@@ -1,0 +1,10 @@
+{
+  "name": "Weather Friends",
+  "description": "\"Weather Friends\" by BostonyFX - Retro-futuristic cybernetic smart display weather console with live forecasts, precision local station data, barometric tracking, and environmental monitoring.",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

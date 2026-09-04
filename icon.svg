@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Dark Radial Canvas Background -->
+    <radialGradient id="bgGrad" cx="50%" cy="50%" r="65%">
+      <stop offset="0%" stop-color="#0c181e"/>
+      <stop offset="60%" stop-color="#070e12"/>
+      <stop offset="100%" stop-color="#04080a"/>
+    </radialGradient>
+
+    <!-- Warm Golden Sun Gradient -->
+    <linearGradient id="sunGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff176"/>
+      <stop offset="45%" stop-color="#ffb74d"/>
+      <stop offset="100%" stop-color="#ff9800"/>
+    </linearGradient>
+
+    <!-- Ambient Outer Glow for Sun -->
+    <filter id="sunGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+
+    <!-- Glowing Heart Cutout Shadow -->
+    <filter id="innerGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.28   0 0 0 0 0.9   0 0 0 0 0.77  0 0 0 0.75 0"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+
+    <!-- Teal-Cyan Moon Gradient -->
+    <linearGradient id="moonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e0f7fa"/>
+      <stop offset="50%" stop-color="#49e6c4"/>
+      <stop offset="100%" stop-color="#00b4d8"/>
+    </linearGradient>
+
+    <!-- Subtle HUD Ring Gradients -->
+    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="rgba(73,230,196,0.5)"/>
+      <stop offset="50%" stop-color="rgba(255,183,77,0.4)"/>
+      <stop offset="100%" stop-color="rgba(73,230,196,0.2)"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Base Icon Background with rounded corner mask-safe bounds -->
+  <rect width="512" height="512" fill="url(#bgGrad)" rx="104"/>
+
+  <!-- Subtle Cybernetic Radar Target Rings -->
+  <circle cx="256" cy="256" r="215" fill="none" stroke="url(#ringGrad)" stroke-width="1.5" stroke-dasharray="6 8" opacity="0.45"/>
+  <circle cx="256" cy="256" r="185" fill="none" stroke="rgba(255,183,77,0.2)" stroke-width="1"/>
+  <circle cx="256" cy="256" r="236" fill="none" stroke="rgba(73,230,196,0.15)" stroke-width="1"/>
+
+  <!-- Sun Rays (12 Radiant Geometric Flares) -->
+  <g filter="url(#sunGlow)" opacity="0.95">
+    <!-- North -->
+    <polygon points="256,76 264,124 248,124" fill="url(#sunGrad)"/>
+    <!-- North-East -->
+    <polygon points="383,129 367,169 355,157" fill="url(#sunGrad)"/>
+    <!-- East-North-East -->
+    <polygon points="424,196 376,210 373,194" fill="url(#sunGrad)"/>
+    <!-- East -->
+    <polygon points="436,256 388,248 388,264" fill="url(#sunGrad)"/>
+    <!-- East-South-East -->
+    <polygon points="424,316 373,318 376,302" fill="url(#sunGrad)"/>
+    <!-- South-East -->
+    <polygon points="383,383 355,355 367,343" fill="url(#sunGrad)"/>
+    <!-- South -->
+    <polygon points="256,436 248,388 264,388" fill="url(#sunGrad)"/>
+    <!-- South-West -->
+    <polygon points="129,383 145,343 157,355" fill="url(#sunGrad)"/>
+    <!-- West-South-West -->
+    <polygon points="88,316 139,302 136,318" fill="url(#sunGrad)"/>
+    <!-- West -->
+    <polygon points="76,256 124,264 124,248" fill="url(#sunGrad)"/>
+    <!-- West-North-West -->
+    <polygon points="88,196 136,194 139,210" fill="url(#sunGrad)"/>
+    <!-- North-West -->
+    <polygon points="129,129 157,157 145,169" fill="url(#sunGrad)"/>
+  </g>
+
+  <!-- Radiant Outer Halo -->
+  <circle cx="256" cy="256" r="148" fill="rgba(255,183,77,0.14)" filter="url(#sunGlow)"/>
+
+  <!-- Sun Disc with Heart Mask/Cutout -->
+  <mask id="sunHeartCutout">
+    <!-- Solid white reveals the sun disc -->
+    <rect width="512" height="512" fill="white"/>
+    <!-- Black cuts out the heart in the center -->
+    <path d="M256,346 C256,346 168,290 168,226 C168,192 195,166 228,166 C245,166 252,175 256,180 C260,175 267,166 284,166 C317,166 344,192 344,226 C344,290 256,346 256,346 Z" fill="black"/>
+  </mask>
+
+  <!-- Golden Sun Core Disc with the Heart Window cut out -->
+  <circle cx="256" cy="256" r="132" fill="url(#sunGrad)" mask="url(#sunHeartCutout)" filter="url(#sunGlow)"/>
+
+  <!-- Inside Cutout: Dark Deep Space Canvas for the Heart -->
+  <path d="M256,346 C256,346 168,290 168,226 C168,192 195,166 228,166 C245,166 252,175 256,180 C260,175 267,166 284,166 C317,166 344,192 344,226 C344,290 256,346 256,346 Z"
+        fill="#081419"
+        stroke="rgba(73,230,196,0.65)"
+        stroke-width="3"
+        filter="url(#innerGlow)"/>
+
+  <!-- Glowing Heart Inner Rim Accent -->
+  <path d="M256,340 C256,340 174,286 174,226 C174,196 199,172 228,172 C243,172 250,180 256,186 C262,180 269,172 284,172 C313,172 338,196 338,226 C338,286 256,340 256,340 Z"
+        fill="none"
+        stroke="rgba(255,255,255,0.25)"
+        stroke-width="1.5"/>
+
+  <!-- Crescent Moon nested in the left lobe of the heart -->
+  <!-- Main Moon Body -->
+  <path d="M246,204 C222,204 204,223 204,248 C204,272 223,292 248,292 C236,286 228,272 228,256 C228,238 238,222 254,214 C251,208 248,204 246,204 Z"
+        fill="url(#moonGrad)"
+        filter="url(#innerGlow)"/>
+
+  <!-- Starlight Diamond nested in the right lobe of the heart -->
+  <g transform="translate(290, 226)">
+    <!-- 4-point glowing star -->
+    <path d="M0,-14 L3,-3 L14,0 L3,3 L0,14 L-3,3 L-14,0 L-3,-3 Z" fill="#ffffff" filter="url(#innerGlow)"/>
+    <circle cx="0" cy="0" r="2.5" fill="#49e6c4"/>
+  </g>
+
+  <!-- Smaller twinkling star -->
+  <g transform="translate(268, 282) scale(0.6)">
+    <path d="M0,-10 L2,-2 L10,0 L2,2 L0,10 L-2,2 L-10,0 L-2,-2 Z" fill="#49e6c4" opacity="0.9"/>
+  </g>
+
+  <!-- High-tech crosshairs / calibration ticks in corners -->
+  <g stroke="rgba(73,230,196,0.35)" stroke-width="1.5">
+    <path d="M48,64 L48,48 L64,48"/>
+    <path d="M464,64 L464,48 L448,48"/>
+    <path d="M48,448 L48,464 L64,464"/>
+    <path d="M464,448 L464,464 L448,464"/>
+  </g>
+</svg>

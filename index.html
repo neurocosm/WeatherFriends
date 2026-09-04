@@ -12,10 +12,10 @@
 <link rel="icon" type="image/svg+xml" href="/icon.svg">
 <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<title>"Weather Friends" by BostonyFX</title>
-<meta name="description" content="&quot;Weather Friends&quot; by BostonyFX - Smart display weather console with live forecasts, precision local station data, barometric tracking, and environmental monitoring.">
-<meta property="og:title" content="&quot;Weather Friends&quot; by BostonyFX">
-<meta property="og:description" content="&quot;Weather Friends&quot; by BostonyFX - Smart display weather console with live forecasts, precision local station data, barometric tracking, and environmental monitoring.">
+<title>Weather Friends app by BostonyFX</title>
+<meta name="description" content="Weather Friends app by BostonyFX - Smart display weather console with live forecasts, precision local station data, barometric tracking, and environmental monitoring.">
+<meta property="og:title" content="Weather Friends app by BostonyFX">
+<meta property="og:description" content="Weather Friends app by BostonyFX - Smart display weather console with live forecasts, precision local station data, barometric tracking, and environmental monitoring.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Outfit:wght@400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
@@ -68,26 +68,35 @@
     position:relative;
     gap:10px;
     margin-bottom:6px;
-    height:16px;
-  }
-  .device-top .notch{
-    height:3px;width:38px;
-    background:linear-gradient(180deg,#c7cdd2,#8f979d);
-    border-radius:2px;
-    box-shadow:inset 0 1px 2px rgba(0,0,0,0.3);
+    height:18px;
   }
   .device-top .brand{
-    font-family:'Rajdhani',sans-serif;
-    font-weight:700;
-    font-size:0.65rem;
-    letter-spacing:0.08em;
-    color:#666e74;
+    font-family:'Outfit',sans-serif;
+    font-weight:600;
+    font-size:0.74rem;
+    letter-spacing:0.02em;
+    color:#5a6369;
     user-select:none;
-    text-transform:uppercase;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
   }
   .device-top .brand b{
-    font-weight:800;
-    color:#4a5258;
+    font-weight:700;
+    color:#3d4449;
+  }
+  .device-top .version-pill{
+    font-family:'Share Tech Mono',monospace;
+    font-weight:700;
+    font-size:0.62rem;
+    letter-spacing:0.03em;
+    color:#4a545a;
+    background:rgba(0,0,0,0.08);
+    border:1px solid rgba(0,0,0,0.12);
+    border-radius:4px;
+    padding:1px 6px;
+    line-height:1.2;
+    user-select:all;
   }
   .device-actions{
     position:absolute;
@@ -870,8 +879,10 @@
 
 <div class="device">
   <div class="device-top">
-    <div class="notch"></div>
-    <div class="brand">"Weather Friends" by <b>BostonyFX</b></div>
+    <div class="brand">
+      <span>Weather Friends app by <b>BostonyFX</b></span>
+      <span class="version-pill" id="appVersionBadge" title="App Version: v1.MMDDYYYY.TIME">v1</span>
+    </div>
     <div class="device-actions">
       <button class="pwa-install-btn" id="pwaInstallBtn" title="Install Weather Friends as a standalone app on your tablet">
         <svg class="pwa-install-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -1175,6 +1186,19 @@
     if(dstEl){
       dstEl.textContent = hasDst ? 'DST' : 'ST';
       dstEl.title = hasDst ? 'Daylight Saving Time Active' : 'Standard Time Active';
+    }
+
+    // Versioning Schema: v1.MMDDYYYY.TIME
+    const verBadge = document.getElementById('appVersionBadge');
+    if(verBadge && !verBadge.dataset.set){
+      const mm = String(now.getMonth() + 1).padStart(2, '0');
+      const dd = String(now.getDate()).padStart(2, '0');
+      const yyyy = now.getFullYear();
+      const hh = String(now.getHours()).padStart(2, '0');
+      const min = String(now.getMinutes()).padStart(2, '0');
+      verBadge.textContent = `v1.${mm}${dd}${yyyy}.${hh}${min}`;
+      verBadge.dataset.set = "true";
+      verBadge.title = `Release Build: v1.${mm}${dd}${yyyy}.${hh}${min}`;
     }
   }
   tickClock();

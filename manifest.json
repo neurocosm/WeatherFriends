@@ -1,6 +1,6 @@
 {
-  "name": "Weather Friends",
-  "short_name": "Weather",
+  "name": "WeatherFriends",
+  "short_name": "WeatherFriends",
   "description": "High-visibility weather console with real-time radar, solar data, and alerts",
   "start_url": "./",
   "scope": "./",

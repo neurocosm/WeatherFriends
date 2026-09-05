@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -8,20 +9,32 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = 3000;
 
-// Current App Build Version (Format: v1.MMDDYY.HHMM)
-const APP_BUILD_VERSION = 'v1.090426.1930';
+// Read current App Build Version from version.json (stamped in US Eastern Time EDT/EST)
+function getAppVersion() {
+  try {
+    const versionFilePath = path.join(__dirname, 'version.json');
+    if (fs.existsSync(versionFilePath)) {
+      const data = JSON.parse(fs.readFileSync(versionFilePath, 'utf8'));
+      if (data && data.version) return data.version;
+    }
+  } catch (e) {}
+  return 'v1.090426.2243';
+}
+
 const BUILD_TIMESTAMP = Date.now();
 
 // Serve static files from the root directory
 app.use(express.static(__dirname));
 
-// Version endpoint for remote PWA update detection
+// Version endpoint for remote PWA update detection (always reflects Eastern Time)
 app.get('/api/version', (req, res) => {
   res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
   res.setHeader('Pragma', 'no-cache');
   res.setHeader('Expires', '0');
+  const currentVersion = getAppVersion();
   res.json({
-    version: APP_BUILD_VERSION,
+    version: currentVersion,
+    timezone: 'America/New_York (EDT/EST)',
     timestamp: BUILD_TIMESTAMP,
     serverTime: Date.now()
   });

@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "dev": "node server.js",
-    "build": "echo 'Build complete'",
+    "revision": "node update-version.js",
+    "build": "node update-version.js && echo 'Build complete'",
     "start": "node server.js",
     "lint": "echo 'Lint pass'"
   },

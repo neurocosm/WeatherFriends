@@ -110,6 +110,7 @@
     cursor:pointer;
     user-select:none;
     transition:all 0.2s ease;
+    position:relative;
   }
   .device-top .version-pill:hover{
     background:rgba(73,230,196,0.15);
@@ -118,6 +119,33 @@
   }
   .device-top .version-pill:active{
     transform:scale(0.96);
+  }
+  .device-top .version-pill.has-update{
+    background:rgba(255,179,0,0.18);
+    border-color:rgba(255,179,0,0.7);
+    color:#ffb300;
+    animation:pulseUpdate 2.2s infinite ease-in-out;
+  }
+  .device-top .version-pill.has-update:hover{
+    background:rgba(255,179,0,0.3);
+    border-color:#ffb300;
+    color:#ffffff;
+  }
+  @keyframes pulseUpdate{
+    0%,100%{ box-shadow:0 0 4px rgba(255,179,0,0.2); }
+    50%{ box-shadow:0 0 10px rgba(255,179,0,0.6); }
+  }
+  .version-update-dot{
+    display:none;
+    width:5px;
+    height:5px;
+    border-radius:50%;
+    background:#ffb300;
+    box-shadow:0 0 6px #ffb300;
+    flex:none;
+  }
+  .device-top .version-pill.has-update .version-update-dot{
+    display:inline-block;
   }
   .device-top .version-refresh-icon{
     width:10px;
@@ -131,6 +159,9 @@
     animation:spin 0.75s linear infinite;
     opacity:1;
     color:#49e6c4;
+  }
+  .device-top .version-pill.syncing.has-update .version-refresh-icon{
+    color:#ffb300;
   }
   .device-top .version-pill.synced{
     background:rgba(73,230,196,0.2);
@@ -1200,11 +1231,12 @@
   <div class="device-top">
     <div class="brand">
       <span>Weather Friends app by <b>BostonyFX</b></span>
-      <button class="version-pill" id="appVersionBadge" type="button" title="Tap to manually refresh weather data" aria-label="Manual refresh weather">
+      <button class="version-pill" id="appVersionBadge" type="button" title="Tap to refresh weather. If an update is available, will install and reload latest version. (Hold or double-tap to force reload)" aria-label="Version and manual refresh">
+        <span class="version-update-dot" id="versionUpdateDot"></span>
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1</span>
+        <span id="appVersionText">v1.090426.1930</span>
       </button>
     </div>
     <div class="device-actions">
@@ -2309,32 +2341,127 @@
   });
 
   /* ---------------------------------------------------------------
-     MANUAL REFRESH: INTERACTIVE VERSION BADGE TAP HANDLER
+     REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
+  const CLIENT_APP_VERSION = 'v1.090426.1930';
+  let serverLatestVersion = CLIENT_APP_VERSION;
+  let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
+  const verTextEl = document.getElementById('appVersionText');
+
+  // Hard purge PWA cache and reload with cache buster
+  async function forcePwaUpdateAndReload(){
+    if(verTextEl) verTextEl.textContent = 'UPDATING…';
+    if(verBadgeBtn){
+      verBadgeBtn.classList.add('syncing');
+      verBadgeBtn.classList.remove('has-update');
+    }
+
+    try{
+      // 1. Send CLEAR_CACHE signal and unregister active service workers
+      if('serviceWorker' in navigator){
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        for(const reg of registrations){
+          try{
+            if(reg.active) reg.active.postMessage({ action: 'CLEAR_CACHE' });
+            await reg.unregister();
+          }catch(e){}
+        }
+      }
+
+      // 2. Clear browser CacheStorage directly
+      if('caches' in window){
+        const cacheKeys = await caches.keys();
+        await Promise.all(cacheKeys.map(k => caches.delete(k)));
+      }
+    }catch(err){
+      console.warn('Cache purge error:', err);
+    }
+
+    // 3. Force hard navigation using timestamp query param to bypass disk caches
+    setTimeout(() => {
+      const freshUrl = window.location.origin + window.location.pathname + '?_v=' + Date.now();
+      window.location.replace(freshUrl);
+    }, 300);
+  }
+
+  // Check server for newer build version
+  async function checkServerVersion(){
+    try{
+      const res = await fetch(`/api/version?_t=${Date.now()}`, { cache: 'no-store' });
+      if(res.ok){
+        const data = await res.json();
+        if(data && data.version){
+          serverLatestVersion = data.version;
+          if(data.version !== CLIENT_APP_VERSION){
+            updatePending = true;
+            if(verBadgeBtn){
+              verBadgeBtn.classList.add('has-update');
+              verBadgeBtn.title = `New version available (${data.version})! Tap to install and reload.`;
+            }
+            if(verTextEl && !verBadgeBtn.classList.contains('syncing')){
+              verTextEl.textContent = `${CLIENT_APP_VERSION} • NEW`;
+            }
+            return true;
+          }
+        }
+      }
+    }catch(e){}
+    return false;
+  }
+
   if(verBadgeBtn){
+    // Single tap handler: refreshes weather if current, or updates if new version detected
     verBadgeBtn.addEventListener('click', async (e) => {
       e.stopPropagation();
       if(verBadgeBtn.classList.contains('syncing')) return;
-      verBadgeBtn.classList.add('syncing');
-      const verTextEl = document.getElementById('appVersionText');
-      const savedVersion = verBadgeBtn.dataset.version || (verTextEl ? verTextEl.textContent : 'v1');
-      if(verTextEl) verTextEl.textContent = 'REFRESHING…';
 
+      verBadgeBtn.classList.add('syncing');
+      if(verTextEl) verTextEl.textContent = 'CHECKING…';
+
+      // Check if update is waiting on server or already flagged
+      const hasUpdate = updatePending || await checkServerVersion();
+      if(hasUpdate){
+        await forcePwaUpdateAndReload();
+        return;
+      }
+
+      // If already on latest version: perform normal manual weather refresh
+      if(verTextEl) verTextEl.textContent = 'REFRESHING…';
       try{
         await init();
+        if(verTextEl) verTextEl.textContent = 'SYNCED ✓';
+        verBadgeBtn.classList.add('synced');
+      }catch(err){
+        if(verTextEl) verTextEl.textContent = 'ERROR';
       }finally{
         setTimeout(() => {
-          if(verTextEl) verTextEl.textContent = 'SYNCED ✓';
-          verBadgeBtn.classList.add('synced');
-          setTimeout(() => {
-            verBadgeBtn.classList.remove('syncing');
-            verBadgeBtn.classList.remove('synced');
-            if(verTextEl) verTextEl.textContent = verBadgeBtn.dataset.version || savedVersion;
-          }, 1400);
-        }, 500);
+          verBadgeBtn.classList.remove('syncing');
+          verBadgeBtn.classList.remove('synced');
+          if(verTextEl) verTextEl.textContent = CLIENT_APP_VERSION;
+        }, 1200);
       }
     });
+
+    // Double-click / double-tap shortcut: forces hard cache bust and reload unconditionally
+    verBadgeBtn.addEventListener('dblclick', async (e) => {
+      e.stopPropagation();
+      await forcePwaUpdateAndReload();
+    });
+
+    // Touch hold (long press 1.4s) on tablet screen: forces hard cache bust and reload
+    let touchHoldTimer = null;
+    verBadgeBtn.addEventListener('touchstart', () => {
+      touchHoldTimer = setTimeout(async () => {
+        await forcePwaUpdateAndReload();
+      }, 1400);
+    }, { passive: true });
+    verBadgeBtn.addEventListener('touchend', () => {
+      if(touchHoldTimer) clearTimeout(touchHoldTimer);
+    }, { passive: true });
+    verBadgeBtn.addEventListener('touchcancel', () => {
+      if(touchHoldTimer) clearTimeout(touchHoldTimer);
+    }, { passive: true });
   }
 
   /* ---------------------------------------------------------------
@@ -2748,7 +2875,11 @@
   setInspirationType(currentInspirationType, false);
 
   init();
-  setInterval(init, 1000*60*10); // refresh every 10 minutes
+  checkServerVersion();
+  setInterval(() => {
+    init();
+    checkServerVersion();
+  }, 1000 * 60 * 10); // refresh weather and check version every 10 minutes
 
 })();
 </script>

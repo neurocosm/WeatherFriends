@@ -8,8 +8,24 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = 3000;
 
+// Current App Build Version (Format: v1.MMDDYY.HHMM)
+const APP_BUILD_VERSION = 'v1.090426.1930';
+const BUILD_TIMESTAMP = Date.now();
+
 // Serve static files from the root directory
 app.use(express.static(__dirname));
+
+// Version endpoint for remote PWA update detection
+app.get('/api/version', (req, res) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  res.json({
+    version: APP_BUILD_VERSION,
+    timestamp: BUILD_TIMESTAMP,
+    serverTime: Date.now()
+  });
+});
 
 // Server-side IP Geolocation fallback (avoids browser adblocker / CORS blocks)
 app.get('/api/location', async (req, res) => {

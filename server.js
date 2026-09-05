@@ -121,6 +121,96 @@ app.get('/api/search-location', async (req, res) => {
   res.json({ results: [] });
 });
 
+// Free Inspiration API (Positive Quotes, Philosophy / Stoic, Scripture / Biblical)
+const INSPIRATION_FALLBACKS = {
+  positive: [
+    { text: "Wherever you go, no matter what the weather, always bring your own sunshine.", author: "Anthony J. D'Angelo" },
+    { text: "Do what you can, with what you have, where you are.", author: "Theodore Roosevelt" },
+    { text: "Keep your face always toward the sunshine, and shadows will fall behind you.", author: "Walt Whitman" },
+    { text: "Every day may not be good, but there is something good in every day.", author: "Alice Morse Earle" },
+    { text: "Start where you are. Use what you have. Do what you can.", author: "Arthur Ashe" },
+    { text: "Act as if what you do makes a difference. It does.", author: "William James" },
+    { text: "It always seems impossible until it's done.", author: "Nelson Mandela" },
+    { text: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
+    { text: "A warm smile is the universal language of kindness.", author: "William Arthur Ward" },
+    { text: "Happiness is not by chance, but by choice.", author: "Jim Rohn" },
+    { text: "You are never too old to set another goal or to dream a new dream.", author: "C.S. Lewis" },
+    { text: "Optimism is a happiness magnet. If you stay positive, good things will be drawn to you.", author: "Mary Lou Retton" }
+  ],
+  philosophy: [
+    { text: "You have power over your mind - not outside events. Realize this, and you will find strength.", author: "Marcus Aurelius" },
+    { text: "We suffer more often in imagination than in reality.", author: "Seneca" },
+    { text: "Waste no more time arguing about what a good man should be. Be one.", author: "Marcus Aurelius" },
+    { text: "No person has the power to have everything they want, but it is in their power not to want what they haven't.", author: "Seneca" },
+    { text: "The unexamined life is not worth living.", author: "Socrates" },
+    { text: "Nature does not hurry, yet everything is accomplished.", author: "Lao Tzu" },
+    { text: "It is the mark of an educated mind to be able to entertain a thought without accepting it.", author: "Aristotle" },
+    { text: "First say to yourself what you would be; and then do what you have to do.", author: "Epictetus" },
+    { text: "When you arise in the morning think of what a privilege it is to be alive: to breathe, to think, to enjoy, to love.", author: "Marcus Aurelius" },
+    { text: "The key is to keep company only with people who uplift you, whose presence calls forth your best.", author: "Epictetus" },
+    { text: "Happiness resides not in possessions, and not in gold, happiness dwells in the soul.", author: "Democritus" }
+  ],
+  scripture: [
+    { text: "For I know the plans I have for you, declares the Lord, plans for peace and not for evil, to give you a future and a hope.", author: "Jeremiah 29:11" },
+    { text: "Trust in the Lord with all your heart, and do not lean on your own understanding. In all your ways acknowledge him, and he will make straight your paths.", author: "Proverbs 3:5-6" },
+    { text: "I can do all things through him who strengthens me.", author: "Philippians 4:13" },
+    { text: "The Lord is my shepherd; I shall not want. He makes me lie down in green pastures. He leads me beside still waters.", author: "Psalm 23:1-2" },
+    { text: "Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go.", author: "Joshua 1:9" },
+    { text: "And we know that in all things God works for the good of those who love him.", author: "Romans 8:28" },
+    { text: "Those who hope in the Lord will renew their strength. They will soar on wings like eagles; they will run and not grow weary.", author: "Isaiah 40:31" },
+    { text: "Cast all your anxiety on him because he cares for you.", author: "1 Peter 5:7" },
+    { text: "This is the day that the Lord has made; let us rejoice and be glad in it.", author: "Psalm 118:24" },
+    { text: "Love is patient, love is kind. It does not envy, it does not boast, it is not proud.", author: "1 Corinthians 13:4" },
+    { text: "Let all that you do be done in love.", author: "1 Corinthians 16:14" }
+  ]
+};
+
+app.get('/api/inspiration', async (req, res) => {
+  const type = (req.query.type || 'positive').toLowerCase();
+  const pool = INSPIRATION_FALLBACKS[type] || INSPIRATION_FALLBACKS.positive;
+
+  // Attempt live external fetch with safe timeout
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3500);
+
+    if (type === 'positive') {
+      const qRes = await fetch('https://dummyjson.com/quotes/random', { signal: controller.signal });
+      clearTimeout(timeoutId);
+      if (qRes.ok) {
+        const qData = await qRes.json();
+        if (qData && qData.quote) {
+          return res.json({ text: qData.quote, author: qData.author || 'Inspirational', category: 'positive' });
+        }
+      }
+    } else if (type === 'scripture') {
+      const popularPassages = [
+        'Jeremiah 29:11', 'Proverbs 3:5-6', 'Philippians 4:13', 'Psalm 23:1-3',
+        'Joshua 1:9', 'Romans 8:28', 'Isaiah 40:31', '1 Peter 5:7',
+        'Psalm 118:24', '1 Corinthians 13:4-7', 'Matthew 6:33-34', 'Psalm 46:1-2'
+      ];
+      const randomPassage = popularPassages[Math.floor(Math.random() * popularPassages.length)];
+      const bRes = await fetch(`https://bible-api.com/${encodeURIComponent(randomPassage)}`, { signal: controller.signal });
+      clearTimeout(timeoutId);
+      if (bRes.ok) {
+        const bData = await bRes.json();
+        if (bData && bData.text) {
+          const cleanText = bData.text.replace(/\s+/g, ' ').trim();
+          return res.json({ text: cleanText, author: bData.reference, category: 'scripture' });
+        }
+      }
+    } else if (type === 'philosophy') {
+      // Return a random timeless philosophical quote from our extensive pool
+      clearTimeout(timeoutId);
+    }
+  } catch (err) {
+    // Gracefully use verified pool
+  }
+
+  const item = pool[Math.floor(Math.random() * pool.length)];
+  res.json({ text: item.text, author: item.author, category: type });
+});
+
 // Fallback to index.html for any other route
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));

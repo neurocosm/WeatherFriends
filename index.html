@@ -112,6 +112,23 @@
     transition:all 0.2s ease;
     position:relative;
   }
+  .device-top .version-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    font-family:'Share Tech Mono',monospace;
+    font-size:0.75rem;
+    color:var(--ink-dim);
+    background:rgba(0,0,0,0.22);
+    border:1px solid rgba(140,200,210,0.28);
+    border-radius:6px;
+    padding:2px 8px;
+    line-height:1.2;
+    cursor:pointer;
+    user-select:none;
+    transition:all 0.2s ease;
+    position:relative;
+  }
   .device-top .version-pill:hover{
     background:rgba(73,230,196,0.15);
     border-color:rgba(73,230,196,0.45);
@@ -120,28 +137,42 @@
   .device-top .version-pill:active{
     transform:scale(0.96);
   }
+  /* High-Contrast, Zero-Blur "NEW AVAILABLE" update state */
   .device-top .version-pill.has-update{
-    background:rgba(255,179,0,0.18);
-    border-color:rgba(255,179,0,0.7);
-    color:#ffb300;
-    animation:pulseUpdate 2.2s infinite ease-in-out;
+    background:#13222e;
+    border-color:#ffb800;
+    color:#ffffff;
+    box-shadow:0 0 0 1px #ffb800;
   }
   .device-top .version-pill.has-update:hover{
-    background:rgba(255,179,0,0.3);
-    border-color:#ffb300;
+    background:#1b2f40;
+    border-color:#ffd24d;
     color:#ffffff;
   }
-  @keyframes pulseUpdate{
-    0%,100%{ box-shadow:0 0 4px rgba(255,179,0,0.2); }
-    50%{ box-shadow:0 0 10px rgba(255,179,0,0.6); }
+  .version-new-badge{
+    display:none;
+    background:#ffb800;
+    color:#091218;
+    font-family:'Outfit',sans-serif;
+    font-size:0.62rem;
+    font-weight:900;
+    letter-spacing:0.07em;
+    padding:1.5px 5px;
+    border-radius:3px;
+    line-height:1;
+    text-transform:uppercase;
+    margin-left:3px;
+    vertical-align:middle;
+  }
+  .device-top .version-pill.has-update .version-new-badge{
+    display:inline-block;
   }
   .version-update-dot{
     display:none;
-    width:5px;
-    height:5px;
+    width:6px;
+    height:6px;
     border-radius:50%;
-    background:#ffb300;
-    box-shadow:0 0 6px #ffb300;
+    background:#ffb800;
     flex:none;
   }
   .device-top .version-pill.has-update .version-update-dot{
@@ -151,7 +182,7 @@
     width:10px;
     height:10px;
     stroke:currentColor;
-    opacity:0.75;
+    opacity:0.85;
     transition:transform 0.2s ease;
     flex:none;
   }
@@ -161,7 +192,7 @@
     color:#49e6c4;
   }
   .device-top .version-pill.syncing.has-update .version-refresh-icon{
-    color:#ffb300;
+    color:#ffb800;
   }
   .device-top .version-pill.synced{
     background:rgba(73,230,196,0.2);
@@ -296,12 +327,13 @@
   /* ---- Top Tier: 3 Distinct Certified Blocks ---- */
   .topbar{
     display:grid;
-    grid-template-columns: 1.2fr 0.95fr 1.35fr;
-    gap:clamp(6px, 1vw, 10px);
-    margin-bottom:clamp(6px, 1vh, 12px);
+    grid-template-columns: var(--tw1, 1.25fr) 6px var(--tw2, 0.85fr) 6px var(--tw3, 1.25fr);
+    gap:0;
+    margin-bottom:clamp(4px, 0.8vh, 8px);
     align-items:stretch;
-    flex:1.08 1 0;
+    flex:1.02 1 0;
     min-height:0;
+    position:relative;
   }
 
   .top-cert-card{
@@ -820,12 +852,13 @@
   /* ---- Main 3-column grid ---- */
   .panels{
     display:grid;
-    grid-template-columns:1fr 1fr 1fr;
-    gap:clamp(6px, 1vw, 10px);
-    margin-bottom:clamp(6px, 1vh, 12px);
+    grid-template-columns: var(--mw1, 1fr) 6px var(--mw2, 1fr) 6px var(--mw3, 1fr);
+    gap:0;
+    margin-bottom:clamp(4px, 0.8vh, 8px);
     align-items:stretch;
-    flex:1.15 1 0;
+    flex:1.25 1 0;
     min-height:0;
+    position:relative;
   }
   .panel{
     background:rgba(4, 11, 14, 0.65);
@@ -1043,6 +1076,170 @@
     text-overflow:ellipsis;
   }
 
+  /* ---- Magic 8-Ball Panel & Orb ---- */
+  .eightball-panel{
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    cursor:pointer;
+    user-select:none;
+    -webkit-tap-highlight-color:transparent;
+    overflow:hidden;
+    transition:border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .eightball-panel:hover{
+    border-color:rgba(73, 230, 196, 0.45);
+    box-shadow:0 0 16px rgba(73, 230, 196, 0.15);
+  }
+  .eightball-badge{
+    font-family:'Orbitron',sans-serif;
+    font-size:clamp(0.55rem, 1.1vh, 0.65rem);
+    letter-spacing:0.08em;
+    color:var(--teal);
+    background:rgba(73, 230, 196, 0.12);
+    border:1px solid rgba(73, 230, 196, 0.35);
+    padding:1px 6px;
+    border-radius:4px;
+    transition:all 0.2s ease;
+  }
+  .eightball-panel:hover .eightball-badge{
+    background:rgba(73, 230, 196, 0.25);
+    color:#ffffff;
+  }
+  .eightball-stage{
+    flex:1 1 0;
+    min-height:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    width:100%;
+    overflow:hidden;
+  }
+  .eightball-sphere{
+    width:clamp(110px, min(32cqw, 19vh), 170px);
+    height:clamp(110px, min(32cqw, 19vh), 170px);
+    aspect-ratio:1 / 1;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 28%, #28343b 0%, #10191e 35%, #050a0d 75%, #010406 100%);
+    box-shadow:
+      inset 0 4px 10px rgba(255, 255, 255, 0.22),
+      inset 0 -8px 18px rgba(0, 0, 0, 0.85),
+      0 6px 20px rgba(0, 0, 0, 0.7),
+      0 0 12px rgba(73, 230, 196, 0.18);
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:transform 0.12s ease;
+    border:1px solid rgba(73, 230, 196, 0.25);
+  }
+  .eightball-sphere::after{
+    content:'';
+    position:absolute;
+    top:9%;
+    left:18%;
+    width:36%;
+    height:20%;
+    border-radius:50%;
+    background:radial-gradient(ellipse at center, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0) 75%);
+    transform:rotate(-28deg);
+    pointer-events:none;
+  }
+  /* The liquid inspection window */
+  .eightball-window{
+    width:62%;
+    height:62%;
+    border-radius:50%;
+    background:radial-gradient(circle at 50% 50%, #081622 0%, #03080d 80%, #010406 100%);
+    border:3px solid #0b1c24;
+    box-shadow:inset 0 0 14px rgba(0,0,0,0.95), inset 0 0 8px rgba(26, 92, 114, 0.4);
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+  }
+  /* Floating icosahedron die with die triangle SVG */
+  .eightball-die{
+    width:94%;
+    height:94%;
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:opacity 0.75s ease, transform 0.85s cubic-bezier(0.2, 0.8, 0.25, 1);
+    opacity:1;
+    transform:scale(1) rotate(0deg);
+  }
+  .eightball-die.sinking{
+    opacity:0.08;
+    transform:scale(0.55) rotate(18deg) translateY(12px);
+    filter:blur(3px);
+  }
+  .eightball-die.surfacing{
+    opacity:1;
+    transform:scale(1) rotate(0deg) translateY(0);
+    filter:blur(0);
+  }
+  .eightball-triangle-svg{
+    width:100%;
+    height:100%;
+    position:absolute;
+    top:0;
+    left:0;
+    filter:drop-shadow(0 0 5px rgba(22, 102, 140, 0.6));
+  }
+  .eightball-answer-text{
+    position:relative;
+    z-index:2;
+    font-family:'Outfit',sans-serif;
+    font-weight:800;
+    font-size:clamp(0.56rem, min(3.1cqw, 1.45vh), 0.84rem);
+    letter-spacing:0.04em;
+    line-height:1.15;
+    text-transform:uppercase;
+    text-align:center;
+    width:70%;
+    margin-top:8%;
+    color:#e1f8ff;
+    text-shadow:0 0 6px rgba(73, 230, 196, 0.75), 0 1px 3px rgba(0,0,0,0.9);
+    word-break:normal;
+    overflow-wrap:break-word;
+    user-select:none;
+    pointer-events:none;
+  }
+  /* Bubble particles in fluid */
+  .eightball-bubble{
+    position:absolute;
+    border-radius:50%;
+    background:rgba(73, 230, 196, 0.35);
+    pointer-events:none;
+    opacity:0;
+  }
+  /* Shake animation on whole sphere */
+  @keyframes eightballWobble{
+    0%{transform:translate(0, 0) rotate(0deg);}
+    15%{transform:translate(-6px, -4px) rotate(-5deg);}
+    30%{transform:translate(5px, 3px) rotate(4deg);}
+    45%{transform:translate(-4px, 3px) rotate(-3deg);}
+    60%{transform:translate(4px, -2px) rotate(2deg);}
+    75%{transform:translate(-2px, 1px) rotate(-1deg);}
+    100%{transform:translate(0, 0) rotate(0deg);}
+  }
+  .eightball-sphere.shaking{
+    animation:eightballWobble 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  }
+  .eightball-counter{
+    font-family:'Rajdhani',sans-serif;
+    font-weight:600;
+    font-size:clamp(0.62rem, 1.1vh, 0.72rem);
+    letter-spacing:0.06em;
+    color:var(--ink-dim);
+    text-align:center;
+    margin-top:2px;
+  }
+
   .uv-row{display:flex;flex-direction:column;gap:4px;}
   .uv-track{height:clamp(7px, 1.3vh, 10px);border-radius:6px;background:#10181c;overflow:hidden;box-shadow:inset 0 0 3px #000;}
   .uv-fill{height:100%;border-radius:6px;transition:width 600ms ease;}
@@ -1064,42 +1261,95 @@
     letter-spacing:0.06em;
   }
 
-  /* ---- Bottom 5-day strip ---- */
+  /* ---- Touch-Draggable Row Seam Splitters ---- */
+  .row-splitter{
+    width:6px;
+    height:100%;
+    position:relative;
+    cursor:col-resize;
+    user-select:none;
+    touch-action:none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:8;
+    flex:none;
+  }
+  /* Generous touch target (28px) for fingers on tablet */
+  .row-splitter::before{
+    content:'';
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:-11px;
+    right:-11px;
+    z-index:2;
+  }
+  .splitter-grip{
+    width:2px;
+    height:clamp(26px, 5vh, 46px);
+    background:rgba(140, 200, 210, 0.22);
+    border-radius:2px;
+    transition:background 0.2s ease, width 0.2s ease, box-shadow 0.2s ease;
+    pointer-events:none;
+  }
+  .row-splitter:hover .splitter-grip,
+  .row-splitter.is-dragging .splitter-grip{
+    background:#49e6c4;
+    width:3px;
+    box-shadow:0 0 8px rgba(73, 230, 196, 0.7);
+  }
+  body.is-resizing-blocks{
+    cursor:col-resize !important;
+    user-select:none !important;
+  }
+  body.is-resizing-blocks *{
+    user-select:none !important;
+  }
+
+  /* ---- Bottom 5-day strip (1:1 Compact Blocks & Tightly Grouped Data) ---- */
   .outlook{
     display:grid;
     grid-template-columns:repeat(5,1fr);
-    gap:clamp(4px, 0.8vw, 10px);
-    flex:0.80 1 0;
+    gap:clamp(6px, 1.1vw, 12px);
+    flex:0 0 auto;
     min-height:0;
     width:100%;
+    align-items:center;
+    justify-content:center;
   }
   .day-card{
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:center;
-    gap:clamp(2px, 0.5vh, 6px);
-    padding:clamp(4px, 1.0vh, 10px) clamp(2px, 1.5cqw, 8px);
-    background:rgba(4, 11, 14, 0.55);
+    aspect-ratio:1 / 1;
+    max-height:clamp(140px, 24vh, 205px);
+    gap:clamp(2px, 0.5vh, 5px);
+    padding:clamp(6px, 1.0vh, 10px) clamp(4px, 1cqw, 8px);
+    background:rgba(4, 11, 14, 0.70);
     border:1px solid var(--grid-line);
-    border-radius:8px;
+    border-radius:10px;
     container-type:inline-size;
     min-width:0;
     overflow:hidden;
     transition:background 0.2s ease, border-color 0.2s ease;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.05), 0 2px 8px rgba(0,0,0,0.35);
+    margin:0 auto;
+    width:100%;
   }
   .day-card.is-today{
-    background:rgba(8, 22, 28, 0.7);
-    border-color:rgba(73, 230, 196, 0.4);
-    box-shadow:inset 0 1px 0 rgba(73,230,196,0.2), 0 2px 8px rgba(0,0,0,0.3);
+    background:rgba(8, 26, 32, 0.85);
+    border-color:rgba(73, 230, 196, 0.55);
+    box-shadow:inset 0 1px 0 rgba(73,230,196,0.3), 0 2px 10px rgba(0,0,0,0.45);
   }
   .day-card .dname{
     font-family:'Outfit',sans-serif;
-    font-weight:800;
-    font-size:clamp(0.72rem, min(13cqw, 2.0vh), 1.25rem);
-    letter-spacing:0.06em;
+    font-weight:700;
+    font-size:clamp(0.85rem, min(14.5cqw, 2.2vh), 1.25rem);
+    letter-spacing:0.07em;
     text-transform:uppercase;
-    color:#4ac6ff;
+    color:#62d9ff;
     line-height:1;
     white-space:nowrap;
   }
@@ -1107,57 +1357,95 @@
     color:#49e6c4;
   }
   .day-card .dicon{
-    width:clamp(24px, min(24cqw, 4.8vh), 46px);
-    height:clamp(24px, min(24cqw, 4.8vh), 46px);
-    margin:clamp(1px, 0.3vh, 4px) 0;
+    width:clamp(28px, min(24cqw, 4.6vh), 42px);
+    height:clamp(28px, min(24cqw, 4.6vh), 42px);
+    margin:0;
     flex-shrink:0;
-    filter:drop-shadow(0 2px 6px rgba(0,0,0,0.45));
+    filter:drop-shadow(0 2px 6px rgba(0,0,0,0.5));
+  }
+  .day-card .ddesc{
+    font-family:'Outfit',sans-serif;
+    font-weight:500;
+    font-size:clamp(0.66rem, min(10.8cqw, 1.45vh), 0.92rem);
+    letter-spacing:0.02em;
+    color:#9ec7d6;
+    line-height:1.15;
+    text-align:center;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    max-width:96%;
+    margin-top:-1px;
+    margin-bottom:1px;
+  }
+  .day-card.is-today .ddesc{
+    color:#90e8d5;
   }
   .day-card .hi-lo{
     font-family:'Outfit',sans-serif;
     font-weight:800;
-    font-size:clamp(0.92rem, min(17cqw, 2.6vh), 1.7rem);
+    font-size:clamp(1.10rem, min(19.5cqw, 2.9vh), 1.78rem);
     line-height:1;
-    letter-spacing:-0.02em;
+    letter-spacing:-0.03em;
     display:flex;
     align-items:baseline;
     justify-content:center;
-    gap:clamp(3px, 1.2cqw, 6px);
+    gap:clamp(3px, 1.1cqw, 5px);
     white-space:nowrap;
   }
   .day-card .hi-lo .hi{
-    color:#f2f9fb;
-    font-weight:900;
+    color:#fff6e5;
+    font-weight:800;
+    text-shadow:0 0 10px rgba(255,220,160,0.22);
   }
   .day-card .hi-lo .sep{
-    color:rgba(140, 200, 210, 0.35);
-    font-weight:600;
+    color:#446b7a;
+    font-weight:500;
     font-size:0.85em;
   }
   .day-card .hi-lo .lo{
-    color:#688696;
+    color:#50cbff;
     font-weight:700;
-    font-size:0.9em;
+    font-size:0.92em;
   }
-  .day-card .duv{
-    font-family:'Rajdhani',sans-serif;
-    font-weight:700;
-    font-size:clamp(0.68rem, min(11.5cqw, 1.7vh), 1.05rem);
-    letter-spacing:0.05em;
-    text-transform:uppercase;
-    color:var(--ink-dim);
-    line-height:1;
+  .day-meta-row{
     display:flex;
     align-items:center;
-    gap:3px;
+    justify-content:center;
+    gap:clamp(3px, 1.2cqw, 6px);
+    width:100%;
+    margin-top:1px;
+    flex-wrap:nowrap;
+  }
+  .day-card .duv, .day-card .dhum{
+    font-family:'Rajdhani',sans-serif;
+    font-weight:700;
+    font-size:clamp(0.72rem, min(12cqw, 1.75vh), 1.05rem);
+    letter-spacing:0.04em;
+    line-height:1;
+    display:inline-flex;
+    align-items:center;
+    gap:3.5px;
     white-space:nowrap;
+    padding:clamp(2px, 0.35vh, 3.5px) clamp(4px, 0.9cqw, 7px);
+    border-radius:5px;
+    background:rgba(0, 0, 0, 0.35);
+    border:1px solid rgba(140, 200, 210, 0.18);
   }
-  .day-card .duv .duv-lbl{
-    opacity:0.65;
-    font-size:0.88em;
+  .day-card .duv .duv-dot{
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    flex:none;
   }
-  .day-card .duv .duv-val{
-    color:var(--ink);
+  .day-card .dhum .dhum-icon{
+    width:11px;
+    height:11px;
+    flex:none;
+    color:#4ac6ff;
+  }
+  .day-card .dhum .dhum-val{
+    color:#d8f4ff;
     font-weight:800;
   }
 
@@ -1187,6 +1475,9 @@
       overflow:visible;
       display:block;
     }
+    .row-splitter{
+      display:none;
+    }
     .topbar{
       grid-template-columns: 1fr;
       flex:none;
@@ -1212,6 +1503,10 @@
       flex:none;
       padding-top:12px;
     }
+    .day-card{
+      aspect-ratio:auto;
+      max-height:none;
+    }
   }
 
   /* iPad & iOS Safe Area optimization (Home Indicator / Rounded bezels) */
@@ -1236,7 +1531,8 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.090426.2243</span>
+        <span id="appVersionText">v1.090526.0815</span>
+        <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
     <div class="device-actions">
@@ -1267,6 +1563,11 @@
         </div>
       </div>
 
+      <!-- SEAM 0: DATE <-> CLOCK SPLITTER -->
+      <div class="row-splitter" data-row="top" data-seam="0" title="Drag to adjust width • Double-tap to reset" role="separator" aria-orientation="vertical">
+        <div class="splitter-grip"></div>
+      </div>
+
       <!-- CERTIFIED BLOCK 2: STACKED HIGH-DENSITY CLOCK (YELLOW DIGITS + WHITE PM + SECONDS) -->
       <div class="top-cert-card" id="topClockBlock">
         <div class="stacked-clock-grid">
@@ -1276,6 +1577,11 @@
           <div class="clock-min-val" id="clockMin">05</div>
           <div class="clock-sec-val" id="clockSec">20</div>
         </div>
+      </div>
+
+      <!-- SEAM 1: CLOCK <-> WEATHER SPLITTER -->
+      <div class="row-splitter" data-row="top" data-seam="1" title="Drag to adjust width • Double-tap to reset" role="separator" aria-orientation="vertical">
+        <div class="splitter-grip"></div>
       </div>
 
       <!-- CERTIFIED BLOCK 3: MOCKUP-ACCURATE WEATHER BLOCK -->
@@ -1341,31 +1647,51 @@
       </div>
     </div>
 
-    <div class="panels">
-      <!-- CONDITIONS (teal, like Remote Sensor) -->
-      <div class="panel">
+    <div class="panels" id="panelsRow">
+      <!-- MAGIC 8-BALL (Center-Left Square, replaces redundant Conditions) -->
+      <div class="panel eightball-panel" id="panelEightball" title="Tap to shake the Magic 8-Ball">
         <div class="panel-head">
           <div class="ttl">
-            <svg class="icon glow-teal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 14.5V5a2 2 0 1 0-4 0v9.5a4 4 0 1 0 4 0z"/><line x1="10" y1="8" x2="12" y2="8"/></svg>
-            <span class="label glow-teal">Conditions</span>
+            <svg class="icon glow-teal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <circle cx="12" cy="12" r="4"/>
+              <path d="M12 2a10 10 0 0 1 10 10"/>
+            </svg>
+            <span class="label glow-teal">8-Ball</span>
           </div>
-          <span class="fine glow-ink" id="condUpdated">&nbsp;</span>
+          <span class="eightball-badge glow-teal" id="eightballBadge">TAP TO SHAKE</span>
         </div>
 
-        <div class="big-reading">
-          <span class="num glow-teal" id="tempNow">--</span>
-          <span class="unit glow-teal">°F</span>
-          <span class="trend glow-teal" id="tempTrend">→</span>
+        <div class="eightball-stage">
+          <div class="eightball-sphere" id="eightballSphere">
+            <div class="eightball-window">
+              <div class="eightball-die" id="eightballDie">
+                <!-- Isometric icosahedron floating triangle SVG -->
+                <svg class="eightball-triangle-svg" viewBox="0 0 100 100">
+                  <polygon points="50,14 88,80 12,80" fill="#0c2331" stroke="#226484" stroke-width="3" stroke-linejoin="round"/>
+                  <polygon points="50,14 50,80 12,80" fill="#091b26" opacity="0.45"/>
+                </svg>
+                <div class="eightball-answer-text" id="eightballAnswer">IT IS CERTAIN</div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="fine glow-ink" id="feelsLike">Feels like --°F</div>
 
-        <div class="sub-reading" style="margin-top:auto;">
-          <span class="num glow-teal" id="humidityNow">--</span>
-          <span class="unit glow-teal">%</span>
-          <span class="trend glow-teal" id="humidityTrend">→</span>
-          <span class="label glow-ink" style="margin-left:4px;">Humidity</span>
-        </div>
-        <div class="fine glow-ink" id="windNow">Wind -- mph</div>
+        <div class="eightball-counter" id="eightballCounter">20 TRADITIONAL ANSWERS</div>
+
+        <!-- Hidden elements preserved for weather telemetry logic compatibility -->
+        <span id="tempNow" style="display:none;"></span>
+        <span id="tempTrend" style="display:none;"></span>
+        <span id="feelsLike" style="display:none;"></span>
+        <span id="humidityNow" style="display:none;"></span>
+        <span id="humidityTrend" style="display:none;"></span>
+        <span id="windNow" style="display:none;"></span>
+        <span id="condUpdated" style="display:none;"></span>
+      </div>
+
+      <!-- SEAM 0: CONDITIONS <-> INSPIRATION SPLITTER -->
+      <div class="row-splitter" data-row="mid" data-seam="0" title="Drag to adjust width • Double-tap to reset" role="separator" aria-orientation="vertical">
+        <div class="splitter-grip"></div>
       </div>
 
       <!-- INSPIRATION / WISDOM / SCRIPTURE (Center Block) -->
@@ -1405,8 +1731,13 @@
         <span id="condText" style="display:none;"></span>
       </div>
 
+      <!-- SEAM 1: INSPIRATION <-> DETAILS SPLITTER -->
+      <div class="row-splitter" data-row="mid" data-seam="1" title="Drag to adjust width • Double-tap to reset" role="separator" aria-orientation="vertical">
+        <div class="splitter-grip"></div>
+      </div>
+
       <!-- DETAILS (blue, like Indoor Sensor) -->
-      <div class="panel">
+      <div class="panel" id="panelDetails">
         <div class="panel-head">
           <div class="ttl">
             <span class="label glow-blue">Details</span>
@@ -1595,26 +1926,6 @@
     if(dstEl){
       dstEl.textContent = hasDst ? 'DST' : 'ST';
       dstEl.title = hasDst ? 'Daylight Saving Time Active' : 'Standard Time Active';
-    }
-
-    // Versioning Schema: v1.MMDDYYYY.TIME
-    const verBadge = document.getElementById('appVersionBadge');
-    if(verBadge && !verBadge.dataset.set){
-      const mm = String(now.getMonth() + 1).padStart(2, '0');
-      const dd = String(now.getDate()).padStart(2, '0');
-      const yyyy = now.getFullYear();
-      const hh = String(now.getHours()).padStart(2, '0');
-      const min = String(now.getMinutes()).padStart(2, '0');
-      const verStr = `v1.${mm}${dd}${yyyy}.${hh}${min}`;
-      const verTextEl = document.getElementById('appVersionText');
-      if(verTextEl){
-        verTextEl.textContent = verStr;
-      } else {
-        verBadge.textContent = verStr;
-      }
-      verBadge.dataset.version = verStr;
-      verBadge.dataset.set = "true";
-      verBadge.title = `Release Build: ${verStr} • Tap to refresh`;
     }
   }
   tickClock();
@@ -1919,7 +2230,7 @@
   async function fetchWeather(lat, lon){
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}`
       + `&current=temperature_2m,relative_humidity_2m,apparent_temperature,pressure_msl,weather_code,wind_speed_10m,uv_index`
-      + `&daily=weather_code,temperature_2m_max,temperature_2m_min,uv_index_max,sunrise,sunset`
+      + `&daily=weather_code,temperature_2m_max,temperature_2m_min,uv_index_max,relative_humidity_2m_max,sunrise,sunset`
       + `&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch&timezone=auto&forecast_days=6`;
     const r = await fetch(url);
     if(!r.ok) throw new Error('weather fetch failed');
@@ -1948,11 +2259,35 @@
       const card = document.createElement('div');
       card.className = 'day-card' + (i === 0 ? ' is-today' : '');
       const dn = i===0 ? 'TODAY' : dayShort[d.getDay()];
+      const hi = Math.round(daily.temperature_2m_max[i]);
+      const lo = Math.round(daily.temperature_2m_min[i]);
+      const uv = Math.round(daily.uv_index_max ? (daily.uv_index_max[i] ?? 0) : 0);
+      const ucol = uvColor(uv);
+      const humVal = daily.relative_humidity_2m_max ? daily.relative_humidity_2m_max[i] : null;
+      const hum = humVal !== null && humVal !== undefined ? Math.round(humVal) : '--';
+      const desc = weatherDescription(daily.weather_code[i]);
+
       card.innerHTML = `
         <div class="dname">${dn}</div>
         <svg class="dicon" viewBox="0 0 100 100">${weatherIconSvg(daily.weather_code[i])}</svg>
-        <div class="hi-lo"><span class="hi">${Math.round(daily.temperature_2m_max[i])}°</span><span class="sep">/</span><span class="lo">${Math.round(daily.temperature_2m_min[i])}°</span></div>
-        <div class="duv"><span class="duv-lbl">UV</span><span class="duv-val">${Math.round(daily.uv_index_max[i])}</span></div>
+        <div class="ddesc" title="${desc}">${desc}</div>
+        <div class="hi-lo">
+          <span class="hi" title="High ${hi}°">${hi}°</span>
+          <span class="sep">/</span>
+          <span class="lo" title="Low ${lo}°">${lo}°</span>
+        </div>
+        <div class="day-meta-row">
+          <div class="duv" title="Peak UV: ${uv} (${uvCategory(uv)})">
+            <span class="duv-dot" style="background:${ucol};box-shadow:0 0 4px ${ucol};"></span>
+            <span style="color:${ucol};font-weight:800;">UV ${uv}</span>
+          </div>
+          <div class="dhum" title="Peak Humidity: ${hum}%">
+            <svg class="dhum-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+            </svg>
+            <span class="dhum-val">${hum}%</span>
+          </div>
+        </div>
       `;
       el.appendChild(card);
     }
@@ -2343,7 +2678,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.090426.2243';
+  const CLIENT_APP_VERSION = 'v1.090526.0815';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -2400,7 +2735,7 @@
               verBadgeBtn.title = `New version available (${data.version})! Tap to install and reload.`;
             }
             if(verTextEl && !verBadgeBtn.classList.contains('syncing')){
-              verTextEl.textContent = `${CLIENT_APP_VERSION} • NEW`;
+              verTextEl.textContent = CLIENT_APP_VERSION;
             }
             return true;
           }
@@ -2874,6 +3209,265 @@
   // Initialize selected inspiration mode (daily quote)
   setInspirationType(currentInspirationType, false);
 
+  /* ---------------------------------------------------------------
+     TRADITIONAL MAGIC 8-BALL ENGINE (CENTER-LEFT SQUARE)
+     - Full 20 canonical Magic 8-Ball responses (10 affirmative, 5 non-committal, 5 negative)
+     - Interactive physical shake with liquid reveal animation
+     - Sound-safe, offline, touch & click responsive
+  --------------------------------------------------------------- */
+  const EIGHTBALL_RESPONSES = [
+    // 10 Affirmative (●)
+    { text: 'IT IS CERTAIN', type: 'affirmative' },
+    { text: 'IT IS DECIDEDLY SO', type: 'affirmative' },
+    { text: 'WITHOUT A DOUBT', type: 'affirmative' },
+    { text: 'YES DEFINITELY', type: 'affirmative' },
+    { text: 'YOU MAY RELY ON IT', type: 'affirmative' },
+    { text: 'AS I SEE IT, YES', type: 'affirmative' },
+    { text: 'MOST LIKELY', type: 'affirmative' },
+    { text: 'OUTLOOK GOOD', type: 'affirmative' },
+    { text: 'YES', type: 'affirmative' },
+    { text: 'SIGNS POINT TO YES', type: 'affirmative' },
+
+    // 5 Non-committal (▲)
+    { text: 'REPLY HAZY, TRY AGAIN', type: 'neutral' },
+    { text: 'ASK AGAIN LATER', type: 'neutral' },
+    { text: 'BETTER NOT TELL YOU NOW', type: 'neutral' },
+    { text: 'CANNOT PREDICT NOW', type: 'neutral' },
+    { text: 'CONCENTRATE AND ASK AGAIN', type: 'neutral' },
+
+    // 5 Negative (■)
+    { text: "DON'T COUNT ON IT", type: 'negative' },
+    { text: 'MY REPLY IS NO', type: 'negative' },
+    { text: 'MY SOURCES SAY NO', type: 'negative' },
+    { text: 'OUTLOOK NOT SO GOOD', type: 'negative' },
+    { text: 'VERY DOUBTFUL', type: 'negative' }
+  ];
+
+  const eightballPanel = document.getElementById('panelEightball');
+  const eightballSphere = document.getElementById('eightballSphere');
+  const eightballDie = document.getElementById('eightballDie');
+  const eightballAnswer = document.getElementById('eightballAnswer');
+  const eightballBadge = document.getElementById('eightballBadge');
+  const eightballCounter = document.getElementById('eightballCounter');
+
+  let isShaking8Ball = false;
+  let last8BallIndex = -1;
+
+  function shakeEightBall(){
+    if(isShaking8Ball) return;
+    isShaking8Ball = true;
+
+    if(eightballBadge) eightballBadge.textContent = 'CONSULTING…';
+    if(eightballSphere) eightballSphere.classList.add('shaking');
+    if(eightballDie){
+      eightballDie.classList.remove('surfacing');
+      eightballDie.classList.add('sinking');
+    }
+
+    // Pick a new response that differs from the previous one
+    let nextIdx = Math.floor(Math.random() * EIGHTBALL_RESPONSES.length);
+    if(nextIdx === last8BallIndex){
+      nextIdx = (nextIdx + 1) % EIGHTBALL_RESPONSES.length;
+    }
+    last8BallIndex = nextIdx;
+    const resp = EIGHTBALL_RESPONSES[nextIdx];
+
+    // Slight random rotation angle for floating triangle die realism (-12deg to +12deg)
+    const randomAngle = (Math.random() * 24 - 12).toFixed(1);
+
+    setTimeout(() => {
+      if(eightballAnswer){
+        eightballAnswer.textContent = resp.text;
+        // Subtle color tinting based on traditional oracle tone
+        if(resp.type === 'affirmative'){
+          eightballAnswer.style.color = '#e1f8ff';
+          eightballAnswer.style.textShadow = '0 0 8px rgba(73, 230, 196, 0.9), 0 1px 4px rgba(0,0,0,0.9)';
+        } else if(resp.type === 'neutral'){
+          eightballAnswer.style.color = '#fff6dc';
+          eightballAnswer.style.textShadow = '0 0 8px rgba(255, 215, 72, 0.8), 0 1px 4px rgba(0,0,0,0.9)';
+        } else {
+          eightballAnswer.style.color = '#ffdada';
+          eightballAnswer.style.textShadow = '0 0 8px rgba(255, 110, 110, 0.8), 0 1px 4px rgba(0,0,0,0.9)';
+        }
+      }
+
+      if(eightballDie){
+        eightballDie.classList.remove('sinking');
+        eightballDie.classList.add('surfacing');
+        eightballDie.style.transform = `scale(1) rotate(${randomAngle}deg) translateY(0)`;
+      }
+
+      if(eightballBadge) eightballBadge.textContent = 'SHAKEN ✓';
+      if(eightballCounter){
+        const typeLabel = resp.type === 'affirmative' ? 'AFFIRMATIVE' : (resp.type === 'neutral' ? 'NON-COMMITTAL' : 'NEGATIVE');
+        eightballCounter.textContent = `ANSWER ${nextIdx + 1} OF 20 • ${typeLabel}`;
+      }
+    }, 450);
+
+    setTimeout(() => {
+      if(eightballSphere) eightballSphere.classList.remove('shaking');
+      isShaking8Ball = false;
+      setTimeout(() => {
+        if(!isShaking8Ball && eightballBadge) eightballBadge.textContent = 'TAP TO SHAKE';
+      }, 1500);
+    }, 700);
+  }
+
+  if(eightballPanel){
+    eightballPanel.addEventListener('click', (e) => {
+      e.stopPropagation();
+      shakeEightBall();
+    });
+  }
+
+  /* ---------------------------------------------------------------
+     INTERACTIVE ROW SEAM SPLITTERS (HORIZONTAL RESIZING)
+  --------------------------------------------------------------- */
+  function initRowSplitters(){
+    const topRowEl = document.getElementById('topTier');
+    const midRowEl = document.getElementById('panelsRow');
+
+    // Default column weights
+    // Top row: Date (1.25fr), Clock (0.85fr narrower), Weather (1.25fr)
+    const DEFAULT_TOP = [1.25, 0.85, 1.25];
+    // Middle row: Conditions (1fr), Inspiration (1fr), Details (1fr)
+    const DEFAULT_MID = [1.0, 1.0, 1.0];
+
+    const MIN_WEIGHT = 0.45; // Prevents any block from collapsing completely
+
+    function applyWeights(rowId, weights){
+      if(rowId === 'top' && topRowEl){
+        topRowEl.style.setProperty('--tw1', `${weights[0]}fr`);
+        topRowEl.style.setProperty('--tw2', `${weights[1]}fr`);
+        topRowEl.style.setProperty('--tw3', `${weights[2]}fr`);
+      } else if(rowId === 'mid' && midRowEl){
+        midRowEl.style.setProperty('--mw1', `${weights[0]}fr`);
+        midRowEl.style.setProperty('--mw2', `${weights[1]}fr`);
+        midRowEl.style.setProperty('--mw3', `${weights[2]}fr`);
+      }
+    }
+
+    function loadSavedWeights(rowId, fallback){
+      try{
+        const raw = localStorage.getItem(`wf_layout_${rowId}_weights`);
+        if(raw){
+          const parsed = JSON.parse(raw);
+          if(Array.isArray(parsed) && parsed.length === 3 && parsed.every(n => typeof n === 'number' && n >= MIN_WEIGHT)){
+            return parsed;
+          }
+        }
+      }catch(e){}
+      return [...fallback];
+    }
+
+    const currentWeights = {
+      top: loadSavedWeights('top', DEFAULT_TOP),
+      mid: loadSavedWeights('mid', DEFAULT_MID)
+    };
+
+    applyWeights('top', currentWeights.top);
+    applyWeights('mid', currentWeights.mid);
+
+    const splitters = document.querySelectorAll('.row-splitter');
+    splitters.forEach(splitter => {
+      const rowId = splitter.dataset.row;
+      const seamIndex = parseInt(splitter.dataset.seam, 10);
+
+      let startX = 0;
+      let startW = [];
+      let containerWidth = 0;
+      let isDragging = false;
+
+      function onPointerDown(e){
+        if(e.button !== undefined && e.button !== 0) return;
+        const rowEl = rowId === 'top' ? topRowEl : midRowEl;
+        if(!rowEl) return;
+
+        isDragging = true;
+        startX = e.clientX;
+        startW = [...currentWeights[rowId]];
+        containerWidth = rowEl.getBoundingClientRect().width;
+        splitter.classList.add('is-dragging');
+        document.body.classList.add('is-resizing-blocks');
+
+        try{ splitter.setPointerCapture(e.pointerId); }catch(err){}
+        e.preventDefault();
+      }
+
+      function onPointerMove(e){
+        if(!isDragging || containerWidth <= 0) return;
+        const deltaX = e.clientX - startX;
+        const totalWeight = startW[0] + startW[1] + startW[2];
+        const deltaWeight = (deltaX / containerWidth) * totalWeight;
+
+        const newW = [...startW];
+        if(seamIndex === 0){
+          // Adjust block 0 vs block 1
+          let w0 = startW[0] + deltaWeight;
+          let w1 = startW[1] - deltaWeight;
+          if(w0 < MIN_WEIGHT){
+            w1 -= (MIN_WEIGHT - w0);
+            w0 = MIN_WEIGHT;
+          }
+          if(w1 < MIN_WEIGHT){
+            w0 -= (MIN_WEIGHT - w1);
+            w1 = MIN_WEIGHT;
+          }
+          newW[0] = Math.max(MIN_WEIGHT, parseFloat(w0.toFixed(3)));
+          newW[1] = Math.max(MIN_WEIGHT, parseFloat(w1.toFixed(3)));
+        } else if(seamIndex === 1){
+          // Adjust block 1 vs block 2
+          let w1 = startW[1] + deltaWeight;
+          let w2 = startW[2] - deltaWeight;
+          if(w1 < MIN_WEIGHT){
+            w2 -= (MIN_WEIGHT - w1);
+            w1 = MIN_WEIGHT;
+          }
+          if(w2 < MIN_WEIGHT){
+            w1 -= (MIN_WEIGHT - w2);
+            w2 = MIN_WEIGHT;
+          }
+          newW[1] = Math.max(MIN_WEIGHT, parseFloat(w1.toFixed(3)));
+          newW[2] = Math.max(MIN_WEIGHT, parseFloat(w2.toFixed(3)));
+        }
+
+        currentWeights[rowId] = newW;
+        applyWeights(rowId, newW);
+      }
+
+      function onPointerUp(e){
+        if(!isDragging) return;
+        isDragging = false;
+        splitter.classList.remove('is-dragging');
+        document.body.classList.remove('is-resizing-blocks');
+        try{ splitter.releasePointerCapture(e.pointerId); }catch(err){}
+
+        try{
+          localStorage.setItem(`wf_layout_${rowId}_weights`, JSON.stringify(currentWeights[rowId]));
+        }catch(err){}
+      }
+
+      splitter.addEventListener('pointerdown', onPointerDown);
+      splitter.addEventListener('pointermove', onPointerMove);
+      splitter.addEventListener('pointerup', onPointerUp);
+      splitter.addEventListener('pointercancel', onPointerUp);
+
+      // Double-click or double-tap on seam resets row to default proportions
+      let lastTapTime = 0;
+      splitter.addEventListener('click', () => {
+        const now = Date.now();
+        if(now - lastTapTime < 350){
+          const def = rowId === 'top' ? DEFAULT_TOP : DEFAULT_MID;
+          currentWeights[rowId] = [...def];
+          applyWeights(rowId, def);
+          try{ localStorage.removeItem(`wf_layout_${rowId}_weights`); }catch(err){}
+        }
+        lastTapTime = now;
+      });
+    });
+  }
+
+  initRowSplitters();
   init();
   checkServerVersion();
   setInterval(() => {

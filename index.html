@@ -1044,12 +1044,30 @@
     opacity:0;
     transform:translateY(3px);
   }
+  .inspire-quote-content{
+    display:inline;
+  }
+  .inspire-author-inline{
+    display:inline-block;
+    white-space:nowrap;
+    font-family:'Outfit',sans-serif;
+    font-weight:700;
+    font-size:clamp(0.72rem, min(3.5cqw, 1.5vh), 0.95rem);
+    letter-spacing:0.04em;
+    color:var(--purple);
+    text-transform:uppercase;
+    margin-left:7px;
+    vertical-align:baseline;
+    user-select:none;
+    text-shadow:0 0 8px rgba(184, 107, 255, 0.5);
+  }
+  .inspire-author-inline .inspire-dash{
+    color:var(--purple);
+    font-weight:800;
+    margin-right:3px;
+  }
   .inspire-author-row{
-    margin-top:clamp(2px, 0.5vh, 4px);
-    display:flex;
-    align-items:center;
-    gap:6px;
-    flex-shrink:0;
+    display:none;
   }
   .inspire-author-left{
     display:flex;
@@ -1187,6 +1205,7 @@
     margin:0;
     word-break:normal;
     overflow-wrap:break-word;
+    text-wrap:balance;
     flex-shrink:0;
     transition:opacity 0.2s ease, transform 0.2s ease;
   }
@@ -1254,8 +1273,8 @@
     overflow:hidden;
   }
   .eightball-sphere{
-    width:clamp(110px, min(32cqw, 19vh), 170px);
-    height:clamp(110px, min(32cqw, 19vh), 170px);
+    width:var(--eightball-size, clamp(130px, 85%, 280px));
+    height:var(--eightball-size, clamp(130px, 85%, 280px));
     aspect-ratio:1 / 1;
     border-radius:50%;
     background:radial-gradient(circle at 35% 28%, #28343b 0%, #10191e 35%, #050a0d 75%, #010406 100%);
@@ -1263,13 +1282,14 @@
       inset 0 4px 10px rgba(255, 255, 255, 0.22),
       inset 0 -8px 18px rgba(0, 0, 0, 0.85),
       0 6px 20px rgba(0, 0, 0, 0.7),
-      0 0 12px rgba(73, 230, 196, 0.18);
+      0 0 14px rgba(73, 230, 196, 0.20);
     position:relative;
     display:flex;
     align-items:center;
     justify-content:center;
     transition:transform 0.12s ease;
     border:1px solid rgba(73, 230, 196, 0.25);
+    flex-shrink:0;
   }
   .eightball-sphere::after{
     content:'';
@@ -1283,14 +1303,14 @@
     transform:rotate(-28deg);
     pointer-events:none;
   }
-  /* The liquid inspection window */
+  /* The liquid inspection window - enlarged to 76% for substantial clarity */
   .eightball-window{
-    width:62%;
-    height:62%;
+    width:76%;
+    height:76%;
     border-radius:50%;
     background:radial-gradient(circle at 50% 50%, #081622 0%, #03080d 80%, #010406 100%);
     border:3px solid #0b1c24;
-    box-shadow:inset 0 0 14px rgba(0,0,0,0.95), inset 0 0 8px rgba(26, 92, 114, 0.4);
+    box-shadow:inset 0 0 16px rgba(0,0,0,0.95), inset 0 0 10px rgba(26, 92, 114, 0.45);
     position:relative;
     display:flex;
     align-items:center;
@@ -1299,8 +1319,8 @@
   }
   /* Floating icosahedron die with die triangle SVG */
   .eightball-die{
-    width:94%;
-    height:94%;
+    width:98%;
+    height:98%;
     position:relative;
     display:flex;
     align-items:center;
@@ -1325,26 +1345,37 @@
     position:absolute;
     top:0;
     left:0;
-    filter:drop-shadow(0 0 5px rgba(22, 102, 140, 0.6));
+    filter:drop-shadow(0 0 7px rgba(22, 102, 140, 0.75));
   }
   .eightball-answer-text{
-    position:relative;
+    position:absolute;
+    left:50%;
+    top:52%;
+    transform:translate(-50%, -50%);
     z-index:2;
-    font-family:'Outfit',sans-serif;
-    font-weight:800;
-    font-size:clamp(0.56rem, min(3.1cqw, 1.45vh), 0.84rem);
-    letter-spacing:0.04em;
-    line-height:1.15;
-    text-transform:uppercase;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
     text-align:center;
-    width:70%;
-    margin-top:8%;
+    width:88%;
+    max-height:80%;
     color:#e1f8ff;
-    text-shadow:0 0 6px rgba(73, 230, 196, 0.75), 0 1px 3px rgba(0,0,0,0.9);
-    word-break:normal;
-    overflow-wrap:break-word;
+    text-shadow:0 0 8px rgba(73, 230, 196, 0.95), 0 0 16px rgba(18, 120, 150, 0.65), 0 1px 3px rgba(0,0,0,0.95);
     user-select:none;
     pointer-events:none;
+    transition:opacity 0.2s ease;
+  }
+  .eightball-line{
+    display:block;
+    white-space:nowrap;
+    word-break:keep-all;
+    overflow-wrap:normal;
+    text-transform:uppercase;
+    font-family:'Outfit',sans-serif;
+    font-weight:800;
+    letter-spacing:0.02em;
+    line-height:1.14;
   }
   /* Bubble particles in fluid */
   .eightball-bubble{
@@ -1668,7 +1699,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.090626.0739</span>
+        <span id="appVersionText">v1.090626.0821</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -1803,12 +1834,15 @@
           <div class="eightball-sphere" id="eightballSphere">
             <div class="eightball-window">
               <div class="eightball-die" id="eightballDie">
-                <!-- Isometric icosahedron floating triangle SVG -->
+                <!-- Isometric icosahedron floating triangle SVG cleanly inscribed in view window -->
                 <svg class="eightball-triangle-svg" viewBox="0 0 100 100">
-                  <polygon points="50,14 88,80 12,80" fill="#0c2331" stroke="#226484" stroke-width="3" stroke-linejoin="round"/>
-                  <polygon points="50,14 50,80 12,80" fill="#091b26" opacity="0.45"/>
+                  <polygon points="50,7 87.2,71.5 12.8,71.5" fill="#0c2331" stroke="#257599" stroke-width="2.5" stroke-linejoin="round"/>
+                  <polygon points="50,7 50,71.5 12.8,71.5" fill="#091b26" opacity="0.45"/>
                 </svg>
-                <div class="eightball-answer-text" id="eightballAnswer">IT IS CERTAIN</div>
+                <div class="eightball-answer-text" id="eightballAnswer">
+                  <span class="eightball-line">IT IS</span>
+                  <span class="eightball-line">CERTAIN</span>
+                </div>
               </div>
             </div>
           </div>
@@ -1851,12 +1885,9 @@
 
         <div class="inspire-body-wrap" id="inspireCardBody">
           <div class="inspire-text-container" id="inspireTextContainer">
-            <div class="inspire-text" id="inspireText">Wherever you go, no matter what the weather, always bring your own sunshine.</div>
-          </div>
-          <div class="inspire-author-row">
-            <div class="inspire-author-left">
-              <span class="inspire-dash glow-purple">—</span>
-              <span class="inspire-author glow-purple" id="inspireAuthor">Anthony J. D'Angelo</span>
+            <div class="inspire-text" id="inspireText">
+              <span class="inspire-quote-content">Wherever you go, no matter what the weather, always bring your own sunshine.</span>
+              <span class="inspire-author-inline glow-purple" id="inspireAuthor"><span class="inspire-dash">—</span> Anthony J. D'Angelo</span>
             </div>
           </div>
         </div>
@@ -2807,7 +2838,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.090626.0739';
+  const CLIENT_APP_VERSION = 'v1.090626.0821';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -3168,6 +3199,20 @@
     return `${y}-${m}-${d}`;
   }
 
+  let currentInspirationData = {
+    text: "Wherever you go, no matter what the weather, always bring your own sunshine.",
+    author: "Anthony J. D'Angelo"
+  };
+
+  function buildInspirationHtml(text, author){
+    const cleanText = (text || '').trim();
+    const cleanAuthor = (author || '').trim();
+    const authorHtml = cleanAuthor 
+      ? `<span class="inspire-author-inline glow-purple" id="inspireAuthor"><span class="inspire-dash">—</span> ${cleanAuthor}</span>`
+      : '';
+    return `<span class="inspire-quote-content">${cleanText}</span> ${authorHtml}`;
+  }
+
   // Smart dynamic text fitting buffer
   let measureBuffer = null;
   function getMeasureBuffer(){
@@ -3180,10 +3225,13 @@
     return measureBuffer;
   }
 
-  function fitQuoteTextToContainer(text){
+  function fitQuoteTextToContainer(text, author){
     if(!inspireTextEl || !inspireTextContainer) return;
-    const cleanText = (text || '').trim();
+    const cleanText = (text !== undefined ? text : currentInspirationData.text || '').trim();
+    const cleanAuthor = (author !== undefined ? author : currentInspirationData.author || '').trim();
     if(!cleanText) return;
+
+    currentInspirationData = { text: cleanText, author: cleanAuthor };
 
     // Read available box dimensions
     let availW = inspireTextContainer.clientWidth;
@@ -3197,7 +3245,7 @@
     const targetW = Math.max(100, availW - 4);
     const targetH = Math.max(50, availH - 4);
     buf.style.width = targetW + 'px';
-    buf.textContent = cleanText;
+    buf.innerHTML = buildInspirationHtml(cleanText, cleanAuthor);
 
     // Binary search font size between 12px (long scripture/stoic wisdom) and 38px (short positive affirmations)
     let low = 12;
@@ -3233,9 +3281,10 @@
     if(!inspireTextEl) return;
     inspireTextEl.classList.add('fading');
     setTimeout(() => {
-      inspireTextEl.textContent = text;
-      fitQuoteTextToContainer(text);
-      if(inspireAuthorEl) inspireAuthorEl.textContent = author || 'Inspirational';
+      const cleanAuthor = (author || 'Inspirational').trim();
+      currentInspirationData = { text: text, author: cleanAuthor };
+      inspireTextEl.innerHTML = buildInspirationHtml(text, cleanAuthor);
+      fitQuoteTextToContainer(text, cleanAuthor);
       inspireTextEl.classList.remove('fading');
     }, 160);
   }
@@ -3324,15 +3373,15 @@
   // Observe container resizing to automatically re-fit text dynamically
   if(window.ResizeObserver && inspireTextContainer){
     const ro = new ResizeObserver(() => {
-      if(inspireTextEl && inspireTextEl.textContent){
-        fitQuoteTextToContainer(inspireTextEl.textContent);
+      if(currentInspirationData && currentInspirationData.text){
+        fitQuoteTextToContainer(currentInspirationData.text, currentInspirationData.author);
       }
     });
     ro.observe(inspireTextContainer);
   } else {
     window.addEventListener('resize', () => {
-      if(inspireTextEl && inspireTextEl.textContent){
-        fitQuoteTextToContainer(inspireTextEl.textContent);
+      if(currentInspirationData && currentInspirationData.text){
+        fitQuoteTextToContainer(currentInspirationData.text, currentInspirationData.author);
       }
     });
   }
@@ -3357,33 +3406,34 @@
   --------------------------------------------------------------- */
   const EIGHTBALL_RESPONSES = [
     // 10 Affirmative (●)
-    { text: 'IT IS CERTAIN', type: 'affirmative' },
-    { text: 'IT IS DECIDEDLY SO', type: 'affirmative' },
-    { text: 'WITHOUT A DOUBT', type: 'affirmative' },
-    { text: 'YES DEFINITELY', type: 'affirmative' },
-    { text: 'YOU MAY RELY ON IT', type: 'affirmative' },
-    { text: 'AS I SEE IT, YES', type: 'affirmative' },
-    { text: 'MOST LIKELY', type: 'affirmative' },
-    { text: 'OUTLOOK GOOD', type: 'affirmative' },
-    { text: 'YES', type: 'affirmative' },
-    { text: 'SIGNS POINT TO YES', type: 'affirmative' },
+    { text: 'IT IS CERTAIN', layouts: [['IT IS', 'CERTAIN']], type: 'affirmative' },
+    { text: 'IT IS DECIDEDLY SO', layouts: [['IT IS', 'DECIDEDLY SO'], ['IT IS', 'DECIDEDLY', 'SO']], type: 'affirmative' },
+    { text: 'WITHOUT A DOUBT', layouts: [['WITHOUT', 'A DOUBT']], type: 'affirmative' },
+    { text: 'YES DEFINITELY', layouts: [['YES', 'DEFINITELY']], type: 'affirmative' },
+    { text: 'YOU MAY RELY ON IT', layouts: [['YOU MAY', 'RELY ON IT']], type: 'affirmative' },
+    { text: 'AS I SEE IT, YES', layouts: [['AS I SEE', 'IT, YES'], ['AS I', 'SEE IT,', 'YES']], type: 'affirmative' },
+    { text: 'MOST LIKELY', layouts: [['MOST', 'LIKELY']], type: 'affirmative' },
+    { text: 'OUTLOOK GOOD', layouts: [['OUTLOOK', 'GOOD']], type: 'affirmative' },
+    { text: 'YES', layouts: [['YES']], type: 'affirmative' },
+    { text: 'SIGNS POINT TO YES', layouts: [['SIGNS', 'POINT TO YES'], ['SIGNS', 'POINT TO', 'YES']], type: 'affirmative' },
 
     // 5 Non-committal (▲)
-    { text: 'REPLY HAZY, TRY AGAIN', type: 'neutral' },
-    { text: 'ASK AGAIN LATER', type: 'neutral' },
-    { text: 'BETTER NOT TELL YOU NOW', type: 'neutral' },
-    { text: 'CANNOT PREDICT NOW', type: 'neutral' },
-    { text: 'CONCENTRATE AND ASK AGAIN', type: 'neutral' },
+    { text: 'REPLY HAZY, TRY AGAIN', layouts: [['REPLY HAZY,', 'TRY AGAIN'], ['REPLY', 'HAZY,', 'TRY AGAIN']], type: 'neutral' },
+    { text: 'ASK AGAIN LATER', layouts: [['ASK', 'AGAIN LATER'], ['ASK AGAIN', 'LATER']], type: 'neutral' },
+    { text: 'BETTER NOT TELL YOU NOW', layouts: [['BETTER NOT', 'TELL YOU NOW'], ['BETTER', 'NOT TELL', 'YOU NOW']], type: 'neutral' },
+    { text: 'CANNOT PREDICT NOW', layouts: [['CANNOT', 'PREDICT NOW']], type: 'neutral' },
+    { text: 'CONCENTRATE AND ASK AGAIN', layouts: [['CONCENTRATE', 'AND ASK AGAIN'], ['CONCENTRATE', 'AND ASK', 'AGAIN']], type: 'neutral' },
 
     // 5 Negative (■)
-    { text: "DON'T COUNT ON IT", type: 'negative' },
-    { text: 'MY REPLY IS NO', type: 'negative' },
-    { text: 'MY SOURCES SAY NO', type: 'negative' },
-    { text: 'OUTLOOK NOT SO GOOD', type: 'negative' },
-    { text: 'VERY DOUBTFUL', type: 'negative' }
+    { text: "DON'T COUNT ON IT", layouts: [["DON'T", "COUNT ON IT"], ["DON'T COUNT", "ON IT"]], type: 'negative' },
+    { text: 'MY REPLY IS NO', layouts: [['MY REPLY', 'IS NO']], type: 'negative' },
+    { text: 'MY SOURCES SAY NO', layouts: [['MY SOURCES', 'SAY NO']], type: 'negative' },
+    { text: 'OUTLOOK NOT SO GOOD', layouts: [['OUTLOOK', 'NOT SO GOOD'], ['OUTLOOK', 'NOT SO', 'GOOD']], type: 'negative' },
+    { text: 'VERY DOUBTFUL', layouts: [['VERY', 'DOUBTFUL']], type: 'negative' }
   ];
 
   const eightballPanel = document.getElementById('panelEightball');
+  const eightballStage = document.querySelector('.eightball-stage');
   const eightballSphere = document.getElementById('eightballSphere');
   const eightballDie = document.getElementById('eightballDie');
   const eightballAnswer = document.getElementById('eightballAnswer');
@@ -3391,7 +3441,89 @@
   const eightballCounter = document.getElementById('eightballCounter');
 
   let isShaking8Ball = false;
-  let last8BallIndex = -1;
+  let last8BallIndex = 0;
+
+  /**
+   * Fits 8-ball answer text dynamically to the inner viewable window:
+   * - Triangle is cleanly inscribed inside the circular fluid window (no clipped corners)
+   * - Text is bounded by the inner circular viewing window of the 8-ball (windowDiam * 0.82)
+   * - Words can gracefully overlap the floating triangle if necessary for maximum readability
+   * - Strict non-wrapping per line: words are NEVER chopped or split across lines
+   * - Automatically tests candidate line breaks and selects the layout that yields the largest font
+   */
+  function fitEightballAnswer(ballSize, resp){
+    if(!eightballAnswer || !resp) return;
+    const candidateLayouts = resp.layouts || (resp.lines ? [resp.lines] : [[resp.text]]);
+
+    // Effective viewable window diameter (liquid window is 76% of sphere)
+    const windowDiam = Math.max(80, ballSize * 0.76);
+    const safeLineWidth = windowDiam * 0.82;
+    const safeBlockHeight = windowDiam * 0.72;
+
+    let bestLayout = candidateLayouts[0];
+    let bestFontSize = 10;
+
+    candidateLayouts.forEach(layout => {
+      const numLines = layout.length;
+      // Inject candidate lines into answer container
+      eightballAnswer.innerHTML = layout.map(l => `<span class="eightball-line">${l}</span>`).join('');
+
+      // Measure unscaled baseline width of each line at 16px
+      const testPx = 16;
+      eightballAnswer.style.fontSize = testPx + 'px';
+      eightballAnswer.style.lineHeight = '1.14';
+
+      const lineEls = eightballAnswer.querySelectorAll('.eightball-line');
+      let maxAllowedFontForLayout = 38;
+
+      // 1. Height constraint: total text height fits safely within circular window
+      const maxFontByHeight = Math.floor(safeBlockHeight / (numLines * 1.14));
+      if(maxFontByHeight < maxAllowedFontForLayout) maxAllowedFontForLayout = maxFontByHeight;
+
+      // 2. Width constraint per line: each line fits inside the circular window diameter
+      for(let i = 0; i < lineEls.length; i++){
+        const lineEl = lineEls[i];
+        const unscaledW = Math.max(10, lineEl.offsetWidth);
+        const maxFontForThisLine = Math.floor((safeLineWidth / unscaledW) * testPx);
+        if(maxFontForThisLine < maxAllowedFontForLayout){
+          maxAllowedFontForLayout = maxFontForThisLine;
+        }
+      }
+
+      // Cap according to line density for optical harmony
+      const maxCeiling = numLines === 1 ? 36 : (numLines === 2 ? 26 : 20);
+      const finalLayoutFontSize = Math.max(10, Math.min(maxCeiling, maxAllowedFontForLayout));
+
+      if(finalLayoutFontSize > bestFontSize){
+        bestFontSize = finalLayoutFontSize;
+        bestLayout = layout;
+      }
+    });
+
+    // Render the winning layout at the maximum possible font size
+    eightballAnswer.innerHTML = bestLayout.map(line => `<span class="eightball-line">${line}</span>`).join('');
+    eightballAnswer.style.fontSize = bestFontSize + 'px';
+    eightballAnswer.style.lineHeight = '1.14';
+  }
+
+  /**
+   * Dynamically resizes the 8-Ball sphere to occupy ~85% of available space
+   * - Automatically responds to container resize, panel splitter drags, or screen adjustments
+   */
+  function resizeEightball(){
+    if(!eightballStage || !eightballSphere) return;
+    const w = eightballStage.clientWidth;
+    const h = eightballStage.clientHeight;
+    if(w <= 20 || h <= 20) return;
+
+    // Expand sphere to 85% of available headroom (min of width and height)
+    const targetDiameter = Math.max(110, Math.floor(Math.min(w, h) * 0.85));
+    eightballSphere.style.width = targetDiameter + 'px';
+    eightballSphere.style.height = targetDiameter + 'px';
+
+    const currentResp = EIGHTBALL_RESPONSES[last8BallIndex >= 0 ? last8BallIndex : 0];
+    fitEightballAnswer(targetDiameter, currentResp);
+  }
 
   function shakeEightBall(){
     if(isShaking8Ball) return;
@@ -3417,7 +3549,9 @@
 
     setTimeout(() => {
       if(eightballAnswer){
-        eightballAnswer.textContent = resp.text;
+        const currentBallSize = eightballSphere ? eightballSphere.clientWidth : 160;
+        fitEightballAnswer(currentBallSize, resp);
+
         // Subtle color tinting based on traditional oracle tone
         if(resp.type === 'affirmative'){
           eightballAnswer.style.color = '#e1f8ff';
@@ -3459,6 +3593,19 @@
       shakeEightBall();
     });
   }
+
+  // Observe resizing of the 8-ball stage to dynamically scale sphere to 85% of available bounds
+  if(window.ResizeObserver && eightballStage){
+    const ebObserver = new ResizeObserver(() => {
+      resizeEightball();
+    });
+    ebObserver.observe(eightballStage);
+  } else {
+    window.addEventListener('resize', resizeEightball);
+  }
+
+  // Initialize initial sizing
+  setTimeout(resizeEightball, 50);
 
   /* ---------------------------------------------------------------
      CHECKIDAY DAILY HOLIDAYS ROTATION ENGINE (CHECKIDAY BLOCK)
@@ -3550,16 +3697,27 @@
     hBufLead.textContent = leadText;
     hBufTitle.textContent = title;
 
-    // Base title size scaled by character length
-    const isVeryLongTitle = title.length > 28;
-    const isMediumTitle = title.length > 17;
-    const baseTitle = isVeryLongTitle ? 22 : (isMediumTitle ? 26 : 31);
+    // Measure unscaled single-line width of the title at a baseline 20px
+    hBufTitle.style.whiteSpace = 'nowrap';
+    hBufTitle.style.fontSize = '20px';
+    const titleWidthAt20px = Math.max(10, hBufTitle.scrollWidth || hBufTitle.offsetWidth);
+
+    // Calculate the maximum font size where the entire title fits on ONE single line
+    const singleLineMaxFont = Math.floor(((targetW - 8) / titleWidthAt20px) * 20);
+
+    // If the title can fit on a single line at >= 18px, lock it to a single line to prevent orphan/widow words
+    const titleCanBeSingleLine = singleLineMaxFont >= 18;
+    const baseTitle = titleCanBeSingleLine 
+      ? Math.min(32, singleLineMaxFont) 
+      : (title.length > 28 ? 21 : 25);
     const baseSummary = 15.5;
 
     // Helper: evaluates if a given text fits at a specific scale percentage
     function testScale(text, scalePct) {
       const s = scalePct / 100;
-      const titlePx = Math.round(baseTitle * s);
+      const titlePx = titleCanBeSingleLine
+        ? Math.min(singleLineMaxFont, Math.max(18, Math.round(baseTitle * s)))
+        : Math.round(baseTitle * s);
       const summaryPx = Math.max(12.5, Math.round(baseSummary * s));
       const leadPx = Math.min(13.5, Math.max(11, Math.round(11.5 * Math.min(s, 1.15))));
       const gapPx = Math.max(4, Math.round(7 * s));
@@ -3567,6 +3725,8 @@
       hBufLead.style.fontSize = leadPx + 'px';
       hBufLead.style.lineHeight = '1.2';
 
+      hBufTitle.style.whiteSpace = titleCanBeSingleLine ? 'nowrap' : 'normal';
+      hBufTitle.style.textWrap = titleCanBeSingleLine ? 'nowrap' : 'balance';
       hBufTitle.style.fontSize = titlePx + 'px';
       hBufTitle.style.lineHeight = titlePx >= 28 ? '1.14' : '1.18';
 
@@ -3619,7 +3779,9 @@
     }
 
     const finalS = chosenScale / 100;
-    const finalTitlePx = Math.round(baseTitle * finalS);
+    const finalTitlePx = titleCanBeSingleLine 
+      ? Math.min(singleLineMaxFont, Math.max(18, Math.round(baseTitle * finalS)))
+      : Math.round(baseTitle * finalS);
     const finalSummaryPx = Math.max(12, Math.round(baseSummary * finalS));
     const finalLeadPx = Math.min(14, Math.max(11, Math.round(11.5 * Math.min(finalS, 1.15))));
     const finalGapPx = Math.max(4, Math.round(7 * finalS));
@@ -3629,6 +3791,8 @@
     holidayLeadEl.style.lineHeight = '1.2';
 
     holidayTitleEl.textContent = title;
+    holidayTitleEl.style.whiteSpace = titleCanBeSingleLine ? 'nowrap' : 'normal';
+    holidayTitleEl.style.textWrap = titleCanBeSingleLine ? 'nowrap' : 'balance';
     holidayTitleEl.style.fontSize = finalTitlePx + 'px';
     holidayTitleEl.style.lineHeight = finalTitlePx >= 28 ? '1.14' : '1.18';
 

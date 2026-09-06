@@ -1,5 +1,5 @@
-// Weather Friends Service Worker (Cache-first for shell assets, network-first for live weather APIs)
-const CACHE_NAME = 'weather-friends-v1';
+// Weather Friends Service Worker (Network-first for navigation shell & APIs, cache-first for static media)
+const CACHE_NAME = 'weather-friends-v2';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -25,6 +25,7 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         keys.map((key) => {
           if (key !== CACHE_NAME) {
+            console.log('[SW] Deleting legacy cache:', key);
             return caches.delete(key);
           }
         })
@@ -49,7 +50,7 @@ self.addEventListener('message', (event) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  // Live weather API & radar tiles: always go network-first with no caching crash
+  // 1. Live APIs & telemetry: always network-first with zero caching
   if (
     url.pathname.startsWith('/api/') ||
     url.hostname.includes('open-meteo.com') ||
@@ -58,7 +59,7 @@ self.addEventListener('fetch', (event) => {
     url.hostname.includes('cartocdn.com')
   ) {
     event.respondWith(
-      fetch(event.request).catch(() => {
+      fetch(event.request, { cache: 'no-store' }).catch(() => {
         return new Response(JSON.stringify({ error: 'offline' }), {
           headers: { 'Content-Type': 'application/json' }
         });
@@ -67,11 +68,33 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // App shell: cache-first with network background fallback
+  // 2. Navigation / HTML Document (Root and index.html):
+  // CRITICAL FOR SMART TVs: Always fetch fresh HTML from network so page reloads immediately update!
+  // Fall back to cached shell only if device is truly offline.
+  if (event.request.mode === 'navigate' || url.pathname === '/' || url.pathname === '/index.html') {
+    event.respondWith(
+      fetch(event.request, { cache: 'no-cache' })
+        .then((freshResponse) => {
+          if (freshResponse && freshResponse.status === 200) {
+            const copy = freshResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+          }
+          return freshResponse;
+        })
+        .catch(() => {
+          return caches.match(event.request).then((cached) => {
+            if (cached) return cached;
+            return caches.match('/index.html');
+          });
+        })
+    );
+    return;
+  }
+
+  // 3. Static static media assets (icons, manifest): cache-first with network background fallback
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
-        // Fetch fresh copy in background to keep cache up to date
         fetch(event.request).then((freshResponse) => {
           if (freshResponse && freshResponse.status === 200) {
             caches.open(CACHE_NAME).then((cache) => cache.put(event.request, freshResponse));

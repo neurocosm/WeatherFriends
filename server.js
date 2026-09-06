@@ -23,6 +23,17 @@ function getAppVersion() {
 
 const BUILD_TIMESTAMP = Date.now();
 
+// Serve static files with anti-cache headers for HTML, SW, and version manifest
+app.use((req, res, next) => {
+  // Prevent Smart TV and browser aggressive caching of entry point, service worker, and version
+  if (req.path === '/' || req.path === '/index.html' || req.path === '/sw.js' || req.path === '/version.json' || req.path === '/manifest.json' || req.path.startsWith('/api/')) {
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, proxy-revalidate, max-age=0');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+  }
+  next();
+});
+
 // Serve static files from the root directory
 app.use(express.static(__dirname));
 
@@ -248,6 +259,16 @@ let checkidayCache = {
 };
 
 const CURATED_ORIGINS = {
+  // September 6 Holidays
+  'barbie doll day': 'Marks the anniversary of the day that the Barbie doll first went on sale in 1959, created by Mattel co-founder Ruth Handler.',
+  'fight procrastination day': 'A dedicated day encouraging everyone to overcome delay, get organized, and tackle that long-overdue project today.',
+  'great egg toss day': 'Celebrates the classic outdoor lawn game and partner coordination challenge enjoyed at picnics and fairs everywhere.',
+  'national coffee ice cream day': 'Honoring the creamy, caffeinated dessert favorite blending rich espresso and sweet cream, first recorded in the early 20th century.',
+  'national pastor\'s spouses day': 'Observed on the first Sunday of September to recognize and appreciate the steadfast support and guidance of ministry partners.',
+  'national read a book day': 'Observed annually on September 6, encouraging people of all ages to step away from screens and get lost in a good book.',
+  'pet rock day': 'Celebrates Gary Dahl\'s humorous 1975 creation that became one of the most famous, low-maintenance fads in toy history.',
+  'stillbirth remembrance day': 'Observed annually on September 6 to honor memories and support grieving families with compassion, awareness, and care.',
+  // Additional September dates
   'franchise appreciation day': 'Observed on the Saturday before Labor Day since 2011 to celebrate local franchise owners and community businesses.',
   'international bacon day': 'Created in 2004 by CU Boulder graduate students and celebrated the Saturday before Labor Day with friends and feasts.',
   'international day of charity': 'Established by the United Nations General Assembly to mobilize volunteering, community aid, and humanitarian support worldwide.',
@@ -262,12 +283,12 @@ const CURATED_ORIGINS = {
 };
 
 const CHECKIDAY_BACKUP_HOLIDAYS = [
-  { title: "International Bacon Day", description: "Celebrating the sizzling culinary favorite worldwide.", origin: CURATED_ORIGINS['international bacon day'], summary: "In January of 2004, graduate students came up with the idea for International Bacon Day, celebrating it on the Saturday before Labor Day with friends and feasts.", link: "https://www.checkiday.com" },
-  { title: "National Cheese Pizza Day", description: "Honoring the iconic cheesy slice beloved by all generations.", origin: CURATED_ORIGINS['national cheese pizza day'], summary: "National Cheese Pizza Day celebrates the classic flatbread pie first enjoyed in Naples and brought to America by early 20th century immigrants.", link: "https://www.checkiday.com" },
-  { title: "International Day of Charity", description: "Recognizing humanitarian aid and compassion across communities.", origin: CURATED_ORIGINS['international day of charity'], summary: "Established by the United Nations General Assembly to mobilize people, charities, and communities to help alleviate human suffering worldwide.", link: "https://www.checkiday.com" },
-  { title: "National Hummingbird Day", description: "Appreciating the agile, vibrant pollinators of our ecosystems.", origin: CURATED_ORIGINS['national hummingbird day'], summary: "Celebrates the incredible agility and vitality of hummingbirds, highlighting over 300 species of nature's smallest pollinators.", link: "https://www.checkiday.com" },
-  { title: "World Beard Day", description: "Celebrating facial hair enthusiasts and grooming traditions.", origin: CURATED_ORIGINS['world beard day'], summary: "Observed the first Saturday in September as a global celebration of facial hair, grooming traditions, and camaraderie.", link: "https://www.checkiday.com" },
-  { title: "National Be Late For Something Day", description: "A playful reminder to slow down, breathe, and avoid rushing.", origin: CURATED_ORIGINS['national be late for something day'], summary: "Created by the Procrastinator's Club of America in 1956 to give people a fun excuse to slow down, relax, and take in their surroundings.", link: "https://www.checkiday.com" }
+  { title: "National Read a Book Day", description: "Encouraging people to pause and spend the day reading a book of their choosing.", origin: CURATED_ORIGINS['national read a book day'], summary: "National Read a Book Day encourages people to pause from their busy lives to spend the day reading a book of their choosing.", link: "https://www.checkiday.com" },
+  { title: "Barbie Doll Day", description: "Marks the anniversary of the day that the Barbie doll first went on sale in 1959.", origin: CURATED_ORIGINS['barbie doll day'], summary: "Barbie Doll Day marks the anniversary of the day that the Barbie doll first went on sale in 1959, created by Ruth Handler.", link: "https://www.checkiday.com" },
+  { title: "Fight Procrastination Day", description: "Take charge of your day and tackle tasks with renewed energy.", origin: CURATED_ORIGINS['fight procrastination day'], summary: "Although procrastination may take place on most days, today is about getting tasks done at home, in the office, or at school.", link: "https://www.checkiday.com" },
+  { title: "National Coffee Ice Cream Day", description: "Blends two great foods into one delicious creamy dessert.", origin: CURATED_ORIGINS['national coffee ice cream day'], summary: "National Coffee Ice Cream Day is a day that blends two great treats into one: ice cream and rich aromatic coffee.", link: "https://www.checkiday.com" },
+  { title: "Great Egg Toss Day", description: "Celebrating the fun outdoor partner game and lawn contest.", origin: CURATED_ORIGINS['great egg toss day'], summary: "Great Egg Toss Day celebrates the sport of egg tossing, a classic lawn challenge played at picnics and fairs.", link: "https://www.checkiday.com" },
+  { title: "Pet Rock Day", description: "Celebrating Gary Dahl's humorous, zero-maintenance 1975 pet fad.", origin: CURATED_ORIGINS['pet rock day'], summary: "In 1975, Gary Dahl created the pet rock as the perfect low-work pet, inspiring millions of smiles worldwide.", link: "https://www.checkiday.com" }
 ];
 
 async function enrichHolidaySummaries(items) {
@@ -287,11 +308,11 @@ async function enrichHolidaySummaries(items) {
 
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 3500);
+      const timeoutId = setTimeout(() => controller.abort(), 2000);
       const pageRes = await fetch(item.link, {
         signal: controller.signal,
         headers: {
-          'User-Agent': 'WeatherFriendsConsole/1.2 (DailyHolidayFeed)'
+          'User-Agent': 'WeatherFriendsConsole/1.3 (DailyHolidayFeed)'
         }
       });
       clearTimeout(timeoutId);
@@ -366,10 +387,32 @@ async function enrichHolidaySummaries(items) {
 }
 
 app.get('/api/checkiday', async (req, res) => {
-  res.setHeader('Cache-Control', 'no-cache');
+  // Always prevent smart TV and browser disk caching on API data
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+
   const now = new Date();
-  const dateKey = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York' }).format(now);
+  const tz = req.query.tz || 'America/New_York';
+  let dateKey;
+  try {
+    dateKey = new Intl.DateTimeFormat('en-CA', { timeZone: tz }).format(now);
+  } catch (e) {
+    dateKey = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York' }).format(now);
+  }
+
+  // Client can explicitly supply its current calendar date
+  if (req.query.date && /^\d{4}-\d{2}-\d{2}$/.test(req.query.date)) {
+    dateKey = req.query.date;
+  }
+
   const force = req.query.refresh === '1';
+
+  // Automatically reset cache if calendar date changed from previous day
+  if (checkidayCache.dateKey && checkidayCache.dateKey !== dateKey) {
+    console.log(`[Checkiday Server] Date rolled over from ${checkidayCache.dateKey} to ${dateKey}. Purging stale cache.`);
+    checkidayCache = { dateKey, fetchedAt: 0, holidays: [] };
+  }
 
   // Return cached result if same calendar day and fetched within 60 minutes
   if (!force && checkidayCache.dateKey === dateKey && checkidayCache.holidays.length > 0 && (Date.now() - checkidayCache.fetchedAt < 60 * 60 * 1000)) {
@@ -378,17 +421,18 @@ app.get('/api/checkiday', async (req, res) => {
       date: checkidayCache.dateKey,
       cached: true,
       count: checkidayCache.holidays.length,
-      holidays: checkidayCache.holidays
+      holidays: checkidayCache.holidays,
+      serverTime: Date.now()
     });
   }
 
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 6000);
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
     const feedRes = await fetch('https://api.checkiday.com/rss', {
       signal: controller.signal,
       headers: {
-        'User-Agent': 'WeatherFriendsConsole/1.2 (DailyHolidayFeed)'
+        'User-Agent': 'WeatherFriendsConsole/1.3 (DailyHolidayFeed)'
       }
     });
     clearTimeout(timeoutId);
@@ -436,19 +480,35 @@ app.get('/api/checkiday', async (req, res) => {
       }
 
       if (items.length > 0) {
-        // Fetch origin summaries from permalinks in parallel
-        await enrichHolidaySummaries(items);
+        // Fast enrichment with 2500ms race so RSS items are NEVER discarded
+        try {
+          await Promise.race([
+            enrichHolidaySummaries(items),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('Enrichment timeout')), 2500))
+          ]);
+        } catch (enrichErr) {
+          console.warn('[Checkiday] Enrichment partial or timed out, using parsed items:', enrichErr.message);
+        }
+
+        // Fill in any missing origin or summary
+        items.forEach(it => {
+          if (!it.origin) it.origin = it.primarySummary || it.description || `Celebrating ${it.title} today!`;
+          if (!it.primarySummary) it.primarySummary = it.origin;
+          if (!it.summary) it.summary = it.primarySummary;
+        });
 
         checkidayCache = {
           dateKey,
           fetchedAt: Date.now(),
           holidays: items
         };
+
         return res.json({
           success: true,
           date: dateKey,
           count: items.length,
-          holidays: items
+          holidays: items,
+          serverTime: Date.now()
         });
       }
     }
@@ -456,13 +516,18 @@ app.get('/api/checkiday', async (req, res) => {
     console.error('Checkiday feed error:', err.message);
   }
 
-  const fallbackList = (checkidayCache.holidays.length > 0) ? checkidayCache.holidays : CHECKIDAY_BACKUP_HOLIDAYS;
+  // If server cache exists for today, prefer that over static backup
+  const fallbackList = (checkidayCache.dateKey === dateKey && checkidayCache.holidays.length > 0)
+    ? checkidayCache.holidays
+    : CHECKIDAY_BACKUP_HOLIDAYS;
+
   res.json({
     success: true,
     date: dateKey,
     count: fallbackList.length,
     holidays: fallbackList,
-    fallback: true
+    fallback: true,
+    serverTime: Date.now()
   });
 });
 

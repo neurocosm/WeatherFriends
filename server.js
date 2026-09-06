@@ -240,6 +240,232 @@ app.get('/api/inspiration', async (req, res) => {
   res.json({ text: item.text, author: item.author, category: type });
 });
 
+// Checkiday Daily Holidays API Proxy & Caching
+let checkidayCache = {
+  dateKey: null,
+  fetchedAt: 0,
+  holidays: []
+};
+
+const CURATED_ORIGINS = {
+  'franchise appreciation day': 'Observed on the Saturday before Labor Day since 2011 to celebrate local franchise owners and community businesses.',
+  'international bacon day': 'Created in 2004 by CU Boulder graduate students and celebrated the Saturday before Labor Day with friends and feasts.',
+  'international day of charity': 'Established by the United Nations General Assembly to mobilize volunteering, community aid, and humanitarian support worldwide.',
+  'international vulture awareness day': 'Founded by conservation trusts in South Africa and England to highlight vital raptor preservation and biodiversity.',
+  'national be late for something day': 'Created by the Procrastinator\'s Club of America in 1956 as a playful excuse to slow down, relax, and take in the moment.',
+  'national cheese pizza day': 'Honoring the classic flatbread pie first enjoyed in 18th-century Naples and brought to America by early 20th-century immigrants.',
+  'national hummingbird day': 'Celebrating the incredible agility and beauty of more than 320 species of nature\'s smallest and most vibrant pollinators.',
+  'national shrink day': 'Honors psychologists and psychiatrists on September 5, celebrating Bob Newhart\'s birthday and his famous TV therapist role.',
+  'national tailgating day': 'Celebrating pregame food, grilling, and fan camaraderie outside stadiums on the first Saturday of September.',
+  'world beard day': 'Observed on the first Saturday in September as a global celebration of facial hair, grooming traditions, and camaraderie.',
+  'world samosa day': 'Dedicated to the crispy, savory spiced pastry originating in Central Asia and celebrated across global street food cultures.'
+};
+
+const CHECKIDAY_BACKUP_HOLIDAYS = [
+  { title: "International Bacon Day", description: "Celebrating the sizzling culinary favorite worldwide.", origin: CURATED_ORIGINS['international bacon day'], summary: "In January of 2004, graduate students came up with the idea for International Bacon Day, celebrating it on the Saturday before Labor Day with friends and feasts.", link: "https://www.checkiday.com" },
+  { title: "National Cheese Pizza Day", description: "Honoring the iconic cheesy slice beloved by all generations.", origin: CURATED_ORIGINS['national cheese pizza day'], summary: "National Cheese Pizza Day celebrates the classic flatbread pie first enjoyed in Naples and brought to America by early 20th century immigrants.", link: "https://www.checkiday.com" },
+  { title: "International Day of Charity", description: "Recognizing humanitarian aid and compassion across communities.", origin: CURATED_ORIGINS['international day of charity'], summary: "Established by the United Nations General Assembly to mobilize people, charities, and communities to help alleviate human suffering worldwide.", link: "https://www.checkiday.com" },
+  { title: "National Hummingbird Day", description: "Appreciating the agile, vibrant pollinators of our ecosystems.", origin: CURATED_ORIGINS['national hummingbird day'], summary: "Celebrates the incredible agility and vitality of hummingbirds, highlighting over 300 species of nature's smallest pollinators.", link: "https://www.checkiday.com" },
+  { title: "World Beard Day", description: "Celebrating facial hair enthusiasts and grooming traditions.", origin: CURATED_ORIGINS['world beard day'], summary: "Observed the first Saturday in September as a global celebration of facial hair, grooming traditions, and camaraderie.", link: "https://www.checkiday.com" },
+  { title: "National Be Late For Something Day", description: "A playful reminder to slow down, breathe, and avoid rushing.", origin: CURATED_ORIGINS['national be late for something day'], summary: "Created by the Procrastinator's Club of America in 1956 to give people a fun excuse to slow down, relax, and take in their surroundings.", link: "https://www.checkiday.com" }
+];
+
+async function enrichHolidaySummaries(items) {
+  if (!items || items.length === 0) return items;
+
+  await Promise.allSettled(items.map(async (item) => {
+    const key = (item.title || '').toLowerCase().trim();
+    if (CURATED_ORIGINS[key]) {
+      item.origin = CURATED_ORIGINS[key];
+    }
+
+    if (!item.link || !item.link.startsWith('http') || item.link === 'https://www.checkiday.com') {
+      item.summary = item.description;
+      if (!item.origin) item.origin = item.description;
+      return;
+    }
+
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3500);
+      const pageRes = await fetch(item.link, {
+        signal: controller.signal,
+        headers: {
+          'User-Agent': 'WeatherFriendsConsole/1.2 (DailyHolidayFeed)'
+        }
+      });
+      clearTimeout(timeoutId);
+
+      if (pageRes.ok) {
+        const html = await pageRes.text();
+        let desc = '';
+
+        // 1. Prioritize JSON-LD structured data (often has full clean text)
+        const jsonLdMatch = html.match(/<script type=["\x27]application\/ld\+json["\x27]>([\s\S]*?)<\/script>/i);
+        if (jsonLdMatch) {
+          try {
+            const data = JSON.parse(jsonLdMatch[1]);
+            if (data && data.description) {
+              desc = String(data.description);
+            }
+          } catch (e) {}
+        }
+
+        // 2. Fallback to OpenGraph description
+        if (!desc) {
+          const ogMatch = html.match(/<meta[^>]*property=["\x27]og:description["\x27][^>]*content=["\x27]([^"\x27]+)["\x27]/i);
+          if (ogMatch) {
+            desc = ogMatch[1];
+          }
+        }
+
+        if (desc) {
+          const clean = desc
+            .replace(/&#039;/g, "'")
+            .replace(/&apos;/g, "'")
+            .replace(/&quot;/g, '"')
+            .replace(/&amp;/g, '&')
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>')
+            .replace(/^[“"']+|[”"']+$/g, '')
+            .replace(/\s+/g, ' ')
+            .trim();
+
+          // Extract first 1-2 complete sentences
+          const rawSentences = clean.match(/[^.!?]+[.!?]+(\s|$)/g) || [];
+          const validSentences = rawSentences
+            .map(s => s.trim())
+            .filter(s => s.length > 20 && !s.endsWith('…') && !s.endsWith('...'));
+
+          if (validSentences.length > 0) {
+            item.primarySummary = validSentences[0];
+            item.summary = validSentences.slice(0, 2).join(' ').trim();
+          } else {
+            const noEllipsis = clean.replace(/[…\.]{2,}.*$/, '').trim();
+            item.primarySummary = noEllipsis || clean;
+            item.summary = noEllipsis || clean;
+          }
+        }
+      }
+    } catch (err) {
+      // Graceful fallback to default description
+    }
+
+    if (!item.origin) {
+      item.origin = item.primarySummary || item.description || `Today we celebrate ${item.title}!`;
+    }
+    if (!item.primarySummary) {
+      item.primarySummary = item.origin;
+    }
+    if (!item.summary) {
+      item.summary = item.primarySummary;
+    }
+  }));
+
+  return items;
+}
+
+app.get('/api/checkiday', async (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache');
+  const now = new Date();
+  const dateKey = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York' }).format(now);
+  const force = req.query.refresh === '1';
+
+  // Return cached result if same calendar day and fetched within 60 minutes
+  if (!force && checkidayCache.dateKey === dateKey && checkidayCache.holidays.length > 0 && (Date.now() - checkidayCache.fetchedAt < 60 * 60 * 1000)) {
+    return res.json({
+      success: true,
+      date: checkidayCache.dateKey,
+      cached: true,
+      count: checkidayCache.holidays.length,
+      holidays: checkidayCache.holidays
+    });
+  }
+
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 6000);
+    const feedRes = await fetch('https://api.checkiday.com/rss', {
+      signal: controller.signal,
+      headers: {
+        'User-Agent': 'WeatherFriendsConsole/1.2 (DailyHolidayFeed)'
+      }
+    });
+    clearTimeout(timeoutId);
+
+    if (feedRes.ok) {
+      const xmlText = await feedRes.text();
+      const items = [];
+      const itemRegex = /<item>([\s\S]*?)<\/item>/gi;
+      let match;
+
+      const cleanStr = (s) => (s || '')
+        .replace(/<!\[CDATA\[/g, '')
+        .replace(/\]\]>/g, '')
+        .replace(/<[^>]*>/g, '')
+        .replace(/&amp;/g, '&')
+        .replace(/&quot;/g, '"')
+        .replace(/&apos;/g, "'")
+        .replace(/&#39;/g, "'")
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .trim();
+
+      while ((match = itemRegex.exec(xmlText)) !== null) {
+        const itemXml = match[1];
+        const titleMatch = itemXml.match(/<title>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/title>/i);
+        const linkMatch = itemXml.match(/<link>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/link>/i);
+        const descMatch = itemXml.match(/<description>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/description>/i);
+        const pubDateMatch = itemXml.match(/<pubDate>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/pubDate>/i);
+
+        const title = cleanStr(titleMatch ? titleMatch[1] : '');
+        const link = cleanStr(linkMatch ? linkMatch[1] : '');
+        let description = cleanStr(descMatch ? descMatch[1] : '');
+        if (!description || description.toLowerCase() === `today is ${title.toLowerCase()}!`) {
+          description = `Celebrating ${title} today!`;
+        }
+
+        if (title) {
+          items.push({
+            title,
+            description,
+            link: link || 'https://www.checkiday.com',
+            pubDate: cleanStr(pubDateMatch ? pubDateMatch[1] : '')
+          });
+        }
+      }
+
+      if (items.length > 0) {
+        // Fetch origin summaries from permalinks in parallel
+        await enrichHolidaySummaries(items);
+
+        checkidayCache = {
+          dateKey,
+          fetchedAt: Date.now(),
+          holidays: items
+        };
+        return res.json({
+          success: true,
+          date: dateKey,
+          count: items.length,
+          holidays: items
+        });
+      }
+    }
+  } catch (err) {
+    console.error('Checkiday feed error:', err.message);
+  }
+
+  const fallbackList = (checkidayCache.holidays.length > 0) ? checkidayCache.holidays : CHECKIDAY_BACKUP_HOLIDAYS;
+  res.json({
+    success: true,
+    date: dateKey,
+    count: fallbackList.length,
+    holidays: fallbackList,
+    fallback: true
+  });
+});
+
 // Fallback to index.html for any other route
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));

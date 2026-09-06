@@ -1076,6 +1076,146 @@
     text-overflow:ellipsis;
   }
 
+  /* Details Checkiday Holiday Panel */
+  .details-holiday-panel{
+    container-type:inline-size;
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    height:100%;
+    min-height:0;
+    overflow:hidden;
+    padding:clamp(8px, 1.4vh, 16px) clamp(12px, 1.6vw, 20px);
+    cursor:pointer;
+    user-select:none;
+    -webkit-tap-highlight-color:transparent;
+    transition:border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .details-holiday-panel:hover{
+    border-color:rgba(56, 189, 248, 0.45);
+    box-shadow:0 0 16px rgba(56, 189, 248, 0.12);
+  }
+  #detailsTitle{
+    font-family:'Outfit',sans-serif;
+    font-weight:800;
+    font-size:clamp(0.76rem, 1.4vh, 0.90rem);
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+  }
+  .holiday-nav-controls{
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .holiday-counter-badge{
+    font-family:'Space Mono',monospace;
+    font-size:clamp(0.66rem, 1.2vh, 0.78rem);
+    color:var(--text-muted);
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.12);
+    border-radius:4px;
+    padding:2px 7px;
+    letter-spacing:0.04em;
+    user-select:none;
+    white-space:nowrap;
+    line-height:1.2;
+  }
+  .holiday-refresh-btn{
+    background:rgba(56, 189, 248, 0.10);
+    border:1px solid rgba(56, 189, 248, 0.3);
+    color:var(--blue);
+    border-radius:5px;
+    width:clamp(22px, 2.8vh, 26px);
+    height:clamp(22px, 2.8vh, 26px);
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    font-size:0.92rem;
+    transition:all 0.18s ease;
+    line-height:1;
+    padding:0;
+  }
+  .holiday-refresh-btn:hover{
+    background:rgba(56, 189, 248, 0.28);
+    color:#ffffff;
+    border-color:var(--blue);
+    transform:scale(1.06);
+  }
+  .holiday-refresh-icon{
+    display:inline-block;
+    transition:transform 0.4s ease;
+  }
+  .holiday-refresh-btn.spinning .holiday-refresh-icon{
+    animation:spinRefresh 0.7s linear infinite;
+  }
+  @keyframes spinRefresh{
+    from{transform:rotate(0deg);}
+    to{transform:rotate(360deg);}
+  }
+  .holiday-content-area{
+    flex:1 1 0;
+    min-height:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:clamp(2px, 0.6vh, 6px) 0;
+    gap:clamp(6px, 1.2vh, 12px);
+    overflow:hidden;
+    position:relative;
+  }
+  .holiday-lead{
+    font-family:'Outfit',sans-serif;
+    font-size:clamp(0.80rem, min(3.2cqw, 1.6vh), 1.05rem);
+    font-weight:700;
+    letter-spacing:0.06em;
+    color:var(--teal);
+    text-shadow:0 0 12px rgba(73, 230, 196, 0.45);
+    line-height:1.2;
+    transition:opacity 0.2s ease;
+    flex-shrink:0;
+    text-transform:uppercase;
+  }
+  .holiday-title{
+    font-family:'Outfit',sans-serif;
+    font-weight:800;
+    font-size:clamp(1.15rem, min(5.0cqw, 2.6vh), 1.90rem);
+    line-height:1.16;
+    color:#ffffff;
+    letter-spacing:-0.005em;
+    text-shadow:0 2px 18px rgba(0,0,0,0.9), 0 0 22px rgba(56,189,248,0.52);
+    margin:0;
+    word-break:normal;
+    overflow-wrap:break-word;
+    flex-shrink:0;
+    transition:opacity 0.2s ease, transform 0.2s ease;
+  }
+  .holiday-title.fading{
+    opacity:0;
+    transform:translateY(4px);
+  }
+  .holiday-summary{
+    font-family:'Outfit',sans-serif;
+    font-size:clamp(0.82rem, min(3.2cqw, 1.6vh), 1.05rem);
+    line-height:1.42;
+    color:rgba(226, 232, 240, 0.94);
+    letter-spacing:0.01em;
+    margin:0;
+    word-break:normal;
+    overflow-wrap:break-word;
+    flex-shrink:0;
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:3;
+    overflow:hidden;
+    transition:opacity 0.2s ease, transform 0.2s ease;
+    text-shadow:0 1px 4px rgba(0,0,0,0.85);
+  }
+  .holiday-summary.fading{
+    opacity:0;
+    transform:translateY(4px);
+  }
+
   /* ---- Magic 8-Ball Panel & Orb ---- */
   .eightball-panel{
     display:flex;
@@ -1531,7 +1671,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.090526.0815</span>
+        <span id="appVersionText">v1.090526.2140</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -1736,42 +1876,34 @@
         <div class="splitter-grip"></div>
       </div>
 
-      <!-- DETAILS (blue, like Indoor Sensor) -->
-      <div class="panel" id="panelDetails">
+      <!-- CHECKIDAY DAILY HOLIDAYS (Right-Center Block) -->
+      <div class="panel details-holiday-panel" id="panelDetails" title="Tap or click to rotate to the next holiday">
         <div class="panel-head">
           <div class="ttl">
-            <span class="label glow-blue">Details</span>
+            <span class="label glow-blue" id="detailsTitle">Checkiday</span>
+          </div>
+          <div class="holiday-nav-controls">
+            <span class="holiday-counter-badge" id="holidayCounterBadge" title="Current holiday in daily rotation">-- / --</span>
+            <button type="button" class="holiday-refresh-btn" id="holidayRefreshBtn" title="Refresh Checkiday Feed" aria-label="Refresh Checkiday Feed">
+              <span class="holiday-refresh-icon">↻</span>
+            </button>
           </div>
         </div>
 
-        <div>
-          <span class="label glow-blue">UV Index</span>
-          <div class="big-reading" style="margin-top:2px;">
-            <span class="num glow-blue" id="uvNow" style="font-size:2.6rem;">--</span>
-          </div>
-          <div class="uv-row">
-            <div class="uv-track"><div class="uv-fill" id="uvFill" style="width:0%;background:var(--teal);"></div></div>
-            <div class="uv-scale"><span>Low</span><span>Mod</span><span>High</span><span>V.High</span><span>Extreme</span></div>
-          </div>
+        <div class="holiday-content-area" id="holidayContentArea">
+          <div class="holiday-lead glow-teal" id="holidayLead">Today we celebrate...</div>
+          <div class="holiday-title glow-blue" id="holidayTitle">Loading Today's Holidays...</div>
+          <div class="holiday-summary" id="holidaySummary"></div>
         </div>
 
-        <div class="sun-row">
-          <div><span class="lbl">Sunrise</span><span id="sunrise">--:--</span></div>
-          <div style="text-align:right;"><span class="lbl">Sunset</span><span id="sunset">--:--</span></div>
-        </div>
-
-        <div class="comfort-row" style="margin-top:auto;">
-          <svg class="comfort-face" viewBox="0 0 24 24" id="comfortFace"></svg>
-          <div>
-            <div class="label glow-blue">Comfort</div>
-            <div class="fine glow-ink" id="comfortText">—</div>
-          </div>
-        </div>
-
-        <div class="alert-box glow-amber" id="alertBox">
-          <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
-          <span id="alertText">No active alerts</span>
-        </div>
+        <!-- Hidden elements preserved for weather telemetry loop compatibility -->
+        <span id="sunrise" style="display:none;"></span>
+        <span id="sunset" style="display:none;"></span>
+        <span id="uvNow" style="display:none;"></span>
+        <div id="uvFill" style="display:none;"></div>
+        <svg id="comfortFace" style="display:none;"></svg>
+        <span id="comfortText" style="display:none;"></span>
+        <div id="alertBox" style="display:none;"><span id="alertText"></span></div>
       </div>
     </div>
 
@@ -2678,7 +2810,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.090526.0815';
+  const CLIENT_APP_VERSION = 'v1.090526.2140';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -3319,6 +3451,311 @@
       shakeEightBall();
     });
   }
+
+  /* ---------------------------------------------------------------
+     CHECKIDAY DAILY HOLIDAYS ROTATION ENGINE (CHECKIDAY BLOCK)
+     - Pulls daily feed from /api/checkiday (Checkiday.com official daily RSS)
+     - Rotates daily holidays 1 every 15 minutes in a continuous loop
+     - Automatically updates to the next set on the next day (midnight rollover)
+     - Displays "Today we celebrate..." with large, prominent holiday name
+     - Interactive controls (card tap, manual refresh ↻)
+     - Smooth fade transitions and 15-minute rotation progress bar
+  --------------------------------------------------------------- */
+  const CHECKIDAY_ROTATION_MS = 15 * 60 * 1000; // 15 minutes
+  let checkidayHolidays = [];
+  let currentHolidayIndex = 0;
+  let lastHolidayRotateTimestamp = 0;
+  let checkidayActiveDateKey = '';
+  let isFetchingCheckiday = false;
+
+  const holidayTitleEl = document.getElementById('holidayTitle');
+  const holidayLeadEl = document.getElementById('holidayLead');
+  const holidaySummaryEl = document.getElementById('holidaySummary');
+  const holidayContentArea = document.getElementById('holidayContentArea');
+  const holidayCounterBadge = document.getElementById('holidayCounterBadge');
+  const holidayRefreshBtn = document.getElementById('holidayRefreshBtn');
+  const panelDetailsEl = document.getElementById('panelDetails');
+
+  /**
+   * HOLIDAY SCREENER & DYNAMIC AUTO-FIT ENGINE
+   * - Accurately measures available dimensions and detects true overflow across multiple signals
+   * - Prioritizes crisp, high-impact readability without horizontal text slicing
+   * - Gracefully falls back to curated/concise origin story if full text exceeds card headroom
+   * - Eliminates mid-sentence truncations and maintains vertical elegance
+   */
+  function screenAndFitHolidayText() {
+    if (!holidayContentArea || !holidayTitleEl || !holidaySummaryEl || !holidayLeadEl) return;
+    
+    const cHeight = holidayContentArea.clientHeight;
+    const cWidth = holidayContentArea.clientWidth;
+    if (cHeight <= 30 || cWidth <= 30) return;
+
+    const holiday = (checkidayHolidays && checkidayHolidays[currentHolidayIndex]) || null;
+    if (!holiday) return;
+
+    const title = holiday.title || "National Holiday";
+    const originText = holiday.origin || holiday.primarySummary || holiday.description || "";
+    const fullSummary = holiday.summary || holiday.origin || holiday.description || "";
+
+    holidayTitleEl.textContent = title;
+
+    // Helper: checks if any element in the stack exceeds available card height
+    const checkOverflow = () => {
+      const leadH = holidayLeadEl.offsetHeight || 0;
+      const titleH = holidayTitleEl.offsetHeight || 0;
+      const summaryH = holidaySummaryEl.scrollHeight || 0;
+      const summaryClientH = holidaySummaryEl.clientHeight || 0;
+      const areaScrollH = holidayContentArea.scrollHeight || 0;
+
+      if (areaScrollH > cHeight + 1) return true;
+      if (summaryClientH > 0 && summaryH > summaryClientH + 1) return true;
+      if ((leadH + titleH + summaryH + 12) > cHeight) return true;
+      return false;
+    };
+
+    // Calculate balanced starting font sizes based on card height and title length
+    const isLongTitle = title.length > 22;
+    let leadPx = Math.min(14, Math.max(11, Math.round(cHeight * 0.075)));
+    let titlePx = isLongTitle
+      ? Math.min(23, Math.max(16, Math.round(cHeight * 0.13)))
+      : Math.min(27, Math.max(18, Math.round(cHeight * 0.15)));
+    let summaryPx = Math.min(16.5, Math.max(13, Math.round(cHeight * 0.098)));
+
+    // Set initial text: if full summary is short (under 160 chars), try it; otherwise use punchy origin
+    const tryFullFirst = fullSummary.length <= 160 && fullSummary !== originText;
+    holidaySummaryEl.textContent = tryFullFirst ? fullSummary : originText;
+
+    holidayLeadEl.style.fontSize = leadPx + 'px';
+    holidayTitleEl.style.fontSize = titlePx + 'px';
+    holidaySummaryEl.style.fontSize = summaryPx + 'px';
+
+    // Screener Pass 1: iteratively reduce font sizes if overflowing
+    let pass1 = 0;
+    while (pass1 < 16 && checkOverflow()) {
+      if (titlePx > 16) titlePx -= 0.8;
+      if (summaryPx > 12.5) summaryPx -= 0.4;
+      holidayTitleEl.style.fontSize = titlePx + 'px';
+      holidaySummaryEl.style.fontSize = summaryPx + 'px';
+      pass1++;
+    }
+
+    // Screener Pass 2: if still overflowing, switch to concise originText
+    if (checkOverflow() && holidaySummaryEl.textContent !== originText) {
+      holidaySummaryEl.textContent = originText;
+      
+      titlePx = isLongTitle
+        ? Math.min(22, Math.max(15.5, Math.round(cHeight * 0.125)))
+        : Math.min(25, Math.max(17, Math.round(cHeight * 0.14)));
+      summaryPx = Math.min(15.5, Math.max(12.5, Math.round(cHeight * 0.092)));
+      holidayTitleEl.style.fontSize = titlePx + 'px';
+      holidaySummaryEl.style.fontSize = summaryPx + 'px';
+
+      let pass2 = 0;
+      while (pass2 < 16 && checkOverflow()) {
+        if (titlePx > 15) titlePx -= 0.8;
+        if (summaryPx > 12) summaryPx -= 0.4;
+        holidayTitleEl.style.fontSize = titlePx + 'px';
+        holidaySummaryEl.style.fontSize = summaryPx + 'px';
+        pass2++;
+      }
+    }
+
+    // Step 3: Check remaining headroom for vertical alignment
+    const leadFinalH = holidayLeadEl.offsetHeight || 0;
+    const titleFinalH = holidayTitleEl.offsetHeight || 0;
+    const summaryFinalH = holidaySummaryEl.offsetHeight || 0;
+    const totalContentH = leadFinalH + titleFinalH + summaryFinalH + 12;
+
+    if (cHeight - totalContentH >= 6) {
+      holidayContentArea.style.justifyContent = 'center';
+    } else {
+      holidayContentArea.style.justifyContent = 'flex-start';
+    }
+  }
+
+  // Setup ResizeObserver for immediate re-screening on panel resize or window adjustments
+  if (window.ResizeObserver && holidayContentArea) {
+    let resizeTimer = null;
+    const holidayObserver = new ResizeObserver(() => {
+      if (resizeTimer) clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(screenAndFitHolidayText, 40);
+    });
+    holidayObserver.observe(holidayContentArea);
+  }
+
+  function renderCurrentHoliday(animate = true){
+    if(!checkidayHolidays || checkidayHolidays.length === 0){
+      if(holidayTitleEl) holidayTitleEl.textContent = "Loading Today's Holidays...";
+      if(holidaySummaryEl) holidaySummaryEl.textContent = "";
+      if(holidayCounterBadge) holidayCounterBadge.textContent = "-- / --";
+      return;
+    }
+
+    if(currentHolidayIndex < 0 || currentHolidayIndex >= checkidayHolidays.length){
+      currentHolidayIndex = 0;
+    }
+
+    const holiday = checkidayHolidays[currentHolidayIndex];
+
+    // Update counter badge: e.g. "2 / 11"
+    if(holidayCounterBadge){
+      holidayCounterBadge.textContent = `${currentHolidayIndex + 1} / ${checkidayHolidays.length}`;
+      holidayCounterBadge.title = `Holiday ${currentHolidayIndex + 1} of ${checkidayHolidays.length} today`;
+    }
+
+    const applyContent = () => {
+      if(holidayTitleEl) holidayTitleEl.textContent = holiday.title || "National Holiday";
+      screenAndFitHolidayText();
+      if(holidayTitleEl) holidayTitleEl.classList.remove('fading');
+      if(holidayLeadEl) holidayLeadEl.classList.remove('fading');
+      if(holidaySummaryEl) holidaySummaryEl.classList.remove('fading');
+    };
+
+    if(animate && holidayTitleEl){
+      holidayTitleEl.classList.add('fading');
+      if(holidayLeadEl) holidayLeadEl.classList.add('fading');
+      if(holidaySummaryEl) holidaySummaryEl.classList.add('fading');
+      setTimeout(applyContent, 160);
+    } else {
+      applyContent();
+    }
+
+    // Persist current state in localStorage
+    try{
+      localStorage.setItem('wf_checkiday_index', String(currentHolidayIndex));
+      localStorage.setItem('wf_checkiday_last_rotate', String(lastHolidayRotateTimestamp));
+      localStorage.setItem('wf_checkiday_date', checkidayActiveDateKey);
+    }catch(e){}
+  }
+
+  function rotateHoliday(direction = 1, isManual = false){
+    if(!checkidayHolidays || checkidayHolidays.length <= 1) return;
+    currentHolidayIndex = (currentHolidayIndex + direction + checkidayHolidays.length) % checkidayHolidays.length;
+    lastHolidayRotateTimestamp = Date.now();
+    renderCurrentHoliday(true);
+  }
+
+  async function loadCheckidayFeed(forceRefresh = false){
+    if(isFetchingCheckiday) return;
+    isFetchingCheckiday = true;
+
+    const todayKey = getLocalDateKey();
+    checkidayActiveDateKey = todayKey;
+
+    if(holidayRefreshBtn) holidayRefreshBtn.classList.add('spinning');
+
+    // 1. Try reading from cached today data if not forcing refresh (must contain enhanced summaries)
+    try{
+      const savedDate = localStorage.getItem('wf_checkiday_date');
+      const savedListRaw = localStorage.getItem('wf_checkiday_list');
+      if(!forceRefresh && savedDate === todayKey && savedListRaw){
+        const parsed = JSON.parse(savedListRaw);
+        if(Array.isArray(parsed) && parsed.length > 0 && parsed[0].origin){
+          checkidayHolidays = parsed;
+
+          const savedIdx = parseInt(localStorage.getItem('wf_checkiday_index') || '0', 10);
+          const savedLastRotate = parseInt(localStorage.getItem('wf_checkiday_last_rotate') || '0', 10);
+
+          if(!isNaN(savedLastRotate) && savedLastRotate > 0){
+            const elapsed = Date.now() - savedLastRotate;
+            if(elapsed >= CHECKIDAY_ROTATION_MS){
+              const intervalsElapsed = Math.floor(elapsed / CHECKIDAY_ROTATION_MS);
+              currentHolidayIndex = (savedIdx + intervalsElapsed) % checkidayHolidays.length;
+              lastHolidayRotateTimestamp = Date.now() - (elapsed % CHECKIDAY_ROTATION_MS);
+            } else {
+              currentHolidayIndex = (savedIdx >= 0 && savedIdx < checkidayHolidays.length) ? savedIdx : 0;
+              lastHolidayRotateTimestamp = savedLastRotate;
+            }
+          } else {
+            currentHolidayIndex = (savedIdx >= 0 && savedIdx < checkidayHolidays.length) ? savedIdx : 0;
+            lastHolidayRotateTimestamp = Date.now();
+          }
+
+          renderCurrentHoliday(false);
+          isFetchingCheckiday = false;
+          if(holidayRefreshBtn) holidayRefreshBtn.classList.remove('spinning');
+          return;
+        }
+      }
+    }catch(e){}
+
+    // 2. Fetch fresh feed from server proxy
+    try{
+      const res = await fetch(`/api/checkiday${forceRefresh ? '?refresh=1' : ''}`);
+      if(res.ok){
+        const data = await res.json();
+        if(data && Array.isArray(data.holidays) && data.holidays.length > 0){
+          checkidayHolidays = data.holidays;
+
+          // If day rolled over or fresh fetch, start from first holiday unless same day
+          const savedDate = localStorage.getItem('wf_checkiday_date');
+          const isNewDay = savedDate !== todayKey;
+          
+          if(isNewDay){
+            currentHolidayIndex = 0;
+            lastHolidayRotateTimestamp = Date.now();
+          } else {
+            const savedIdx = parseInt(localStorage.getItem('wf_checkiday_index') || '0', 10);
+            currentHolidayIndex = (savedIdx >= 0 && savedIdx < checkidayHolidays.length) ? savedIdx : 0;
+            lastHolidayRotateTimestamp = parseInt(localStorage.getItem('wf_checkiday_last_rotate') || String(Date.now()), 10);
+          }
+
+          try{
+            localStorage.setItem('wf_checkiday_date', todayKey);
+            localStorage.setItem('wf_checkiday_list', JSON.stringify(checkidayHolidays));
+            localStorage.setItem('wf_checkiday_index', String(currentHolidayIndex));
+            localStorage.setItem('wf_checkiday_last_rotate', String(lastHolidayRotateTimestamp));
+          }catch(e){}
+
+          renderCurrentHoliday(true);
+        }
+      }
+    }catch(err){
+      console.warn('Failed to fetch Checkiday feed:', err);
+    }finally{
+      isFetchingCheckiday = false;
+      if(holidayRefreshBtn){
+        setTimeout(() => holidayRefreshBtn.classList.remove('spinning'), 350);
+      }
+    }
+  }
+
+  // Interactive controls (panel tap to rotate and refresh button)
+  if(panelDetailsEl){
+    panelDetailsEl.addEventListener('click', (e) => {
+      if(e.target.closest('#holidayRefreshBtn')) return;
+      rotateHoliday(1, true);
+    });
+  }
+
+  if(holidayRefreshBtn){
+    holidayRefreshBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      loadCheckidayFeed(true);
+    });
+  }
+
+  // Background timer: checks 15m rotation progress & rollover to next day at midnight
+  setInterval(() => {
+    // A. Check if the calendar date changed to the next day
+    const currentDay = getLocalDateKey();
+    if(checkidayActiveDateKey && currentDay !== checkidayActiveDateKey){
+      console.log('[Checkiday] Date changed to next day (' + currentDay + '). Fetching next holiday set...');
+      loadCheckidayFeed(true);
+      return;
+    }
+
+    // B. Check 15-minute rotation cycle
+    if(checkidayHolidays && checkidayHolidays.length > 1 && lastHolidayRotateTimestamp > 0){
+      const elapsed = Date.now() - lastHolidayRotateTimestamp;
+      if(elapsed >= CHECKIDAY_ROTATION_MS){
+        rotateHoliday(1, false);
+      }
+    }
+  }, 1000);
+
+  // Initial load
+  loadCheckidayFeed(false);
 
   /* ---------------------------------------------------------------
      INTERACTIVE ROW SEAM SPLITTERS (HORIZONTAL RESIZING)

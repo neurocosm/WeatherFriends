@@ -1821,7 +1821,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.090726.1057</span>
+        <span id="appVersionText">v1.090726.1103</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -1922,7 +1922,19 @@
               </div>
             </div>
 
-            <!-- Item 2: Barometric Pressure -->
+            <!-- Item 2: UV Index -->
+            <div class="wx-telemetry-row wx-telemetry-capsule" title="UV Index">
+              <svg class="wx-row-icon capsule-icon glow-teal" id="topUvIcon" viewBox="0 0 24 24" fill="none" stroke="#49e6c4" stroke-width="1.7">
+                <circle cx="12" cy="12" r="4" fill="rgba(73, 230, 196, 0.12)"/>
+                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+              </svg>
+              <div class="wx-row-reading capsule-reading">
+                <span class="wx-row-val capsule-val glow-teal" id="topUvNow">--</span>
+                <span class="wx-row-unit capsule-unit glow-teal" id="topUvLabel">UV</span>
+              </div>
+            </div>
+
+            <!-- Item 3: Barometric Pressure -->
             <div class="wx-telemetry-row wx-telemetry-capsule" title="Barometric Pressure">
               <svg class="wx-row-icon capsule-icon glow-purple" id="topPressureIcon" viewBox="0 0 24 24" fill="none" stroke="#cf7dff">
                 <circle cx="12" cy="12" r="9.5" stroke="currentColor" stroke-width="1.5"/>
@@ -1933,18 +1945,6 @@
               <div class="wx-row-reading capsule-reading">
                 <span class="wx-row-val capsule-val glow-purple" id="topPressureNow">--</span>
                 <span class="wx-row-unit capsule-unit glow-purple">in</span>
-              </div>
-            </div>
-
-            <!-- Item 3: UV Index -->
-            <div class="wx-telemetry-row wx-telemetry-capsule" title="UV Index">
-              <svg class="wx-row-icon capsule-icon glow-teal" id="topUvIcon" viewBox="0 0 24 24" fill="none" stroke="#49e6c4" stroke-width="1.7">
-                <circle cx="12" cy="12" r="4" fill="rgba(73, 230, 196, 0.12)"/>
-                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
-              </svg>
-              <div class="wx-row-reading capsule-reading">
-                <span class="wx-row-val capsule-val glow-teal" id="topUvNow">--</span>
-                <span class="wx-row-unit capsule-unit glow-teal" id="topUvLabel">UV</span>
               </div>
             </div>
           </div>
@@ -3382,7 +3382,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.090726.1057';
+  const CLIENT_APP_VERSION = 'v1.090726.1103';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');

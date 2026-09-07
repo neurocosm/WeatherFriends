@@ -990,42 +990,54 @@
     min-height:0;
     overflow:hidden;
     padding:clamp(6px, 1.2vh, 12px) clamp(8px, 1.2vw, 14px);
-    gap:clamp(2px, 0.4vh, 5px);
+    gap:clamp(3px, 0.6vh, 6px);
+  }
+  .inspire-head{
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    gap:clamp(6px, 1.2cqw, 12px);
+    width:100%;
+    flex:0 0 auto;
+    margin-bottom:0;
   }
   #inspireTitle{
     font-family:'Outfit',sans-serif;
     font-weight:800;
     font-size:clamp(0.65rem, 1.3vh, 0.78rem);
     letter-spacing:0.12em;
+    text-transform:uppercase;
+    white-space:nowrap;
+    line-height:1;
   }
   .inspire-tabs{
-    display:grid;
-    grid-template-columns:repeat(3, 1fr);
+    display:inline-flex;
+    align-items:center;
     gap:clamp(3px, 0.8cqw, 6px);
-    width:100%;
-    margin-top:1px;
-    margin-bottom:clamp(2px, 0.4vh, 4px);
-    flex:0 0 auto;
+    flex:1;
+    margin:0;
+    min-width:0;
   }
   .inspire-tab-btn{
     background:rgba(4, 14, 20, 0.55);
     border:1px solid rgba(179, 136, 255, 0.25);
     color:var(--ink-dim);
     font-family:'Outfit',sans-serif;
-    font-size:clamp(0.58rem, min(2.8cqw, 1.2vh), 0.72rem);
+    font-size:clamp(0.56rem, min(2.6cqw, 1.15vh), 0.70rem);
     font-weight:700;
     letter-spacing:0.04em;
     text-transform:uppercase;
-    padding:clamp(2px, 0.35vh, 4px) clamp(2px, 0.6cqw, 6px);
+    padding:clamp(2px, 0.35vh, 4px) clamp(3px, 0.8cqw, 8px);
     border-radius:6px;
     cursor:pointer;
     transition:all 0.18s ease;
     white-space:nowrap;
     text-align:center;
-    display:flex;
+    display:inline-flex;
     align-items:center;
     justify-content:center;
     line-height:1;
+    flex:1;
   }
   .inspire-tab-btn:hover{
     color:#ffffff;
@@ -1038,38 +1050,6 @@
     color:#ffffff;
     box-shadow:0 0 8px rgba(179, 136, 255, 0.4);
   }
-  .inspire-refresh-btn{
-    background:rgba(179, 136, 255, 0.10);
-    border:1px solid rgba(179, 136, 255, 0.35);
-    color:var(--purple);
-    border-radius:6px;
-    padding:1px 6px;
-    display:inline-flex;
-    align-items:center;
-    gap:3px;
-    cursor:pointer;
-    font-family:'Outfit',sans-serif;
-    font-weight:700;
-    font-size:clamp(0.58rem, 1.1vh, 0.68rem);
-    letter-spacing:0.04em;
-    line-height:1;
-    transition:all 0.2s ease;
-    flex-shrink:0;
-  }
-  .inspire-refresh-btn:hover{
-    transform:scale(1.04);
-    border-color:var(--purple);
-    background:rgba(179, 136, 255, 0.25);
-    color:#ffffff;
-  }
-  .inspire-refresh-icon{
-    font-size:1.05em;
-    display:inline-block;
-    transition:transform 0.4s ease;
-  }
-  .inspire-refresh-btn:hover .inspire-refresh-icon{
-    transform:rotate(180deg);
-  }
   .inspire-body-wrap{
     flex:1 1 0;
     display:flex;
@@ -1079,6 +1059,13 @@
     position:relative;
     min-height:0;
     overflow:hidden;
+    cursor:pointer;
+  }
+  .inspire-body-wrap:hover .inspire-text{
+    filter:brightness(1.06);
+  }
+  .inspire-body-wrap:active .inspire-text{
+    transform:scale(0.995);
   }
   .inspire-text-container{
     flex:1 1 0;
@@ -1816,7 +1803,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.090626.2126</span>
+        <span id="appVersionText">v1.090626.2130</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -1996,24 +1983,19 @@
       </div>
 
       <!-- INSPIRATION / WISDOM / SCRIPTURE (Center Block) -->
-      <div class="panel inspiration-panel" id="inspirationPanel">
-        <div class="panel-head">
+      <div class="panel inspiration-panel" id="inspirationPanel" title="Tap or click text to get a new quote">
+        <div class="panel-head inspire-head">
           <div class="ttl">
             <span class="label glow-purple" id="inspireTitle">Inspiration</span>
           </div>
-          <button type="button" class="inspire-refresh-btn" id="inspireRefreshBtn" title="Get new quote" aria-label="Refresh Quote">
-            <span class="inspire-refresh-icon">↻</span>
-            <span class="inspire-refresh-lbl">NEW</span>
-          </button>
+          <div class="inspire-tabs" id="inspireTabs">
+            <button type="button" class="inspire-tab-btn active" data-type="positive" id="tabPositive" title="Relatable Positive Quotes">Positive</button>
+            <button type="button" class="inspire-tab-btn" data-type="philosophy" id="tabPhilosophy" title="Philosophical & Stoic Wisdom">Wisdom</button>
+            <button type="button" class="inspire-tab-btn" data-type="scripture" id="tabScripture" title="Spiritual & Biblical Inspiration">Scripture</button>
+          </div>
         </div>
 
-        <div class="inspire-tabs" id="inspireTabs">
-          <button type="button" class="inspire-tab-btn active" data-type="positive" id="tabPositive" title="Relatable Positive Quotes">Positive</button>
-          <button type="button" class="inspire-tab-btn" data-type="philosophy" id="tabPhilosophy" title="Philosophical & Stoic Wisdom">Wisdom</button>
-          <button type="button" class="inspire-tab-btn" data-type="scripture" id="tabScripture" title="Spiritual & Biblical Inspiration">Scripture</button>
-        </div>
-
-        <div class="inspire-body-wrap" id="inspireCardBody">
+        <div class="inspire-body-wrap" id="inspireCardBody" title="Tap or click to get a new quote">
           <div class="inspire-text-container" id="inspireTextContainer">
             <div class="inspire-text" id="inspireText">
               <span class="inspire-quote-content">Wherever you go, no matter what the weather, always bring your own sunshine.</span>
@@ -3380,7 +3362,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.090626.2126';
+  const CLIENT_APP_VERSION = 'v1.090626.2130';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -3905,9 +3887,17 @@
     }
   });
 
-  if(inspireRefreshBtn){
-    inspireRefreshBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
+  // Tap or click quote text block to refresh to a new quote (same as Checkiday.com)
+  const inspireCardBody = document.getElementById('inspireCardBody');
+  if(inspireCardBody){
+    inspireCardBody.addEventListener('click', () => {
+      fetchInspiration(currentInspirationType, true);
+    });
+  }
+  const inspirationPanel = document.getElementById('inspirationPanel');
+  if(inspirationPanel){
+    inspirationPanel.addEventListener('click', (e) => {
+      if(e.target.closest('#inspireTabs')) return;
       fetchInspiration(currentInspirationType, true);
     });
   }

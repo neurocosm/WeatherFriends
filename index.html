@@ -747,8 +747,8 @@
 
   .wx-row-icon,
   .capsule-icon{
-    width:clamp(15px, min(4cqw, 2.4vh), 21px);
-    height:clamp(15px, min(4cqw, 2.4vh), 21px);
+    width:clamp(14px, min(3.8cqw, 2.28vh), 20px);
+    height:clamp(14px, min(3.8cqw, 2.28vh), 20px);
     flex:none;
     filter:drop-shadow(0 1px 3px currentColor);
     transition:width 0.08s ease, height 0.08s ease;
@@ -766,7 +766,7 @@
   .capsule-val{
     font-family:'Outfit',sans-serif;
     font-weight:500;
-    font-size:clamp(1.15rem, min(5cqw, 3vh), 1.75rem);
+    font-size:clamp(1.09rem, min(4.75cqw, 2.85vh), 1.66rem);
     line-height:1;
     letter-spacing:0.01em;
     font-variant-numeric:tabular-nums;
@@ -778,7 +778,7 @@
   .capsule-unit{
     font-family:'Outfit',sans-serif;
     font-weight:400;
-    font-size:clamp(0.76rem, min(3.4cqw, 2vh), 1.15rem);
+    font-size:clamp(0.72rem, min(3.2cqw, 1.9vh), 1.09rem);
     line-height:1;
     margin-left:2px;
     opacity:0.85;
@@ -1563,11 +1563,11 @@
     display:flex;
     flex-direction:column;
     align-items:center;
-    justify-content:center;
+    justify-content:flex-start;
     aspect-ratio:1 / 1;
     max-height:clamp(140px, 24vh, 205px);
     gap:clamp(2px, 0.5vh, 5px);
-    padding:clamp(6px, 1.0vh, 10px) clamp(4px, 1cqw, 8px);
+    padding:clamp(7px, 1.3vh, 12px) clamp(4px, 1cqw, 8px) clamp(6px, 1.0vh, 10px);
     background:rgba(4, 11, 14, 0.70);
     border:1px solid var(--grid-line);
     border-radius:10px;
@@ -1587,12 +1587,13 @@
   .day-card .dname{
     font-family:'Outfit',sans-serif;
     font-weight:700;
-    font-size:clamp(0.85rem, min(14.5cqw, 2.2vh), 1.25rem);
-    letter-spacing:0.07em;
+    font-size:clamp(0.72rem, min(11.8cqw, 2.0vh), 1.15rem);
+    letter-spacing:0.04em;
     text-transform:uppercase;
     color:#62d9ff;
     line-height:1;
     white-space:nowrap;
+    margin-bottom:clamp(1px, 0.3vh, 3px);
   }
   .day-card.is-today .dname{
     color:#49e6c4;
@@ -1649,24 +1650,36 @@
     font-weight:400;
     font-size:0.92em;
   }
+  .day-meta-grid,
   .day-meta-row{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:clamp(2px, 0.4vh, 4px);
+    width:100%;
+    margin-top:clamp(2px, 0.4vh, 5px);
+  }
+  .day-meta-subrow{
     display:flex;
     align-items:center;
     justify-content:center;
-    gap:clamp(3px, 1cqw, 7px);
+    gap:clamp(8px, 2cqw, 14px);
     width:100%;
-    margin-top:clamp(1px, 0.4vh, 3px);
-    flex-wrap:nowrap;
+    white-space:nowrap;
+  }
+  .day-meta-subrow.day-meta-center{
+    justify-content:center;
   }
   .day-card .day-telem-item{
     font-family:'Outfit',sans-serif;
     font-weight:400;
-    font-size:clamp(0.66rem, min(10.5cqw, 1.55vh), 0.92rem);
+    font-size:clamp(0.73rem, min(11.5cqw, 1.70vh), 1.01rem);
     letter-spacing:0.01em;
     line-height:1;
     display:inline-flex;
     align-items:center;
-    gap:2px;
+    gap:3px;
     white-space:nowrap;
     padding:0;
     margin:0;
@@ -1674,8 +1687,8 @@
     border:none;
   }
   .day-card .day-telem-icon{
-    width:clamp(9px, min(8cqw, 1.35vh), 12px);
-    height:clamp(9px, min(8cqw, 1.35vh), 12px);
+    width:clamp(10px, min(8.8cqw, 1.5vh), 13px);
+    height:clamp(10px, min(8.8cqw, 1.5vh), 13px);
     flex:none;
     display:inline-block;
   }
@@ -1687,7 +1700,7 @@
     font-feature-settings:"tnum" 1;
   }
   .day-card .day-telem-unit{
-    font-size:0.75em;
+    font-size:0.78em;
     font-weight:400;
     opacity:0.85;
     margin-left:0.5px;
@@ -1808,7 +1821,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.090726.1039</span>
+        <span id="appVersionText">v1.090726.1057</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -2511,9 +2524,9 @@
     const capsuleUnitEls = topWeatherBlockEl.querySelectorAll('.capsule-unit');
     const capsuleIconEls = topWeatherBlockEl.querySelectorAll('.capsule-icon');
 
-    const capsuleValSize = Math.max(13, Math.min(24, Math.round(bodyAvailH * 0.20)));
-    const capsuleUnitSize = Math.max(10, Math.min(15, Math.round(capsuleValSize * 0.70)));
-    const capsuleIconSize = Math.max(14, Math.min(21, Math.round(capsuleValSize * 0.94)));
+    const capsuleValSize = Math.max(12, Math.min(23, Math.round(bodyAvailH * 0.19)));
+    const capsuleUnitSize = Math.max(9, Math.min(14, Math.round(capsuleValSize * 0.70)));
+    const capsuleIconSize = Math.max(13, Math.min(20, Math.round(capsuleValSize * 0.94)));
 
     capsuleValEls.forEach(el => { el.style.fontSize = capsuleValSize + 'px'; });
     capsuleUnitEls.forEach(el => { el.style.fontSize = capsuleUnitSize + 'px'; });
@@ -2523,7 +2536,7 @@
     });
 
     // Approximate width taken by the hard-right telemetry stack
-    const telemetryWidth = Math.max(80, Math.round(capsuleValSize * 4.1));
+    const telemetryWidth = Math.max(76, Math.round(capsuleValSize * 4.1));
     // The giant hero temperature in the lower-left gets all remaining horizontal width!
     const leftColTargetW = Math.max(80, targetW - telemetryWidth - 8);
 
@@ -2899,7 +2912,7 @@
     return `${h}:${pad(d.getMinutes())} ${ap}`;
   }
 
-  const dayShort = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+  const dayNames = ['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
 
   function renderOutlook(daily, cur){
     const el = document.getElementById('outlook');
@@ -2910,7 +2923,7 @@
       const d = new Date(daily.time[i] + 'T12:00:00');
       const card = document.createElement('div');
       card.className = 'day-card' + (i === 0 ? ' is-today' : '');
-      const dn = i===0 ? 'TODAY' : dayShort[d.getDay()];
+      const dn = i===0 ? 'TODAY' : dayNames[d.getDay()];
       const hi = Math.round(daily.temperature_2m_max[i]);
       const lo = Math.round(daily.temperature_2m_min[i]);
       const uv = Math.round(daily.uv_index_max ? (daily.uv_index_max[i] ?? 0) : 0);
@@ -2935,28 +2948,32 @@
           <span class="sep">/</span>
           <span class="lo" title="Low ${lo}°">${lo}°</span>
         </div>
-        <div class="day-meta-row">
-          <div class="day-telem-item d-hum" title="Humidity: ${hum}%">
-            <svg class="day-telem-icon glow-blue" viewBox="0 0 24 24" fill="rgba(56,189,248,0.12)" stroke="#38bdf8" stroke-width="2">
-              <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
-            </svg>
-            <span class="day-telem-val glow-blue" style="color:#38bdf8;">${hum}<span class="day-telem-unit">%</span></span>
+        <div class="day-meta-grid">
+          <div class="day-meta-subrow">
+            <div class="day-telem-item d-hum" title="Humidity: ${hum}%">
+              <svg class="day-telem-icon glow-blue" viewBox="0 0 24 24" fill="rgba(56,189,248,0.12)" stroke="#38bdf8" stroke-width="2">
+                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+              </svg>
+              <span class="day-telem-val glow-blue" style="color:#38bdf8;">${hum}<span class="day-telem-unit">%</span></span>
+            </div>
+            <div class="day-telem-item d-uv" title="Peak UV: ${uv} (${uvCategory(uv)})">
+              <svg class="day-telem-icon" viewBox="0 0 24 24" fill="none" stroke="${ucol}" stroke-width="2">
+                <circle cx="12" cy="12" r="4.2"/>
+                <path d="M12 2v2.2M12 19.8V22M2 12h2.2M19.8 12H22M4.93 4.93l1.56 1.56M17.51 17.51l1.56 1.56M4.93 19.07l1.56-1.56M17.51 6.49l1.56-1.56"/>
+              </svg>
+              <span class="day-telem-val" style="color:${ucol};">${uv}<span class="day-telem-unit">uv</span></span>
+            </div>
           </div>
-          <div class="day-telem-item d-press" title="Pressure: ${pressIn} inHg">
-            <svg class="day-telem-icon glow-purple" viewBox="0 0 24 24" fill="none" stroke="#cf7dff">
-              <circle cx="12" cy="12" r="9.5" stroke="currentColor" stroke-width="1.6"/>
-              <path d="M 6.5 13.5 A 6.5 6.5 0 1 1 17.5 13.5" stroke="currentColor" stroke-width="1.8" stroke-dasharray="3.2 1.6" stroke-linecap="butt" fill="none"/>
-              <circle cx="12" cy="12" r="1.8" fill="currentColor"/>
-              <path d="M12 12 L16.5 9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-            </svg>
-            <span class="day-telem-val glow-purple" style="color:#cf7dff;">${pressIn}<span class="day-telem-unit">in</span></span>
-          </div>
-          <div class="day-telem-item d-uv" title="Peak UV: ${uv} (${uvCategory(uv)})">
-            <svg class="day-telem-icon" viewBox="0 0 24 24" fill="none" stroke="${ucol}" stroke-width="2">
-              <circle cx="12" cy="12" r="4.2"/>
-              <path d="M12 2v2.2M12 19.8V22M2 12h2.2M19.8 12H22M4.93 4.93l1.56 1.56M17.51 17.51l1.56 1.56M4.93 19.07l1.56-1.56M17.51 6.49l1.56-1.56"/>
-            </svg>
-            <span class="day-telem-val" style="color:${ucol};">${uv}<span class="day-telem-unit">uv</span></span>
+          <div class="day-meta-subrow day-meta-center">
+            <div class="day-telem-item d-press" title="Pressure: ${pressIn} inHg">
+              <svg class="day-telem-icon glow-purple" viewBox="0 0 24 24" fill="none" stroke="#cf7dff">
+                <circle cx="12" cy="12" r="9.5" stroke="currentColor" stroke-width="1.6"/>
+                <path d="M 6.5 13.5 A 6.5 6.5 0 1 1 17.5 13.5" stroke="currentColor" stroke-width="1.8" stroke-dasharray="3.2 1.6" stroke-linecap="butt" fill="none"/>
+                <circle cx="12" cy="12" r="1.8" fill="currentColor"/>
+                <path d="M12 12 L16.5 9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+              </svg>
+              <span class="day-telem-val glow-purple" style="color:#cf7dff;">${pressIn}<span class="day-telem-unit">in</span></span>
+            </div>
           </div>
         </div>
       `;
@@ -3365,7 +3382,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.090726.1039';
+  const CLIENT_APP_VERSION = 'v1.090726.1057';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');

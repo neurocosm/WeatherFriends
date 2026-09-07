@@ -1259,18 +1259,6 @@
     overflow:hidden;
     position:relative;
   }
-  .holiday-lead{
-    font-family:'Outfit',sans-serif;
-    font-size:clamp(0.80rem, min(3.2cqw, 1.6vh), 1.05rem);
-    font-weight:700;
-    letter-spacing:0.06em;
-    color:var(--teal);
-    text-shadow:0 0 12px rgba(73, 230, 196, 0.45);
-    line-height:1.2;
-    transition:opacity 0.2s ease;
-    flex-shrink:0;
-    text-transform:uppercase;
-  }
   .holiday-title{
     font-family:'Outfit',sans-serif;
     font-weight:800;
@@ -1324,20 +1312,29 @@
     border-color:rgba(73, 230, 196, 0.45);
     box-shadow:0 0 16px rgba(73, 230, 196, 0.15);
   }
-  .eightball-badge{
-    font-family:'Orbitron',sans-serif;
-    font-size:clamp(0.55rem, 1.1vh, 0.65rem);
-    letter-spacing:0.08em;
-    color:var(--teal);
-    background:rgba(73, 230, 196, 0.12);
-    border:1px solid rgba(73, 230, 196, 0.35);
-    padding:1px 6px;
-    border-radius:4px;
-    transition:all 0.2s ease;
+  #eightballTitle{
+    font-family:'Outfit',sans-serif;
+    font-weight:800;
+    font-size:clamp(0.70rem, 1.3vh, 0.82rem);
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    line-height:1;
   }
-  .eightball-panel:hover .eightball-badge{
-    background:rgba(73, 230, 196, 0.25);
+  .eightball-sub-hint{
+    font-family:'Outfit',sans-serif;
+    font-size:0.80em;
+    font-weight:600;
+    letter-spacing:0.04em;
+    text-transform:none;
+    color:rgba(73, 230, 196, 0.75);
+    margin-left:4px;
+    vertical-align:baseline;
+    transition:color 0.2s ease, opacity 0.2s ease, text-shadow 0.2s ease;
+  }
+  .eightball-panel:hover .eightball-sub-hint{
     color:#ffffff;
+    opacity:1;
+    text-shadow:0 0 8px rgba(73, 230, 196, 0.6);
   }
   .eightball-stage{
     flex:1 1 0;
@@ -1803,7 +1800,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.090626.2130</span>
+        <span id="appVersionText">v1.090726.1035</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -1944,9 +1941,8 @@
               <circle cx="12" cy="12" r="4"/>
               <path d="M12 2a10 10 0 0 1 10 10"/>
             </svg>
-            <span class="label glow-teal">8-Ball</span>
+            <span class="label glow-teal" id="eightballTitle">8-Ball <span class="eightball-sub-hint">(tap)</span></span>
           </div>
-          <span class="eightball-badge glow-teal" id="eightballBadge">TAP TO SHAKE</span>
         </div>
 
         <div class="eightball-stage">
@@ -2037,7 +2033,6 @@
         </div>
 
         <div class="holiday-content-area" id="holidayContentArea">
-          <div class="holiday-lead glow-teal" id="holidayLead">Today we celebrate...</div>
           <div class="holiday-title glow-blue" id="holidayTitle">Loading Today's Holidays...</div>
           <div class="holiday-summary" id="holidaySummary"></div>
         </div>
@@ -3362,7 +3357,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.090626.2130';
+  const CLIENT_APP_VERSION = 'v1.090726.1035';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -3969,7 +3964,6 @@
   const eightballSphere = document.getElementById('eightballSphere');
   const eightballDie = document.getElementById('eightballDie');
   const eightballAnswer = document.getElementById('eightballAnswer');
-  const eightballBadge = document.getElementById('eightballBadge');
 
   let isShaking8Ball = false;
   let last8BallIndex = 0;
@@ -4060,7 +4054,6 @@
     if(isShaking8Ball) return;
     isShaking8Ball = true;
 
-    if(eightballBadge) eightballBadge.textContent = 'CONSULTING…';
     if(eightballSphere) eightballSphere.classList.add('shaking');
     if(eightballDie){
       eightballDie.classList.remove('surfacing');
@@ -4101,16 +4094,11 @@
         eightballDie.classList.add('surfacing');
         eightballDie.style.transform = `scale(1) rotate(${randomAngle}deg) translateY(0)`;
       }
-
-      if(eightballBadge) eightballBadge.textContent = 'SHAKEN ✓';
     }, 450);
 
     setTimeout(() => {
       if(eightballSphere) eightballSphere.classList.remove('shaking');
       isShaking8Ball = false;
-      setTimeout(() => {
-        if(!isShaking8Ball && eightballBadge) eightballBadge.textContent = 'TAP TO SHAKE';
-      }, 1500);
     }, 700);
   }
 
@@ -4139,7 +4127,7 @@
      - Pulls daily feed from /api/checkiday (Checkiday.com official daily RSS)
      - Rotates daily holidays 1 every 15 minutes in a continuous loop
      - Automatically updates to the next set on the next day (midnight rollover)
-     - Displays "Today we celebrate..." with large, prominent holiday name
+     - Displays prominent holiday name with auto-fitting dynamic typography and narrative overview
      - Interactive controls (card tap, manual refresh ↻)
      - Smooth fade transitions and 15-minute rotation progress bar
   --------------------------------------------------------------- */
@@ -4151,7 +4139,6 @@
   let isFetchingCheckiday = false;
 
   const holidayTitleEl = document.getElementById('holidayTitle');
-  const holidayLeadEl = document.getElementById('holidayLead');
   const holidaySummaryEl = document.getElementById('holidaySummary');
   const holidayContentArea = document.getElementById('holidayContentArea');
   const holidayCounterBadge = document.getElementById('holidayCounterBadge');
@@ -4160,7 +4147,6 @@
 
   // Smart dynamic text fitting buffer for Checkiday.com (Proportional Binary Max-Fill)
   let holidayMeasureBuffer = null;
-  let hBufLead = null;
   let hBufTitle = null;
   let hBufSummary = null;
 
@@ -4170,16 +4156,12 @@
       holidayMeasureBuffer.id = 'holidayMeasureBuffer';
       holidayMeasureBuffer.style.cssText = 'position:fixed;top:-9999px;left:-9999px;visibility:hidden;pointer-events:none;z-index:-1000;white-space:normal;word-break:normal;overflow-wrap:break-word;box-sizing:border-box;display:flex;flex-direction:column;padding:0;margin:0;border:none;';
       
-      hBufLead = document.createElement('div');
-      hBufLead.style.cssText = 'font-family:\'Outfit\',sans-serif;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;margin:0;padding:0;flex-shrink:0;';
-      
       hBufTitle = document.createElement('div');
       hBufTitle.style.cssText = 'font-family:\'Outfit\',sans-serif;font-weight:800;letter-spacing:-0.005em;margin:0;padding:0;flex-shrink:0;';
       
       hBufSummary = document.createElement('div');
       hBufSummary.style.cssText = 'font-family:\'Outfit\',sans-serif;font-weight:400;letter-spacing:0.01em;margin:0;padding:0;flex-shrink:0;';
       
-      holidayMeasureBuffer.appendChild(hBufLead);
       holidayMeasureBuffer.appendChild(hBufTitle);
       holidayMeasureBuffer.appendChild(hBufSummary);
       document.body.appendChild(holidayMeasureBuffer);
@@ -4191,13 +4173,13 @@
    * HOLIDAY AUTO-FIT ENGINE (Coordinated Binary Max-Fill)
    * - Aligns Checkiday.com with the Inspiration block's dynamic auto-fit philosophy
    * - Measures exact container width and height
-   * - Dynamically calculates proportional scales for Eyebrow, Hero Title, and Narrative Summary
+   * - Dynamically calculates proportional scales for Hero Title and Narrative Summary
    * - Short titles scale up to 34-38px bold display type to command the space
    * - Summary scales up to 18-20.5px for effortless living-room / TV legibility
    * - Falls back to concise origin overview if full summary is too lengthy
    */
   function screenAndFitHolidayText() {
-    if (!holidayContentArea || !holidayTitleEl || !holidaySummaryEl || !holidayLeadEl) return;
+    if (!holidayContentArea || !holidayTitleEl || !holidaySummaryEl) return;
     
     let availW = holidayContentArea.clientWidth;
     let availH = holidayContentArea.clientHeight;
@@ -4220,8 +4202,6 @@
     const targetH = Math.max(80, availH - 4);
     buf.style.width = targetW + 'px';
 
-    const leadText = "TODAY WE CELEBRATE...";
-    hBufLead.textContent = leadText;
     hBufTitle.textContent = title;
 
     // Measure unscaled single-line width of the title at a baseline 20px
@@ -4246,11 +4226,7 @@
         ? Math.min(singleLineMaxFont, Math.max(18, Math.round(baseTitle * s)))
         : Math.round(baseTitle * s);
       const summaryPx = Math.max(12.5, Math.round(baseSummary * s));
-      const leadPx = Math.min(13.5, Math.max(11, Math.round(11.5 * Math.min(s, 1.15))));
       const gapPx = Math.max(4, Math.round(7 * s));
-
-      hBufLead.style.fontSize = leadPx + 'px';
-      hBufLead.style.lineHeight = '1.2';
 
       hBufTitle.style.whiteSpace = titleCanBeSingleLine ? 'nowrap' : 'normal';
       hBufTitle.style.textWrap = titleCanBeSingleLine ? 'nowrap' : 'balance';
@@ -4310,13 +4286,9 @@
       ? Math.min(singleLineMaxFont, Math.max(18, Math.round(baseTitle * finalS)))
       : Math.round(baseTitle * finalS);
     const finalSummaryPx = Math.max(12, Math.round(baseSummary * finalS));
-    const finalLeadPx = Math.min(14, Math.max(11, Math.round(11.5 * Math.min(finalS, 1.15))));
     const finalGapPx = Math.max(4, Math.round(7 * finalS));
 
     // Apply the computed responsive typography and vertical spacing
-    holidayLeadEl.style.fontSize = finalLeadPx + 'px';
-    holidayLeadEl.style.lineHeight = '1.2';
-
     holidayTitleEl.textContent = title;
     holidayTitleEl.style.whiteSpace = titleCanBeSingleLine ? 'nowrap' : 'normal';
     holidayTitleEl.style.textWrap = titleCanBeSingleLine ? 'nowrap' : 'balance';
@@ -4365,13 +4337,11 @@
       if(holidayTitleEl) holidayTitleEl.textContent = holiday.title || "National Holiday";
       screenAndFitHolidayText();
       if(holidayTitleEl) holidayTitleEl.classList.remove('fading');
-      if(holidayLeadEl) holidayLeadEl.classList.remove('fading');
       if(holidaySummaryEl) holidaySummaryEl.classList.remove('fading');
     };
 
     if(animate && holidayTitleEl){
       holidayTitleEl.classList.add('fading');
-      if(holidayLeadEl) holidayLeadEl.classList.add('fading');
       if(holidaySummaryEl) holidaySummaryEl.classList.add('fading');
       setTimeout(applyContent, 160);
     } else {

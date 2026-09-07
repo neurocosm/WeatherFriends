@@ -363,53 +363,61 @@
     margin:auto;
     min-width:0;
     overflow:hidden;
-    padding:2px 0;
+    padding:4px 0;
   }
 
   .day-hero-name{
     font-family:'Outfit',sans-serif;
     font-weight:900;
-    font-size:clamp(1.7rem, min(17.8cqw, 5.8vh), 3.95rem);
-    letter-spacing:0.03em;
-    line-height:1;
-    color:#4ac6ff;
+    font-size:clamp(1.5rem, min(18.2cqw, 6.2vh), 4.2rem);
+    letter-spacing:0.02em;
+    line-height:0.96;
+    color:#38bdf8;
     text-transform:uppercase;
     white-space:nowrap;
     max-width:100%;
     overflow:hidden;
+    text-shadow:0 2px 10px rgba(56, 189, 248, 0.28);
+    transition:font-size 0.08s ease;
   }
 
   .day-period-name{
     font-family:'Outfit',sans-serif;
     font-weight:800;
-    font-size:clamp(1.35rem, min(13.5cqw, 4.4vh), 3.05rem);
-    letter-spacing:0.05em;
+    font-size:clamp(0.92rem, min(10.5cqw, 3.6vh), 2.45rem);
+    letter-spacing:0.06em;
     color:#ffffff;
     text-transform:uppercase;
-    line-height:1;
+    line-height:0.98;
     white-space:nowrap;
+    text-shadow:0 2px 8px rgba(255, 255, 255, 0.22);
+    transition:font-size 0.08s ease;
   }
 
   .date-monthday-str{
     font-family:'Outfit',sans-serif;
     font-weight:800;
-    font-size:clamp(1.15rem, min(12cqw, 3.8vh), 2.68rem);
-    letter-spacing:0.04em;
-    color:#4ac6ff;
+    font-size:clamp(0.85rem, min(9.8cqw, 3.35vh), 2.28rem);
+    letter-spacing:0.03em;
+    color:#38bdf8;
     white-space:nowrap;
     overflow:hidden;
     text-transform:uppercase;
-    line-height:1;
+    line-height:0.98;
+    text-shadow:0 2px 8px rgba(56, 189, 248, 0.22);
+    transition:font-size 0.08s ease;
   }
 
   .date-year-str{
     font-family:'Outfit',sans-serif;
     font-weight:800;
-    font-size:clamp(1.15rem, min(12cqw, 3.8vh), 2.68rem);
-    letter-spacing:0.05em;
-    color:#4ac6ff;
+    font-size:clamp(0.85rem, min(9.8cqw, 3.35vh), 2.28rem);
+    letter-spacing:0.06em;
+    color:#38bdf8;
     white-space:nowrap;
-    line-height:1;
+    line-height:0.98;
+    text-shadow:0 2px 8px rgba(56, 189, 248, 0.22);
+    transition:font-size 0.08s ease;
   }
 
   /* Block 2: Stacked High-Density 2-Column Clock */
@@ -420,7 +428,7 @@
     display:grid;
     grid-template-columns: minmax(min-content, auto) minmax(min-content, auto);
     grid-template-rows: auto auto auto;
-    column-gap:clamp(10px, 3.2cqw, 22px);
+    column-gap:clamp(16px, 4.5cqw, 36px);
     row-gap:clamp(2px, 0.4vh, 4px);
     align-items:center;
     align-content:center;
@@ -442,8 +450,8 @@
     color:#ffe600;
     line-height:0.86;
     margin:0;
-    text-align:center;
-    justify-self:center;
+    text-align:left;
+    justify-self:start;
     font-variant-numeric: tabular-nums;
     font-feature-settings: "tnum" 1;
     width:100%;
@@ -455,7 +463,7 @@
     font-family:'Outfit',sans-serif;
     font-weight:900;
     font-size:clamp(1.1rem, min(10cqw, 3.4vh), 2.4rem);
-    letter-spacing:0.04em;
+    letter-spacing:0.12em;
     color:#ffe600;
     line-height:0.8;
     text-align:center;
@@ -475,8 +483,8 @@
     color:#ffe600;
     line-height:0.86;
     margin:0;
-    text-align:center;
-    justify-self:center;
+    text-align:left;
+    justify-self:start;
     font-variant-numeric: tabular-nums;
     font-feature-settings: "tnum" 1;
     width:100%;
@@ -486,31 +494,34 @@
     grid-column: 2;
     grid-row: 1;
     font-family:'Outfit',sans-serif;
-    font-weight:900;
-    font-size:clamp(2.3rem, min(23cqw, 8.6vh), 5.4rem);
+    font-weight:800;
+    font-size:clamp(2.0rem, min(20cqw, 7.5vh), 4.6rem);
     letter-spacing:0.02em;
     color:#ffffff;
     line-height:0.86;
     align-self:center;
-    justify-self:center;
-    text-align:center;
+    justify-self:end;
+    text-align:right;
     width:100%;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
   }
 
   .clock-sec-val{
     grid-column: 2;
     grid-row: 3;
-    font-family:'Share Tech Mono',monospace;
-    font-weight:700;
-    font-size:clamp(1.7rem, min(17cqw, 6.2vh), 4.0rem);
-    letter-spacing:0.03em;
+    font-family:'Outfit',sans-serif;
+    font-weight:800;
+    font-size:clamp(2.0rem, min(20cqw, 7.5vh), 4.6rem);
+    letter-spacing:0.02em;
     color:#ffffff;
     line-height:0.86;
     align-self:center;
-    justify-self:center;
-    text-align:center;
+    justify-self:end;
+    text-align:right;
     width:100%;
     font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
   }
 
   /* Block 3: Mockup-Accurate Weather Block */
@@ -526,58 +537,67 @@
     container-type:inline-size;
   }
 
-  /* Header Row: City Name + Condition */
+  /* Center-Stacked Header: City/State on Top, Weather Description Directly Underneath */
+  .top-wx-header-stack,
   .top-wx-header-bar{
     display:flex;
+    flex-direction:column;
     align-items:center;
-    justify-content:space-between;
-    gap:8px;
+    justify-content:center;
+    gap:clamp(1px, 0.3vh, 3px);
     width:100%;
     min-width:0;
-    margin-bottom:clamp(2px, 0.5vh, 6px);
-    padding:0 clamp(2px, 1cqw, 8px);
+    margin-bottom:clamp(2px, 0.4vh, 6px);
+    padding:0;
+    text-align:center;
+    flex:0 0 auto;
   }
 
   .top-loc-btn{
     display:inline-flex;
     align-items:center;
-    gap:6px;
+    justify-content:center;
+    gap:clamp(4px, 0.8cqw, 7px);
     background:none;
     border:none;
     padding:0;
     cursor:pointer;
-    text-align:left;
+    text-align:center;
     min-width:0;
-    flex:1 1 auto;
-    overflow:hidden;
+    max-width:100%;
+    white-space:nowrap;
   }
   .top-loc-btn:hover .top-city-name{
     text-decoration:underline;
   }
 
   .loc-pin-icon{
-    width:clamp(15px, min(4cqw, 2.8vh), 24px);
-    height:clamp(15px, min(4cqw, 2.8vh), 24px);
+    width:clamp(15px, min(4.2cqw, 2.6vh), 24px);
+    height:clamp(15px, min(4.2cqw, 2.6vh), 24px);
     flex:none;
-    color:#49e6c4;
+    color:#46f1ab;
+    filter:drop-shadow(0 0 6px rgba(70,241,171,0.45));
+    transition:width 0.08s ease, height 0.08s ease;
   }
 
   .top-city-name{
-    font-family:'Rajdhani',sans-serif;
-    font-weight:700;
-    font-size:clamp(1.0rem, min(4.5cqw, 2.8vh), 1.75rem);
+    font-family:'Outfit',sans-serif;
+    font-weight:500;
+    font-size:clamp(1.1rem, min(5.2cqw, 3.2vh), 1.85rem);
     letter-spacing:0.04em;
     color:#f2f9fb;
     white-space:nowrap;
     overflow:visible;
     line-height:1.1;
     text-transform:uppercase;
+    text-shadow:0 1px 8px rgba(242, 249, 251, 0.28);
+    transition:font-size 0.08s ease;
   }
 
   .loc-edit-hint{
-    font-size:0.95rem;
-    color:#49e6c4;
-    opacity:0.9;
+    font-size:clamp(0.85rem, 2.4cqw, 1.15rem);
+    color:#46f1ab;
+    opacity:0.85;
     margin-left:2px;
     flex:none;
   }
@@ -585,139 +605,184 @@
   .top-cond-summary{
     display:inline-flex;
     align-items:center;
-    gap:6px;
+    justify-content:center;
+    gap:clamp(5px, 1.0cqw, 8px);
     min-width:0;
-    flex:0 0 auto;
+    max-width:100%;
+    white-space:nowrap;
   }
 
   .top-cond-icon-wrap{
-    width:clamp(18px, min(4.5cqw, 3vh), 26px);
-    height:clamp(18px, min(4.5cqw, 3vh), 26px);
+    width:clamp(16px, min(4.4cqw, 2.7vh), 24px);
+    height:clamp(16px, min(4.4cqw, 2.7vh), 24px);
     display:flex;
     align-items:center;
     justify-content:center;
     flex:none;
+    transition:width 0.08s ease, height 0.08s ease;
   }
   .top-cond-icon-wrap svg{ width:100%; height:100%; }
 
   .top-cond-desc{
-    font-family:'Rajdhani',sans-serif;
-    font-size:clamp(1.0rem, min(4.5cqw, 2.8vh), 1.75rem);
-    font-weight:700;
+    font-family:'Outfit',sans-serif;
+    font-size:clamp(1.0rem, min(4.8cqw, 2.9vh), 1.65rem);
+    font-weight:400;
     letter-spacing:0.04em;
-    color:#f2f9fb;
+    color:#eaf5f9;
     white-space:nowrap;
     line-height:1.1;
     text-transform:uppercase;
+    text-shadow:0 1px 8px rgba(234, 245, 249, 0.22);
+    transition:font-size 0.08s ease;
   }
 
-  /* Main 2-Column Split Body */
+  /* Lower Row: Hero Temp Justified Lower-Left, Telemetry Justified Lower-Right */
+  .top-wx-bottom-row,
   .top-wx-body{
-    display:grid;
-    grid-template-columns: 1.35fr 0.85fr;
-    gap:clamp(8px, 2.5cqw, 18px);
-    align-items:center;
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:clamp(8px, 2cqw, 16px);
+    width:100%;
     flex:1;
     min-height:0;
-    margin-top:2px;
-    padding:0 clamp(2px, 1cqw, 8px);
+    margin:0;
+    padding:0 clamp(2px, 0.8cqw, 6px);
   }
 
-  /* Left Column: Giant Temp Digits + Stacked °F */
+  /* Left Column: Anchored Lower-Left */
   .top-wx-temp-col{
     display:flex;
-    align-items:center;
+    align-items:flex-end;
+    justify-content:flex-start;
     height:100%;
     min-width:0;
+    flex:1 1 auto;
   }
 
   .hero-temp-combo{
     display:inline-flex;
-    align-items:center;
-    line-height:0.80;
+    align-items:flex-end;
+    line-height:0.74;
+    transform:scaleY(1.10);
+    transform-origin:bottom left;
   }
 
   .hero-temp-num{
     font-family:'Outfit',sans-serif;
-    font-weight:900;
-    font-size:clamp(4.2rem, min(36cqw, 13.8vh), 8.4rem);
-    letter-spacing:-0.03em;
-    color:#49e6c4;
-    line-height:0.80;
+    font-weight:400;
+    font-size:clamp(4.6rem, min(40cqw, 17vh), 9.2rem);
+    letter-spacing:-0.04em;
+    color:#46f1ab;
+    line-height:0.74;
     font-variant-numeric: tabular-nums;
+    text-shadow:0 2px 18px rgba(70, 241, 171, 0.45);
+    transition:font-size 0.08s ease;
   }
 
   .hero-temp-unit-stack{
-    display:flex;
+    display:inline-flex;
     flex-direction:column;
-    justify-content:space-between;
-    height:clamp(3.8rem, min(30cqw, 11.4vh), 7.2rem);
-    margin-left:clamp(4px, 1.2cqw, 10px);
-    color:#49e6c4;
+    align-items:center;
+    justify-content:flex-start;
+    align-self:flex-start;
+    margin-left:clamp(2px, 0.6cqw, 6px);
+    margin-top:clamp(2px, 0.5vh, 6px);
+    color:#46f1ab;
+    text-shadow:0 2px 12px rgba(70, 241, 171, 0.35);
   }
 
   .hero-deg{
     font-family:'Outfit',sans-serif;
-    font-weight:800;
-    font-size:clamp(1.8rem, min(14.5cqw, 5.0vh), 3.4rem);
-    line-height:0.85;
+    font-weight:400;
+    font-size:clamp(1.1rem, min(9cqw, 3.5vh), 2.2rem);
+    line-height:0.8;
+    text-align:center;
+    display:block;
+    transition:font-size 0.08s ease;
   }
 
   .hero-unit{
     font-family:'Outfit',sans-serif;
-    font-weight:800;
-    font-size:clamp(2.1rem, min(17cqw, 6.0vh), 4.2rem);
+    font-weight:400;
+    font-size:clamp(0.85rem, min(6.8cqw, 2.6vh), 1.6rem);
     line-height:0.85;
+    margin-top:1px;
+    text-align:center;
+    opacity:0.92;
+    display:block;
+    transition:font-size 0.08s ease;
   }
 
-  /* Right Column: Dual Inset Telemetry Capsules */
+  /* Right Column: Anchored Lower-Right, Hard-Right Justified Telemetry Stack */
+  .top-wx-telemetry-col,
   .top-wx-capsules-col{
     display:flex;
     flex-direction:column;
-    justify-content:space-between;
-    gap:clamp(6px, 1.4cqw, 12px);
-    height:100%;
-    max-height:clamp(68px, min(23cqw, 15.5vh), 115px);
-    margin:auto 0;
+    align-items:flex-end;
+    justify-content:flex-end;
+    gap:clamp(5px, 1.2vh, 10px);
+    flex:0 0 auto;
+    margin:0 0 clamp(2px, 0.6vh, 6px) 0;
+    padding-right:clamp(1px, 0.5cqw, 4px);
+    min-height:0;
   }
 
+  .wx-telemetry-row,
   .wx-telemetry-capsule{
-    background:rgba(4,14,18,0.75);
-    border:1px solid rgba(40,85,95,0.4);
-    border-radius:clamp(7px, 2cqw, 13px);
-    padding:clamp(3px, 0.8vh, 8px) clamp(8px, 2.4cqw, 16px);
-    display:flex;
+    background:none;
+    border:none;
+    border-radius:0;
+    padding:0;
+    margin:0;
+    display:inline-flex;
     align-items:center;
-    justify-content:space-between;
-    gap:clamp(6px, 2cqw, 12px);
-    box-shadow:inset 0 1px 3px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.04);
+    justify-content:flex-end;
+    gap:clamp(6px, 1.2cqw, 10px);
+    box-shadow:none;
+    flex:0 0 auto;
+    min-height:0;
+    width:100%;
   }
 
+  .wx-row-icon,
   .capsule-icon{
-    width:clamp(16px, min(4.5cqw, 2.8vh), 24px);
-    height:clamp(16px, min(4.5cqw, 2.8vh), 24px);
+    width:clamp(15px, min(4cqw, 2.4vh), 21px);
+    height:clamp(15px, min(4cqw, 2.4vh), 21px);
     flex:none;
+    filter:drop-shadow(0 1px 3px currentColor);
+    transition:width 0.08s ease, height 0.08s ease;
   }
 
+  .wx-row-reading,
   .capsule-reading{
-    display:flex;
+    display:inline-flex;
     align-items:baseline;
-    gap:3px;
+    justify-content:flex-end;
+    white-space:nowrap;
   }
 
+  .wx-row-val,
   .capsule-val{
-    font-family:'Rajdhani',sans-serif;
-    font-weight:800;
-    font-size:clamp(1.35rem, min(9.2cqw, 3.8vh), 2.5rem);
+    font-family:'Outfit',sans-serif;
+    font-weight:500;
+    font-size:clamp(1.15rem, min(5cqw, 3vh), 1.75rem);
     line-height:1;
-    letter-spacing:0.02em;
+    letter-spacing:0.01em;
+    font-variant-numeric:tabular-nums;
+    text-align:right;
+    transition:font-size 0.08s ease;
   }
 
+  .wx-row-unit,
   .capsule-unit{
-    font-family:'Rajdhani',sans-serif;
-    font-weight:700;
-    font-size:clamp(0.9rem, min(5.0cqw, 2.2vh), 1.5rem);
+    font-family:'Outfit',sans-serif;
+    font-weight:400;
+    font-size:clamp(0.76rem, min(3.4cqw, 2vh), 1.15rem);
     line-height:1;
+    margin-left:2px;
+    opacity:0.85;
+    transition:font-size 0.08s ease;
   }
 
   /* Quick Location Picker Modal */
@@ -1136,38 +1201,65 @@
     white-space:nowrap;
     line-height:1.2;
   }
-  .holiday-refresh-btn{
-    background:rgba(56, 189, 248, 0.10);
-    border:1px solid rgba(56, 189, 248, 0.3);
-    color:var(--blue);
-    border-radius:5px;
-    width:clamp(22px, 2.8vh, 26px);
-    height:clamp(22px, 2.8vh, 26px);
+  .holiday-calendar-btn{
+    width:clamp(22px, 2.7vh, 26px);
+    height:clamp(22px, 2.7vh, 26px);
+    background:rgba(12, 19, 26, 0.95);
+    border:1px solid rgba(56, 189, 248, 0.38);
+    border-radius:4px;
     display:inline-flex;
+    flex-direction:column;
+    align-items:stretch;
+    justify-content:flex-start;
+    padding:0;
+    cursor:pointer;
+    overflow:hidden;
+    user-select:none;
+    box-shadow:0 1px 4px rgba(0,0,0,0.45);
+    transition:all 0.18s ease;
+    flex-shrink:0;
+  }
+  .holiday-calendar-btn:hover{
+    border-color:var(--blue);
+    background:rgba(20, 32, 44, 0.95);
+    transform:scale(1.06);
+    box-shadow:0 0 10px rgba(56, 189, 248, 0.3);
+  }
+  .holiday-calendar-btn:active{
+    transform:scale(0.92);
+  }
+  .cal-top-accent{
+    width:100%;
+    height:clamp(6px, 0.85vh, 7px);
+    background:linear-gradient(90deg, #0284c7, #38bdf8);
+    display:flex;
+    justify-content:space-evenly;
+    align-items:center;
+    flex-shrink:0;
+    padding:0 2px;
+  }
+  .cal-pin{
+    width:2px;
+    height:3px;
+    background:#080d12;
+    border-radius:1px;
+    display:inline-block;
+  }
+  .cal-day-body{
+    flex:1;
+    width:100%;
+    display:flex;
     align-items:center;
     justify-content:center;
-    cursor:pointer;
-    font-size:0.92rem;
-    transition:all 0.18s ease;
-    line-height:1;
-    padding:0;
+    background:#0c131a;
   }
-  .holiday-refresh-btn:hover{
-    background:rgba(56, 189, 248, 0.28);
+  .cal-day-num{
+    font-family:'Space Mono',monospace;
+    font-weight:700;
+    font-size:clamp(0.64rem, 1.25vh, 0.76rem);
     color:#ffffff;
-    border-color:var(--blue);
-    transform:scale(1.06);
-  }
-  .holiday-refresh-icon{
-    display:inline-block;
-    transition:transform 0.4s ease;
-  }
-  .holiday-refresh-btn.spinning .holiday-refresh-icon{
-    animation:spinRefresh 0.7s linear infinite;
-  }
-  @keyframes spinRefresh{
-    from{transform:rotate(0deg);}
-    to{transform:rotate(360deg);}
+    line-height:1;
+    letter-spacing:-0.03em;
   }
   .holiday-content-area{
     flex:1 1 0;
@@ -1396,15 +1488,6 @@
   .eightball-sphere.shaking{
     animation:eightballWobble 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
   }
-  .eightball-counter{
-    font-family:'Rajdhani',sans-serif;
-    font-weight:600;
-    font-size:clamp(0.62rem, 1.1vh, 0.72rem);
-    letter-spacing:0.06em;
-    color:var(--ink-dim);
-    text-align:center;
-    margin-top:2px;
-  }
 
   .uv-row{display:flex;flex-direction:column;gap:4px;}
   .uv-track{height:clamp(7px, 1.3vh, 10px);border-radius:6px;background:#10181c;overflow:hidden;box-shadow:inset 0 0 3px #000;}
@@ -1531,7 +1614,7 @@
   }
   .day-card .ddesc{
     font-family:'Outfit',sans-serif;
-    font-weight:500;
+    font-weight:400;
     font-size:clamp(0.66rem, min(10.8cqw, 1.45vh), 0.92rem);
     letter-spacing:0.02em;
     color:#9ec7d6;
@@ -1549,10 +1632,10 @@
   }
   .day-card .hi-lo{
     font-family:'Outfit',sans-serif;
-    font-weight:800;
+    font-weight:400;
     font-size:clamp(1.10rem, min(19.5cqw, 2.9vh), 1.78rem);
     line-height:1;
-    letter-spacing:-0.03em;
+    letter-spacing:-0.01em;
     display:flex;
     align-items:baseline;
     justify-content:center;
@@ -1561,58 +1644,67 @@
   }
   .day-card .hi-lo .hi{
     color:#fff6e5;
-    font-weight:800;
-    text-shadow:0 0 10px rgba(255,220,160,0.22);
+    font-weight:400;
+    text-shadow:0 0 8px rgba(255,220,160,0.18);
   }
   .day-card .hi-lo .sep{
     color:#446b7a;
-    font-weight:500;
+    font-weight:300;
     font-size:0.85em;
   }
   .day-card .hi-lo .lo{
     color:#50cbff;
-    font-weight:700;
+    font-weight:400;
     font-size:0.92em;
   }
   .day-meta-row{
     display:flex;
     align-items:center;
     justify-content:center;
-    gap:clamp(3px, 1.2cqw, 6px);
+    gap:clamp(3px, 1cqw, 7px);
     width:100%;
-    margin-top:1px;
+    margin-top:clamp(1px, 0.4vh, 3px);
     flex-wrap:nowrap;
   }
-  .day-card .duv, .day-card .dhum{
-    font-family:'Rajdhani',sans-serif;
-    font-weight:700;
-    font-size:clamp(0.72rem, min(12cqw, 1.75vh), 1.05rem);
-    letter-spacing:0.04em;
+  .day-card .day-telem-item{
+    font-family:'Outfit',sans-serif;
+    font-weight:400;
+    font-size:clamp(0.66rem, min(10.5cqw, 1.55vh), 0.92rem);
+    letter-spacing:0.01em;
     line-height:1;
     display:inline-flex;
     align-items:center;
-    gap:3.5px;
+    gap:2px;
     white-space:nowrap;
-    padding:clamp(2px, 0.35vh, 3.5px) clamp(4px, 0.9cqw, 7px);
-    border-radius:5px;
-    background:rgba(0, 0, 0, 0.35);
-    border:1px solid rgba(140, 200, 210, 0.18);
+    padding:0;
+    margin:0;
+    background:none;
+    border:none;
   }
-  .day-card .duv .duv-dot{
-    width:6px;
-    height:6px;
-    border-radius:50%;
+  .day-card .day-telem-icon{
+    width:clamp(9px, min(8cqw, 1.35vh), 12px);
+    height:clamp(9px, min(8cqw, 1.35vh), 12px);
     flex:none;
+    display:inline-block;
   }
-  .day-card .dhum .dhum-icon{
-    width:11px;
-    height:11px;
-    flex:none;
-    color:#4ac6ff;
+  .day-card .day-telem-val{
+    display:inline-flex;
+    align-items:baseline;
+    font-weight:400;
+    font-variant-numeric:tabular-nums;
+    font-feature-settings:"tnum" 1;
   }
-  .day-card .dhum .dhum-val{
-    color:#d8f4ff;
-    font-weight:800;
+  .day-card .day-telem-unit{
+    font-size:0.75em;
+    font-weight:400;
+    opacity:0.85;
+    margin-left:0.5px;
+  }
+  /* Backwards compatibility if legacy class names are present */
+  .day-card .duv, .day-card .dhum, .day-card .dpress{
+    background:none !important;
+    border:none !important;
+    padding:0 !important;
   }
 
   .err-msg{
@@ -1724,7 +1816,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.090626.1910</span>
+        <span id="appVersionText">v1.090626.2126</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -1779,8 +1871,8 @@
 
       <!-- CERTIFIED BLOCK 3: MOCKUP-ACCURATE WEATHER BLOCK -->
       <div class="top-cert-card" id="topWeatherBlock">
-        <!-- Top Header Bar: Location (left) + Condition (right) -->
-        <div class="top-wx-header-bar">
+        <!-- Top Header Stack: City/State Center Top, Condition Directly Underneath -->
+        <div class="top-wx-header-stack">
           <button class="top-loc-btn" id="topLocBtn" title="Click to change location or enter ZIP code" type="button">
             <svg class="loc-pin-icon glow-teal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
               <path d="M12 21s-7-4.5-7-10a7 7 0 0 1 14 0c0 5.5-7 10-7 10z"/>
@@ -1799,9 +1891,9 @@
           </div>
         </div>
 
-        <!-- Main 2-Column Split Body -->
-        <div class="top-wx-body">
-          <!-- Left Column: Giant Temp + Stacked °F -->
+        <!-- Lower Row: Hero Temp (Lower-Left) + Stacked Telemetry (Lower-Right) -->
+        <div class="top-wx-bottom-row top-wx-body">
+          <!-- Lower-Left Column: Giant Temp + Stacked °F -->
           <div class="top-wx-temp-col">
             <div class="hero-temp-combo">
               <span class="hero-temp-num glow-teal" id="topTempNow">--</span>
@@ -1812,27 +1904,42 @@
             </div>
           </div>
 
-          <!-- Right Column: Dual Inset Telemetry Capsules (Humidity + UV) -->
-          <div class="top-wx-capsules-col">
-            <!-- Capsule 1: Humidity -->
-            <div class="wx-telemetry-capsule">
-              <svg class="capsule-icon glow-blue" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.4">
+          <!-- Lower-Right Column: Hard-Right Justified Telemetry Stack (Uniform Font & Size, Unbolded) -->
+          <div class="top-wx-telemetry-col top-wx-capsules-col">
+            <!-- Item 1: Humidity -->
+            <div class="wx-telemetry-row wx-telemetry-capsule" title="Relative Humidity">
+              <svg class="wx-row-icon capsule-icon glow-blue" viewBox="0 0 24 24" fill="rgba(56,189,248,0.12)" stroke="#38bdf8" stroke-width="1.7">
                 <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
               </svg>
-              <div class="capsule-reading">
-                <span class="capsule-val glow-blue" id="topHumNow">--</span>
-                <span class="capsule-unit glow-blue">%</span>
+              <div class="wx-row-reading capsule-reading">
+                <span class="wx-row-val capsule-val glow-blue" id="topHumNow">--</span>
+                <span class="wx-row-unit capsule-unit glow-blue">%</span>
               </div>
             </div>
 
-            <!-- Capsule 2: UV Index -->
-            <div class="wx-telemetry-capsule">
-              <svg class="capsule-icon glow-teal" id="topUvIcon" viewBox="0 0 24 24" fill="none" stroke="#49e6c4" stroke-width="2.2">
-                <circle cx="12" cy="12" r="4"/>
+            <!-- Item 2: Barometric Pressure -->
+            <div class="wx-telemetry-row wx-telemetry-capsule" title="Barometric Pressure">
+              <svg class="wx-row-icon capsule-icon glow-purple" id="topPressureIcon" viewBox="0 0 24 24" fill="none" stroke="#cf7dff">
+                <circle cx="12" cy="12" r="9.5" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M 6.5 13.5 A 6.5 6.5 0 1 1 17.5 13.5" stroke="currentColor" stroke-width="1.7" stroke-dasharray="3.2 1.6" stroke-linecap="butt" fill="none"/>
+                <circle cx="12" cy="12" r="1.9" fill="currentColor"/>
+                <path d="M12 12 L16.8 9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+              </svg>
+              <div class="wx-row-reading capsule-reading">
+                <span class="wx-row-val capsule-val glow-purple" id="topPressureNow">--</span>
+                <span class="wx-row-unit capsule-unit glow-purple">in</span>
+              </div>
+            </div>
+
+            <!-- Item 3: UV Index -->
+            <div class="wx-telemetry-row wx-telemetry-capsule" title="UV Index">
+              <svg class="wx-row-icon capsule-icon glow-teal" id="topUvIcon" viewBox="0 0 24 24" fill="none" stroke="#49e6c4" stroke-width="1.7">
+                <circle cx="12" cy="12" r="4" fill="rgba(73, 230, 196, 0.12)"/>
                 <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
               </svg>
-              <div class="capsule-reading">
-                <span class="capsule-val glow-teal" id="topUvNow">--</span>
+              <div class="wx-row-reading capsule-reading">
+                <span class="wx-row-val capsule-val glow-teal" id="topUvNow">--</span>
+                <span class="wx-row-unit capsule-unit glow-teal" id="topUvLabel">UV</span>
               </div>
             </div>
           </div>
@@ -1872,8 +1979,6 @@
             </div>
           </div>
         </div>
-
-        <div class="eightball-counter" id="eightballCounter">20 TRADITIONAL ANSWERS</div>
 
         <!-- Hidden elements preserved for weather telemetry logic compatibility -->
         <span id="tempNow" style="display:none;"></span>
@@ -1937,8 +2042,14 @@
           </div>
           <div class="holiday-nav-controls">
             <span class="holiday-counter-badge" id="holidayCounterBadge" title="Current holiday in daily rotation">-- / --</span>
-            <button type="button" class="holiday-refresh-btn" id="holidayRefreshBtn" title="Refresh Checkiday Feed" aria-label="Refresh Checkiday Feed">
-              <span class="holiday-refresh-icon">↻</span>
+            <button type="button" class="holiday-calendar-btn" id="holidayCalendarBtn" title="Today's date • Tap to rotate holiday" aria-label="Today's date">
+              <div class="cal-top-accent">
+                <span class="cal-pin"></span>
+                <span class="cal-pin"></span>
+              </div>
+              <div class="cal-day-body">
+                <span class="cal-day-num" id="holidayCalDay">6</span>
+              </div>
             </button>
           </div>
         </div>
@@ -2086,24 +2197,53 @@
 
     // Full-Height 4-Tier Date Stack (THURSDAY / NIGHT / SEPTEMBER 3 / 2026)
     const dayHeroEl = document.getElementById('dayHeroName');
-    if(dayHeroEl) dayHeroEl.textContent = fullDayNames[now.getDay()];
+    const newDay = fullDayNames[now.getDay()];
+    let dateChanged = false;
+    if(dayHeroEl && dayHeroEl.textContent !== newDay){
+      dayHeroEl.textContent = newDay;
+      dateChanged = true;
+    }
 
     const periodEl = document.getElementById('dayPeriodName') || document.getElementById('periodBadge');
-    if(periodEl) periodEl.textContent = getConversationalPeriod(rawHours);
+    const newPeriod = getConversationalPeriod(rawHours);
+    if(periodEl && periodEl.textContent !== newPeriod){
+      periodEl.textContent = newPeriod;
+      dateChanged = true;
+    }
 
     const monthDayStr = now.toLocaleDateString('en-US', {
       month: 'long',
       day: 'numeric'
     }).toUpperCase();
     const monthDayEl = document.getElementById('dateMonthDayStr');
-    if(monthDayEl) monthDayEl.textContent = monthDayStr;
+    if(monthDayEl && monthDayEl.textContent !== monthDayStr){
+      monthDayEl.textContent = monthDayStr;
+      dateChanged = true;
+    }
 
     const yearStr = now.getFullYear().toString();
     const yearEl = document.getElementById('dateYearStr');
-    if(yearEl) yearEl.textContent = yearStr;
+    if(yearEl && yearEl.textContent !== yearStr){
+      yearEl.textContent = yearStr;
+      dateChanged = true;
+    }
+
+    if(dateChanged && typeof fitDateBlockToContainer === 'function'){
+      fitDateBlockToContainer();
+    }
 
     const fullDateEl = document.getElementById('dateFullStr');
     if(fullDateEl) fullDateEl.textContent = `${monthDayStr}, ${yearStr}`;
+
+    // Checkiday Calendar Icon Day Number
+    const calDayEl = document.getElementById('holidayCalDay');
+    if(calDayEl && calDayEl.textContent !== String(now.getDate())){
+      calDayEl.textContent = String(now.getDate());
+    }
+    const calBtnEl = document.getElementById('holidayCalendarBtn');
+    if(calBtnEl){
+      calBtnEl.title = `Today is ${now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} • Tap to view next holiday`;
+    }
 
     // DST Indicator
     const hasDst = isDaylightSavings(now);
@@ -2113,7 +2253,349 @@
       dstEl.title = hasDst ? 'Daylight Saving Time Active' : 'Standard Time Active';
     }
   }
+
+  /* ---------------------------------------------------------------
+     DATE BLOCK 4-TIER SIZING & AUTO-FIT ENGINE
+     - Proportional tiered hierarchy from user mockup:
+       * Tier 1: Day Hero (100% reference scale) - Heavy Cyan (#38bdf8)
+       * Tier 2: Period (~58% scale) - Luminous Crisp White (#ffffff)
+       * Tier 3: Month & Day (~54% scale) - Cyan (#38bdf8)
+       * Tier 4: Year (~54% scale) - Cyan (#38bdf8)
+     - Obey scaling rules for resizable block:
+       * Auto-fits dynamically to container width & height when resized
+       * Zero text wrapping or awkward clipping (tested for widest days like WEDNESDAY)
+       * Center-balanced vertical spacing via justify-content: space-evenly
+  --------------------------------------------------------------- */
+  const dateContentWrapEl = document.querySelector('.date-content-wrap');
+  const dHeroEl = document.getElementById('dayHeroName');
+  const dPeriodEl = document.getElementById('dayPeriodName');
+  const dMonthDayEl = document.getElementById('dateMonthDayStr');
+  const dYearEl = document.getElementById('dateYearStr');
+
+  let dateMeasureBuffer = null;
+  let dBufDay = null;
+  let dBufPeriod = null;
+  let dBufMonthDay = null;
+  let dBufYear = null;
+
+  function getDateMeasureBuffer(){
+    if(!dateMeasureBuffer){
+      dateMeasureBuffer = document.createElement('div');
+      dateMeasureBuffer.id = 'dateMeasureBuffer';
+      dateMeasureBuffer.style.cssText = 'position:fixed;top:-9999px;left:-9999px;visibility:hidden;pointer-events:none;z-index:-1000;white-space:nowrap;box-sizing:border-box;display:flex;flex-direction:column;padding:0;margin:0;border:none;';
+
+      dBufDay = document.createElement('div');
+      dBufDay.style.cssText = 'font-family:\'Outfit\',sans-serif;font-weight:900;letter-spacing:0.02em;text-transform:uppercase;line-height:0.96;';
+
+      dBufPeriod = document.createElement('div');
+      dBufPeriod.style.cssText = 'font-family:\'Outfit\',sans-serif;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;line-height:0.98;';
+
+      dBufMonthDay = document.createElement('div');
+      dBufMonthDay.style.cssText = 'font-family:\'Outfit\',sans-serif;font-weight:800;letter-spacing:0.03em;text-transform:uppercase;line-height:0.98;';
+
+      dBufYear = document.createElement('div');
+      dBufYear.style.cssText = 'font-family:\'Outfit\',sans-serif;font-weight:800;letter-spacing:0.06em;line-height:0.98;';
+
+      dateMeasureBuffer.appendChild(dBufDay);
+      dateMeasureBuffer.appendChild(dBufPeriod);
+      dateMeasureBuffer.appendChild(dBufMonthDay);
+      dateMeasureBuffer.appendChild(dBufYear);
+      document.body.appendChild(dateMeasureBuffer);
+    }
+    return dateMeasureBuffer;
+  }
+
+  function fitDateBlockToContainer(){
+    if(!dateContentWrapEl || !dHeroEl || !dPeriodEl || !dMonthDayEl || !dYearEl) return;
+
+    let availW = dateContentWrapEl.clientWidth;
+    let availH = dateContentWrapEl.clientHeight;
+    if(availW <= 40 || availH <= 40){
+      availW = 280;
+      availH = 160;
+    }
+
+    const targetW = Math.max(80, availW - 14);
+    const targetH = Math.max(60, availH - 8);
+
+    const buf = getDateMeasureBuffer();
+    dBufDay.textContent = (dHeroEl.textContent || 'SUNDAY').trim();
+    dBufPeriod.textContent = (dPeriodEl.textContent || 'MORNING').trim();
+    dBufMonthDay.textContent = (dMonthDayEl.textContent || 'SEPTEMBER 6').trim();
+    dBufYear.textContent = (dYearEl.textContent || '2026').trim();
+
+    // Binary search for Hero Day font size between 16px and 80px
+    let low = 16;
+    let high = 80;
+    let bestS = 24;
+
+    while(low <= high){
+      const mid = Math.floor((low + high) / 2);
+      const sDay = mid;
+      const sPeriod = Math.max(12, Math.round(mid * 0.58));
+      const sMonthDay = Math.max(11, Math.round(mid * 0.54));
+      const sYear = Math.max(11, Math.round(mid * 0.54));
+
+      dBufDay.style.fontSize = sDay + 'px';
+      dBufPeriod.style.fontSize = sPeriod + 'px';
+      dBufMonthDay.style.fontSize = sMonthDay + 'px';
+      dBufYear.style.fontSize = sYear + 'px';
+
+      const wDay = dBufDay.scrollWidth;
+      const wPeriod = dBufPeriod.scrollWidth;
+      const wMonthDay = dBufMonthDay.scrollWidth;
+      const wYear = dBufYear.scrollWidth;
+
+      const maxLineWidth = Math.max(wDay, wPeriod, wMonthDay, wYear);
+      const totalStackH = (sDay * 0.96) + (sPeriod * 0.98) + (sMonthDay * 0.98) + (sYear * 0.98) + (3 * Math.max(4, sDay * 0.16));
+
+      if(maxLineWidth <= targetW && totalStackH <= targetH){
+        bestS = mid;
+        low = mid + 1;
+      } else {
+        high = mid - 1;
+      }
+    }
+
+    const finalDay = bestS;
+    const finalPeriod = Math.max(12, Math.round(bestS * 0.58));
+    const finalMonthDay = Math.max(11, Math.round(bestS * 0.54));
+    const finalYear = Math.max(11, Math.round(bestS * 0.54));
+
+    dHeroEl.style.fontSize = finalDay + 'px';
+    dPeriodEl.style.fontSize = finalPeriod + 'px';
+    dMonthDayEl.style.fontSize = finalMonthDay + 'px';
+    dYearEl.style.fontSize = finalYear + 'px';
+  }
+
+  // Setup ResizeObserver on Date container
+  if(window.ResizeObserver && dateContentWrapEl){
+    let dateResizeTimer = null;
+    const dateObserver = new ResizeObserver(() => {
+      if(dateResizeTimer) cancelAnimationFrame(dateResizeTimer);
+      dateResizeTimer = requestAnimationFrame(fitDateBlockToContainer);
+    });
+    dateObserver.observe(dateContentWrapEl);
+  } else {
+    window.addEventListener('resize', fitDateBlockToContainer);
+  }
+
+  /* ---------------------------------------------------------------
+     WEATHER BLOCK 2-COLUMN SIZING & AUTO-FIT ENGINE
+     - Proportional tiered hierarchy from user mockup:
+       * Header Bar: City Name (left) + Condition Text & Icon (right)
+       * Hero Temp (Left Column): Giant Digits (900 Outfit, #46f1ab)
+       * Stacked °F: Degree symbol at cap-height, unit F at baseline
+       * Capsules (Right Column): Humidity (Cyan #38bdf8), Barometric Pressure (Purple #cf7dff), UV Index (Mint #46f1ab)
+     - Obey scaling rules for resizable block:
+       * Fits dynamically to container width & height when resized via splitters
+       * Zero text wrapping or awkward clipping (safeguards 3-digit temps & long city names)
+       * Smooth 60fps scaling during splitter drag & resize
+  --------------------------------------------------------------- */
+  const topWeatherBlockEl = document.getElementById('topWeatherBlock');
+  const heroTempNumEl = document.getElementById('topTempNow');
+  const heroTempUnitStackEl = document.querySelector('.hero-temp-unit-stack');
+  const heroDegEl = document.querySelector('.hero-deg');
+  const heroUnitEl = document.querySelector('.hero-unit');
+  const topCityNameEl = document.getElementById('cityName');
+  const topCondDescEl = document.getElementById('topCondText');
+  const topCondIconWrapEl = document.getElementById('topCondIconWrap');
+  const topLocPinEl = document.querySelector('.loc-pin-icon');
+  const topLocHintEl = document.querySelector('.loc-edit-hint');
+
+  let wxMeasureBuffer = null;
+  let wxBufTempWrap = null;
+  let wxBufTemp = null;
+  let wxBufDeg = null;
+  let wxBufUnit = null;
+  let wxBufStack = null;
+  let wxBufCity = null;
+  let wxBufCond = null;
+
+  function getWxMeasureBuffer(){
+    if(!wxMeasureBuffer){
+      wxMeasureBuffer = document.createElement('div');
+      wxMeasureBuffer.id = 'wxMeasureBuffer';
+      wxMeasureBuffer.style.cssText = 'position:fixed;top:-9999px;left:-9999px;visibility:hidden;pointer-events:none;z-index:-1000;white-space:nowrap;box-sizing:border-box;display:inline-flex;align-items:center;line-height:0.82;padding:0;margin:0;border:none;';
+
+      wxBufTempWrap = document.createElement('div');
+      wxBufTempWrap.style.cssText = 'display:inline-flex;align-items:flex-start;line-height:0.82;padding:0;margin:0;';
+
+      wxBufTemp = document.createElement('span');
+      wxBufTemp.style.cssText = 'font-family:\'Outfit\',sans-serif;font-weight:400;letter-spacing:-0.03em;line-height:0.82;';
+
+      wxBufStack = document.createElement('div');
+      wxBufStack.style.cssText = 'display:inline-flex;flex-direction:column;align-items:center;justify-content:flex-start;margin-left:4px;';
+
+      wxBufDeg = document.createElement('span');
+      wxBufDeg.textContent = '°';
+      wxBufDeg.style.cssText = 'font-family:\'Outfit\',sans-serif;font-weight:400;line-height:0.8;text-align:center;';
+
+      wxBufUnit = document.createElement('span');
+      wxBufUnit.textContent = 'F';
+      wxBufUnit.style.cssText = 'font-family:\'Outfit\',sans-serif;font-weight:400;line-height:0.85;text-align:center;';
+
+      wxBufStack.appendChild(wxBufDeg);
+      wxBufStack.appendChild(wxBufUnit);
+
+      wxBufTempWrap.appendChild(wxBufTemp);
+      wxBufTempWrap.appendChild(wxBufStack);
+
+      wxBufCity = document.createElement('span');
+      wxBufCity.style.cssText = 'font-family:\'Outfit\',sans-serif;font-weight:500;letter-spacing:0.02em;text-transform:uppercase;white-space:nowrap;line-height:1.1;';
+
+      wxBufCond = document.createElement('span');
+      wxBufCond.style.cssText = 'font-family:\'Outfit\',sans-serif;font-weight:400;letter-spacing:0.02em;text-transform:uppercase;white-space:nowrap;line-height:1.1;';
+
+      wxMeasureBuffer.appendChild(wxBufTempWrap);
+      wxMeasureBuffer.appendChild(wxBufCity);
+      wxMeasureBuffer.appendChild(wxBufCond);
+      document.body.appendChild(wxMeasureBuffer);
+    }
+    return wxMeasureBuffer;
+  }
+
+  function fitWeatherBlockToContainer(){
+    if(!topWeatherBlockEl || !heroTempNumEl) return;
+
+    let availW = topWeatherBlockEl.clientWidth;
+    let availH = topWeatherBlockEl.clientHeight;
+    if(availW <= 40 || availH <= 40){
+      availW = 340;
+      availH = 160;
+    }
+
+    const padH = Math.max(6, Math.round(availH * 0.045));
+    const padW = Math.max(8, Math.round(availW * 0.03));
+    const targetW = Math.max(100, availW - (padW * 2));
+    const targetH = Math.max(70, availH - (padH * 2));
+
+    const buf = getWxMeasureBuffer();
+
+    // 1. Dynamic Header Sizing (Center-Stacked: City/State on Top, Condition Underneath)
+    // Sized larger with room for longer weather descriptions
+    const cityName = (topCityNameEl ? topCityNameEl.textContent : 'Waltham, MA').trim();
+    const condName = (topCondDescEl ? topCondDescEl.textContent : 'Clear Sky').trim();
+
+    wxBufCity.textContent = cityName;
+    wxBufCond.textContent = condName;
+
+    // Both lines occupy the full card width, giving ample space for longer weather descriptions
+    const availCityTxtW = Math.max(70, targetW - 48);
+    const availCondTxtW = Math.max(70, targetW - 36);
+
+    let headLow = 13;
+    let headHigh = Math.min(26, Math.max(16, Math.round(targetW * 0.075)));
+    let bestHeadS = 16;
+
+    while(headLow <= headHigh){
+      const mid = Math.floor((headLow + headHigh) / 2);
+      wxBufCity.style.fontSize = mid + 'px';
+      wxBufCond.style.fontSize = Math.max(12, Math.round(mid * 0.92)) + 'px';
+      if(wxBufCity.scrollWidth <= availCityTxtW && wxBufCond.scrollWidth <= availCondTxtW){
+        bestHeadS = mid;
+        headLow = mid + 1;
+      } else {
+        headHigh = mid - 1;
+      }
+    }
+
+    if(topCityNameEl) topCityNameEl.style.fontSize = bestHeadS + 'px';
+    if(topCondDescEl) topCondDescEl.style.fontSize = Math.max(12, Math.round(bestHeadS * 0.92)) + 'px';
+
+    const iconDim = Math.max(15, Math.min(24, Math.round(bestHeadS * 1.25)));
+    if(topLocPinEl){
+      topLocPinEl.style.width = iconDim + 'px';
+      topLocPinEl.style.height = iconDim + 'px';
+    }
+    if(topCondIconWrapEl){
+      topCondIconWrapEl.style.width = iconDim + 'px';
+      topCondIconWrapEl.style.height = iconDim + 'px';
+    }
+    if(topLocHintEl){
+      topLocHintEl.style.fontSize = Math.max(11, Math.round(bestHeadS * 0.88)) + 'px';
+    }
+
+    // Header stack height (2 lines + gap)
+    const headerH = Math.max(28, Math.round(bestHeadS * 2.15) + 3);
+    const bodyAvailH = Math.max(50, targetH - headerH - 2);
+
+    // 2. Uniform Unbolded Telemetry Items in Lower-Right (Humidity, Barometric Pressure, UV)
+    // All 3 use identical font, size, unbolded weight, and are justified hard-right
+    const capsuleValEls = topWeatherBlockEl.querySelectorAll('.capsule-val');
+    const capsuleUnitEls = topWeatherBlockEl.querySelectorAll('.capsule-unit');
+    const capsuleIconEls = topWeatherBlockEl.querySelectorAll('.capsule-icon');
+
+    const capsuleValSize = Math.max(13, Math.min(24, Math.round(bodyAvailH * 0.20)));
+    const capsuleUnitSize = Math.max(10, Math.min(15, Math.round(capsuleValSize * 0.70)));
+    const capsuleIconSize = Math.max(14, Math.min(21, Math.round(capsuleValSize * 0.94)));
+
+    capsuleValEls.forEach(el => { el.style.fontSize = capsuleValSize + 'px'; });
+    capsuleUnitEls.forEach(el => { el.style.fontSize = capsuleUnitSize + 'px'; });
+    capsuleIconEls.forEach(el => {
+      el.style.width = capsuleIconSize + 'px';
+      el.style.height = capsuleIconSize + 'px';
+    });
+
+    // Approximate width taken by the hard-right telemetry stack
+    const telemetryWidth = Math.max(80, Math.round(capsuleValSize * 4.1));
+    // The giant hero temperature in the lower-left gets all remaining horizontal width!
+    const leftColTargetW = Math.max(80, targetW - telemetryWidth - 8);
+
+    // 3. Binary search for Giant Taller Hero Temperature Font Size (Lower-Left Corner)
+    wxBufTemp.textContent = (heroTempNumEl.textContent || '61').trim();
+
+    let low = 36;
+    let high = 145;
+    let bestTempS = 56;
+
+    while(low <= high){
+      const mid = Math.floor((low + high) / 2);
+      const sTemp = mid;
+      const sDeg = Math.max(13, Math.round(mid * 0.30));
+      const sUnit = Math.max(10, Math.round(mid * 0.22));
+
+      wxBufTemp.style.fontSize = sTemp + 'px';
+      wxBufDeg.style.fontSize = sDeg + 'px';
+      wxBufUnit.style.fontSize = sUnit + 'px';
+
+      const wCombo = wxBufTempWrap.scrollWidth;
+      // Account for vertical stretch of the taller digits
+      const hCombo = sTemp * 0.84;
+
+      if(wCombo <= leftColTargetW && hCombo <= bodyAvailH){
+        bestTempS = mid;
+        low = mid + 1;
+      } else {
+        high = mid - 1;
+      }
+    }
+
+    const finalTemp = bestTempS;
+    const finalDeg = Math.max(13, Math.round(bestTempS * 0.30));
+    const finalUnit = Math.max(10, Math.round(bestTempS * 0.22));
+
+    heroTempNumEl.style.fontSize = finalTemp + 'px';
+    if(heroDegEl) heroDegEl.style.fontSize = finalDeg + 'px';
+    if(heroUnitEl) heroUnitEl.style.fontSize = finalUnit + 'px';
+    if(heroTempUnitStackEl) heroTempUnitStackEl.style.height = 'auto';
+  }
+
+  // Setup ResizeObserver on Weather container
+  if(window.ResizeObserver && topWeatherBlockEl){
+    let wxResizeTimer = null;
+    const wxObserver = new ResizeObserver(() => {
+      if(wxResizeTimer) cancelAnimationFrame(wxResizeTimer);
+      wxResizeTimer = requestAnimationFrame(fitWeatherBlockToContainer);
+    });
+    wxObserver.observe(topWeatherBlockEl);
+  } else {
+    window.addEventListener('resize', fitWeatherBlockToContainer);
+  }
+
   tickClock();
+  fitDateBlockToContainer();
+  fitWeatherBlockToContainer();
   setInterval(tickClock, 1000);
 
   /* ---------------------------------------------------------------
@@ -2415,7 +2897,7 @@
   async function fetchWeather(lat, lon){
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}`
       + `&current=temperature_2m,relative_humidity_2m,apparent_temperature,pressure_msl,weather_code,wind_speed_10m,uv_index`
-      + `&daily=weather_code,temperature_2m_max,temperature_2m_min,uv_index_max,relative_humidity_2m_max,sunrise,sunset`
+      + `&daily=weather_code,temperature_2m_max,temperature_2m_min,uv_index_max,relative_humidity_2m_max,pressure_msl_mean,sunrise,sunset`
       + `&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch&timezone=auto&forecast_days=6`;
     const r = await fetch(url);
     if(!r.ok) throw new Error('weather fetch failed');
@@ -2434,7 +2916,7 @@
 
   const dayShort = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
 
-  function renderOutlook(daily){
+  function renderOutlook(daily, cur){
     const el = document.getElementById('outlook');
     if(!el) return;
     el.innerHTML = '';
@@ -2452,6 +2934,13 @@
       const hum = humVal !== null && humVal !== undefined ? Math.round(humVal) : '--';
       const desc = weatherDescription(daily.weather_code[i]);
 
+      let pressIn = '--';
+      if(daily.pressure_msl_mean && daily.pressure_msl_mean[i] != null){
+        pressIn = hpaToInHg(daily.pressure_msl_mean[i]).toFixed(2);
+      } else if(i === 0 && cur && cur.pressure_msl != null){
+        pressIn = hpaToInHg(cur.pressure_msl).toFixed(2);
+      }
+
       card.innerHTML = `
         <div class="dname">${dn}</div>
         <svg class="dicon" viewBox="0 0 100 100">${weatherIconSvg(daily.weather_code[i])}</svg>
@@ -2462,15 +2951,27 @@
           <span class="lo" title="Low ${lo}°">${lo}°</span>
         </div>
         <div class="day-meta-row">
-          <div class="duv" title="Peak UV: ${uv} (${uvCategory(uv)})">
-            <span class="duv-dot" style="background:${ucol};box-shadow:0 0 4px ${ucol};"></span>
-            <span style="color:${ucol};font-weight:800;">UV ${uv}</span>
-          </div>
-          <div class="dhum" title="Peak Humidity: ${hum}%">
-            <svg class="dhum-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <div class="day-telem-item d-hum" title="Humidity: ${hum}%">
+            <svg class="day-telem-icon glow-blue" viewBox="0 0 24 24" fill="rgba(56,189,248,0.12)" stroke="#38bdf8" stroke-width="2">
               <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
             </svg>
-            <span class="dhum-val">${hum}%</span>
+            <span class="day-telem-val glow-blue" style="color:#38bdf8;">${hum}<span class="day-telem-unit">%</span></span>
+          </div>
+          <div class="day-telem-item d-press" title="Pressure: ${pressIn} inHg">
+            <svg class="day-telem-icon glow-purple" viewBox="0 0 24 24" fill="none" stroke="#cf7dff">
+              <circle cx="12" cy="12" r="9.5" stroke="currentColor" stroke-width="1.6"/>
+              <path d="M 6.5 13.5 A 6.5 6.5 0 1 1 17.5 13.5" stroke="currentColor" stroke-width="1.8" stroke-dasharray="3.2 1.6" stroke-linecap="butt" fill="none"/>
+              <circle cx="12" cy="12" r="1.8" fill="currentColor"/>
+              <path d="M12 12 L16.5 9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+            <span class="day-telem-val glow-purple" style="color:#cf7dff;">${pressIn}<span class="day-telem-unit">in</span></span>
+          </div>
+          <div class="day-telem-item d-uv" title="Peak UV: ${uv} (${uvCategory(uv)})">
+            <svg class="day-telem-icon" viewBox="0 0 24 24" fill="none" stroke="${ucol}" stroke-width="2">
+              <circle cx="12" cy="12" r="4.2"/>
+              <path d="M12 2v2.2M12 19.8V22M2 12h2.2M19.8 12H22M4.93 4.93l1.56 1.56M17.51 17.51l1.56 1.56M4.93 19.07l1.56-1.56M17.51 6.49l1.56-1.56"/>
+            </svg>
+            <span class="day-telem-val" style="color:${ucol};">${uv}<span class="day-telem-unit">uv</span></span>
           </div>
         </div>
       `;
@@ -2505,7 +3006,10 @@
     if(coordsEl) coordsEl.textContent = `${lat.toFixed(4)}, ${lon.toFixed(4)}${accTxt}`;
     if(label){
       const cityEl = document.getElementById('cityName');
-      if(cityEl) cityEl.textContent = label;
+      if(cityEl){
+        cityEl.textContent = label;
+        if(typeof fitWeatherBlockToContainer === 'function') fitWeatherBlockToContainer();
+      }
     }
 
     // Save current active station in localStorage for instant reloading
@@ -2609,6 +3113,12 @@
       }
     }
 
+    const topPressureEl = document.getElementById('topPressureNow');
+    if(topPressureEl && cur.pressure_msl != null){
+      const inHg = hpaToInHg(cur.pressure_msl);
+      topPressureEl.textContent = inHg.toFixed(2);
+    }
+
     // Sunrise / sunset
     const sunriseEl = document.getElementById('sunrise');
     if(sunriseEl) sunriseEl.textContent = fmtTime(daily.sunrise[0]);
@@ -2632,11 +3142,15 @@
     }
 
     // 5-day outlook
-    renderOutlook(daily);
+    renderOutlook(daily, cur);
 
     const condUpdatedEl = document.getElementById('condUpdated');
     if(condUpdatedEl) condUpdatedEl.textContent = 'Updated ' + fmtTime(new Date().toISOString());
     setStatus('Live • auto-refresh every 10 min');
+
+    if(typeof fitWeatherBlockToContainer === 'function'){
+      fitWeatherBlockToContainer();
+    }
   }
 
   /* ---------------------------------------------------------------
@@ -2696,7 +3210,10 @@
           const label = await reverseGeocode(lat, lon);
           const finalName = label || 'Waltham, MA';
           const cityEl = document.getElementById('cityName');
-          if(cityEl) cityEl.textContent = finalName;
+          if(cityEl){
+            cityEl.textContent = finalName;
+            if(typeof fitWeatherBlockToContainer === 'function') fitWeatherBlockToContainer();
+          }
           try{
             localStorage.setItem('wx_saved_location', JSON.stringify({ lat, lon, name: finalName }));
           }catch(e){}
@@ -2863,7 +3380,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.090626.1910';
+  const CLIENT_APP_VERSION = 'v1.090626.2126';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -3463,7 +3980,6 @@
   const eightballDie = document.getElementById('eightballDie');
   const eightballAnswer = document.getElementById('eightballAnswer');
   const eightballBadge = document.getElementById('eightballBadge');
-  const eightballCounter = document.getElementById('eightballCounter');
 
   let isShaking8Ball = false;
   let last8BallIndex = 0;
@@ -3597,10 +4113,6 @@
       }
 
       if(eightballBadge) eightballBadge.textContent = 'SHAKEN ✓';
-      if(eightballCounter){
-        const typeLabel = resp.type === 'affirmative' ? 'AFFIRMATIVE' : (resp.type === 'neutral' ? 'NON-COMMITTAL' : 'NEGATIVE');
-        eightballCounter.textContent = `ANSWER ${nextIdx + 1} OF 20 • ${typeLabel}`;
-      }
     }, 450);
 
     setTimeout(() => {
@@ -3653,7 +4165,7 @@
   const holidaySummaryEl = document.getElementById('holidaySummary');
   const holidayContentArea = document.getElementById('holidayContentArea');
   const holidayCounterBadge = document.getElementById('holidayCounterBadge');
-  const holidayRefreshBtn = document.getElementById('holidayRefreshBtn');
+  const holidayCalendarBtn = document.getElementById('holidayCalendarBtn');
   const panelDetailsEl = document.getElementById('panelDetails');
 
   // Smart dynamic text fitting buffer for Checkiday.com (Proportional Binary Max-Fill)
@@ -3898,8 +4410,6 @@
     const todayKey = getLocalDateKey();
     checkidayActiveDateKey = todayKey;
 
-    if(holidayRefreshBtn) holidayRefreshBtn.classList.add('spinning');
-
     // 1. Instant Cache Display (Stale-While-Revalidate):
     // If we have cached data for today, render it immediately so the TV UI is instantly responsive.
     // If cached data is from yesterday or older, immediately purge it to prevent stale holidays!
@@ -3997,30 +4507,30 @@
       console.warn('Failed to fetch Checkiday feed:', err);
     }finally{
       isFetchingCheckiday = false;
-      if(holidayRefreshBtn){
-        setTimeout(() => holidayRefreshBtn.classList.remove('spinning'), 350);
-      }
     }
   }
 
-  // Interactive controls (panel tap to rotate and refresh button)
+  // Interactive controls: tap card or calendar button to rotate to the next holiday
   if(panelDetailsEl){
-    panelDetailsEl.addEventListener('click', (e) => {
-      if(e.target.closest('#holidayRefreshBtn')) return;
+    panelDetailsEl.addEventListener('click', () => {
       rotateHoliday(1, true);
     });
   }
 
-  if(holidayRefreshBtn){
-    holidayRefreshBtn.addEventListener('click', (e) => {
+  if(holidayCalendarBtn){
+    holidayCalendarBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      // Explicit manual user action: purge cached holidays and force fresh pull
+      rotateHoliday(1, true);
+    });
+    // Optional power-action: double-clicking the calendar icon forces a fresh feed pull
+    holidayCalendarBtn.addEventListener('dblclick', (e) => {
+      e.stopPropagation();
       try{
         localStorage.removeItem('wf_checkiday_list');
         localStorage.removeItem('wf_checkiday_date');
         localStorage.removeItem('wf_checkiday_index');
         localStorage.removeItem('wf_checkiday_last_rotate');
-      }catch(e){}
+      }catch(err){}
       loadCheckidayFeed(true);
     });
   }
@@ -4199,6 +4709,10 @@
 
         currentWeights[rowId] = newW;
         applyWeights(rowId, newW);
+        if(rowId === 'top'){
+          if(typeof fitDateBlockToContainer === 'function') fitDateBlockToContainer();
+          if(typeof fitWeatherBlockToContainer === 'function') fitWeatherBlockToContainer();
+        }
       }
 
       function onPointerUp(e){
@@ -4211,6 +4725,10 @@
         try{
           localStorage.setItem(`wf_layout_${rowId}_weights`, JSON.stringify(currentWeights[rowId]));
         }catch(err){}
+        if(rowId === 'top'){
+          if(typeof fitDateBlockToContainer === 'function') fitDateBlockToContainer();
+          if(typeof fitWeatherBlockToContainer === 'function') fitWeatherBlockToContainer();
+        }
       }
 
       splitter.addEventListener('pointerdown', onPointerDown);
@@ -4227,6 +4745,10 @@
           currentWeights[rowId] = [...def];
           applyWeights(rowId, def);
           try{ localStorage.removeItem(`wf_layout_${rowId}_weights`); }catch(err){}
+          if(rowId === 'top'){
+            if(typeof fitDateBlockToContainer === 'function') fitDateBlockToContainer();
+            if(typeof fitWeatherBlockToContainer === 'function') fitWeatherBlockToContainer();
+          }
         }
         lastTapTime = now;
       });

@@ -1,5 +1,5 @@
 // Weather Friends Service Worker (Network-first for navigation shell & APIs, cache-first for static media)
-const CACHE_NAME = 'wf-v1.090726.2056';
+const CACHE_NAME = 'wf-v1.090726.2123';
 const STATIC_ASSETS = [
   '/',
   '/index.html',

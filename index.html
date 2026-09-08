@@ -37,6 +37,7 @@
     --ink:#dce7ea;
     --ink-dim:#6b7f87;
     --grid-line:rgba(140,200,210,0.14);
+    --board-brightness:1.0;
   }
   *{box-sizing:border-box;}
   html{
@@ -92,6 +93,86 @@
     margin-bottom:clamp(3px, 0.6vh, 6px);
     height:clamp(16px, 2.2vh, 20px);
     flex:0 0 auto;
+  }
+  /* Hardware-Style 5-Dot Board Dimmer (Top Left) */
+  .device-dimmer{
+    position:absolute;
+    left:0;
+    top:50%;
+    transform:translateY(-50%);
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background:rgba(0,0,0,0.32);
+    border:1px solid rgba(140,200,210,0.22);
+    border-radius:12px;
+    padding:2px 7px 2px 6px;
+    cursor:pointer;
+    user-select:none;
+    transition:all 0.2s ease;
+    z-index:20;
+  }
+  .device-dimmer:hover{
+    border-color:rgba(73,230,196,0.45);
+    background:rgba(0,0,0,0.45);
+  }
+  .device-dimmer:focus-visible{
+    outline:2px solid var(--teal);
+    outline-offset:2px;
+  }
+  .dimmer-icon{
+    width:10px;
+    height:10px;
+    stroke:var(--teal);
+    opacity:0.85;
+    flex:none;
+    transition:transform 0.25s ease, opacity 0.2s ease;
+  }
+  .device-dimmer:hover .dimmer-icon{
+    opacity:1;
+    transform:rotate(20deg);
+  }
+  .dimmer-dots-cluster{
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+  }
+  .dimmer-dot-btn{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.18);
+    border:1px solid rgba(255,255,255,0.22);
+    padding:0;
+    margin:0;
+    cursor:pointer;
+    flex:none;
+    transition:all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    position:relative;
+  }
+  .dimmer-dot-btn:hover{
+    transform:scale(1.25);
+    background:rgba(73,230,196,0.7);
+    border-color:var(--teal);
+  }
+  .dimmer-dot-btn.active{
+    background:#ffe600;
+    border-color:#fff275;
+    box-shadow:0 0 6px rgba(255,230,0,0.75);
+    transform:scale(1.15);
+  }
+  .dimmer-pct-label{
+    font-family:'Share Tech Mono',monospace;
+    font-size:0.62rem;
+    color:var(--ink-dim);
+    letter-spacing:0.02em;
+    margin-left:1px;
+    min-width:28px;
+    text-align:right;
+    transition:color 0.2s ease;
+  }
+  .device-dimmer:hover .dimmer-pct-label{
+    color:var(--teal);
   }
   .device-top .brand{
     font-family:'Outfit',sans-serif;
@@ -285,13 +366,16 @@
     display:flex;
     flex-direction:column;
     justify-content:space-between;
+    gap:clamp(4px, 0.8vh, 8px);
     background:radial-gradient(120% 140% at 50% 0%, var(--screen-bg-2), var(--screen-bg) 70%);
     border-radius:10px;
     border:1px solid #000;
     box-shadow:inset 0 0 40px rgba(0,0,0,0.9), inset 0 0 2px #000;
-    padding:clamp(6px, 1.2vh, 12px) clamp(8px, 1.2vw, 14px) clamp(4px, 0.8vh, 8px);
+    padding:clamp(6px, 1.2vh, 12px) clamp(8px, 1.2vw, 14px) clamp(4px, 0.8vh, 8px) clamp(26px, 2.5vw, 32px);
     overflow:hidden;
     box-sizing:border-box;
+    filter: brightness(var(--board-brightness, 1.0)) contrast(calc(1 + (1 - var(--board-brightness, 1.0)) * 0.15));
+    transition: filter 0.28s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .screen::after{
     content:'';
@@ -327,7 +411,7 @@
     display:grid;
     grid-template-columns: var(--tw1, 1.25fr) 6px var(--tw2, 0.85fr) 6px var(--tw3, 1.25fr);
     gap:0;
-    margin-bottom:clamp(4px, 0.8vh, 8px);
+    margin-bottom:0;
     align-items:stretch;
     flex:1.02 1 auto;
     min-height:clamp(100px, 18vh, 180px);
@@ -337,6 +421,95 @@
   .panels, .outlook{
     position:relative;
     z-index:10;
+  }
+
+  /* Hardware-Style 1-Dimensional Light Gray Row Order Steppers (Outside the Frames) */
+  .row-order-ctrl{
+    position:absolute;
+    left:clamp(-25px, -2.4vw, -21px);
+    top:50%;
+    transform:translateY(-50%);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:3px;
+    z-index:35;
+    pointer-events:auto;
+    user-select:none;
+    transition:opacity 0.2s ease;
+  }
+  .row-order-ctrl.slot-top,
+  .row-order-ctrl.slot-mid,
+  .row-order-ctrl.slot-bottom{
+    top:50%;
+    bottom:auto;
+    transform:translateY(-50%);
+  }
+
+  .row-arrow-btn{
+    background:transparent;
+    border:none;
+    outline:none;
+    width:22px;
+    height:22px;
+    padding:0;
+    margin:0;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    color:#9eb0b8; /* Simple 1-dimensional light gray */
+    opacity:0.45;  /* Noticeable up close, quiet & unobtrusive from distance */
+    transition:opacity 0.18s ease, color 0.18s ease, transform 0.15s ease;
+    border-radius:4px;
+    -webkit-tap-highlight-color:transparent;
+    line-height:1;
+  }
+  .row-arrow-btn:hover{
+    opacity:1;
+    color:#ffffff;
+    transform:scale(1.25);
+  }
+  .row-arrow-btn:active{
+    transform:scale(0.9);
+    color:var(--teal);
+    opacity:1;
+  }
+  .row-arrow-btn:focus-visible{
+    outline:1px dashed rgba(220, 231, 234, 0.6);
+    outline-offset:1px;
+  }
+  .row-arrow-icon{
+    width:15px;
+    height:15px;
+    stroke:currentColor;
+    stroke-width:2.2;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+    display:block;
+    pointer-events:none;
+  }
+  .row-order-ctrl.slot-top .row-arrow-up{
+    display:none !important;
+  }
+  .row-order-ctrl.slot-bottom .row-arrow-down{
+    display:none !important;
+  }
+
+  /* Physical Glide on Row Reordering */
+  .row-swap-anim{
+    animation:rowSwapGlide 0.24s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  @keyframes rowSwapGlide{
+    0%{
+      opacity:0.75;
+      transform:translateY(3px);
+    }
+    100%{
+      opacity:1;
+      transform:translateY(0);
+    }
   }
 
   .top-cert-card{
@@ -515,7 +688,7 @@
     grid-row: 1;
     font-family:'Outfit',sans-serif;
     font-weight:800;
-    font-size:clamp(2.0rem, min(20cqw, 7.5vh), 4.6rem);
+    font-size:clamp(1.62rem, min(16.2cqw, 6.07vh), 3.72rem);
     letter-spacing:0.02em;
     color:#ffffff;
     line-height:0.86;
@@ -536,7 +709,7 @@
     grid-row: 3;
     font-family:'Outfit',sans-serif;
     font-weight:800;
-    font-size:clamp(2.0rem, min(20cqw, 7.5vh), 4.6rem);
+    font-size:clamp(1.62rem, min(16.2cqw, 6.07vh), 3.72rem);
     letter-spacing:0.02em;
     color:#ffffff;
     line-height:0.86;
@@ -957,7 +1130,7 @@
     display:grid;
     grid-template-columns: var(--mw1, 1fr) 6px var(--mw2, 1fr) 6px var(--mw3, 1fr);
     gap:0;
-    margin-bottom:clamp(4px, 0.8vh, 8px);
+    margin-bottom:0;
     align-items:stretch;
     flex:1.25 1 auto;
     min-height:clamp(120px, 22vh, 220px);
@@ -1127,7 +1300,7 @@
   }
   .inspire-text{
     font-family:'Outfit',sans-serif;
-    font-weight:700;
+    font-weight:450;
     color:#f2f9fb;
     letter-spacing:0.01em;
     transition:opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
@@ -1309,7 +1482,7 @@
   }
   .holiday-title{
     font-family:'Outfit',sans-serif;
-    font-weight:800;
+    font-weight:500;
     font-size:clamp(1.15rem, min(5.0cqw, 2.6vh), 1.90rem);
     line-height:1.16;
     color:#ffffff;
@@ -1808,7 +1981,7 @@
       overflow:visible !important;
       display:block !important;
       flex:none !important;
-      padding:10px 8px !important;
+      padding:10px 8px 10px 28px !important;
     }
     .row-splitter{
       display:none !important;
@@ -1871,6 +2044,22 @@
 
 <div class="device">
   <div class="device-top">
+    <!-- 5-Dot Board Dimmer (Far Left) -->
+    <div class="device-dimmer" id="boardDimmer" role="group" aria-label="Board Brightness Dimmer" title="Adjust display brightness (100%, 75%, 50%, 25%, 15%) • Tap to cycle • Key: D">
+      <svg class="dimmer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
+        <circle cx="12" cy="12" r="4.5"/>
+        <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.93 4.93l1.77 1.77M17.3 17.3l1.77 1.77M4.93 19.07l1.77-1.77M17.3 6.7l1.77-1.77"/>
+      </svg>
+      <div class="dimmer-dots-cluster" id="dimmerDots">
+        <button type="button" class="dimmer-dot-btn active" data-level="0" data-pct="100%" title="100% Brightness (Full Day)" aria-label="100% Brightness"></button>
+        <button type="button" class="dimmer-dot-btn" data-level="1" data-pct="75%" title="75% Brightness (Soft Day)" aria-label="75% Brightness"></button>
+        <button type="button" class="dimmer-dot-btn" data-level="2" data-pct="50%" title="50% Brightness (Ambient Evening)" aria-label="50% Brightness"></button>
+        <button type="button" class="dimmer-dot-btn" data-level="3" data-pct="25%" title="25% Brightness (Twilight Dim)" aria-label="25% Brightness"></button>
+        <button type="button" class="dimmer-dot-btn" data-level="4" data-pct="15%" title="15% Brightness (Night Glow)" aria-label="15% Brightness"></button>
+      </div>
+      <span class="dimmer-pct-label" id="dimmerPctLabel">100%</span>
+    </div>
+
     <div class="brand">
       <span>Weather Friends app by <b>BostonyFX</b></span>
       <button class="version-pill" id="appVersionBadge" type="button" title="Tap to refresh weather. If an update is available, will install and reload latest version. (Hold or double-tap to force reload)" aria-label="Version and manual refresh">
@@ -1878,7 +2067,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.090726.2056</span>
+        <span id="appVersionText">v1.090726.2139</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -1900,6 +2089,22 @@
   <div class="screen" id="screen">
 
     <div class="topbar" id="topTier">
+      <!-- 1-D Light Gray Row Reorder Stepper -->
+      <div class="row-order-ctrl slot-top" id="ctrlTopTier" data-row-id="topTier" aria-label="Reorder row">
+        <button type="button" class="row-arrow-btn row-arrow-up" title="Move row up" aria-label="Move row up">
+          <svg class="row-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="19" x2="12" y2="5"/>
+            <polyline points="5 12 12 5 19 12"/>
+          </svg>
+        </button>
+        <button type="button" class="row-arrow-btn row-arrow-down" title="Move row down" aria-label="Move row down">
+          <svg class="row-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <polyline points="19 12 12 19 5 12"/>
+          </svg>
+        </button>
+      </div>
+
       <!-- CERTIFIED BLOCK 1: FULL-HEIGHT 4-TIER DATE & PERIOD -->
       <div class="top-cert-card" id="topDateBlock">
         <div class="date-content-wrap">
@@ -2010,6 +2215,22 @@
     </div>
 
     <div class="panels" id="panelsRow">
+      <!-- 1-D Light Gray Row Reorder Stepper -->
+      <div class="row-order-ctrl slot-mid" id="ctrlPanelsRow" data-row-id="panelsRow" aria-label="Reorder row">
+        <button type="button" class="row-arrow-btn row-arrow-up" title="Move row up" aria-label="Move row up">
+          <svg class="row-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="19" x2="12" y2="5"/>
+            <polyline points="5 12 12 5 19 12"/>
+          </svg>
+        </button>
+        <button type="button" class="row-arrow-btn row-arrow-down" title="Move row down" aria-label="Move row down">
+          <svg class="row-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <polyline points="19 12 12 19 5 12"/>
+          </svg>
+        </button>
+      </div>
+
       <!-- MAGIC 8-BALL (Center-Left Square, replaces redundant Conditions) -->
       <div class="panel eightball-panel" id="panelEightball" title="Tap to shake the Magic 8-Ball">
         <div class="panel-head">
@@ -2127,7 +2348,23 @@
     </div>
 
     <!-- 5-DAY OUTLOOK -->
-    <div class="outlook" id="outlook"></div>
+    <div class="outlook" id="outlook">
+      <!-- 1-D Light Gray Row Reorder Stepper -->
+      <div class="row-order-ctrl slot-bottom" id="ctrlOutlook" data-row-id="outlook" aria-label="Reorder row">
+        <button type="button" class="row-arrow-btn row-arrow-up" title="Move row up" aria-label="Move row up">
+          <svg class="row-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="19" x2="12" y2="5"/>
+            <polyline points="5 12 12 5 19 12"/>
+          </svg>
+        </button>
+        <button type="button" class="row-arrow-btn row-arrow-down" title="Move row down" aria-label="Move row down">
+          <svg class="row-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <polyline points="19 12 12 19 5 12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
 
   </div>
 
@@ -3108,7 +3345,11 @@
   function renderOutlook(daily, cur){
     const el = document.getElementById('outlook');
     if(!el) return;
+    const existingCtrl = document.getElementById('ctrlOutlook');
     el.innerHTML = '';
+    if(existingCtrl){
+      el.appendChild(existingCtrl);
+    }
     // index 0 is today; show today + next 4
     for(let i=0;i<5 && i<daily.time.length;i++){
       const d = new Date(daily.time[i] + 'T12:00:00');
@@ -3585,7 +3826,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.090726.2056';
+  const CLIENT_APP_VERSION = 'v1.090726.2139';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -3848,6 +4089,119 @@
     }
   });
 
+  /* ---------------------------------------------------------------
+     HARDWARE-STYLE 5-DOT BOARD DIMMER CONTROLLER
+     - 5 Incremental Steps: 100% -> 75% -> 50% -> 25% -> 15% (Night Glow)
+     - Preserves full contrast & vibrancy; never goes blank
+     - Interactive:
+       * Click / Tap specific dot to jump to that brightness
+       * Click / Tap dimmer cluster / sun icon to cycle to next level
+       * Keyboard / Smart TV Remote: Press 'D' or Up/Down arrows to step
+     - Persists in localStorage ('wf_board_dimmer_level')
+  --------------------------------------------------------------- */
+  const DIMMER_LEVELS = [
+    { pct: 100, label: '100%', val: 1.00, desc: 'Full Brightness' },
+    { pct: 75,  label: '75%',  val: 0.75, desc: 'Soft Day' },
+    { pct: 50,  label: '50%',  val: 0.50, desc: 'Ambient Evening' },
+    { pct: 25,  label: '25%',  val: 0.25, desc: 'Twilight Dim' },
+    { pct: 15,  label: '15%',  val: 0.15, desc: 'Night Glow' }
+  ];
+
+  let currentDimmerIndex = 0;
+  const boardDimmerEl = document.getElementById('boardDimmer');
+  const dimmerDotsContainer = document.getElementById('dimmerDots');
+  const dimmerPctLabel = document.getElementById('dimmerPctLabel');
+  const dimmerDotButtons = dimmerDotsContainer ? Array.from(dimmerDotsContainer.querySelectorAll('.dimmer-dot-btn')) : [];
+
+  function applyBoardDimmer(index, save = true){
+    const safeIdx = (index >= 0 && index < DIMMER_LEVELS.length) ? index : 0;
+    currentDimmerIndex = safeIdx;
+    const config = DIMMER_LEVELS[safeIdx];
+
+    // Update CSS custom property on root
+    document.documentElement.style.setProperty('--board-brightness', String(config.val));
+
+    // Update UI dot states
+    dimmerDotButtons.forEach((btn, idx) => {
+      if(idx === safeIdx){
+        btn.classList.add('active');
+        btn.setAttribute('aria-pressed', 'true');
+      } else {
+        btn.classList.remove('active');
+        btn.setAttribute('aria-pressed', 'false');
+      }
+    });
+
+    if(dimmerPctLabel){
+      dimmerPctLabel.textContent = config.label;
+    }
+
+    if(boardDimmerEl){
+      boardDimmerEl.title = `Display Brightness: ${config.label} (${config.desc}) • Tap or press 'D' to change`;
+    }
+
+    if(save){
+      try{
+        localStorage.setItem('wf_board_dimmer_level', String(safeIdx));
+      }catch(e){}
+    }
+  }
+
+  function cycleBoardDimmer(forward = true){
+    const next = forward
+      ? (currentDimmerIndex + 1) % DIMMER_LEVELS.length
+      : (currentDimmerIndex - 1 + DIMMER_LEVELS.length) % DIMMER_LEVELS.length;
+    applyBoardDimmer(next, true);
+  }
+
+  // Bind individual dot click/tap
+  dimmerDotButtons.forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const level = parseInt(btn.getAttribute('data-level'), 10);
+      if(!isNaN(level)){
+        applyBoardDimmer(level, true);
+      }
+    });
+  });
+
+  // Tap anywhere on dimmer cluster cycles to next level
+  if(boardDimmerEl){
+    boardDimmerEl.addEventListener('click', (e) => {
+      if(e.target.closest('.dimmer-dot-btn')) return; // handled by dot button
+      cycleBoardDimmer(true);
+    });
+  }
+
+  // Keyboard & Smart TV Remote control
+  window.addEventListener('keydown', (e) => {
+    // Don't intercept if user is typing into an input field or dialog
+    if(e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable)){
+      return;
+    }
+    if(e.key === 'd' || e.key === 'D'){
+      e.preventDefault();
+      cycleBoardDimmer(true);
+    }
+  });
+
+  // Restore saved dimmer level on startup
+  try{
+    const savedLevel = localStorage.getItem('wf_board_dimmer_level');
+    if(savedLevel !== null){
+      const parsedLevel = parseInt(savedLevel, 10);
+      if(!isNaN(parsedLevel) && parsedLevel >= 0 && parsedLevel < DIMMER_LEVELS.length){
+        applyBoardDimmer(parsedLevel, false);
+      } else {
+        applyBoardDimmer(0, false);
+      }
+    } else {
+      applyBoardDimmer(0, false);
+    }
+  }catch(e){
+    applyBoardDimmer(0, false);
+  }
+
   // PWA Service Worker Registration & Platform-Aware Install Prompt Handler
   const pwaInstallBtn = document.getElementById('pwaInstallBtn');
   const ipadModal = document.getElementById('ipadInstallModal');
@@ -3988,7 +4342,7 @@
     if(!measureBuffer){
       measureBuffer = document.createElement('div');
       measureBuffer.id = 'inspireMeasureBuffer';
-      measureBuffer.style.cssText = 'position:fixed;top:-9999px;left:-9999px;visibility:hidden;pointer-events:none;z-index:-1000;white-space:normal;word-break:normal;overflow-wrap:break-word;box-sizing:border-box;font-family:\'Outfit\',sans-serif;font-weight:700;letter-spacing:0.01em;padding:0;margin:0;border:none;';
+      measureBuffer.style.cssText = 'position:fixed;top:-9999px;left:-9999px;visibility:hidden;pointer-events:none;z-index:-1000;white-space:normal;word-break:normal;overflow-wrap:break-word;box-sizing:border-box;font-family:\'Outfit\',sans-serif;font-weight:450;letter-spacing:0.01em;padding:0;margin:0;border:none;';
       document.body.appendChild(measureBuffer);
     }
     return measureBuffer;
@@ -4480,7 +4834,7 @@
       holidayMeasureBuffer.style.cssText = 'position:fixed;top:-9999px;left:-9999px;visibility:hidden;pointer-events:none;z-index:-1000;white-space:normal;word-break:normal;overflow-wrap:break-word;box-sizing:border-box;display:flex;flex-direction:column;padding:0;margin:0;border:none;';
       
       hBufTitle = document.createElement('div');
-      hBufTitle.style.cssText = 'font-family:\'Outfit\',sans-serif;font-weight:800;letter-spacing:-0.005em;margin:0;padding:0;flex-shrink:0;';
+      hBufTitle.style.cssText = 'font-family:\'Outfit\',sans-serif;font-weight:500;letter-spacing:-0.005em;margin:0;padding:0;flex-shrink:0;';
       
       hBufSummary = document.createElement('div');
       hBufSummary.style.cssText = 'font-family:\'Outfit\',sans-serif;font-weight:400;letter-spacing:0.01em;margin:0;padding:0;flex-shrink:0;';
@@ -5038,7 +5392,191 @@
     });
   }
 
+  /* ---------------------------------------------------------------
+     HARDWARE-STYLE DASHBOARD ROW ARRANGER & DIRECTIONAL STEPPERS
+     - 3 Reorderable Row Groups:
+       * 'topTier': Station Date, Clock, Local Weather & Telemetry
+       * 'panelsRow': 8-Ball, Inspiration / Wisdom, Checkiday Holidays
+       * 'outlook': 5-Day Forecast Strip
+     - Dynamic Direction Inheritance:
+       * Slot 0 (Top Row): Down arrow only (swaps with Slot 1)
+       * Slot 1 (Middle Row): Both Up and Down arrows (swaps with Slot 0 or 2)
+       * Slot 2 (Bottom Row): Up arrow only (swaps with Slot 1)
+     - 1-Dimensional light gray styling; zero extra borders
+     - Instant persistence in localStorage ('wf_dashboard_row_order')
+     - Smooth tactile swap transition animation
+  --------------------------------------------------------------- */
+  const VALID_ROW_IDS = ['topTier', 'panelsRow', 'outlook'];
+  const DEFAULT_ROW_ORDER = ['topTier', 'panelsRow', 'outlook'];
+
+  function getSavedRowOrder(){
+    try {
+      const saved = localStorage.getItem('wf_dashboard_row_order');
+      if(saved){
+        const parsed = JSON.parse(saved);
+        if(Array.isArray(parsed) && parsed.length === 3 &&
+           parsed.every(id => VALID_ROW_IDS.includes(id)) &&
+           new Set(parsed).size === 3){
+          return parsed;
+        }
+      }
+    } catch(e){}
+    return [...DEFAULT_ROW_ORDER];
+  }
+
+  let currentRowOrder = getSavedRowOrder();
+
+  function updateRowArrowControls(){
+    const rowSlotClasses = ['slot-top', 'slot-mid', 'slot-bottom'];
+    const screenEl = document.getElementById('screen');
+    if(!screenEl) return;
+
+    currentRowOrder.forEach((rowId, index) => {
+      const rowEl = document.getElementById(rowId);
+      if(!rowEl) return;
+
+      const ctrlId = `ctrl${rowId.charAt(0).toUpperCase() + rowId.slice(1)}`;
+      let ctrlEl = document.getElementById(ctrlId);
+      if(!ctrlEl){
+        ctrlEl = document.createElement('div');
+        ctrlEl.className = `row-order-ctrl ${rowSlotClasses[index]}`;
+        ctrlEl.id = ctrlId;
+        ctrlEl.dataset.rowId = rowId;
+        ctrlEl.setAttribute('aria-label', 'Reorder row');
+        ctrlEl.innerHTML = `
+          <button type="button" class="row-arrow-btn row-arrow-up" title="Move row up" aria-label="Move row up">
+            <svg class="row-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="19" x2="12" y2="5"/>
+              <polyline points="5 12 12 5 19 12"/>
+            </svg>
+          </button>
+          <button type="button" class="row-arrow-btn row-arrow-down" title="Move row down" aria-label="Move row down">
+            <svg class="row-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <polyline points="19 12 12 19 5 12"/>
+            </svg>
+          </button>
+        `;
+        bindRowArrowEvents(ctrlEl, rowId);
+      }
+
+      // Ensure ctrl is inside this row
+      if(!rowEl.contains(ctrlEl)){
+        rowEl.insertBefore(ctrlEl, rowEl.firstChild);
+      }
+
+      // Update slot class
+      rowSlotClasses.forEach(c => ctrlEl.classList.remove(c));
+      ctrlEl.classList.add(rowSlotClasses[index]);
+
+      // Update button titles & labels
+      const upBtn = ctrlEl.querySelector('.row-arrow-up');
+      const downBtn = ctrlEl.querySelector('.row-arrow-down');
+      if(upBtn){
+        upBtn.title = index === 1 ? 'Move row up (swap with top row)' : (index === 2 ? 'Move row up (swap with middle row)' : '');
+      }
+      if(downBtn){
+        downBtn.title = index === 0 ? 'Move row down (swap with middle row)' : (index === 1 ? 'Move row down (swap with bottom row)' : '');
+      }
+    });
+  }
+
+  function bindRowArrowEvents(ctrlEl, rowId){
+    const upBtn = ctrlEl.querySelector('.row-arrow-up');
+    const downBtn = ctrlEl.querySelector('.row-arrow-down');
+
+    if(upBtn){
+      upBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        moveRow(rowId, 'up');
+      });
+    }
+
+    if(downBtn){
+      downBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        moveRow(rowId, 'down');
+      });
+    }
+
+    // Double-click on arrow handle area resets to default order
+    ctrlEl.addEventListener('dblclick', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      applyRowOrder([...DEFAULT_ROW_ORDER], true);
+    });
+  }
+
+  function moveRow(rowId, direction){
+    const currentIndex = currentRowOrder.indexOf(rowId);
+    if(currentIndex === -1) return;
+
+    const newOrder = [...currentRowOrder];
+    if(direction === 'up' && currentIndex > 0){
+      const temp = newOrder[currentIndex];
+      newOrder[currentIndex] = newOrder[currentIndex - 1];
+      newOrder[currentIndex - 1] = temp;
+      applyRowOrder(newOrder, true);
+    } else if(direction === 'down' && currentIndex < newOrder.length - 1){
+      const temp = newOrder[currentIndex];
+      newOrder[currentIndex] = newOrder[currentIndex + 1];
+      newOrder[currentIndex + 1] = temp;
+      applyRowOrder(newOrder, true);
+    }
+  }
+
+  function applyRowOrder(order, animate = false){
+    currentRowOrder = [...order];
+    const screenEl = document.getElementById('screen');
+    if(!screenEl) return;
+
+    try {
+      localStorage.setItem('wf_dashboard_row_order', JSON.stringify(order));
+    } catch(e){}
+
+    // Re-append row containers in the desired order
+    order.forEach(id => {
+      const el = document.getElementById(id);
+      if(el && screenEl.contains(el)){
+        screenEl.appendChild(el);
+        if(animate){
+          el.classList.remove('row-swap-anim');
+          void el.offsetWidth; // trigger reflow
+          el.classList.add('row-swap-anim');
+        }
+      }
+    });
+
+    updateRowArrowControls();
+
+    // Trigger holiday text scaling and fitting
+    if(typeof screenAndFitHolidayText === 'function'){
+      setTimeout(screenAndFitHolidayText, 40);
+    }
+    if(typeof fitDateBlockToContainer === 'function'){
+      setTimeout(fitDateBlockToContainer, 40);
+    }
+    if(typeof fitWeatherBlockToContainer === 'function'){
+      setTimeout(fitWeatherBlockToContainer, 40);
+    }
+  }
+
+  function initRowArranger(){
+    VALID_ROW_IDS.forEach(id => {
+      const ctrlId = `ctrl${id.charAt(0).toUpperCase() + id.slice(1)}`;
+      const ctrl = document.getElementById(ctrlId);
+      if(ctrl){
+        bindRowArrowEvents(ctrl, id);
+      }
+    });
+
+    applyRowOrder(currentRowOrder, false);
+  }
+
   initRowSplitters();
+  initRowArranger();
   init();
   checkServerVersion();
   setInterval(() => {

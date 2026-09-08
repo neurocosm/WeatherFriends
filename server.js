@@ -162,6 +162,27 @@ app.get('/api/search-location', async (req, res) => {
 });
 
 // Free Inspiration API (Positive Quotes, Philosophy / Stoic, Scripture / Biblical)
+const RECENT_QUOTES = new Set();
+const RECENT_QUEUE = [];
+const MAX_RECENT = 75;
+
+function isRecentlyServed(text) {
+  if (!text) return false;
+  const key = text.slice(0, 40).toLowerCase().trim();
+  return RECENT_QUOTES.has(key);
+}
+
+function recordServedQuote(text) {
+  if (!text) return;
+  const key = text.slice(0, 40).toLowerCase().trim();
+  RECENT_QUOTES.add(key);
+  RECENT_QUEUE.push(key);
+  if (RECENT_QUEUE.length > MAX_RECENT) {
+    const oldest = RECENT_QUEUE.shift();
+    RECENT_QUOTES.delete(oldest);
+  }
+}
+
 const INSPIRATION_FALLBACKS = {
   positive: [
     { text: "Wherever you go, no matter what the weather, always bring your own sunshine.", author: "Anthony J. D'Angelo" },
@@ -175,7 +196,15 @@ const INSPIRATION_FALLBACKS = {
     { text: "A warm smile is the universal language of kindness.", author: "William Arthur Ward" },
     { text: "Happiness is not by chance, but by choice.", author: "Jim Rohn" },
     { text: "You are never too old to set another goal or to dream a new dream.", author: "C.S. Lewis" },
-    { text: "Optimism is a happiness magnet. If you stay positive, good things will be drawn to you.", author: "Mary Lou Retton" }
+    { text: "Optimism is a happiness magnet. If you stay positive, good things will be drawn to you.", author: "Mary Lou Retton" },
+    { text: "The best way to predict the future is to create it.", author: "Peter Drucker" },
+    { text: "Spread love everywhere you go. Let no one ever come to you without leaving happier.", author: "Mother Teresa" },
+    { text: "In the middle of difficulty lies opportunity.", author: "Albert Einstein" },
+    { text: "What lies behind us and what lies before us are tiny matters compared to what lies within us.", author: "Ralph Waldo Emerson" },
+    { text: "The secret of getting ahead is getting started.", author: "Mark Twain" },
+    { text: "Joy is not in things; it is in us.", author: "Richard Wagner" },
+    { text: "Your time is limited, so don't waste it living someone else's life.", author: "Steve Jobs" },
+    { text: "Turn your wounds into wisdom.", author: "Oprah Winfrey" }
   ],
   philosophy: [
     { text: "You have power over your mind - not outside events. Realize this, and you will find strength.", author: "Marcus Aurelius" },
@@ -188,7 +217,14 @@ const INSPIRATION_FALLBACKS = {
     { text: "First say to yourself what you would be; and then do what you have to do.", author: "Epictetus" },
     { text: "When you arise in the morning think of what a privilege it is to be alive: to breathe, to think, to enjoy, to love.", author: "Marcus Aurelius" },
     { text: "The key is to keep company only with people who uplift you, whose presence calls forth your best.", author: "Epictetus" },
-    { text: "Happiness resides not in possessions, and not in gold, happiness dwells in the soul.", author: "Democritus" }
+    { text: "Happiness resides not in possessions, and not in gold, happiness dwells in the soul.", author: "Democritus" },
+    { text: "He who has a why to live can bear almost any how.", author: "Friedrich Nietzsche" },
+    { text: "Knowing others is wisdom, knowing yourself is enlightenment.", author: "Lao Tzu" },
+    { text: "Dwell on the beauty of life. Watch the stars, and see yourself running with them.", author: "Marcus Aurelius" },
+    { text: "Difficulties strengthen the mind, as labor does the body.", author: "Seneca" },
+    { text: "Wealth consists not in having great possessions, but in having few wants.", author: "Epictetus" },
+    { text: "It is not that we have a short time to live, but that we waste a lot of it.", author: "Seneca" },
+    { text: "Man conquers the world by conquering himself.", author: "Zeno of Citium" }
   ],
   scripture: [
     { text: "For I know the plans I have for you, declares the Lord, plans for peace and not for evil, to give you a future and a hope.", author: "Jeremiah 29:11" },
@@ -201,53 +237,136 @@ const INSPIRATION_FALLBACKS = {
     { text: "Cast all your anxiety on him because he cares for you.", author: "1 Peter 5:7" },
     { text: "This is the day that the Lord has made; let us rejoice and be glad in it.", author: "Psalm 118:24" },
     { text: "Love is patient, love is kind. It does not envy, it does not boast, it is not proud.", author: "1 Corinthians 13:4" },
-    { text: "Let all that you do be done in love.", author: "1 Corinthians 16:14" }
+    { text: "Let all that you do be done in love.", author: "1 Corinthians 16:14" },
+    { text: "The peace of God, which transcends all understanding, will guard your hearts and your minds in Christ Jesus.", author: "Philippians 4:7" },
+    { text: "Come to me, all you who are weary and burdened, and I will give you rest.", author: "Matthew 11:28" },
+    { text: "God is our refuge and strength, an ever-present help in trouble.", author: "Psalm 46:1" },
+    { text: "The steadfast love of the Lord never ceases; his mercies never come to an end; they are new every morning.", author: "Lamentations 3:22-23" },
+    { text: "For where your treasure is, there your heart will be also.", author: "Matthew 6:21" },
+    { text: "Your word is a lamp for my feet, a light on my path.", author: "Psalm 119:105" },
+    { text: "For we walk by faith, not by sight.", author: "2 Corinthians 5:7" },
+    { text: "Whatever is true, whatever is noble, whatever is right, whatever is pure, whatever is lovely, think about such things.", author: "Philippians 4:8" }
   ]
 };
+
+const EXPANDED_SCRIPTURE_PASSAGES = [
+  'Jeremiah 29:11', 'Proverbs 3:5-6', 'Philippians 4:13', 'Psalm 23:1-4',
+  'Joshua 1:9', 'Romans 8:28', 'Isaiah 40:31', '1 Peter 5:7',
+  'Psalm 118:24', '1 Corinthians 13:4-8', 'Matthew 6:33-34', 'Psalm 46:1-3',
+  'Philippians 4:6-7', 'Proverbs 16:3', 'Proverbs 16:9', 'Psalm 91:1-2',
+  'Psalm 121:1-2', 'Matthew 11:28-30', 'Galatians 5:22-23', 'Romans 12:2',
+  'Romans 12:12', 'Colossians 3:12-14', 'Ephesians 4:32', 'Psalm 139:13-14',
+  'Psalm 27:1', 'Psalm 37:4-5', 'Lamentations 3:22-23', 'Micah 6:8',
+  'Zephaniah 3:17', '2 Timothy 1:7', 'Hebrews 11:1', 'James 1:2-3',
+  '1 Thessalonians 5:16-18', 'John 14:27', 'John 16:33', 'Isaiah 41:10',
+  'Psalm 34:8', 'Psalm 103:1-4', 'Deuteronomy 31:6', 'Psalm 119:105'
+];
 
 app.get('/api/inspiration', async (req, res) => {
   const type = (req.query.type || 'positive').toLowerCase();
   const pool = INSPIRATION_FALLBACKS[type] || INSPIRATION_FALLBACKS.positive;
 
-  // Attempt live external fetch with safe timeout
-  try {
+  // Helper to safely execute fetch with timeout
+  const timedFetch = async (url, options = {}, timeoutMs = 3800) => {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 3500);
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const resp = await fetch(url, { ...options, signal: controller.signal });
+      clearTimeout(timer);
+      return resp;
+    } catch (e) {
+      clearTimeout(timer);
+      return null;
+    }
+  };
 
-    if (type === 'positive') {
-      const qRes = await fetch('https://dummyjson.com/quotes/random', { signal: controller.signal });
-      clearTimeout(timeoutId);
-      if (qRes.ok) {
-        const qData = await qRes.json();
-        if (qData && qData.quote) {
-          return res.json({ text: qData.quote, author: qData.author || 'Inspirational', category: 'positive' });
+  try {
+    if (type === 'scripture') {
+      // Tier 1: OurManna Random Verse API (Rich curated library of inspiring NIV verses)
+      const omRes = await timedFetch('https://beta.ourmanna.com/api/v1/get?format=json&order=random');
+      if (omRes && omRes.ok) {
+        const omData = await omRes.json();
+        const details = omData?.verse?.details;
+        if (details && details.text && details.reference) {
+          const cleanText = details.text.replace(/\s+/g, ' ').trim();
+          const cleanAuthor = `${details.reference}${details.version ? ' (' + details.version + ')' : ''}`;
+          if (!isRecentlyServed(cleanText)) {
+            recordServedQuote(cleanText);
+            return res.json({ text: cleanText, author: cleanAuthor, category: 'scripture' });
+          }
         }
       }
-    } else if (type === 'scripture') {
-      const popularPassages = [
-        'Jeremiah 29:11', 'Proverbs 3:5-6', 'Philippians 4:13', 'Psalm 23:1-3',
-        'Joshua 1:9', 'Romans 8:28', 'Isaiah 40:31', '1 Peter 5:7',
-        'Psalm 118:24', '1 Corinthians 13:4-7', 'Matthew 6:33-34', 'Psalm 46:1-2'
-      ];
-      const randomPassage = popularPassages[Math.floor(Math.random() * popularPassages.length)];
-      const bRes = await fetch(`https://bible-api.com/${encodeURIComponent(randomPassage)}`, { signal: controller.signal });
-      clearTimeout(timeoutId);
-      if (bRes.ok) {
+
+      // Tier 2: Bible-API.com with dynamic passage list
+      const randomPassage = EXPANDED_SCRIPTURE_PASSAGES[Math.floor(Math.random() * EXPANDED_SCRIPTURE_PASSAGES.length)];
+      const bRes = await timedFetch(`https://bible-api.com/${encodeURIComponent(randomPassage)}`);
+      if (bRes && bRes.ok) {
         const bData = await bRes.json();
         if (bData && bData.text) {
           const cleanText = bData.text.replace(/\s+/g, ' ').trim();
+          recordServedQuote(cleanText);
           return res.json({ text: cleanText, author: bData.reference, category: 'scripture' });
         }
       }
     } else if (type === 'philosophy') {
-      // Return a random timeless philosophical quote from our extensive pool
-      clearTimeout(timeoutId);
+      // Tier 1: Stoic Quotes API (Marcus Aurelius, Seneca, Epictetus)
+      const sqRes = await timedFetch('https://stoic-quotes.com/api/quote');
+      if (sqRes && sqRes.ok) {
+        const sqData = await sqRes.json();
+        if (sqData && sqData.text) {
+          const cleanText = sqData.text.replace(/\s+/g, ' ').trim();
+          if (!isRecentlyServed(cleanText)) {
+            recordServedQuote(cleanText);
+            return res.json({ text: cleanText, author: sqData.author || 'Stoic Wisdom', category: 'philosophy' });
+          }
+        }
+      }
+
+      // Tier 2: ZenQuotes API
+      const zRes = await timedFetch('https://zenquotes.io/api/random');
+      if (zRes && zRes.ok) {
+        const zData = await zRes.json();
+        if (Array.isArray(zData) && zData[0] && zData[0].q) {
+          const cleanText = zData[0].q.replace(/\s+/g, ' ').trim();
+          recordServedQuote(cleanText);
+          return res.json({ text: cleanText, author: zData[0].a || 'Philosopher', category: 'philosophy' });
+        }
+      }
+    } else {
+      // Positive / Motivational Quotes
+      // Tier 1: DummyJSON quotes (1400+ quotes)
+      const djRes = await timedFetch('https://dummyjson.com/quotes/random');
+      if (djRes && djRes.ok) {
+        const djData = await djRes.json();
+        if (djData && djData.quote) {
+          const cleanText = djData.quote.replace(/\s+/g, ' ').trim();
+          if (!isRecentlyServed(cleanText)) {
+            recordServedQuote(cleanText);
+            return res.json({ text: cleanText, author: djData.author || 'Inspirational', category: 'positive' });
+          }
+        }
+      }
+
+      // Tier 2: ZenQuotes API
+      const zRes = await timedFetch('https://zenquotes.io/api/random');
+      if (zRes && zRes.ok) {
+        const zData = await zRes.json();
+        if (Array.isArray(zData) && zData[0] && zData[0].q) {
+          const cleanText = zData[0].q.replace(/\s+/g, ' ').trim();
+          recordServedQuote(cleanText);
+          return res.json({ text: cleanText, author: zData[0].a || 'Inspirational', category: 'positive' });
+        }
+      }
     }
   } catch (err) {
-    // Gracefully use verified pool
+    console.warn(`[Inspiration API] Live fetch error for ${type}:`, err.message);
   }
 
-  const item = pool[Math.floor(Math.random() * pool.length)];
+  // Graceful fallback from expanded pool prioritizing non-recently served items
+  const unserved = pool.filter(item => !isRecentlyServed(item.text));
+  const candidatePool = unserved.length > 0 ? unserved : pool;
+  const item = candidatePool[Math.floor(Math.random() * candidatePool.length)];
+  recordServedQuote(item.text);
   res.json({ text: item.text, author: item.author, category: type });
 });
 

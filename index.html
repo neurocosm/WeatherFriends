@@ -1090,7 +1090,7 @@
     font-weight:700;
     color:#f2f9fb;
     letter-spacing:0.01em;
-    transition:opacity 0.22s ease, transform 0.22s ease;
+    transition:opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
     text-shadow:0 2px 10px rgba(0,0,0,0.5);
     width:100%;
     word-break:normal;
@@ -1100,7 +1100,7 @@
   }
   .inspire-text.fading{
     opacity:0;
-    transform:translateY(3px);
+    transform:translateY(4px) scale(0.99);
   }
   .inspire-quote-content{
     display:inline;
@@ -1821,7 +1821,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.090726.1103</span>
+        <span id="appVersionText">v1.090726.2017</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -3382,7 +3382,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.090726.1103';
+  const CLIENT_APP_VERSION = 'v1.090726.2017';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -3829,8 +3829,10 @@
       currentInspirationData = { text: text, author: cleanAuthor };
       inspireTextEl.innerHTML = buildInspirationHtml(text, cleanAuthor);
       fitQuoteTextToContainer(text, cleanAuthor);
-      inspireTextEl.classList.remove('fading');
-    }, 160);
+      requestAnimationFrame(() => {
+        inspireTextEl.classList.remove('fading');
+      });
+    }, 280);
   }
 
   async function fetchInspiration(type = currentInspirationType, forceRefresh = false){
@@ -3879,6 +3881,36 @@
     }
   }
 
+  // Pre-seed today's Daily Triad quotes in background if not already cached
+  function primeDailyTriad(){
+    const todayKey = getLocalDateKey();
+    const types = ['positive', 'philosophy', 'scripture'];
+    types.forEach(t => {
+      const savedDate = localStorage.getItem('wf_quote_date_' + t);
+      const cachedRaw = localStorage.getItem('wf_cached_quote_' + t);
+      if(savedDate !== todayKey || !cachedRaw){
+        fetch(`/api/inspiration?type=${t}&_t=${Date.now()}`)
+          .then(r => r.ok ? r.json() : null)
+          .then(data => {
+            if(data && data.text){
+              try{
+                localStorage.setItem('wf_cached_quote_' + t, JSON.stringify({
+                  text: data.text,
+                  author: data.author || 'Inspirational'
+                }));
+                localStorage.setItem('wf_quote_date_' + t, todayKey);
+                // If it finished for the active type and we don't have text yet, render
+                if(t === currentInspirationType && (!currentInspirationData || !currentInspirationData.text)){
+                  renderInspirationQuote(data.text, data.author);
+                }
+              }catch(e){}
+            }
+          })
+          .catch(() => {});
+      }
+    });
+  }
+
   function setInspirationType(type, forceFetch = false){
     currentInspirationType = type;
     try{
@@ -3898,20 +3930,49 @@
     fetchInspiration(type, forceFetch);
   }
 
+  /* ---------------------------------------------------------------
+     5-MINUTE REVOLVING DAILY TRIAD CAROUSEL
+     - Sequence: Positive (5 min) -> Wisdom (5 min) -> Scripture (5 min)
+     - Preserves the same 3 daily quotes across the day
+     - Automatically rolls to a new triad each day
+     - Pauses when hovering over the card or clicking
+  --------------------------------------------------------------- */
+  const ROTATION_ORDER = ['positive', 'philosophy', 'scripture'];
+  const ROTATION_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
+  let rotationTimer = null;
+  let isHoveringInspiration = false;
+
+  function rotateToNextCategory(){
+    if(isHoveringInspiration) return; // Do not interrupt reading while user is hovering
+    const currentIndex = ROTATION_ORDER.indexOf(currentInspirationType);
+    const nextIndex = (currentIndex + 1) % ROTATION_ORDER.length;
+    const nextType = ROTATION_ORDER[nextIndex];
+    // Rotate smoothly using today's preserved daily quote
+    setInspirationType(nextType, false);
+  }
+
+  function resetRotationTimer(){
+    if(rotationTimer) clearInterval(rotationTimer);
+    rotationTimer = setInterval(rotateToNextCategory, ROTATION_INTERVAL_MS);
+  }
+
   inspireTabs.forEach(tab => {
     if(tab.el){
       tab.el.addEventListener('click', (e) => {
         e.stopPropagation();
-        setInspirationType(tab.type, false);
+        // Explicit tab click pulls a fresh quote and resets the 5-minute timer
+        setInspirationType(tab.type, true);
+        resetRotationTimer();
       });
     }
   });
 
-  // Tap or click quote text block to refresh to a new quote (same as Checkiday.com)
+  // Tap or click quote text block to fetch a fresh quote on demand
   const inspireCardBody = document.getElementById('inspireCardBody');
   if(inspireCardBody){
     inspireCardBody.addEventListener('click', () => {
       fetchInspiration(currentInspirationType, true);
+      resetRotationTimer();
     });
   }
   const inspirationPanel = document.getElementById('inspirationPanel');
@@ -3919,6 +3980,15 @@
     inspirationPanel.addEventListener('click', (e) => {
       if(e.target.closest('#inspireTabs')) return;
       fetchInspiration(currentInspirationType, true);
+      resetRotationTimer();
+    });
+
+    // Pause carousel on hover, resume timer on mouse leave
+    inspirationPanel.addEventListener('mouseenter', () => {
+      isHoveringInspiration = true;
+    });
+    inspirationPanel.addEventListener('mouseleave', () => {
+      isHoveringInspiration = false;
     });
   }
 
@@ -3938,17 +4008,20 @@
     });
   }
 
-  // Automatically check every 30 seconds if midnight has passed to roll to the new day's quote
+  // Automatically check every 30 seconds if midnight has passed to roll to the new day's triad
   setInterval(() => {
     const currentDay = getLocalDateKey();
     const savedDay = localStorage.getItem('wf_quote_date_' + currentInspirationType);
     if(savedDay && savedDay !== currentDay){
+      primeDailyTriad();
       fetchInspiration(currentInspirationType, true);
     }
   }, 30000);
 
-  // Initialize selected inspiration mode (daily quote)
+  // Initialize selected inspiration mode (daily quote) & start carousel
+  primeDailyTriad();
   setInspirationType(currentInspirationType, false);
+  resetRotationTimer();
 
   /* ---------------------------------------------------------------
      TRADITIONAL MAGIC 8-BALL ENGINE (CENTER-LEFT SQUARE)

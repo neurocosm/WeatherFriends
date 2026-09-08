@@ -423,6 +423,15 @@
   /* Block 2: Stacked High-Density 2-Column Clock */
   #topClockBlock{
     justify-content:center;
+    cursor:pointer;
+    user-select:none;
+    transition:filter 0.15s ease, transform 0.1s ease;
+  }
+  #topClockBlock:hover{
+    filter:brightness(1.10);
+  }
+  #topClockBlock:active{
+    transform:scale(0.985);
   }
   .stacked-clock-grid{
     display:grid;
@@ -505,6 +514,10 @@
     width:100%;
     font-variant-numeric: tabular-nums;
     font-feature-settings: "tnum" 1;
+    transition:color 0.15s ease;
+  }
+  .clock-ampm-val.is-24h{
+    letter-spacing:-0.01em;
   }
 
   .clock-sec-val{
@@ -658,6 +671,15 @@
     height:100%;
     min-width:0;
     flex:1 1 auto;
+    cursor:pointer;
+    user-select:none;
+    transition:filter 0.15s ease, transform 0.1s ease;
+  }
+  .top-wx-temp-col:hover{
+    filter:brightness(1.15);
+  }
+  .top-wx-temp-col:active{
+    transform:scale(0.97);
   }
 
   .hero-temp-combo{
@@ -1634,6 +1656,15 @@
     justify-content:center;
     gap:clamp(3px, 1.1cqw, 5px);
     white-space:nowrap;
+    cursor:pointer;
+    user-select:none;
+    transition:filter 0.15s ease, transform 0.1s ease;
+  }
+  .day-card .hi-lo:hover{
+    filter:brightness(1.18);
+  }
+  .day-card .hi-lo:active{
+    transform:scale(0.96);
   }
   .day-card .hi-lo .hi{
     color:#fff6e5;
@@ -1821,7 +1852,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.090726.2017</span>
+        <span id="appVersionText">v1.090726.2029</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -1858,8 +1889,8 @@
         <div class="splitter-grip"></div>
       </div>
 
-      <!-- CERTIFIED BLOCK 2: STACKED HIGH-DENSITY CLOCK (YELLOW DIGITS + WHITE PM + SECONDS) -->
-      <div class="top-cert-card" id="topClockBlock">
+      <!-- CERTIFIED BLOCK 2: STACKED HIGH-DENSITY CLOCK (YELLOW DIGITS + WHITE PM / 24H + SECONDS) -->
+      <div class="top-cert-card" id="topClockBlock" title="Tap clock to toggle 12-Hour / 24-Hour time format">
         <div class="stacked-clock-grid">
           <div class="clock-hour-val" id="clockHour">11</div>
           <div class="clock-ampm-val" id="clockAmpm">PM</div>
@@ -1898,8 +1929,8 @@
 
         <!-- Lower Row: Hero Temp (Lower-Left) + Stacked Telemetry (Lower-Right) -->
         <div class="top-wx-bottom-row top-wx-body">
-          <!-- Lower-Left Column: Giant Temp + Stacked °F -->
-          <div class="top-wx-temp-col">
+          <!-- Lower-Left Column: Giant Temp + Stacked °F/°C -->
+          <div class="top-wx-temp-col" id="topWxTempCol" title="Tap temperature to toggle Fahrenheit (°F) / Celsius (°C)">
             <div class="hero-temp-combo">
               <span class="hero-temp-num glow-teal" id="topTempNow">--</span>
               <div class="hero-temp-unit-stack glow-teal">
@@ -2143,9 +2174,29 @@
   }
 
   /* ---------------------------------------------------------------
-     CLOCK + DATE (12-Hour, Conversational Period, Full Date, DST)
+     CLOCK + DATE (12-Hour / 24-Hour, Conversational Period, Full Date, DST)
   --------------------------------------------------------------- */
   const fullDayNames = ['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
+
+  let is24Hour = false;
+  try{
+    if(localStorage.getItem('wf_time_format') === '24h') is24Hour = true;
+  }catch(e){}
+
+  let currentTempUnit = 'F';
+  try{
+    const savedUnit = localStorage.getItem('wf_unit_temp');
+    if(savedUnit === 'C' || savedUnit === 'F') currentTempUnit = savedUnit;
+  }catch(e){}
+
+  function toDisplayTemp(fVal){
+    if(fVal === null || fVal === undefined || isNaN(fVal)) return '--';
+    const num = Number(fVal);
+    if(currentTempUnit === 'C'){
+      return Math.round((num - 32) * 5 / 9);
+    }
+    return Math.round(num);
+  }
 
   function pad(n){ return n.toString().padStart(2,'0'); }
 
@@ -2166,30 +2217,47 @@
   function tickClock(){
     const now = new Date();
     const rawHours = now.getHours();
-    let h = rawHours % 12;
-    if(h === 0) h = 12;
-    const ampm = rawHours >= 12 ? 'PM' : 'AM';
     const minutes = pad(now.getMinutes());
     const seconds = pad(now.getSeconds());
 
-    // Stacked High-Density Clock Elements (Yellow Hours & Minutes, Cyan PM, Seconds)
+    let hourDisplay = '';
+    let ampmDisplay = '';
+
+    if(is24Hour){
+      hourDisplay = pad(rawHours);
+      ampmDisplay = '24H';
+    } else {
+      let h = rawHours % 12;
+      if(h === 0) h = 12;
+      hourDisplay = pad(h);
+      ampmDisplay = rawHours >= 12 ? 'PM' : 'AM';
+    }
+
+    // Stacked High-Density Clock Elements (Yellow Hours & Minutes, White PM / 24H, Seconds)
     const hourEl = document.getElementById('clockHour');
-    if(hourEl) hourEl.textContent = pad(h);
+    if(hourEl) hourEl.textContent = hourDisplay;
 
     const minEl = document.getElementById('clockMin');
     if(minEl) minEl.textContent = minutes;
 
     const clockAmpmEl = document.getElementById('clockAmpm');
-    if(clockAmpmEl) clockAmpmEl.textContent = ampm;
+    if(clockAmpmEl){
+      clockAmpmEl.textContent = ampmDisplay;
+      if(is24Hour){
+        clockAmpmEl.classList.add('is-24h');
+      } else {
+        clockAmpmEl.classList.remove('is-24h');
+      }
+    }
 
     const secEl = document.getElementById('clockSec');
     if(secEl) secEl.textContent = seconds;
 
     // Backward compatibility for existing selectors
     const digitsEl = document.getElementById('timeDigits');
-    if(digitsEl) digitsEl.textContent = `${h}:${minutes}`;
+    if(digitsEl) digitsEl.textContent = is24Hour ? `${hourDisplay}:${minutes}` : `${parseInt(hourDisplay, 10)}:${minutes}`;
     const ampmEl = document.getElementById('timeAmpm');
-    if(ampmEl) ampmEl.textContent = ampm;
+    if(ampmEl) ampmEl.textContent = ampmDisplay;
     const secondsEl = document.getElementById('timeSeconds');
     if(secondsEl) secondsEl.textContent = `:${seconds}`;
 
@@ -2542,6 +2610,7 @@
 
     // 3. Binary search for Giant Taller Hero Temperature Font Size (Lower-Left Corner)
     wxBufTemp.textContent = (heroTempNumEl.textContent || '61').trim();
+    if(wxBufUnit) wxBufUnit.textContent = currentTempUnit;
 
     let low = 36;
     let high = 145;
@@ -2575,7 +2644,10 @@
 
     heroTempNumEl.style.fontSize = finalTemp + 'px';
     if(heroDegEl) heroDegEl.style.fontSize = finalDeg + 'px';
-    if(heroUnitEl) heroUnitEl.style.fontSize = finalUnit + 'px';
+    if(heroUnitEl){
+      heroUnitEl.style.fontSize = finalUnit + 'px';
+      heroUnitEl.textContent = currentTempUnit;
+    }
     if(heroTempUnitStackEl) heroTempUnitStackEl.style.height = 'auto';
   }
 
@@ -2595,6 +2667,64 @@
   fitDateBlockToContainer();
   fitWeatherBlockToContainer();
   setInterval(tickClock, 1000);
+
+  // NOMAD Interactive Toggle: Tap Time to toggle 12-Hour / 24-Hour mode
+  const topClockCard = document.getElementById('topClockBlock');
+  if(topClockCard){
+    topClockCard.addEventListener('click', () => {
+      is24Hour = !is24Hour;
+      try{
+        localStorage.setItem('wf_time_format', is24Hour ? '24h' : '12h');
+      }catch(e){}
+      tickClock();
+      if(lastWeatherData){
+        updateWeatherUI(lastWeatherData);
+      }
+    });
+  }
+
+  // NOMAD Interactive Toggle: Tap Temperature to toggle °F / °C
+  function toggleTempUnit(){
+    currentTempUnit = (currentTempUnit === 'F') ? 'C' : 'F';
+    try{
+      localStorage.setItem('wf_unit_temp', currentTempUnit);
+    }catch(e){}
+
+    const heroUnit = document.querySelector('.hero-unit');
+    if(heroUnit) heroUnit.textContent = currentTempUnit;
+
+    if(lastWeatherData){
+      updateWeatherUI(lastWeatherData);
+    } else {
+      if(typeof fitWeatherBlockToContainer === 'function') fitWeatherBlockToContainer();
+    }
+  }
+
+  const topTempCol = document.getElementById('topWxTempCol') || document.querySelector('.top-wx-temp-col');
+  if(topTempCol){
+    topTempCol.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleTempUnit();
+    });
+  }
+
+  const heroCombo = document.querySelector('.hero-temp-combo');
+  if(heroCombo && heroCombo !== topTempCol){
+    heroCombo.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleTempUnit();
+    });
+  }
+
+  const outlookStrip = document.getElementById('outlook');
+  if(outlookStrip){
+    outlookStrip.addEventListener('click', (e) => {
+      const hiLoClick = e.target.closest('.hi-lo');
+      if(hiLoClick){
+        toggleTempUnit();
+      }
+    });
+  }
 
   /* ---------------------------------------------------------------
      MOON PHASE (simple synodic-month approximation)
@@ -2907,6 +3037,9 @@
   function fmtTime(iso){
     const d = new Date(iso);
     let h = d.getHours();
+    if(is24Hour){
+      return `${pad(h)}:${pad(d.getMinutes())}`;
+    }
     const ap = h >= 12 ? 'PM':'AM';
     h = h % 12; if(h===0) h=12;
     return `${h}:${pad(d.getMinutes())} ${ap}`;
@@ -2924,8 +3057,8 @@
       const card = document.createElement('div');
       card.className = 'day-card' + (i === 0 ? ' is-today' : '');
       const dn = i===0 ? 'TODAY' : dayNames[d.getDay()];
-      const hi = Math.round(daily.temperature_2m_max[i]);
-      const lo = Math.round(daily.temperature_2m_min[i]);
+      const hi = toDisplayTemp(daily.temperature_2m_max[i]);
+      const lo = toDisplayTemp(daily.temperature_2m_min[i]);
       const uv = Math.round(daily.uv_index_max ? (daily.uv_index_max[i] ?? 0) : 0);
       const ucol = uvColor(uv);
       const humVal = daily.relative_humidity_2m_max ? daily.relative_humidity_2m_max[i] : null;
@@ -2943,10 +3076,10 @@
         <div class="dname">${dn}</div>
         <svg class="dicon" viewBox="0 0 100 100">${weatherIconSvg(daily.weather_code[i])}</svg>
         <div class="ddesc" title="${desc}">${desc}</div>
-        <div class="hi-lo">
-          <span class="hi" title="High ${hi}°">${hi}°</span>
+        <div class="hi-lo" title="Tap to toggle °F / °C">
+          <span class="hi" title="High ${hi}°${currentTempUnit}">${hi}°</span>
           <span class="sep">/</span>
-          <span class="lo" title="Low ${lo}°">${lo}°</span>
+          <span class="lo" title="Low ${lo}°${currentTempUnit}">${lo}°</span>
         </div>
         <div class="day-meta-grid">
           <div class="day-meta-subrow">
@@ -2999,44 +3132,24 @@
   }
 
   /* ---------------------------------------------------------------
-     MAIN RENDER
+     MAIN RENDER & DYNAMIC DISPATCH
   --------------------------------------------------------------- */
-  async function loadWeatherFor(lat, lon, label, accuracyMeters){
-    setStatus('Fetching weather…');
-    const accTxt = accuracyMeters ? ` • ±${Math.round(accuracyMeters)}m` : '';
-    const coordsEl = document.getElementById('coordsText');
-    if(coordsEl) coordsEl.textContent = `${lat.toFixed(4)}, ${lon.toFixed(4)}${accTxt}`;
-    if(label){
-      const cityEl = document.getElementById('cityName');
-      if(cityEl){
-        cityEl.textContent = label;
-        if(typeof fitWeatherBlockToContainer === 'function') fitWeatherBlockToContainer();
-      }
-    }
+  let lastWeatherData = null;
 
-    // Save current active station in localStorage for instant reloading
-    try{
-      localStorage.setItem('wx_saved_location', JSON.stringify({ lat, lon, name: label || 'Current Location' }));
-    }catch(e){}
-
-    let data;
-    try{
-      data = await fetchWeather(lat, lon);
-    }catch(e){
-      setStatus('Weather service unreachable.');
-      return;
-    }
-
+  function updateWeatherUI(data){
+    if(!data) return;
+    lastWeatherData = data;
     const cur = data.current;
     const daily = data.daily;
+    if(!cur || !daily) return;
 
     // Conditions Panel: Temperature
     const tempNowEl = document.getElementById('tempNow');
-    if(tempNowEl) tempNowEl.textContent = Math.round(cur.temperature_2m);
+    if(tempNowEl) tempNowEl.textContent = toDisplayTemp(cur.temperature_2m);
     const tempTrendEl = document.getElementById('tempTrend');
     if(tempTrendEl) tempTrendEl.textContent = trendArrow('wx_temp_last', cur.temperature_2m);
     const feelsLikeEl = document.getElementById('feelsLike');
-    if(feelsLikeEl) feelsLikeEl.textContent = `Feels like ${Math.round(cur.apparent_temperature)}°F`;
+    if(feelsLikeEl) feelsLikeEl.textContent = `Feels like ${toDisplayTemp(cur.apparent_temperature)}°${currentTempUnit}`;
 
     // Humidity
     const humNowEl = document.getElementById('humidityNow');
@@ -3077,14 +3190,17 @@
     // TOP TIER WEATHER BLOCK (NOMAD APP STYLE: HERO TEMP + UV & HUMIDITY)
     // =============================================================
     const topTempEl = document.getElementById('topTempNow');
-    if(topTempEl) topTempEl.textContent = Math.round(cur.temperature_2m);
+    if(topTempEl) topTempEl.textContent = toDisplayTemp(cur.temperature_2m);
+
+    const heroUnitEl = document.querySelector('.hero-unit');
+    if(heroUnitEl) heroUnitEl.textContent = currentTempUnit;
 
     const topFeelsLikeEl = document.getElementById('topFeelsLike');
-    if(topFeelsLikeEl) topFeelsLikeEl.textContent = `Feels like ${Math.round(cur.apparent_temperature)}°F`;
+    if(topFeelsLikeEl) topFeelsLikeEl.textContent = `Feels like ${toDisplayTemp(cur.apparent_temperature)}°${currentTempUnit}`;
 
     const topHiLoEl = document.getElementById('topHiLo');
     if(topHiLoEl && daily.temperature_2m_max && daily.temperature_2m_min){
-      topHiLoEl.textContent = `H: ${Math.round(daily.temperature_2m_max[0])}° / L: ${Math.round(daily.temperature_2m_min[0])}°`;
+      topHiLoEl.textContent = `H: ${toDisplayTemp(daily.temperature_2m_max[0])}° / L: ${toDisplayTemp(daily.temperature_2m_min[0])}°`;
     }
 
     const topHumEl = document.getElementById('topHumNow');
@@ -3121,7 +3237,7 @@
       topPressureEl.textContent = inHg.toFixed(2);
     }
 
-    // Sunrise / sunset
+    // Sunrise / sunset (formats with 12h or 24h depending on is24Hour)
     const sunriseEl = document.getElementById('sunrise');
     if(sunriseEl) sunriseEl.textContent = fmtTime(daily.sunrise[0]);
     const sunsetEl = document.getElementById('sunset');
@@ -3153,6 +3269,35 @@
     if(typeof fitWeatherBlockToContainer === 'function'){
       fitWeatherBlockToContainer();
     }
+  }
+
+  async function loadWeatherFor(lat, lon, label, accuracyMeters){
+    setStatus('Fetching weather…');
+    const accTxt = accuracyMeters ? ` • ±${Math.round(accuracyMeters)}m` : '';
+    const coordsEl = document.getElementById('coordsText');
+    if(coordsEl) coordsEl.textContent = `${lat.toFixed(4)}, ${lon.toFixed(4)}${accTxt}`;
+    if(label){
+      const cityEl = document.getElementById('cityName');
+      if(cityEl){
+        cityEl.textContent = label;
+        if(typeof fitWeatherBlockToContainer === 'function') fitWeatherBlockToContainer();
+      }
+    }
+
+    // Save current active station in localStorage for instant reloading
+    try{
+      localStorage.setItem('wx_saved_location', JSON.stringify({ lat, lon, name: label || 'Current Location' }));
+    }catch(e){}
+
+    let data;
+    try{
+      data = await fetchWeather(lat, lon);
+    }catch(e){
+      setStatus('Weather service unreachable.');
+      return;
+    }
+
+    updateWeatherUI(data);
   }
 
   /* ---------------------------------------------------------------
@@ -3382,7 +3527,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.090726.2017';
+  const CLIENT_APP_VERSION = 'v1.090726.2029';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');

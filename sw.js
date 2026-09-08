@@ -1,5 +1,5 @@
 // Weather Friends Service Worker (Network-first for navigation shell & APIs, cache-first for static media)
-const CACHE_NAME = 'weather-friends-v8';
+const CACHE_NAME = 'wf-v1.090726.2056';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -69,11 +69,11 @@ self.addEventListener('fetch', (event) => {
   }
 
   // 2. Navigation / HTML Document (Root and index.html):
-  // CRITICAL FOR SMART TVs: Always fetch fresh HTML from network so page reloads immediately update!
+  // CRITICAL FOR SMART TVs & TABLETS: Always fetch fresh HTML directly from network with no-store!
   // Fall back to cached shell only if device is truly offline.
   if (event.request.mode === 'navigate' || url.pathname === '/' || url.pathname === '/index.html') {
     event.respondWith(
-      fetch(event.request, { cache: 'no-cache' })
+      fetch(event.request, { cache: 'no-store' })
         .then((freshResponse) => {
           if (freshResponse && freshResponse.status === 200) {
             const copy = freshResponse.clone();

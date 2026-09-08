@@ -332,6 +332,11 @@
     flex:1.02 1 auto;
     min-height:clamp(100px, 18vh, 180px);
     position:relative;
+    z-index:10;
+  }
+  .panels, .outlook{
+    position:relative;
+    z-index:10;
   }
 
   .top-cert-card{
@@ -425,13 +430,19 @@
     justify-content:center;
     cursor:pointer;
     user-select:none;
-    transition:filter 0.15s ease, transform 0.1s ease;
+    touch-action:manipulation;
+    -webkit-tap-highlight-color:rgba(73, 230, 196, 0.25);
+    outline:none;
+    transition:filter 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
   }
   #topClockBlock:hover{
     filter:brightness(1.10);
   }
   #topClockBlock:active{
     transform:scale(0.985);
+  }
+  #topClockBlock:focus-visible{
+    box-shadow:0 0 0 2px #49e6c4, inset 0 0 12px rgba(73, 230, 196, 0.2);
   }
   .stacked-clock-grid{
     display:grid;
@@ -673,13 +684,20 @@
     flex:1 1 auto;
     cursor:pointer;
     user-select:none;
-    transition:filter 0.15s ease, transform 0.1s ease;
+    touch-action:manipulation;
+    -webkit-tap-highlight-color:rgba(73, 230, 196, 0.25);
+    outline:none;
+    border-radius:6px;
+    transition:filter 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
   }
   .top-wx-temp-col:hover{
     filter:brightness(1.15);
   }
   .top-wx-temp-col:active{
     transform:scale(0.97);
+  }
+  .top-wx-temp-col:focus-visible{
+    box-shadow:0 0 0 2px #49e6c4;
   }
 
   .hero-temp-combo{
@@ -1658,13 +1676,21 @@
     white-space:nowrap;
     cursor:pointer;
     user-select:none;
-    transition:filter 0.15s ease, transform 0.1s ease;
+    touch-action:manipulation;
+    -webkit-tap-highlight-color:rgba(73, 230, 196, 0.25);
+    outline:none;
+    border-radius:4px;
+    padding:1px 3px;
+    transition:filter 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
   }
   .day-card .hi-lo:hover{
     filter:brightness(1.18);
   }
   .day-card .hi-lo:active{
     transform:scale(0.96);
+  }
+  .day-card .hi-lo:focus-visible{
+    box-shadow:0 0 0 2px #49e6c4;
   }
   .day-card .hi-lo .hi{
     color:#fff6e5;
@@ -1852,7 +1878,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.090726.2029</span>
+        <span id="appVersionText">v1.090726.2056</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -1890,7 +1916,7 @@
       </div>
 
       <!-- CERTIFIED BLOCK 2: STACKED HIGH-DENSITY CLOCK (YELLOW DIGITS + WHITE PM / 24H + SECONDS) -->
-      <div class="top-cert-card" id="topClockBlock" title="Tap clock to toggle 12-Hour / 24-Hour time format">
+      <div class="top-cert-card" id="topClockBlock" role="button" tabindex="0" aria-label="Toggle 12-Hour or 24-Hour clock format" title="Tap clock to toggle 12-Hour / 24-Hour time format" onclick="">
         <div class="stacked-clock-grid">
           <div class="clock-hour-val" id="clockHour">11</div>
           <div class="clock-ampm-val" id="clockAmpm">PM</div>
@@ -1930,7 +1956,7 @@
         <!-- Lower Row: Hero Temp (Lower-Left) + Stacked Telemetry (Lower-Right) -->
         <div class="top-wx-bottom-row top-wx-body">
           <!-- Lower-Left Column: Giant Temp + Stacked °F/°C -->
-          <div class="top-wx-temp-col" id="topWxTempCol" title="Tap temperature to toggle Fahrenheit (°F) / Celsius (°C)">
+          <div class="top-wx-temp-col" id="topWxTempCol" role="button" tabindex="0" aria-label="Toggle temperature unit between Fahrenheit and Celsius" title="Tap temperature to toggle Fahrenheit (°F) / Celsius (°C)" onclick="">
             <div class="hero-temp-combo">
               <span class="hero-temp-num glow-teal" id="topTempNow">--</span>
               <div class="hero-temp-unit-stack glow-teal">
@@ -2668,19 +2694,50 @@
   fitWeatherBlockToContainer();
   setInterval(tickClock, 1000);
 
-  // NOMAD Interactive Toggle: Tap Time to toggle 12-Hour / 24-Hour mode
-  const topClockCard = document.getElementById('topClockBlock');
-  if(topClockCard){
-    topClockCard.addEventListener('click', () => {
-      is24Hour = !is24Hour;
-      try{
-        localStorage.setItem('wf_time_format', is24Hour ? '24h' : '12h');
-      }catch(e){}
-      tickClock();
-      if(lastWeatherData){
-        updateWeatherUI(lastWeatherData);
+  // Helper for cross-platform, multi-input interactive elements (Touch tablets, Smart TV remotes, and Click)
+  function attachInteractiveAction(el, actionFn){
+    if(!el) return;
+    let lastTrigger = 0;
+    const trigger = (e) => {
+      const now = Date.now();
+      if(now - lastTrigger < 320) return; // Prevent double trigger from touchend + synthetic click
+      lastTrigger = now;
+      if(e && typeof e.stopPropagation === 'function') e.stopPropagation();
+      actionFn();
+    };
+
+    // 1. Mouse / Pointer / Touch clicks
+    el.addEventListener('click', trigger);
+
+    // 2. Direct touch end for instant mobile/tablet response (skips 300ms mobile delay)
+    el.addEventListener('touchend', (e) => {
+      trigger(e);
+    }, { passive: true });
+
+    // 3. Smart TV Remote Control & Keyboard navigation (Enter / Space / OK key)
+    el.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter' || e.key === ' ' || e.keyCode === 13 || e.keyCode === 32){
+        if(e.preventDefault) e.preventDefault();
+        trigger(e);
       }
     });
+  }
+
+  // NOMAD Interactive Toggle: Tap Time to toggle 12-Hour / 24-Hour mode
+  function toggleTimeFormat(){
+    is24Hour = !is24Hour;
+    try{
+      localStorage.setItem('wf_time_format', is24Hour ? '24h' : '12h');
+    }catch(e){}
+    tickClock();
+    if(lastWeatherData){
+      updateWeatherUI(lastWeatherData);
+    }
+  }
+
+  const topClockCard = document.getElementById('topClockBlock');
+  if(topClockCard){
+    attachInteractiveAction(topClockCard, toggleTimeFormat);
   }
 
   // NOMAD Interactive Toggle: Tap Temperature to toggle °F / °C
@@ -2702,25 +2759,26 @@
 
   const topTempCol = document.getElementById('topWxTempCol') || document.querySelector('.top-wx-temp-col');
   if(topTempCol){
-    topTempCol.addEventListener('click', (e) => {
-      e.stopPropagation();
-      toggleTempUnit();
-    });
-  }
-
-  const heroCombo = document.querySelector('.hero-temp-combo');
-  if(heroCombo && heroCombo !== topTempCol){
-    heroCombo.addEventListener('click', (e) => {
-      e.stopPropagation();
-      toggleTempUnit();
-    });
+    attachInteractiveAction(topTempCol, toggleTempUnit);
   }
 
   const outlookStrip = document.getElementById('outlook');
   if(outlookStrip){
-    outlookStrip.addEventListener('click', (e) => {
+    let lastOutlookTrigger = 0;
+    const handleOutlookToggle = (e) => {
       const hiLoClick = e.target.closest('.hi-lo');
       if(hiLoClick){
+        const now = Date.now();
+        if(now - lastOutlookTrigger < 320) return;
+        lastOutlookTrigger = now;
+        toggleTempUnit();
+      }
+    };
+    outlookStrip.addEventListener('click', handleOutlookToggle);
+    outlookStrip.addEventListener('touchend', handleOutlookToggle, { passive: true });
+    outlookStrip.addEventListener('keydown', (e) => {
+      if((e.key === 'Enter' || e.key === ' ' || e.keyCode === 13 || e.keyCode === 32) && e.target.closest('.hi-lo')){
+        if(e.preventDefault) e.preventDefault();
         toggleTempUnit();
       }
     });
@@ -3076,7 +3134,7 @@
         <div class="dname">${dn}</div>
         <svg class="dicon" viewBox="0 0 100 100">${weatherIconSvg(daily.weather_code[i])}</svg>
         <div class="ddesc" title="${desc}">${desc}</div>
-        <div class="hi-lo" title="Tap to toggle °F / °C">
+        <div class="hi-lo" role="button" tabindex="0" aria-label="Toggle temperature unit between Fahrenheit and Celsius" title="Tap to toggle °F / °C">
           <span class="hi" title="High ${hi}°${currentTempUnit}">${hi}°</span>
           <span class="sep">/</span>
           <span class="lo" title="Low ${lo}°${currentTempUnit}">${lo}°</span>
@@ -3527,7 +3585,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.090726.2029';
+  const CLIENT_APP_VERSION = 'v1.090726.2056';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -3812,9 +3870,31 @@
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('/sw.js').then((reg) => {
         console.log('[PWA] ServiceWorker registered with scope:', reg.scope);
+        // Explicitly check for updated sw.js immediately
+        if(typeof reg.update === 'function') reg.update().catch(() => {});
+        reg.addEventListener('updatefound', () => {
+          const newWorker = reg.installing;
+          if(newWorker){
+            newWorker.addEventListener('statechange', () => {
+              if(newWorker.state === 'installed' && navigator.serviceWorker.controller){
+                // New worker ready
+                if(typeof markUpdateAvailable === 'function') markUpdateAvailable();
+              }
+            });
+          }
+        });
       }).catch((err) => {
         console.warn('[PWA] ServiceWorker registration failed:', err);
       });
+    });
+
+    // Check for service worker updates whenever returning to the app
+    document.addEventListener('visibilitychange', () => {
+      if(document.visibilityState === 'visible'){
+        navigator.serviceWorker.getRegistration().then((reg) => {
+          if(reg && typeof reg.update === 'function') reg.update().catch(() => {});
+        }).catch(() => {});
+      }
     });
   }
 

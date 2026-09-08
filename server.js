@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = 3000;
 
-// Read current App Build Version from version.json (stamped in US Eastern Time EDT/EST)
+// Read current App Build Version from version.json (Single True Source of Truth)
 function getAppVersion() {
   try {
     const versionFilePath = path.join(__dirname, 'version.json');
@@ -18,7 +18,7 @@ function getAppVersion() {
       if (data && data.version) return data.version;
     }
   } catch (e) {}
-  return 'v1.090426.2243';
+  return 'v1.090726.2052';
 }
 
 const BUILD_TIMESTAMP = Date.now();
@@ -33,6 +33,39 @@ app.use((req, res, next) => {
   }
   next();
 });
+
+// Single True Source: Serve index.html with live version injected from version.json
+function serveIndexHtml(req, res) {
+  const version = getAppVersion();
+  const filePath = path.join(__dirname, 'index.html');
+  fs.readFile(filePath, 'utf8', (err, html) => {
+    if (err) return res.status(500).send('Error loading page');
+    // Ensure all references match version.json exactly
+    const injected = html
+      .replace(/const CLIENT_APP_VERSION = 'v1\.[^']+';/, `const CLIENT_APP_VERSION = '${version}';`)
+      .replace(/<span id="appVersionText">v1\.[^<]+<\/span>/, `<span id="appVersionText">${version}</span>`);
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, proxy-revalidate, max-age=0');
+    res.send(injected);
+  });
+}
+
+// Single True Source: Serve sw.js with live CACHE_NAME injected from version.json
+function serveServiceWorker(req, res) {
+  const version = getAppVersion();
+  const filePath = path.join(__dirname, 'sw.js');
+  fs.readFile(filePath, 'utf8', (err, swCode) => {
+    if (err) return res.status(500).send('Error loading service worker');
+    const injected = swCode.replace(/const CACHE_NAME = '[^']+';/, `const CACHE_NAME = 'wf-${version}';`);
+    res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, proxy-revalidate, max-age=0');
+    res.send(injected);
+  });
+}
+
+app.get('/', serveIndexHtml);
+app.get('/index.html', serveIndexHtml);
+app.get('/sw.js', serveServiceWorker);
 
 // Serve static files from the root directory
 app.use(express.static(__dirname));
@@ -651,9 +684,7 @@ app.get('/api/checkiday', async (req, res) => {
 });
 
 // Fallback to index.html for any other route
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
+app.get('*', serveIndexHtml);
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on http://0.0.0.0:${PORT}`);

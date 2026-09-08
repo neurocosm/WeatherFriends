@@ -41,4 +41,12 @@ if (fs.existsSync(indexPath)) {
   fs.writeFileSync(indexPath, indexHtml);
 }
 
+// 3. Update sw.js CACHE_NAME so browsers/tablets/Smart TVs immediately detect and activate new worker
+const swPath = path.join(__dirname, 'sw.js');
+if (fs.existsSync(swPath)) {
+  let swJs = fs.readFileSync(swPath, 'utf8');
+  swJs = swJs.replace(/const CACHE_NAME = '[^']+';/, `const CACHE_NAME = 'wf-${currentVersion}';`);
+  fs.writeFileSync(swPath, swJs);
+}
+
 console.log(`[Version Revision] Set to Eastern US Time (EDT/EST): ${currentVersion}`);

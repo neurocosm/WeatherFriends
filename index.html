@@ -1374,7 +1374,8 @@
     height:100%;
     min-height:0;
     overflow:hidden;
-    padding:clamp(8px, 1.4vh, 16px) clamp(12px, 1.6vw, 20px);
+    padding:clamp(6px, 1.2vh, 12px) clamp(8px, 1.2vw, 14px);
+    gap:clamp(4px, 0.8vh, 8px);
     cursor:pointer;
     user-select:none;
     -webkit-tap-highlight-color:transparent;
@@ -1474,8 +1475,8 @@
     min-height:0;
     display:flex;
     flex-direction:column;
-    justify-content:center;
-    padding:clamp(2px, 0.6vh, 6px) 0;
+    justify-content:flex-start;
+    padding:clamp(3px, 0.6vh, 6px) 0 0 0;
     gap:clamp(6px, 1.2vh, 12px);
     overflow:hidden;
     position:relative;
@@ -1483,11 +1484,11 @@
   .holiday-title{
     font-family:'Outfit',sans-serif;
     font-weight:500;
-    font-size:clamp(1.15rem, min(5.0cqw, 2.6vh), 1.90rem);
-    line-height:1.16;
-    color:#ffffff;
-    letter-spacing:-0.005em;
-    text-shadow:0 2px 18px rgba(0,0,0,0.9), 0 0 22px rgba(56,189,248,0.52);
+    font-size:clamp(1.08rem, min(4.2cqw, 2.1vh), 1.42rem);
+    line-height:1.18;
+    color:var(--blue);
+    letter-spacing:0.005em;
+    text-shadow:0 0 12px rgba(58, 168, 255, 0.35), 0 2px 8px rgba(0,0,0,0.6);
     margin:0;
     word-break:normal;
     overflow-wrap:break-word;
@@ -1501,9 +1502,10 @@
   }
   .holiday-summary{
     font-family:'Outfit',sans-serif;
-    font-size:clamp(0.85rem, min(3.4cqw, 1.65vh), 1.15rem);
+    font-weight:400;
+    font-size:clamp(0.92rem, min(3.4cqw, 1.65vh), 1.15rem);
     line-height:1.38;
-    color:rgba(226, 232, 240, 0.94);
+    color:rgba(235, 242, 248, 0.92);
     letter-spacing:0.01em;
     margin:0;
     word-break:normal;
@@ -2067,7 +2069,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.090726.2139</span>
+        <span id="appVersionText">v1.090726.2215</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -3826,7 +3828,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.090726.2139';
+  const CLIENT_APP_VERSION = 'v1.090726.2215';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -4852,7 +4854,8 @@
    * - Measures exact container width and height
    * - Dynamically calculates proportional scales for Hero Title and Narrative Summary
    * - Short titles scale up to 34-38px bold display type to command the space
-   * - Summary scales up to 18-20.5px for effortless living-room / TV legibility
+   * - Summary scales up to 18-21px for effortless living-room / TV legibility
+   * - Justifies from the top to align cleanly with the Inspiration card baseline
    * - Falls back to concise origin overview if full summary is too lengthy
    */
   function screenAndFitHolidayText() {
@@ -4887,32 +4890,33 @@
     const titleWidthAt20px = Math.max(10, hBufTitle.scrollWidth || hBufTitle.offsetWidth);
 
     // Calculate the maximum font size where the entire title fits on ONE single line
-    const singleLineMaxFont = Math.floor(((targetW - 8) / titleWidthAt20px) * 20);
+    const singleLineMaxFont = Math.floor(((targetW - 10) / titleWidthAt20px) * 20);
 
-    // If the title can fit on a single line at >= 18px, lock it to a single line to prevent orphan/widow words
-    const titleCanBeSingleLine = singleLineMaxFont >= 18;
+    // Keep title on 1 line whenever it fits at >= 17.5px (clean headline).
+    // Only wrap to 2 lines for very long titles (35+ chars), avoiding giant bloated headings.
+    const titleCanBeSingleLine = singleLineMaxFont >= 17.5;
     const baseTitle = titleCanBeSingleLine 
-      ? Math.min(32, singleLineMaxFont) 
-      : (title.length > 28 ? 21 : 25);
-    const baseSummary = 15.5;
+      ? Math.min(22, Math.max(18, singleLineMaxFont)) 
+      : (title.length > 38 ? 18.5 : 20.5);
+    const baseSummary = titleCanBeSingleLine ? 16.5 : 15.2;
 
     // Helper: evaluates if a given text fits at a specific scale percentage
     function testScale(text, scalePct) {
       const s = scalePct / 100;
       const titlePx = titleCanBeSingleLine
-        ? Math.min(singleLineMaxFont, Math.max(18, Math.round(baseTitle * s)))
-        : Math.round(baseTitle * s);
-      const summaryPx = Math.max(12.5, Math.round(baseSummary * s));
-      const gapPx = Math.max(4, Math.round(7 * s));
+        ? Math.min(singleLineMaxFont, Math.max(17.5, Math.round(baseTitle * s)))
+        : Math.max(16.5, Math.round(baseTitle * s));
+      const summaryPx = Math.max(13, Math.round(baseSummary * s));
+      const gapPx = Math.max(5, Math.round(7 * s));
 
       hBufTitle.style.whiteSpace = titleCanBeSingleLine ? 'nowrap' : 'normal';
       hBufTitle.style.textWrap = titleCanBeSingleLine ? 'nowrap' : 'balance';
       hBufTitle.style.fontSize = titlePx + 'px';
-      hBufTitle.style.lineHeight = titlePx >= 28 ? '1.14' : '1.18';
+      hBufTitle.style.lineHeight = '1.18';
 
       hBufSummary.textContent = text;
       hBufSummary.style.fontSize = summaryPx + 'px';
-      hBufSummary.style.lineHeight = summaryPx >= 17 ? '1.34' : '1.38';
+      hBufSummary.style.lineHeight = '1.38';
 
       buf.style.gap = gapPx + 'px';
 
@@ -4923,8 +4927,8 @@
 
     // Binary search for maximum fitting scale
     function findBestFit(text) {
-      let low = 65;
-      let high = 135;
+      let low = 70;
+      let high = 130;
       let best = 0;
 
       while (low <= high) {
@@ -4947,37 +4951,41 @@
       chosenScale = findBestFit(fullSummary);
     }
 
-    // If full summary doesn't fit or results in tiny text (< 82% scale), use punchy originText
-    if (chosenScale < 82) {
+    // If full summary doesn't fit or results in tiny text (< 84% scale), use punchy originText
+    if (chosenScale < 84) {
       chosenText = originText || fullSummary;
       chosenScale = findBestFit(chosenText);
     }
 
     // If still tight, fallback with lowest reasonable scale
     if (chosenScale === 0) {
-      chosenScale = 68;
+      chosenScale = 75;
     }
 
     const finalS = chosenScale / 100;
     const finalTitlePx = titleCanBeSingleLine 
-      ? Math.min(singleLineMaxFont, Math.max(18, Math.round(baseTitle * finalS)))
-      : Math.round(baseTitle * finalS);
-    const finalSummaryPx = Math.max(12, Math.round(baseSummary * finalS));
-    const finalGapPx = Math.max(4, Math.round(7 * finalS));
+      ? Math.min(singleLineMaxFont, Math.max(17.5, Math.round(baseTitle * finalS)))
+      : Math.max(16.5, Math.round(baseTitle * finalS));
+    const finalSummaryPx = Math.max(13, Math.round(baseSummary * finalS));
+    const finalGapPx = Math.max(5, Math.round(7 * finalS));
 
     // Apply the computed responsive typography and vertical spacing
     holidayTitleEl.textContent = title;
+    holidayTitleEl.style.fontWeight = '500';
+    holidayTitleEl.style.color = 'var(--blue)';
     holidayTitleEl.style.whiteSpace = titleCanBeSingleLine ? 'nowrap' : 'normal';
     holidayTitleEl.style.textWrap = titleCanBeSingleLine ? 'nowrap' : 'balance';
     holidayTitleEl.style.fontSize = finalTitlePx + 'px';
-    holidayTitleEl.style.lineHeight = finalTitlePx >= 28 ? '1.14' : '1.18';
+    holidayTitleEl.style.lineHeight = '1.18';
 
     holidaySummaryEl.textContent = chosenText;
+    holidaySummaryEl.style.fontWeight = '400';
+    holidaySummaryEl.style.color = 'rgba(235, 242, 248, 0.92)';
     holidaySummaryEl.style.fontSize = finalSummaryPx + 'px';
-    holidaySummaryEl.style.lineHeight = finalSummaryPx >= 17 ? '1.34' : '1.38';
+    holidaySummaryEl.style.lineHeight = '1.38';
 
     holidayContentArea.style.gap = finalGapPx + 'px';
-    holidayContentArea.style.justifyContent = 'center';
+    holidayContentArea.style.justifyContent = 'flex-start';
   }
 
   // Setup ResizeObserver for immediate re-screening on panel resize or window adjustments

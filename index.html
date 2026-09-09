@@ -2004,31 +2004,39 @@
   /* ---- Floating TV Remote Resize HUD Control Center ---- */
   .remote-resize-hud{
     position:fixed;
-    bottom:clamp(16px, 3vh, 32px);
     left:50%;
-    transform:translateX(-50%) translateY(24px);
+    top:auto;
+    bottom:20px;
+    transform:none;
     opacity:0;
     pointer-events:none;
     z-index:9999;
     display:flex;
     align-items:center;
-    gap:14px;
-    background:rgba(2, 8, 12, 0.96);
+    gap:12px;
+    background:rgba(2, 8, 12, 0.97);
     border:1.5px solid #38bdf8;
     border-radius:18px;
-    padding:10px 20px;
-    box-shadow:0 0 28px rgba(56, 189, 248, 0.45), 0 10px 36px rgba(0, 0, 0, 0.9);
-    backdrop-filter:blur(12px);
-    -webkit-backdrop-filter:blur(12px);
-    transition:opacity 0.25s ease, transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+    padding:8px 18px;
+    box-shadow:0 0 28px rgba(56, 189, 248, 0.5), 0 12px 38px rgba(0, 0, 0, 0.92);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    transition:opacity 0.2s ease, left 0.14s ease-out, top 0.14s ease-out, bottom 0.14s ease-out;
     font-family:'Outfit', sans-serif;
     color:rgba(240, 246, 252, 0.95);
     max-width:94vw;
   }
   .remote-resize-hud.is-visible{
     opacity:1;
-    transform:translateX(-50%) translateY(0);
     pointer-events:auto;
+  }
+  .remote-resize-hud[data-placement="above"]{
+    border-bottom-color:#49e6c4;
+    box-shadow:0 -6px 28px rgba(73, 230, 196, 0.35), 0 12px 38px rgba(0, 0, 0, 0.92);
+  }
+  .remote-resize-hud[data-placement="under"]{
+    border-top-color:#49e6c4;
+    box-shadow:0 6px 28px rgba(73, 230, 196, 0.35), 0 12px 38px rgba(0, 0, 0, 0.92);
   }
   .remote-resize-hud .hud-icon{
     color:#38bdf8;
@@ -2463,7 +2471,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.090826.2119</span>
+        <span id="appVersionText">v1.090826.2141</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -2516,7 +2524,7 @@
       <div class="top-cert-card" id="topDateBlock">
         <div class="date-content-wrap">
           <div class="day-hero-name" id="dayHeroName">THURSDAY</div>
-          <div class="day-period-name" id="dayPeriodName">NIGHT</div>
+          <div class="day-period-name" id="dayPeriodName" title="National Weather Service & Astronomical Civil Twilight Standard • Conversational Time of Day">NIGHT</div>
           <div class="date-monthday-str" id="dateMonthDayStr">SEPTEMBER 3</div>
           <div class="date-year-str" id="dateYearStr">2026</div>
         </div>
@@ -2910,12 +2918,63 @@
 
   function pad(n){ return n.toString().padStart(2,'0'); }
 
-  function getConversationalPeriod(hours){
-    if(hours >= 4 && hours < 7) return 'EARLY MORNING';
-    if(hours >= 7 && hours < 12) return 'MORNING';
-    if(hours >= 12 && hours < 17) return 'AFTERNOON';
-    if(hours >= 17 && hours < 21) return 'EVENING';
-    return 'NIGHT';
+  var lastWeatherData = null;
+
+  /* ---------------------------------------------------------------
+     NATIONAL WEATHER SERVICE (NWS) & ASTRONOMICAL CIVIL TWILIGHT STANDARDS
+     - Standard Operational Definitions:
+       * 12:00 AM – 2:59 AM : OVERNIGHT
+       * 3:00 AM – 5:59 AM  : TOWARD MORNING (or DAWN TWILIGHT ~30m before local sunrise)
+       * 6:00 AM – 8:59 AM  : EARLY MORNING
+       * 9:00 AM – 11:59 AM : LATE MORNING
+       * 12:00 PM – 2:59 PM : EARLY AFTERNOON
+       * 3:00 PM – 5:59 PM  : LATE AFTERNOON
+       * 6:00 PM – 8:59 PM  : EVENING (or DUSK TWILIGHT ~30m after local sunset)
+       * 9:00 PM – 11:59 PM : LATE EVENING
+     - Astronomical Civil Twilight:
+       * Triggered when the sun is between 0° and 6° below horizon
+       * Calculated in real-time from NOAA / Open-Meteo local sunrise and sunset
+  --------------------------------------------------------------- */
+  function getConversationalPeriod(nowDate){
+    try {
+      const d = nowDate instanceof Date ? nowDate : new Date();
+      const h = typeof nowDate === 'number' ? nowDate : d.getHours();
+      const m = d.getMinutes();
+      const nowMs = d.getTime();
+
+      // 1. Astronomical Civil Twilight (Civil Dawn & Civil Dusk)
+      // Checks true solar geometry based on local sunrise / sunset times from weather feed
+      if(typeof lastWeatherData !== 'undefined' && lastWeatherData && lastWeatherData.daily && Array.isArray(lastWeatherData.daily.sunrise) && Array.isArray(lastWeatherData.daily.sunset)){
+        try{
+          const srStr = lastWeatherData.daily.sunrise[0];
+          const ssStr = lastWeatherData.daily.sunset[0];
+          if(srStr && ssStr){
+            const srTime = new Date(srStr).getTime();
+            const ssTime = new Date(ssStr).getTime();
+            // Dawn Twilight: 30 minutes prior to local sunrise
+            if(!isNaN(srTime) && nowMs >= (srTime - 30 * 60 * 1000) && nowMs < srTime){
+              return 'DAWN TWILIGHT';
+            }
+            // Dusk Twilight: 30 minutes following local sunset
+            if(!isNaN(ssTime) && nowMs >= ssTime && nowMs < (ssTime + 30 * 60 * 1000)){
+              return 'DUSK TWILIGHT';
+            }
+          }
+        }catch(err){}
+      }
+
+      // 2. Official National Weather Service (NWS) Standard Operational Time Segments
+      if(h >= 0 && h < 3) return 'OVERNIGHT';
+      if(h >= 3 && h < 6) return 'TOWARD MORNING';
+      if(h >= 6 && h < 9) return 'EARLY MORNING';
+      if(h >= 9 && h < 12) return 'LATE MORNING';
+      if(h >= 12 && h < 15) return 'EARLY AFTERNOON';
+      if(h >= 15 && h < 18) return 'LATE AFTERNOON';
+      if(h >= 18 && h < 21) return 'EVENING';
+      return 'LATE EVENING';
+    } catch(err) {
+      return 'EVENING';
+    }
   }
 
   function isDaylightSavings(d){
@@ -2981,7 +3040,7 @@
     }
 
     const periodEl = document.getElementById('dayPeriodName') || document.getElementById('periodBadge');
-    const newPeriod = getConversationalPeriod(rawHours);
+    const newPeriod = getConversationalPeriod(now);
     if(periodEl && periodEl.textContent !== newPeriod){
       periodEl.textContent = newPeriod;
       dateChanged = true;
@@ -3884,8 +3943,6 @@
   /* ---------------------------------------------------------------
      MAIN RENDER & DYNAMIC DISPATCH
   --------------------------------------------------------------- */
-  let lastWeatherData = null;
-
   function updateWeatherUI(data){
     if(!data) return;
     lastWeatherData = data;
@@ -4018,6 +4075,9 @@
 
     if(typeof fitWeatherBlockToContainer === 'function'){
       fitWeatherBlockToContainer();
+    }
+    if(typeof tickClock === 'function'){
+      tickClock();
     }
   }
 
@@ -4277,7 +4337,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.090826.2119';
+  const CLIENT_APP_VERSION = 'v1.090826.2141';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -5856,11 +5916,59 @@
         const p2 = Math.round((w[2] / sum) * 100);
         hudPctBadge.textContent = `${p0}% | ${p1}% | ${p2}%`;
       }
+      positionResizeHud(target);
+    }
+
+    function positionResizeHud(sp){
+      if(!hudEl) return;
+      const target = sp || activeLockedSplitter;
+      if(!target) return;
+
+      const rowEl = target.closest('.panels') || target.closest('.topbar') || target.closest('.dashboard-row') || target.parentElement;
+      if(!rowEl) return;
+
+      const rowRect = rowEl.getBoundingClientRect();
+      const seamRect = target.getBoundingClientRect();
+      
+      const hudW = hudEl.offsetWidth || 560;
+      const hudH = hudEl.offsetHeight || 80;
+      const pad = 12;
+
+      // 1. Horizontal Position: Center directly over the active seam
+      const seamCenterX = seamRect.left + (seamRect.width / 2);
+      let targetLeft = seamCenterX - (hudW / 2);
+      targetLeft = Math.max(pad, Math.min(window.innerWidth - hudW - pad, targetLeft));
+
+      hudEl.style.left = `${Math.round(targetLeft)}px`;
+
+      // 2. Vertical Position:
+      // - TOP SEAM: Place controls UNDER the row (leaving Date, Clock & Weather 100% visible)
+      // - BOTTOM SEAM: Place controls ABOVE the seam / row (leaving 8-Ball, Quote & Holidays 100% visible)
+      const isTopRow = (target.dataset.row === 'top') || (rowRect.top < window.innerHeight * 0.42);
+
+      if(isTopRow){
+        let targetTop = rowRect.bottom + 8;
+        if(targetTop + hudH > window.innerHeight - pad){
+          targetTop = window.innerHeight - hudH - pad;
+        }
+        hudEl.style.top = `${Math.round(targetTop)}px`;
+        hudEl.style.bottom = 'auto';
+        hudEl.setAttribute('data-placement', 'under');
+      } else {
+        let targetBottom = (window.innerHeight - rowRect.top) + 8;
+        if(targetBottom + hudH > window.innerHeight - pad){
+          targetBottom = window.innerHeight - hudH - pad;
+        }
+        hudEl.style.bottom = `${Math.round(targetBottom)}px`;
+        hudEl.style.top = 'auto';
+        hudEl.setAttribute('data-placement', 'above');
+      }
     }
 
     function showResizeHud(sp){
       if(!hudEl) return;
       updateResizeHud(sp);
+      positionResizeHud(sp);
       hudEl.classList.add('is-visible');
     }
 
@@ -6252,6 +6360,14 @@
         resetSplitterRow(activeLockedSplitter);
       }
     });
+
+    window.addEventListener('resize', () => {
+      if(activeLockedSplitter) positionResizeHud(activeLockedSplitter);
+    });
+
+    window.positionActiveResizeHud = () => {
+      if(activeLockedSplitter) positionResizeHud(activeLockedSplitter);
+    };
   }
 
   /* ---------------------------------------------------------------
@@ -6557,6 +6673,9 @@
     } catch(e){}
 
     updateRowCollapseUI(animate);
+    if(typeof window.positionActiveResizeHud === 'function'){
+      setTimeout(window.positionActiveResizeHud, 60);
+    }
   }
 
   function initRowArranger(){

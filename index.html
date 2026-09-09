@@ -1475,20 +1475,20 @@
     min-height:0;
     display:flex;
     flex-direction:column;
-    justify-content:flex-start;
-    padding:clamp(3px, 0.6vh, 6px) 0 0 0;
-    gap:clamp(6px, 1.2vh, 12px);
+    justify-content:center;
+    padding:clamp(2px, 0.4vh, 6px) 0;
+    gap:clamp(6px, 1.2vh, 14px);
     overflow:hidden;
     position:relative;
   }
   .holiday-title{
     font-family:'Outfit',sans-serif;
-    font-weight:500;
-    font-size:clamp(1.08rem, min(4.2cqw, 2.1vh), 1.42rem);
-    line-height:1.18;
+    font-weight:600;
+    font-size:clamp(1.15rem, min(4.5cqw, 2.3vh), 1.75rem);
+    line-height:1.16;
     color:var(--blue);
     letter-spacing:0.005em;
-    text-shadow:0 0 12px rgba(58, 168, 255, 0.35), 0 2px 8px rgba(0,0,0,0.6);
+    text-shadow:0 0 14px rgba(58, 168, 255, 0.4), 0 2px 8px rgba(0,0,0,0.6);
     margin:0;
     word-break:normal;
     overflow-wrap:break-word;
@@ -1503,8 +1503,8 @@
   .holiday-summary{
     font-family:'Outfit',sans-serif;
     font-weight:400;
-    font-size:clamp(0.92rem, min(3.4cqw, 1.65vh), 1.15rem);
-    line-height:1.38;
+    font-size:clamp(0.92rem, min(3.4cqw, 1.65vh), 1.20rem);
+    line-height:1.46;
     color:rgba(235, 242, 248, 0.92);
     letter-spacing:0.01em;
     margin:0;
@@ -1567,18 +1567,23 @@
     justify-content:center;
     position:relative;
     width:100%;
+    height:100%;
     overflow:hidden;
+    padding:4px;
+    box-sizing:border-box;
   }
   .eightball-sphere{
-    width:var(--eightball-size, clamp(130px, 85%, 280px));
-    height:var(--eightball-size, clamp(130px, 85%, 280px));
+    width:var(--eightball-size, auto);
+    height:var(--eightball-size, auto);
+    max-width:calc(100% - 10px);
+    max-height:calc(100% - 10px);
     aspect-ratio:1 / 1;
     border-radius:50%;
     background:radial-gradient(circle at 35% 28%, #28343b 0%, #10191e 35%, #050a0d 75%, #010406 100%);
     box-shadow:
       inset 0 4px 10px rgba(255, 255, 255, 0.22),
       inset 0 -8px 18px rgba(0, 0, 0, 0.85),
-      0 6px 20px rgba(0, 0, 0, 0.7),
+      0 6px 18px rgba(0, 0, 0, 0.7),
       0 0 14px rgba(73, 230, 196, 0.20);
     position:relative;
     display:flex;
@@ -1717,7 +1722,7 @@
     letter-spacing:0.06em;
   }
 
-  /* ---- Touch-Draggable Row Seam Splitters ---- */
+  /* ---- Touch & Smart TV Remote Draggable Row Seam Splitters ---- */
   .row-splitter{
     width:6px;
     height:100%;
@@ -1730,8 +1735,9 @@
     justify-content:center;
     z-index:8;
     flex:none;
+    outline:none;
   }
-  /* Generous touch target (28px) for fingers on tablet */
+  /* Generous touch target (28px) for fingers on tablet / TV focus */
   .row-splitter::before{
     content:'';
     position:absolute;
@@ -1748,19 +1754,146 @@
     border-radius:2px;
     transition:background 0.2s ease, width 0.2s ease, box-shadow 0.2s ease;
     pointer-events:none;
+    position:relative;
   }
   .row-splitter:hover .splitter-grip,
+  .row-splitter:focus-visible .splitter-grip,
   .row-splitter.is-dragging .splitter-grip{
     background:#49e6c4;
     width:3px;
-    box-shadow:0 0 8px rgba(73, 230, 196, 0.7);
+    box-shadow:0 0 10px rgba(73, 230, 196, 0.85);
   }
+  /* TV Remote Focused Seam (hover/focus highlight) */
+  .row-splitter:focus-visible{
+    outline:none;
+  }
+  .row-splitter:focus-visible .splitter-grip{
+    background:#49e6c4;
+    width:4px;
+    box-shadow:0 0 14px #49e6c4, 0 0 24px rgba(73, 230, 196, 0.5);
+  }
+
+  /* TV Remote & Long-Press LOCKED RESIZE MODE (illuminated pulsing state) */
+  .row-splitter.is-locked-resize{
+    cursor:ew-resize !important;
+  }
+  .row-splitter.is-locked-resize .splitter-grip{
+    background:#38bdf8 !important;
+    width:4px !important;
+    height:clamp(44px, 8vh, 80px) !important;
+    box-shadow:0 0 16px #38bdf8, 0 0 32px rgba(56, 189, 248, 0.85) !important;
+    animation:seamPulseGlow 1.4s ease-in-out infinite alternate;
+  }
+  @keyframes seamPulseGlow{
+    0%{
+      box-shadow:0 0 12px #38bdf8, 0 0 22px rgba(56, 189, 248, 0.6);
+      filter:brightness(1.05);
+    }
+    100%{
+      box-shadow:0 0 22px #49e6c4, 0 0 36px rgba(73, 230, 196, 0.95);
+      filter:brightness(1.3);
+    }
+  }
+  /* Directional arrow badges on locked seam */
+  .row-splitter.is-locked-resize::after{
+    content:'◀ ▶';
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    font-family:'Outfit', sans-serif;
+    font-size:0.62rem;
+    font-weight:700;
+    letter-spacing:0.18em;
+    color:#ffffff;
+    background:rgba(2, 6, 8, 0.92);
+    border:1px solid #38bdf8;
+    border-radius:12px;
+    padding:2px 7px;
+    pointer-events:none;
+    z-index:9;
+    box-shadow:0 0 14px rgba(56, 189, 248, 0.7);
+    white-space:nowrap;
+    animation:seamBadgePulse 1.4s ease-in-out infinite alternate;
+  }
+  @keyframes seamBadgePulse{
+    0%{ transform:translate(-50%, -50%) scale(0.96); opacity:0.92; }
+    100%{ transform:translate(-50%, -50%) scale(1.06); opacity:1; }
+  }
+
   body.is-resizing-blocks{
     cursor:col-resize !important;
     user-select:none !important;
   }
   body.is-resizing-blocks *{
     user-select:none !important;
+  }
+
+  /* ---- Floating TV Remote Resize HUD Hint Pill ---- */
+  .remote-resize-hud{
+    position:fixed;
+    bottom:clamp(18px, 3.2vh, 32px);
+    left:50%;
+    transform:translateX(-50%) translateY(20px);
+    opacity:0;
+    pointer-events:none;
+    z-index:9999;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:rgba(2, 6, 8, 0.94);
+    border:1px solid #38bdf8;
+    border-radius:24px;
+    padding:7px 18px;
+    box-shadow:0 0 24px rgba(56, 189, 248, 0.4), 0 8px 30px rgba(0, 0, 0, 0.85);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+    transition:opacity 0.25s ease, transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+    font-family:'Outfit', sans-serif;
+    font-size:clamp(0.72rem, 1.4vh, 0.85rem);
+    color:rgba(240, 246, 252, 0.95);
+    white-space:nowrap;
+  }
+  .remote-resize-hud.is-visible{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+    pointer-events:auto;
+  }
+  .remote-resize-hud .hud-icon{
+    color:#38bdf8;
+    font-weight:700;
+    font-size:1.05em;
+    display:inline-flex;
+    align-items:center;
+  }
+  .remote-resize-hud .hud-key{
+    display:inline-block;
+    background:rgba(255, 255, 255, 0.12);
+    border:1px solid rgba(255, 255, 255, 0.25);
+    border-radius:5px;
+    padding:1px 6px;
+    font-family:'Share Tech Mono', monospace;
+    font-size:0.75rem;
+    color:#ffffff;
+    margin:0 2px;
+  }
+  .remote-resize-hud .hud-exit-btn{
+    margin-left:4px;
+    background:rgba(73, 230, 196, 0.18);
+    border:1px solid #49e6c4;
+    color:#49e6c4;
+    border-radius:12px;
+    padding:2px 9px;
+    font-size:0.68rem;
+    font-weight:600;
+    cursor:pointer;
+    transition:background 0.15s ease;
+  }
+  .remote-resize-hud .hud-exit-btn:hover,
+  .remote-resize-hud .hud-exit-btn:focus-visible{
+    background:#49e6c4;
+    color:#020608;
+    outline:none;
   }
 
   /* ---- Bottom 5-day strip (1:1 Compact Blocks & Tightly Grouped Data) ---- */
@@ -2069,7 +2202,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.090726.2215</span>
+        <span id="appVersionText">v1.090826.2029</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -2118,7 +2251,7 @@
       </div>
 
       <!-- SEAM 0: DATE <-> CLOCK SPLITTER -->
-      <div class="row-splitter" data-row="top" data-seam="0" title="Drag to adjust width • Double-tap to reset" role="separator" aria-orientation="vertical">
+      <div class="row-splitter" data-row="top" data-seam="0" tabindex="0" role="separator" aria-orientation="vertical" aria-label="Resize Date and Clock width. Press OK to lock into adjust mode, Left and Right arrows to resize." title="Drag or press OK to adjust width • Double-tap to reset">
         <div class="splitter-grip"></div>
       </div>
 
@@ -2134,7 +2267,7 @@
       </div>
 
       <!-- SEAM 1: CLOCK <-> WEATHER SPLITTER -->
-      <div class="row-splitter" data-row="top" data-seam="1" title="Drag to adjust width • Double-tap to reset" role="separator" aria-orientation="vertical">
+      <div class="row-splitter" data-row="top" data-seam="1" tabindex="0" role="separator" aria-orientation="vertical" aria-label="Resize Clock and Weather width. Press OK to lock into adjust mode, Left and Right arrows to resize." title="Drag or press OK to adjust width • Double-tap to reset">
         <div class="splitter-grip"></div>
       </div>
 
@@ -2275,7 +2408,7 @@
       </div>
 
       <!-- SEAM 0: CONDITIONS <-> INSPIRATION SPLITTER -->
-      <div class="row-splitter" data-row="mid" data-seam="0" title="Drag to adjust width • Double-tap to reset" role="separator" aria-orientation="vertical">
+      <div class="row-splitter" data-row="mid" data-seam="0" tabindex="0" role="separator" aria-orientation="vertical" aria-label="Resize 8-Ball and Inspiration width. Press OK to lock into adjust mode, Left and Right arrows to resize." title="Drag or press OK to adjust width • Double-tap to reset">
         <div class="splitter-grip"></div>
       </div>
 
@@ -2309,7 +2442,7 @@
       </div>
 
       <!-- SEAM 1: INSPIRATION <-> DETAILS SPLITTER -->
-      <div class="row-splitter" data-row="mid" data-seam="1" title="Drag to adjust width • Double-tap to reset" role="separator" aria-orientation="vertical">
+      <div class="row-splitter" data-row="mid" data-seam="1" tabindex="0" role="separator" aria-orientation="vertical" aria-label="Resize Inspiration and Checkiday width. Press OK to lock into adjust mode, Left and Right arrows to resize." title="Drag or press OK to adjust width • Double-tap to reset">
         <div class="splitter-grip"></div>
       </div>
 
@@ -2368,6 +2501,14 @@
       </div>
     </div>
 
+  </div>
+
+  <!-- Smart TV Remote Horizontal Block Resize HUD Pill -->
+  <div class="remote-resize-hud" id="remoteResizeHud" role="status" aria-live="polite" aria-label="Block resize mode active">
+    <span class="hud-icon">📐</span>
+    <span id="remoteResizeHudText">Resizing: Press <span class="hud-key">◀</span> <span class="hud-key">▶</span> to adjust</span>
+    <span class="hud-hint">Press <span class="hud-key">OK</span> to lock • <span class="hud-key">0</span> to reset</span>
+    <button type="button" class="hud-exit-btn" id="remoteResizeExitBtn" title="Lock and exit resize mode">Done</button>
   </div>
 
   <!-- Location Search & ZIP Code Modal (NOMAD / Weather Friends) -->
@@ -3828,7 +3969,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.090726.2215';
+  const CLIENT_APP_VERSION = 'v1.090826.2029';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -4711,17 +4852,21 @@
   }
 
   /**
-   * Dynamically resizes the 8-Ball sphere to occupy ~85% of available space
-   * - Automatically responds to container resize, panel splitter drags, or screen adjustments
+   * Dynamically resizes the 8-Ball sphere to safely fit available headroom
+   * - Constrained by BOTH width and height so it never clips top/bottom or left/right
+   * - Leaves generous 8-10px breathing room for realistic outer sphere drop-shadow & teal neon glow
    */
   function resizeEightball(){
     if(!eightballStage || !eightballSphere) return;
-    const w = eightballStage.clientWidth;
-    const h = eightballStage.clientHeight;
+    const rect = eightballStage.getBoundingClientRect();
+    const w = Math.floor(rect.width || eightballStage.clientWidth);
+    const h = Math.floor(rect.height || eightballStage.clientHeight);
     if(w <= 20 || h <= 20) return;
 
-    // Expand sphere to 85% of available headroom (min of width and height)
-    const targetDiameter = Math.max(110, Math.floor(Math.min(w, h) * 0.85));
+    // Use 82% of the smaller dimension minus 8px buffer so sphere and its outer glows never touch boundaries
+    const minDim = Math.min(w, h);
+    const targetDiameter = Math.max(64, Math.min(260, Math.floor(minDim * 0.82) - 8));
+    eightballSphere.style.setProperty('--eightball-size', targetDiameter + 'px');
     eightballSphere.style.width = targetDiameter + 'px';
     eightballSphere.style.height = targetDiameter + 'px';
 
@@ -4752,7 +4897,7 @@
 
     setTimeout(() => {
       if(eightballAnswer){
-        const currentBallSize = eightballSphere ? eightballSphere.clientWidth : 160;
+        const currentBallSize = eightballSphere ? (eightballSphere.clientWidth || 160) : 160;
         fitEightballAnswer(currentBallSize, resp);
 
         // Subtle color tinting based on traditional oracle tone
@@ -4788,7 +4933,7 @@
     });
   }
 
-  // Observe resizing of the 8-ball stage to dynamically scale sphere to 85% of available bounds
+  // Observe resizing of the 8-ball stage to dynamically scale sphere to available bounds
   if(window.ResizeObserver && eightballStage){
     const ebObserver = new ResizeObserver(() => {
       resizeEightball();
@@ -4798,8 +4943,11 @@
     window.addEventListener('resize', resizeEightball);
   }
 
-  // Initialize initial sizing
-  setTimeout(resizeEightball, 50);
+  // Multiple initial layout stages to support delayed Smart TV webviews & browser paints
+  resizeEightball();
+  requestAnimationFrame(() => setTimeout(resizeEightball, 120));
+  setTimeout(resizeEightball, 600);
+  window.addEventListener('load', resizeEightball);
 
   /* ---------------------------------------------------------------
      CHECKIDAY DAILY HOLIDAYS ROTATION ENGINE (CHECKIDAY BLOCK)
@@ -4836,10 +4984,10 @@
       holidayMeasureBuffer.style.cssText = 'position:fixed;top:-9999px;left:-9999px;visibility:hidden;pointer-events:none;z-index:-1000;white-space:normal;word-break:normal;overflow-wrap:break-word;box-sizing:border-box;display:flex;flex-direction:column;padding:0;margin:0;border:none;';
       
       hBufTitle = document.createElement('div');
-      hBufTitle.style.cssText = 'font-family:\'Outfit\',sans-serif;font-weight:500;letter-spacing:-0.005em;margin:0;padding:0;flex-shrink:0;';
+      hBufTitle.style.cssText = 'font-family:\'Outfit\',sans-serif;font-weight:600;letter-spacing:0.005em;margin:0;padding:0;flex-shrink:0;text-wrap:balance;line-height:1.16;';
       
       hBufSummary = document.createElement('div');
-      hBufSummary.style.cssText = 'font-family:\'Outfit\',sans-serif;font-weight:400;letter-spacing:0.01em;margin:0;padding:0;flex-shrink:0;';
+      hBufSummary.style.cssText = 'font-family:\'Outfit\',sans-serif;font-weight:400;letter-spacing:0.01em;margin:0;padding:0;flex-shrink:0;line-height:1.46;';
       
       holidayMeasureBuffer.appendChild(hBufTitle);
       holidayMeasureBuffer.appendChild(hBufSummary);
@@ -4849,14 +4997,12 @@
   }
 
   /**
-   * HOLIDAY AUTO-FIT ENGINE (Coordinated Binary Max-Fill)
-   * - Aligns Checkiday.com with the Inspiration block's dynamic auto-fit philosophy
-   * - Measures exact container width and height
-   * - Dynamically calculates proportional scales for Hero Title and Narrative Summary
-   * - Short titles scale up to 34-38px bold display type to command the space
-   * - Summary scales up to 18-21px for effortless living-room / TV legibility
-   * - Justifies from the top to align cleanly with the Inspiration card baseline
-   * - Falls back to concise origin overview if full summary is too lengthy
+   * HOLIDAY BALANCED AUTO-FIT ENGINE (Coordinated Proportional Fill)
+   * - Designed for consistent optical balance across Smart TVs, tablets, and browser tabs
+   * - Prominent, commanding headline title (blue display type) with 1.32x to 1.60x proportional ratio
+   * - Smaller, comfortable narrative body text that breathes and takes advantage of full card space
+   * - Rich two-sentence summaries favored when space permits, preventing awkward empty voids
+   * - Vertically centered layout ensures clean balance regardless of aspect ratio or title length
    */
   function screenAndFitHolidayText() {
     if (!holidayContentArea || !holidayTitleEl || !holidaySummaryEl) return;
@@ -4871,52 +5017,37 @@
     const holiday = (checkidayHolidays && checkidayHolidays[currentHolidayIndex]) || null;
     if (!holiday) return;
 
-    const title = holiday.title || "National Holiday";
+    const title = (holiday.title || "National Holiday").trim();
     const originText = (holiday.origin || holiday.primarySummary || holiday.description || "").trim();
     const fullSummary = (holiday.summary || holiday.origin || holiday.description || "").trim();
-
-    holidayTitleEl.textContent = title;
 
     const buf = getHolidayMeasureBuffer();
     const targetW = Math.max(120, availW - 6);
     const targetH = Math.max(80, availH - 4);
     buf.style.width = targetW + 'px';
 
-    hBufTitle.textContent = title;
+    // Ratio between Title and Summary:
+    // User requested: "the title should be larger (it can stay blue) but the text should BE smaller, but also take up more space. we need some better rules around this ratio."
+    // - Short titles (<= 24 chars): 1.58x ratio commanding the card
+    // - Medium titles (25-36 chars): 1.45x ratio for strong hierarchy
+    // - Long titles (> 36 chars): 1.32x ratio wrapping cleanly into two balanced headline lines
+    const titleLen = title.length;
+    const titleRatio = titleLen > 36 ? 1.32 : (titleLen > 24 ? 1.45 : 1.58);
 
-    // Measure unscaled single-line width of the title at a baseline 20px
-    hBufTitle.style.whiteSpace = 'nowrap';
-    hBufTitle.style.fontSize = '20px';
-    const titleWidthAt20px = Math.max(10, hBufTitle.scrollWidth || hBufTitle.offsetWidth);
+    // Test a candidate configuration at a given summaryPx
+    function testFit(text, summaryPx) {
+      const titlePx = Math.min(36, Math.max(17.5, Math.round(summaryPx * titleRatio)));
+      const gapPx = Math.min(18, Math.max(6, Math.round(summaryPx * 0.58)));
 
-    // Calculate the maximum font size where the entire title fits on ONE single line
-    const singleLineMaxFont = Math.floor(((targetW - 10) / titleWidthAt20px) * 20);
-
-    // Keep title on 1 line whenever it fits at >= 17.5px (clean headline).
-    // Only wrap to 2 lines for very long titles (35+ chars), avoiding giant bloated headings.
-    const titleCanBeSingleLine = singleLineMaxFont >= 17.5;
-    const baseTitle = titleCanBeSingleLine 
-      ? Math.min(22, Math.max(18, singleLineMaxFont)) 
-      : (title.length > 38 ? 18.5 : 20.5);
-    const baseSummary = titleCanBeSingleLine ? 16.5 : 15.2;
-
-    // Helper: evaluates if a given text fits at a specific scale percentage
-    function testScale(text, scalePct) {
-      const s = scalePct / 100;
-      const titlePx = titleCanBeSingleLine
-        ? Math.min(singleLineMaxFont, Math.max(17.5, Math.round(baseTitle * s)))
-        : Math.max(16.5, Math.round(baseTitle * s));
-      const summaryPx = Math.max(13, Math.round(baseSummary * s));
-      const gapPx = Math.max(5, Math.round(7 * s));
-
-      hBufTitle.style.whiteSpace = titleCanBeSingleLine ? 'nowrap' : 'normal';
-      hBufTitle.style.textWrap = titleCanBeSingleLine ? 'nowrap' : 'balance';
+      hBufTitle.textContent = title;
       hBufTitle.style.fontSize = titlePx + 'px';
-      hBufTitle.style.lineHeight = '1.18';
+      hBufTitle.style.lineHeight = '1.16';
+      hBufTitle.style.textWrap = 'balance';
+      hBufTitle.style.whiteSpace = 'normal';
 
       hBufSummary.textContent = text;
       hBufSummary.style.fontSize = summaryPx + 'px';
-      hBufSummary.style.lineHeight = '1.38';
+      hBufSummary.style.lineHeight = '1.46';
 
       buf.style.gap = gapPx + 'px';
 
@@ -4925,17 +5056,18 @@
       return (rH <= targetH && rW <= targetW + 2);
     }
 
-    // Binary search for maximum fitting scale
-    function findBestFit(text) {
-      let low = 70;
-      let high = 130;
+    // Binary search for optimal summary font size between minPx and maxPx
+    function findBestSummaryPx(text, minPx = 13, maxPx = 23) {
+      let low = Math.round(minPx * 2);
+      let high = Math.round(maxPx * 2);
       let best = 0;
 
       while (low <= high) {
         const mid = Math.floor((low + high) / 2);
-        if (testScale(text, mid)) {
-          best = mid;
-          low = mid + 1; // Fits! Try larger font size to fill headroom
+        const testPx = mid / 2;
+        if (testFit(text, testPx)) {
+          best = testPx;
+          low = mid + 1; // Fits! Try larger to maximize fill
         } else {
           high = mid - 1; // Overflows, step down
         }
@@ -4943,49 +5075,47 @@
       return best;
     }
 
-    // Try full summary first if reasonably short; if it cannot reach an expansive scale, switch to concise origin
+    // Text Selection Strategy:
+    // 1. If fullSummary exists and differs from originText, test if fullSummary fits at a comfortable reading size (>= 15px).
+    //    Using fullSummary gives rich 2-sentence context that naturally fills the card nicely!
     let chosenText = fullSummary;
-    let chosenScale = 0;
+    let chosenSummaryPx = 0;
 
-    if (fullSummary && fullSummary.length <= 180 && fullSummary !== originText) {
-      chosenScale = findBestFit(fullSummary);
+    if (fullSummary && fullSummary.length <= 340 && fullSummary !== originText) {
+      chosenSummaryPx = findBestSummaryPx(fullSummary, 14.5, 21);
     }
 
-    // If full summary doesn't fit or results in tiny text (< 84% scale), use punchy originText
-    if (chosenScale < 84) {
+    // 2. If fullSummary is too long (would force summary < 15px) or unavailable, use punchy originText:
+    if (chosenSummaryPx < 15) {
       chosenText = originText || fullSummary;
-      chosenScale = findBestFit(chosenText);
+      chosenSummaryPx = findBestSummaryPx(chosenText, 14, 23);
     }
 
-    // If still tight, fallback with lowest reasonable scale
-    if (chosenScale === 0) {
-      chosenScale = 75;
+    // Fallback if still 0
+    if (chosenSummaryPx === 0) {
+      chosenSummaryPx = 14.5;
     }
 
-    const finalS = chosenScale / 100;
-    const finalTitlePx = titleCanBeSingleLine 
-      ? Math.min(singleLineMaxFont, Math.max(17.5, Math.round(baseTitle * finalS)))
-      : Math.max(16.5, Math.round(baseTitle * finalS));
-    const finalSummaryPx = Math.max(13, Math.round(baseSummary * finalS));
-    const finalGapPx = Math.max(5, Math.round(7 * finalS));
+    const finalTitlePx = Math.min(36, Math.max(17.5, Math.round(chosenSummaryPx * titleRatio)));
+    const finalGapPx = Math.min(18, Math.max(6, Math.round(chosenSummaryPx * 0.58)));
 
     // Apply the computed responsive typography and vertical spacing
     holidayTitleEl.textContent = title;
-    holidayTitleEl.style.fontWeight = '500';
+    holidayTitleEl.style.fontWeight = '600';
     holidayTitleEl.style.color = 'var(--blue)';
-    holidayTitleEl.style.whiteSpace = titleCanBeSingleLine ? 'nowrap' : 'normal';
-    holidayTitleEl.style.textWrap = titleCanBeSingleLine ? 'nowrap' : 'balance';
     holidayTitleEl.style.fontSize = finalTitlePx + 'px';
-    holidayTitleEl.style.lineHeight = '1.18';
+    holidayTitleEl.style.lineHeight = '1.16';
+    holidayTitleEl.style.textWrap = 'balance';
+    holidayTitleEl.style.whiteSpace = 'normal';
 
     holidaySummaryEl.textContent = chosenText;
     holidaySummaryEl.style.fontWeight = '400';
     holidaySummaryEl.style.color = 'rgba(235, 242, 248, 0.92)';
-    holidaySummaryEl.style.fontSize = finalSummaryPx + 'px';
-    holidaySummaryEl.style.lineHeight = '1.38';
+    holidaySummaryEl.style.fontSize = chosenSummaryPx + 'px';
+    holidaySummaryEl.style.lineHeight = '1.46';
 
     holidayContentArea.style.gap = finalGapPx + 'px';
-    holidayContentArea.style.justifyContent = 'flex-start';
+    holidayContentArea.style.justifyContent = 'center';
   }
 
   // Setup ResizeObserver for immediate re-screening on panel resize or window adjustments
@@ -5290,6 +5420,153 @@
     applyWeights('mid', currentWeights.mid);
 
     const splitters = document.querySelectorAll('.row-splitter');
+    const hudEl = document.getElementById('remoteResizeHud');
+    const hudTextEl = document.getElementById('remoteResizeHudText');
+    const hudExitBtn = document.getElementById('remoteResizeExitBtn');
+
+    let activeLockedSplitter = null;
+
+    function getSplitterLabel(sp){
+      if(!sp) return 'Blocks';
+      const r = sp.dataset.row;
+      const s = parseInt(sp.dataset.seam, 10);
+      if(r === 'top'){
+        return s === 0 ? 'Date ↔ Clock' : 'Clock ↔ Weather';
+      } else if(r === 'mid'){
+        return s === 0 ? '8-Ball ↔ Inspiration' : 'Inspiration ↔ Checkiday';
+      }
+      return 'Blocks';
+    }
+
+    function showResizeHud(sp){
+      if(!hudEl) return;
+      if(hudTextEl){
+        hudTextEl.innerHTML = `Resizing <b>${getSplitterLabel(sp)}</b>: Press <span class="hud-key">◀</span> <span class="hud-key">▶</span> to adjust`;
+      }
+      hudEl.classList.add('is-visible');
+    }
+
+    function hideResizeHud(){
+      if(!hudEl) return;
+      hudEl.classList.remove('is-visible');
+    }
+
+    function unlockSplitter(sp, save = true){
+      const target = sp || activeLockedSplitter;
+      if(target){
+        target.classList.remove('is-locked-resize');
+        if(save){
+          const rId = target.dataset.row;
+          try{
+            localStorage.setItem(`wf_layout_${rId}_weights`, JSON.stringify(currentWeights[rId]));
+          }catch(err){}
+        }
+      }
+      activeLockedSplitter = null;
+      hideResizeHud();
+    }
+
+    function lockSplitter(sp){
+      if(activeLockedSplitter && activeLockedSplitter !== sp){
+        unlockSplitter(activeLockedSplitter, true);
+      }
+      activeLockedSplitter = sp;
+      sp.classList.add('is-locked-resize');
+      showResizeHud(sp);
+      try{ sp.focus(); }catch(e){}
+    }
+
+    function toggleLockSplitter(sp){
+      if(activeLockedSplitter === sp){
+        unlockSplitter(sp, true);
+      } else {
+        lockSplitter(sp);
+      }
+    }
+
+    if(hudExitBtn){
+      hudExitBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        unlockSplitter(null, true);
+      });
+    }
+
+    // Step-wise adjust weights by delta (used by TV remote arrow keys and long-hold)
+    function nudgeSplitter(sp, deltaWeight){
+      if(!sp) return;
+      const rowId = sp.dataset.row;
+      const seamIndex = parseInt(sp.dataset.seam, 10);
+      const startW = [...currentWeights[rowId]];
+      const newW = [...startW];
+
+      if(seamIndex === 0){
+        let w0 = startW[0] + deltaWeight;
+        let w1 = startW[1] - deltaWeight;
+        if(w0 < MIN_WEIGHT){
+          w1 -= (MIN_WEIGHT - w0);
+          w0 = MIN_WEIGHT;
+        }
+        if(w1 < MIN_WEIGHT){
+          w0 -= (MIN_WEIGHT - w1);
+          w1 = MIN_WEIGHT;
+        }
+        newW[0] = Math.max(MIN_WEIGHT, parseFloat(w0.toFixed(3)));
+        newW[1] = Math.max(MIN_WEIGHT, parseFloat(w1.toFixed(3)));
+      } else if(seamIndex === 1){
+        let w1 = startW[1] + deltaWeight;
+        let w2 = startW[2] - deltaWeight;
+        if(w1 < MIN_WEIGHT){
+          w2 -= (MIN_WEIGHT - w1);
+          w1 = MIN_WEIGHT;
+        }
+        if(w2 < MIN_WEIGHT){
+          w1 -= (MIN_WEIGHT - w2);
+          w2 = MIN_WEIGHT;
+        }
+        newW[1] = Math.max(MIN_WEIGHT, parseFloat(w1.toFixed(3)));
+        newW[2] = Math.max(MIN_WEIGHT, parseFloat(w2.toFixed(3)));
+      }
+
+      currentWeights[rowId] = newW;
+      applyWeights(rowId, newW);
+      try{
+        localStorage.setItem(`wf_layout_${rowId}_weights`, JSON.stringify(newW));
+      }catch(err){}
+
+      if(rowId === 'top'){
+        if(typeof fitDateBlockToContainer === 'function') fitDateBlockToContainer();
+        if(typeof fitWeatherBlockToContainer === 'function') fitWeatherBlockToContainer();
+      } else if(rowId === 'mid'){
+        if(typeof resizeEightball === 'function') resizeEightball();
+        if(typeof fitQuoteTextToContainer === 'function' && typeof currentInspirationData !== 'undefined' && currentInspirationData){
+          fitQuoteTextToContainer(currentInspirationData.text, currentInspirationData.author);
+        }
+        if(typeof screenAndFitHolidayText === 'function') screenAndFitHolidayText();
+      }
+    }
+
+    function resetSplitterRow(sp){
+      if(!sp) return;
+      const rowId = sp.dataset.row;
+      const def = rowId === 'top' ? DEFAULT_TOP : DEFAULT_MID;
+      currentWeights[rowId] = [...def];
+      applyWeights(rowId, def);
+      try{ localStorage.removeItem(`wf_layout_${rowId}_weights`); }catch(err){}
+      if(rowId === 'top'){
+        if(typeof fitDateBlockToContainer === 'function') fitDateBlockToContainer();
+        if(typeof fitWeatherBlockToContainer === 'function') fitWeatherBlockToContainer();
+      } else if(rowId === 'mid'){
+        if(typeof resizeEightball === 'function') resizeEightball();
+        if(typeof fitQuoteTextToContainer === 'function' && typeof currentInspirationData !== 'undefined' && currentInspirationData){
+          fitQuoteTextToContainer(currentInspirationData.text, currentInspirationData.author);
+        }
+        if(typeof screenAndFitHolidayText === 'function') screenAndFitHolidayText();
+      }
+      if(activeLockedSplitter === sp){
+        unlockSplitter(sp, false);
+      }
+    }
+
     splitters.forEach(splitter => {
       const rowId = splitter.dataset.row;
       const seamIndex = parseInt(splitter.dataset.seam, 10);
@@ -5298,11 +5575,20 @@
       let startW = [];
       let containerWidth = 0;
       let isDragging = false;
+      let longPressTimer = null;
+      let didLongPressTrigger = false;
 
       function onPointerDown(e){
         if(e.button !== undefined && e.button !== 0) return;
         const rowEl = rowId === 'top' ? topRowEl : midRowEl;
         if(!rowEl) return;
+
+        didLongPressTrigger = false;
+        // Start long-press detection (550ms hold locks seam into resize mode on TVs/touchscreens)
+        longPressTimer = setTimeout(() => {
+          didLongPressTrigger = true;
+          toggleLockSplitter(splitter);
+        }, 550);
 
         isDragging = true;
         startX = e.clientX;
@@ -5312,18 +5598,22 @@
         document.body.classList.add('is-resizing-blocks');
 
         try{ splitter.setPointerCapture(e.pointerId); }catch(err){}
-        e.preventDefault();
       }
 
       function onPointerMove(e){
         if(!isDragging || containerWidth <= 0) return;
         const deltaX = e.clientX - startX;
+        if(Math.abs(deltaX) > 4 && longPressTimer){
+          // User started dragging, cancel long press
+          clearTimeout(longPressTimer);
+          longPressTimer = null;
+        }
+
         const totalWeight = startW[0] + startW[1] + startW[2];
         const deltaWeight = (deltaX / containerWidth) * totalWeight;
 
         const newW = [...startW];
         if(seamIndex === 0){
-          // Adjust block 0 vs block 1
           let w0 = startW[0] + deltaWeight;
           let w1 = startW[1] - deltaWeight;
           if(w0 < MIN_WEIGHT){
@@ -5337,7 +5627,6 @@
           newW[0] = Math.max(MIN_WEIGHT, parseFloat(w0.toFixed(3)));
           newW[1] = Math.max(MIN_WEIGHT, parseFloat(w1.toFixed(3)));
         } else if(seamIndex === 1){
-          // Adjust block 1 vs block 2
           let w1 = startW[1] + deltaWeight;
           let w2 = startW[2] - deltaWeight;
           if(w1 < MIN_WEIGHT){
@@ -5357,10 +5646,20 @@
         if(rowId === 'top'){
           if(typeof fitDateBlockToContainer === 'function') fitDateBlockToContainer();
           if(typeof fitWeatherBlockToContainer === 'function') fitWeatherBlockToContainer();
+        } else if(rowId === 'mid'){
+          if(typeof resizeEightball === 'function') resizeEightball();
+          if(typeof fitQuoteTextToContainer === 'function' && typeof currentInspirationData !== 'undefined' && currentInspirationData){
+            fitQuoteTextToContainer(currentInspirationData.text, currentInspirationData.author);
+          }
+          if(typeof screenAndFitHolidayText === 'function') screenAndFitHolidayText();
         }
       }
 
       function onPointerUp(e){
+        if(longPressTimer){
+          clearTimeout(longPressTimer);
+          longPressTimer = null;
+        }
         if(!isDragging) return;
         isDragging = false;
         splitter.classList.remove('is-dragging');
@@ -5373,6 +5672,12 @@
         if(rowId === 'top'){
           if(typeof fitDateBlockToContainer === 'function') fitDateBlockToContainer();
           if(typeof fitWeatherBlockToContainer === 'function') fitWeatherBlockToContainer();
+        } else if(rowId === 'mid'){
+          if(typeof resizeEightball === 'function') resizeEightball();
+          if(typeof fitQuoteTextToContainer === 'function' && typeof currentInspirationData !== 'undefined' && currentInspirationData){
+            fitQuoteTextToContainer(currentInspirationData.text, currentInspirationData.author);
+          }
+          if(typeof screenAndFitHolidayText === 'function') screenAndFitHolidayText();
         }
       }
 
@@ -5381,22 +5686,90 @@
       splitter.addEventListener('pointerup', onPointerUp);
       splitter.addEventListener('pointercancel', onPointerUp);
 
-      // Double-click or double-tap on seam resets row to default proportions
+      // Tap / Click handler:
+      // - If long press triggered, do nothing
+      // - If double click/tap (< 350ms), reset to default 1:1 proportions
+      // - If single click when not dragging, toggle lock mode
       let lastTapTime = 0;
-      splitter.addEventListener('click', () => {
+      splitter.addEventListener('click', (e) => {
+        if(didLongPressTrigger) return;
         const now = Date.now();
         if(now - lastTapTime < 350){
-          const def = rowId === 'top' ? DEFAULT_TOP : DEFAULT_MID;
-          currentWeights[rowId] = [...def];
-          applyWeights(rowId, def);
-          try{ localStorage.removeItem(`wf_layout_${rowId}_weights`); }catch(err){}
-          if(rowId === 'top'){
-            if(typeof fitDateBlockToContainer === 'function') fitDateBlockToContainer();
-            if(typeof fitWeatherBlockToContainer === 'function') fitWeatherBlockToContainer();
-          }
+          resetSplitterRow(splitter);
+        } else {
+          toggleLockSplitter(splitter);
         }
         lastTapTime = now;
       });
+
+      // Smart TV Remote & Keyboard Controls directly on focused splitter:
+      splitter.addEventListener('keydown', (e) => {
+        const key = e.key || '';
+        const code = e.keyCode || 0;
+
+        // Enter / Space / OK key on Smart TV Remote toggles lock mode
+        if(key === 'Enter' || key === ' ' || code === 13 || code === 32){
+          e.preventDefault();
+          e.stopPropagation();
+          toggleLockSplitter(splitter);
+          return;
+        }
+
+        // Left / Right arrows resize adjacent blocks
+        if(key === 'ArrowLeft' || code === 37){
+          e.preventDefault();
+          e.stopPropagation();
+          if(!activeLockedSplitter) lockSplitter(splitter);
+          nudgeSplitter(splitter, -0.04);
+          return;
+        }
+        if(key === 'ArrowRight' || code === 39){
+          e.preventDefault();
+          e.stopPropagation();
+          if(!activeLockedSplitter) lockSplitter(splitter);
+          nudgeSplitter(splitter, 0.04);
+          return;
+        }
+
+        // 0 key or Backspace resets to default
+        if(key === '0' || code === 48 || key === 'Numpad0' || code === 96){
+          e.preventDefault();
+          e.stopPropagation();
+          resetSplitterRow(splitter);
+          return;
+        }
+
+        // Escape / Back unlocks
+        if(key === 'Escape' || code === 27 || key === 'Backspace'){
+          if(activeLockedSplitter){
+            e.preventDefault();
+            e.stopPropagation();
+            unlockSplitter(splitter, true);
+          }
+        }
+      });
+    });
+
+    // Global Keydown Handler for when a seam is in active locked resize mode
+    // Allows Left/Right arrow nudges and OK / Escape locks from anywhere on the page
+    window.addEventListener('keydown', (e) => {
+      if(!activeLockedSplitter) return;
+      const key = e.key || '';
+      const code = e.keyCode || 0;
+
+      if(key === 'ArrowLeft' || code === 37){
+        e.preventDefault();
+        nudgeSplitter(activeLockedSplitter, -0.04);
+      } else if(key === 'ArrowRight' || code === 39){
+        e.preventDefault();
+        nudgeSplitter(activeLockedSplitter, 0.04);
+      } else if(key === 'Enter' || key === ' ' || code === 13 || code === 32 || key === 'Escape' || code === 27){
+        e.preventDefault();
+        unlockSplitter(activeLockedSplitter, true);
+      } else if(key === '0' || code === 48 || key === 'Numpad0' || code === 96){
+        e.preventDefault();
+        resetSplitterRow(activeLockedSplitter);
+      }
     });
   }
 

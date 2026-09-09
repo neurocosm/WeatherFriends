@@ -391,7 +391,7 @@
     min-height:0;
     display:flex;
     flex-direction:column;
-    justify-content:space-between;
+    justify-content:flex-start;
     gap:clamp(4px, 0.8vh, 8px);
     background:radial-gradient(120% 140% at 50% 0%, var(--screen-bg-2), var(--screen-bg) 70%);
     border-radius:10px;
@@ -452,18 +452,18 @@
   /* Hardware-Style 1-Dimensional Light Gray Row Order Steppers (Outside the Frames) */
   .row-order-ctrl{
     position:absolute;
-    left:clamp(-25px, -2.4vw, -21px);
+    left:clamp(-27px, -2.5vw, -22px);
     top:50%;
     transform:translateY(-50%);
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:center;
-    gap:3px;
+    gap:4px;
     z-index:35;
     pointer-events:auto;
     user-select:none;
-    transition:opacity 0.2s ease;
+    transition:opacity 0.2s ease, top 0.2s ease, transform 0.2s ease;
   }
   .row-order-ctrl.slot-top,
   .row-order-ctrl.slot-mid,
@@ -471,6 +471,63 @@
     top:50%;
     bottom:auto;
     transform:translateY(-50%);
+  }
+
+  /* Row Window-Shade Roller Toggle (Dash / Dot) */
+  .row-shutter-toggle{
+    background:transparent;
+    border:none;
+    outline:none;
+    width:22px;
+    height:20px;
+    padding:0;
+    margin:0;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    -webkit-tap-highlight-color:transparent;
+    position:relative;
+    transition:transform 0.18s ease;
+  }
+  .row-shutter-toggle:hover{
+    transform:scale(1.22);
+  }
+  .row-shutter-toggle:active{
+    transform:scale(0.9);
+  }
+  .row-shutter-toggle:focus-visible{
+    outline:1px dashed rgba(73, 230, 196, 0.6);
+    outline-offset:1px;
+  }
+  /* Dash indicator when open/unrolled */
+  .row-shutter-dash{
+    display:block;
+    width:12px;
+    height:2.6px;
+    background:#49e6c4;
+    border-radius:2px;
+    box-shadow:0 0 5px rgba(73, 230, 196, 0.45);
+    transition:background 0.2s ease, box-shadow 0.2s ease;
+  }
+  .row-shutter-toggle:hover .row-shutter-dash{
+    background:#7effdb;
+    box-shadow:0 0 8px rgba(73, 230, 196, 0.85);
+  }
+  /* Dot indicator when collapsed/rolled up */
+  .row-shutter-dot{
+    display:none;
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    background:#ffb648;
+    box-shadow:0 0 7px rgba(255, 182, 72, 0.75), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+    transition:background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  .row-shutter-toggle:hover .row-shutter-dot{
+    background:#ffd17d;
+    box-shadow:0 0 11px rgba(255, 182, 72, 1);
+    transform:scale(1.15);
   }
 
   .row-arrow-btn{
@@ -521,6 +578,95 @@
   }
   .row-order-ctrl.slot-bottom .row-arrow-down{
     display:none !important;
+  }
+
+  /* Rolled-up Horizontal Shutter / Shade Slat */
+  .row-shutter-bar{
+    display:none;
+    width:100%;
+    height:22px;
+    box-sizing:border-box;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    background:repeating-linear-gradient(90deg, rgba(255,255,255,0.035) 0px, transparent 2px, transparent 6px),
+               linear-gradient(180deg, rgba(14, 25, 30, 0.95), rgba(7, 14, 18, 0.95));
+    border:1px solid rgba(73, 230, 196, 0.28);
+    border-radius:6px;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.08), 0 2px 6px rgba(0,0,0,0.5);
+    cursor:pointer;
+    color:rgba(180, 215, 222, 0.7);
+    font-family:system-ui, -apple-system, sans-serif;
+    font-size:10px;
+    font-weight:600;
+    letter-spacing:1.2px;
+    text-transform:uppercase;
+    user-select:none;
+    -webkit-tap-highlight-color:transparent;
+    transition:background 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    padding:0 12px;
+  }
+  .row-shutter-bar:hover{
+    border-color:rgba(255, 182, 72, 0.65);
+    background:repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0px, transparent 2px, transparent 6px),
+               linear-gradient(180deg, rgba(20, 32, 38, 0.98), rgba(11, 20, 24, 0.98));
+    color:#ffb648;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.15), 0 0 10px rgba(255, 182, 72, 0.2);
+  }
+  .row-shutter-bar .shutter-slat-dot{
+    display:inline-block;
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#ffb648;
+    box-shadow:0 0 6px rgba(255,182,72,0.8);
+  }
+  .row-shutter-bar .shutter-slat-label{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .row-shutter-bar .shutter-unroll-hint{
+    font-size:9px;
+    opacity:0.6;
+    letter-spacing:0.6px;
+  }
+
+  /* Collapsed Row States (Rolled Up) */
+  .is-row-collapsed{
+    display:flex !important;
+    flex-direction:row !important;
+    align-items:center !important;
+    flex:0 0 22px !important;
+    min-height:22px !important;
+    max-height:22px !important;
+    height:22px !important;
+    padding:0 !important;
+    margin:0 !important;
+    gap:0 !important;
+    overflow:visible !important;
+  }
+  .is-row-collapsed > :not(.row-order-ctrl):not(.row-shutter-bar){
+    display:none !important;
+  }
+  .is-row-collapsed .row-shutter-bar{
+    display:flex !important;
+  }
+  .is-row-collapsed .row-order-ctrl{
+    top:50% !important;
+    transform:translateY(-50%) !important;
+  }
+  .is-row-collapsed .row-order-ctrl .row-arrow-btn{
+    display:none !important;
+  }
+  .is-row-collapsed .row-shutter-dash{
+    display:none !important;
+  }
+  .is-row-collapsed .row-shutter-dot{
+    display:block !important;
   }
 
   /* Physical Glide on Row Reordering */
@@ -2228,7 +2374,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.090826.2037</span>
+        <span id="appVersionText">v1.090826.2053</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -2250,8 +2396,12 @@
   <div class="screen" id="screen">
 
     <div class="topbar" id="topTier">
-      <!-- 1-D Light Gray Row Reorder Stepper -->
-      <div class="row-order-ctrl slot-top" id="ctrlTopTier" data-row-id="topTier" aria-label="Reorder row">
+      <!-- 1-D Light Gray Row Reorder Stepper & Window-Shade Roller Toggle -->
+      <div class="row-order-ctrl slot-top" id="ctrlTopTier" data-row-id="topTier" aria-label="Reorder or collapse row">
+        <button type="button" class="row-shutter-toggle" title="Roll up row (window shade)" aria-label="Roll up row (window shade)">
+          <span class="row-shutter-dash"></span>
+          <span class="row-shutter-dot"></span>
+        </button>
         <button type="button" class="row-arrow-btn row-arrow-up" title="Move row up" aria-label="Move row up">
           <svg class="row-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round">
             <line x1="12" y1="19" x2="12" y2="5"/>
@@ -2264,6 +2414,12 @@
             <polyline points="19 12 12 19 5 12"/>
           </svg>
         </button>
+      </div>
+
+      <!-- Rolled-Up Horizontal Shutter / Shade Slat -->
+      <div class="row-shutter-bar" id="shutterTopTier" title="Click to pull down and unroll row" role="button" tabindex="0" aria-label="Unroll Date, Clock & Weather row">
+        <span class="shutter-slat-dot"></span>
+        <span class="shutter-slat-label">DATE • CLOCK • CURRENT WEATHER <span class="shutter-unroll-hint">(click to pull down)</span></span>
       </div>
 
       <!-- CERTIFIED BLOCK 1: FULL-HEIGHT 4-TIER DATE & PERIOD -->
@@ -2376,8 +2532,12 @@
     </div>
 
     <div class="panels" id="panelsRow">
-      <!-- 1-D Light Gray Row Reorder Stepper -->
-      <div class="row-order-ctrl slot-mid" id="ctrlPanelsRow" data-row-id="panelsRow" aria-label="Reorder row">
+      <!-- 1-D Light Gray Row Reorder Stepper & Window-Shade Roller Toggle -->
+      <div class="row-order-ctrl slot-mid" id="ctrlPanelsRow" data-row-id="panelsRow" aria-label="Reorder or collapse row">
+        <button type="button" class="row-shutter-toggle" title="Roll up row (window shade)" aria-label="Roll up row (window shade)">
+          <span class="row-shutter-dash"></span>
+          <span class="row-shutter-dot"></span>
+        </button>
         <button type="button" class="row-arrow-btn row-arrow-up" title="Move row up" aria-label="Move row up">
           <svg class="row-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round">
             <line x1="12" y1="19" x2="12" y2="5"/>
@@ -2390,6 +2550,12 @@
             <polyline points="19 12 12 19 5 12"/>
           </svg>
         </button>
+      </div>
+
+      <!-- Rolled-Up Horizontal Shutter / Shade Slat -->
+      <div class="row-shutter-bar" id="shutterPanelsRow" title="Click to pull down and unroll row" role="button" tabindex="0" aria-label="Unroll 8-Ball, Inspiration & Holidays row">
+        <span class="shutter-slat-dot"></span>
+        <span class="shutter-slat-label">ORACLE 8-BALL • DAILY INSPIRATION • CHECKIDAY <span class="shutter-unroll-hint">(click to pull down)</span></span>
       </div>
 
       <!-- MAGIC 8-BALL (Center-Left Square, replaces redundant Conditions) -->
@@ -2510,8 +2676,12 @@
 
     <!-- 5-DAY OUTLOOK -->
     <div class="outlook" id="outlook">
-      <!-- 1-D Light Gray Row Reorder Stepper -->
-      <div class="row-order-ctrl slot-bottom" id="ctrlOutlook" data-row-id="outlook" aria-label="Reorder row">
+      <!-- 1-D Light Gray Row Reorder Stepper & Window-Shade Roller Toggle -->
+      <div class="row-order-ctrl slot-bottom" id="ctrlOutlook" data-row-id="outlook" aria-label="Reorder or collapse row">
+        <button type="button" class="row-shutter-toggle" title="Roll up row (window shade)" aria-label="Roll up row (window shade)">
+          <span class="row-shutter-dash"></span>
+          <span class="row-shutter-dot"></span>
+        </button>
         <button type="button" class="row-arrow-btn row-arrow-up" title="Move row up" aria-label="Move row up">
           <svg class="row-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round">
             <line x1="12" y1="19" x2="12" y2="5"/>
@@ -2524,6 +2694,12 @@
             <polyline points="19 12 12 19 5 12"/>
           </svg>
         </button>
+      </div>
+
+      <!-- Rolled-Up Horizontal Shutter / Shade Slat -->
+      <div class="row-shutter-bar" id="shutterOutlook" title="Click to pull down and unroll row" role="button" tabindex="0" aria-label="Unroll 5-Day Outlook forecast row">
+        <span class="shutter-slat-dot"></span>
+        <span class="shutter-slat-label">5-DAY OUTLOOK FORECAST <span class="shutter-unroll-hint">(click to pull down)</span></span>
       </div>
     </div>
 
@@ -3515,9 +3691,13 @@
     const el = document.getElementById('outlook');
     if(!el) return;
     const existingCtrl = document.getElementById('ctrlOutlook');
+    const existingShutter = document.getElementById('shutterOutlook');
     el.innerHTML = '';
     if(existingCtrl){
       el.appendChild(existingCtrl);
+    }
+    if(existingShutter){
+      el.appendChild(existingShutter);
     }
     // index 0 is today; show today + next 4
     for(let i=0;i<5 && i<daily.time.length;i++){
@@ -3995,7 +4175,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.090826.2037';
+  const CLIENT_APP_VERSION = 'v1.090826.2053';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -5889,11 +6069,18 @@
   }
 
   /* ---------------------------------------------------------------
-     HARDWARE-STYLE DASHBOARD ROW ARRANGER & DIRECTIONAL STEPPERS
-     - 3 Reorderable Row Groups:
+     HARDWARE-STYLE DASHBOARD ROW ARRANGER, COLLAPSIBLE WINDOW-SHADES & DIRECTIONAL STEPPERS
+     - 3 Reorderable & Individually Collapsible Row Groups:
        * 'topTier': Station Date, Clock, Local Weather & Telemetry
        * 'panelsRow': 8-Ball, Inspiration / Wisdom, Checkiday Holidays
        * 'outlook': 5-Day Forecast Strip
+     - Window-Shade Mechanism:
+       * Top-left Dash (—) rolls the row upward into a slim, ribbed horizontal shutter slat
+       * Dash turns into a Dot (●) when rolled up, allowing clean pull-down unrolling
+       * Clicking anywhere on the horizontal shutter bar also unrolls the row
+       * Remaining visible rows expand evenly to fill the display
+       * Sizing remains dynamic and automatically re-fits date, 8-ball, quote, and holidays
+       * Collapsed row states are saved in localStorage ('wf_dashboard_row_collapsed')
      - Dynamic Direction Inheritance:
        * Slot 0 (Top Row): Down arrow only (swaps with Slot 1)
        * Slot 1 (Middle Row): Both Up and Down arrows (swaps with Slot 0 or 2)
@@ -5920,7 +6107,89 @@
     return [...DEFAULT_ROW_ORDER];
   }
 
+  function getSavedCollapsedState(){
+    try {
+      const saved = localStorage.getItem('wf_dashboard_row_collapsed');
+      if(saved){
+        const parsed = JSON.parse(saved);
+        if(typeof parsed === 'object' && parsed !== null){
+          return {
+            topTier: !!parsed.topTier,
+            panelsRow: !!parsed.panelsRow,
+            outlook: !!parsed.outlook
+          };
+        }
+      }
+    } catch(e){}
+    return { topTier: false, panelsRow: false, outlook: false };
+  }
+
   let currentRowOrder = getSavedRowOrder();
+  let rowCollapsedState = getSavedCollapsedState();
+
+  function saveCollapsedState(){
+    try {
+      localStorage.setItem('wf_dashboard_row_collapsed', JSON.stringify(rowCollapsedState));
+    } catch(e){}
+  }
+
+  function triggerAllContentRefits(){
+    if(typeof fitDateBlockToContainer === 'function'){
+      setTimeout(fitDateBlockToContainer, 30);
+    }
+    if(typeof fitWeatherBlockToContainer === 'function'){
+      setTimeout(fitWeatherBlockToContainer, 30);
+    }
+    if(typeof resizeEightball === 'function'){
+      setTimeout(resizeEightball, 30);
+    }
+    if(typeof fitQuoteTextToContainer === 'function' && typeof currentInspirationData !== 'undefined' && currentInspirationData){
+      setTimeout(() => fitQuoteTextToContainer(currentInspirationData.text, currentInspirationData.author), 30);
+    }
+    if(typeof screenAndFitHolidayText === 'function'){
+      setTimeout(screenAndFitHolidayText, 30);
+    }
+  }
+
+  function updateRowCollapseUI(){
+    VALID_ROW_IDS.forEach(rowId => {
+      const rowEl = document.getElementById(rowId);
+      const isCollapsed = !!rowCollapsedState[rowId];
+      if(!rowEl) return;
+
+      if(isCollapsed){
+        rowEl.classList.add('is-row-collapsed');
+      } else {
+        rowEl.classList.remove('is-row-collapsed');
+      }
+
+      // Update toggle button accessibility and tooltip
+      const ctrlId = `ctrl${rowId.charAt(0).toUpperCase() + rowId.slice(1)}`;
+      const ctrlEl = document.getElementById(ctrlId);
+      if(ctrlEl){
+        const toggleBtn = ctrlEl.querySelector('.row-shutter-toggle');
+        if(toggleBtn){
+          toggleBtn.title = isCollapsed ? 'Unroll row (pull down window shade)' : 'Roll up row (window shade)';
+          toggleBtn.setAttribute('aria-label', isCollapsed ? 'Unroll row' : 'Roll up row');
+          toggleBtn.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
+        }
+      }
+    });
+
+    triggerAllContentRefits();
+  }
+
+  function toggleRowCollapse(rowId){
+    // Don't collapse if all other rows are already collapsed (keep at least one row active)
+    const currentlyCollapsedCount = VALID_ROW_IDS.filter(id => rowCollapsedState[id]).length;
+    if(!rowCollapsedState[rowId] && currentlyCollapsedCount >= VALID_ROW_IDS.length - 1){
+      // All other rows are collapsed, prevent blank screen or cycle
+      // But user can unroll anytime
+    }
+    rowCollapsedState[rowId] = !rowCollapsedState[rowId];
+    saveCollapsedState();
+    updateRowCollapseUI();
+  }
 
   function updateRowArrowControls(){
     const rowSlotClasses = ['slot-top', 'slot-mid', 'slot-bottom'];
@@ -5938,8 +6207,12 @@
         ctrlEl.className = `row-order-ctrl ${rowSlotClasses[index]}`;
         ctrlEl.id = ctrlId;
         ctrlEl.dataset.rowId = rowId;
-        ctrlEl.setAttribute('aria-label', 'Reorder row');
+        ctrlEl.setAttribute('aria-label', 'Reorder or collapse row');
         ctrlEl.innerHTML = `
+          <button type="button" class="row-shutter-toggle" title="Roll up row (window shade)" aria-label="Roll up row (window shade)">
+            <span class="row-shutter-dash"></span>
+            <span class="row-shutter-dot"></span>
+          </button>
           <button type="button" class="row-arrow-btn row-arrow-up" title="Move row up" aria-label="Move row up">
             <svg class="row-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round">
               <line x1="12" y1="19" x2="12" y2="5"/>
@@ -5953,7 +6226,7 @@
             </svg>
           </button>
         `;
-        bindRowArrowEvents(ctrlEl, rowId);
+        bindRowControlEvents(ctrlEl, rowId);
       }
 
       // Ensure ctrl is inside this row
@@ -5977,9 +6250,18 @@
     });
   }
 
-  function bindRowArrowEvents(ctrlEl, rowId){
+  function bindRowControlEvents(ctrlEl, rowId){
+    const toggleBtn = ctrlEl.querySelector('.row-shutter-toggle');
     const upBtn = ctrlEl.querySelector('.row-arrow-up');
     const downBtn = ctrlEl.querySelector('.row-arrow-down');
+
+    if(toggleBtn){
+      toggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        toggleRowCollapse(rowId);
+      });
+    }
 
     if(upBtn){
       upBtn.addEventListener('click', (e) => {
@@ -6046,17 +6328,7 @@
     });
 
     updateRowArrowControls();
-
-    // Trigger holiday text scaling and fitting
-    if(typeof screenAndFitHolidayText === 'function'){
-      setTimeout(screenAndFitHolidayText, 40);
-    }
-    if(typeof fitDateBlockToContainer === 'function'){
-      setTimeout(fitDateBlockToContainer, 40);
-    }
-    if(typeof fitWeatherBlockToContainer === 'function'){
-      setTimeout(fitWeatherBlockToContainer, 40);
-    }
+    updateRowCollapseUI();
   }
 
   function initRowArranger(){
@@ -6064,11 +6336,33 @@
       const ctrlId = `ctrl${id.charAt(0).toUpperCase() + id.slice(1)}`;
       const ctrl = document.getElementById(ctrlId);
       if(ctrl){
-        bindRowArrowEvents(ctrl, id);
+        bindRowControlEvents(ctrl, id);
+      }
+
+      // Also allow clicking directly on the horizontal shutter bar to pull down/unroll
+      const shutterId = `shutter${id.charAt(0).toUpperCase() + id.slice(1)}`;
+      const shutterBar = document.getElementById(shutterId);
+      if(shutterBar){
+        shutterBar.addEventListener('click', (e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          if(rowCollapsedState[id]){
+            toggleRowCollapse(id);
+          }
+        });
+        shutterBar.addEventListener('keydown', (e) => {
+          if(e.key === 'Enter' || e.key === ' '){
+            e.preventDefault();
+            if(rowCollapsedState[id]){
+              toggleRowCollapse(id);
+            }
+          }
+        });
       }
     });
 
     applyRowOrder(currentRowOrder, false);
+    updateRowCollapseUI();
   }
 
   initRowSplitters();

@@ -2165,6 +2165,302 @@
     font-weight:600;
   }
 
+  /* ---- STARFIELD OF CONSCIOUSNESS (WARP HYPERSPACE AMBIENT MODE) ---- */
+  .starfield-universe{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    z-index:4;
+    opacity:0;
+    pointer-events:none;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    transition:opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+    background:radial-gradient(140% 120% at 50% 50%, rgba(5, 14, 24, 0.95), rgba(1, 4, 8, 0.98) 70%, #000204 100%);
+  }
+  .starfield-universe.is-active{
+    opacity:1;
+    pointer-events:auto;
+  }
+  .starfield-canvas{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    display:block;
+    cursor:crosshair;
+  }
+  .warp-hyperspace-banner{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%) scale(0.92);
+    opacity:0;
+    pointer-events:none;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    background:rgba(2, 9, 15, 0.94);
+    border:1.5px solid #38bdf8;
+    border-radius:20px;
+    padding:22px 36px;
+    box-shadow:0 0 50px rgba(56, 189, 248, 0.55), 0 16px 50px rgba(0, 0, 0, 0.95), inset 0 0 25px rgba(56, 189, 248, 0.2);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    z-index:20;
+    text-align:center;
+    transition:opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .warp-hyperspace-banner.is-showing{
+    opacity:1;
+    transform:translate(-50%, -50%) scale(1);
+  }
+  .warp-alert-pill{
+    font-family:'Orbitron', sans-serif;
+    font-size:clamp(0.7rem, 1.2vh, 0.82rem);
+    font-weight:700;
+    letter-spacing:0.24em;
+    color:#38bdf8;
+    background:rgba(56, 189, 248, 0.14);
+    border:1px solid rgba(56, 189, 248, 0.45);
+    border-radius:100px;
+    padding:4px 16px;
+    text-transform:uppercase;
+    box-shadow:0 0 14px rgba(56, 189, 248, 0.35);
+    animation:warpPillGlow 1.2s infinite alternate ease-in-out;
+  }
+  @keyframes warpPillGlow{
+    0%{ box-shadow:0 0 8px rgba(56, 189, 248, 0.3); border-color:rgba(56, 189, 248, 0.35); }
+    100%{ box-shadow:0 0 20px rgba(73, 230, 196, 0.7); border-color:rgba(73, 230, 196, 0.8); color:#49e6c4; }
+  }
+  .warp-main-title{
+    font-family:'Orbitron', sans-serif;
+    font-size:clamp(1.4rem, 3.2vw, 2.4rem);
+    font-weight:900;
+    letter-spacing:0.12em;
+    color:#ffffff;
+    text-shadow:0 0 24px rgba(56, 189, 248, 0.8), 0 0 50px rgba(56, 189, 248, 0.4);
+    margin:2px 0;
+  }
+  .warp-sub-title{
+    font-family:'Outfit', sans-serif;
+    font-size:clamp(0.8rem, 1.4vh, 0.95rem);
+    font-weight:500;
+    color:rgba(220, 240, 250, 0.85);
+    letter-spacing:0.06em;
+  }
+  .warp-progress-bar{
+    width:100%;
+    height:4px;
+    background:rgba(255, 255, 255, 0.1);
+    border-radius:2px;
+    overflow:hidden;
+    margin-top:6px;
+  }
+  .warp-progress-fill{
+    display:block;
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg, #38bdf8, #49e6c4, #c084fc);
+    border-radius:2px;
+    box-shadow:0 0 10px #49e6c4;
+    transition:width 2.4s linear;
+  }
+  .starfield-hud{
+    position:absolute;
+    bottom:clamp(14px, 2.5vh, 26px);
+    left:50%;
+    transform:translateX(-50%);
+    width:calc(100% - clamp(24px, 4vw, 64px));
+    max-width:1080px;
+    background:rgba(3, 11, 18, 0.85);
+    border:1.5px solid rgba(56, 189, 248, 0.35);
+    border-radius:18px;
+    padding:8px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    box-shadow:0 12px 36px rgba(0, 0, 0, 0.9), 0 0 24px rgba(56, 189, 248, 0.22);
+    z-index:15;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 0.5s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .starfield-hud.is-visible{
+    opacity:1;
+    pointer-events:auto;
+  }
+  .starfield-hud-left{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex:1 1 0;
+    min-width:0;
+  }
+  .star-core-dot{
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:#38bdf8;
+    box-shadow:0 0 10px #38bdf8, 0 0 20px #38bdf8;
+    flex-shrink:0;
+    animation:anchorDotPulse 2s infinite alternate ease-in-out;
+  }
+  @keyframes anchorDotPulse{
+    0%{ transform:scale(0.85); opacity:0.75; box-shadow:0 0 6px #38bdf8; }
+    100%{ transform:scale(1.3); opacity:1; box-shadow:0 0 16px #49e6c4, 0 0 28px #38bdf8; }
+  }
+  .star-core-info{
+    display:flex;
+    flex-direction:column;
+    min-width:0;
+  }
+  .star-core-title{
+    font-family:'Orbitron', sans-serif;
+    font-size:clamp(0.72rem, 1.2vh, 0.85rem);
+    font-weight:700;
+    letter-spacing:0.14em;
+    color:#e0f2fe;
+    white-space:nowrap;
+  }
+  .star-core-meta{
+    font-family:'Share Tech Mono', monospace;
+    font-size:clamp(0.62rem, 1.1vh, 0.72rem);
+    color:rgba(180, 215, 230, 0.75);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .starfield-hud-center{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    flex:0 0 auto;
+    text-align:center;
+  }
+  .star-zen-clock{
+    display:inline-flex;
+    align-items:baseline;
+    gap:4px;
+    font-family:'Share Tech Mono', monospace;
+    line-height:1;
+  }
+  .star-zen-digits{
+    font-size:clamp(1.3rem, 2.8vh, 1.9rem);
+    font-weight:700;
+    color:#ffffff;
+    letter-spacing:0.04em;
+    text-shadow:0 0 14px rgba(56, 189, 248, 0.7);
+  }
+  .star-zen-sec{
+    font-size:clamp(0.75rem, 1.5vh, 0.95rem);
+    color:#38bdf8;
+    opacity:0.9;
+  }
+  .star-zen-ampm{
+    font-size:clamp(0.68rem, 1.3vh, 0.82rem);
+    color:var(--amber);
+    font-weight:700;
+    margin-left:2px;
+  }
+  .star-zen-sub{
+    font-family:'Orbitron', sans-serif;
+    font-size:clamp(0.55rem, 1.0vh, 0.65rem);
+    letter-spacing:0.18em;
+    color:rgba(148, 197, 216, 0.7);
+    margin-top:2px;
+    text-transform:uppercase;
+  }
+  .starfield-hud-right{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex:1 1 0;
+    justify-content:flex-end;
+  }
+  .star-btn{
+    font-family:'Orbitron', sans-serif;
+    font-size:clamp(0.65rem, 1.1vh, 0.75rem);
+    font-weight:700;
+    letter-spacing:0.08em;
+    padding:6px 14px;
+    border-radius:10px;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    transition:all 0.16s ease;
+    white-space:nowrap;
+    user-select:none;
+  }
+  .star-btn-pulse{
+    background:rgba(56, 189, 248, 0.16);
+    border:1px solid #38bdf8;
+    color:#38bdf8;
+  }
+  .star-btn-pulse:hover{
+    background:#38bdf8;
+    color:#020a10;
+    box-shadow:0 0 16px rgba(56, 189, 248, 0.7);
+    transform:translateY(-1px);
+  }
+  .star-btn-warp{
+    background:rgba(192, 132, 252, 0.15);
+    border:1px solid #c084fc;
+    color:#c084fc;
+  }
+  .star-btn-warp:hover{
+    background:#c084fc;
+    color:#020a10;
+    box-shadow:0 0 16px rgba(192, 132, 252, 0.7);
+    transform:translateY(-1px);
+  }
+  .star-btn-unroll{
+    background:rgba(255, 182, 72, 0.16);
+    border:1px solid #ffb648;
+    color:#ffb648;
+  }
+  .star-btn-unroll:hover{
+    background:#ffb648;
+    color:#020a10;
+    box-shadow:0 0 16px rgba(255, 182, 72, 0.7);
+    transform:translateY(-1px);
+  }
+  .grav-wave-notice{
+    position:absolute;
+    top:28%;
+    left:50%;
+    transform:translateX(-50%) translateY(10px);
+    font-family:'Orbitron', sans-serif;
+    font-size:clamp(0.72rem, 1.3vh, 0.88rem);
+    font-weight:700;
+    letter-spacing:0.2em;
+    color:#49e6c4;
+    background:rgba(2, 12, 18, 0.88);
+    border:1px solid rgba(73, 230, 196, 0.6);
+    border-radius:100px;
+    padding:6px 20px;
+    box-shadow:0 0 20px rgba(73, 230, 196, 0.4);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index:25;
+  }
+  .grav-wave-notice.is-showing{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+  }
+
   /* ---- Bottom 5-day strip (1:1 Compact Blocks & Tightly Grouped Data) ---- */
   .outlook{
     display:grid;
@@ -2471,7 +2767,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.090826.2141</span>
+        <span id="appVersionText">v1.090826.2154</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -2801,6 +3097,55 @@
         <span class="shutter-slat-label">5-DAY OUTLOOK FORECAST <span class="shutter-unroll-hint">(click to pull down)</span></span>
         <button type="button" class="shutter-unroll-all-btn" title="Unroll all window shades back down">⤓ UNROLL ALL</button>
       </div>
+    </div>
+
+    <!-- STARFIELD OF CONSCIOUSNESS (WARP HYPERSPACE AMBIENT UNIVERSE) -->
+    <div class="starfield-universe" id="starfieldUniverse" aria-hidden="true">
+      <canvas id="starfieldCanvas" class="starfield-canvas"></canvas>
+      
+      <!-- Warp Hyperspace Entry Announcement -->
+      <div class="warp-hyperspace-banner" id="warpHyperspaceBanner">
+        <div class="warp-alert-pill">✦ HYPERSPACE WARP INITIATED ✦</div>
+        <div class="warp-main-title">BEGIN STARFIELD WARP HYPERSPACE!</div>
+        <div class="warp-sub-title">ALL SHADES ROLLED • ANCHOR STAR ONLINE (1,000,000 LY) • NEURAL CONSCIOUSNESS ENGAGED</div>
+        <div class="warp-progress-bar"><span class="warp-progress-fill" id="warpProgressFill"></span></div>
+      </div>
+
+      <!-- Floating Minimal Ambient HUD (Bottom / Floating) -->
+      <div class="starfield-hud" id="starfieldHud">
+        <div class="starfield-hud-left">
+          <span class="star-core-dot"></span>
+          <div class="star-core-info">
+            <span class="star-core-title">✦ ANCHOR STAR CORE</span>
+            <span class="star-core-meta">1,000,000 LIGHT-YEARS • RA 05h 35m • CONSCIOUSNESS APEX</span>
+          </div>
+        </div>
+
+        <div class="starfield-hud-center">
+          <div class="star-zen-clock" id="starZenClock">
+            <span class="star-zen-digits" id="starZenDigits">--:--</span>
+            <span class="star-zen-sec" id="starZenSec">00</span>
+            <span class="star-zen-ampm" id="starZenAmpm">--</span>
+          </div>
+          <div class="star-zen-sub" id="starZenSub">CIVIL TWILIGHT • DEEP COSMOS</div>
+        </div>
+
+        <div class="starfield-hud-right">
+          <button type="button" class="star-btn star-btn-pulse" id="starPulseBtn" title="Send Gravitational Wave Pulse (Remote: OK / Enter / Space)">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="3" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="21"/></svg>
+            PULSE (OK)
+          </button>
+          <button type="button" class="star-btn star-btn-warp" id="starWarpBoostBtn" title="Boost Warp Speed (Key: W)">
+            ⚡ WARP BOOST
+          </button>
+          <button type="button" class="star-btn star-btn-unroll" id="starUnrollDashBtn" title="Unroll Dashboard (Remote: 0 / Back / Esc)">
+            ⤓ UNROLL ALL
+          </button>
+        </div>
+      </div>
+
+      <!-- Gravitational Wave HUD Pulse Notice -->
+      <div class="grav-wave-notice" id="gravWaveNotice">GRAVITATIONAL PULSE: CONSCIOUSNESS SYNAPSE ENERGIZED</div>
     </div>
 
   </div>
@@ -4337,7 +4682,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.090826.2141';
+  const CLIENT_APP_VERSION = 'v1.090826.2154';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -6530,6 +6875,18 @@
     updateUnrollAllButtons(collapsedIds);
     updateRowArrowControls();
     triggerAllContentRefits();
+
+    // Check if ALL shades are rolled up -> Trigger STARFIELD OF CONSCIOUSNESS WARP!
+    const allCollapsed = (collapsedIds.length === VALID_ROW_IDS.length);
+    if(allCollapsed){
+      if(typeof startStarfieldWarpHyperspace === 'function'){
+        startStarfieldWarpHyperspace();
+      }
+    } else {
+      if(typeof stopStarfieldWarpHyperspace === 'function'){
+        stopStarfieldWarpHyperspace();
+      }
+    }
   }
 
   function toggleRowCollapse(rowId){
@@ -6721,8 +7078,643 @@
     updateRowCollapseUI();
   }
 
+  /* ---------------------------------------------------------------
+     STARFIELD OF CONSCIOUSNESS (WARP HYPERSPACE AMBIENT MODE)
+  --------------------------------------------------------------- */
+  let isStarfieldActive = false;
+  let starfieldAnimId = null;
+  let starfieldCanvas = null;
+  let starfieldCtx = null;
+  let starfieldUniverseEl = null;
+  let warpHyperspaceBannerEl = null;
+  let warpProgressFillEl = null;
+  let starfieldHudEl = null;
+  let gravWaveNoticeEl = null;
+
+  let starZenDigitsEl = null;
+  let starZenSecEl = null;
+  let starZenAmpmEl = null;
+  let starZenSubEl = null;
+
+  let starfieldWidth = 0;
+  let starfieldHeight = 0;
+  let starfieldDpr = 1;
+
+  const NUM_STARS = 220;
+  let stars = [];
+  let meteors = [];
+  let shockwaves = [];
+  let lastMeteorSpawnTime = 0;
+
+  let currentWarpSpeed = 0.65;
+  let targetWarpSpeed = 0.65;
+  let warpBannerTimer = null;
+  let gravNoticeTimer = null;
+  let anchorDriftT = 0;
+  let zenClockInterval = null;
+  let autoPulseInterval = null;
+
+  // Celestial Moons revolving around the Anchor Star Centerpiece
+  const ANCHOR_MOONS = [
+    { name: 'AURA', dist: 38, speed: 0.0018, phase: 0.0, r: 2.2, color: '#38bdf8', glow: 'rgba(56, 189, 248, 0.9)', tail: [] },
+    { name: 'NOVA', dist: 58, speed: -0.0011, phase: 2.1, r: 3.2, color: '#49e6c4', glow: 'rgba(73, 230, 196, 0.9)', tail: [] },
+    { name: 'SOLARIS', dist: 84, speed: 0.00065, phase: 4.3, r: 2.6, color: '#fbbf24', glow: 'rgba(251, 191, 36, 0.85)', tail: [] }
+  ];
+
+  const SPECTRAL_COLORS = [
+    { color: '#38bdf8', glow: 'rgba(56, 189, 248, 0.7)', weight: 35 }, // Class B: Electric Ice Cyan
+    { color: '#60a5fa', glow: 'rgba(96, 165, 250, 0.7)', weight: 25 }, // Class O: Azure Blue
+    { color: '#ffffff', glow: 'rgba(255, 255, 255, 0.8)', weight: 20 }, // Class A: Diamond White
+    { color: '#fbbf24', glow: 'rgba(251, 191, 36, 0.7)', weight: 12 },  // Class G: Solar Amber
+    { color: '#c084fc', glow: 'rgba(192, 132, 252, 0.7)', weight: 8 }   // Class M: Nebula Violet
+  ];
+
+  function pickSpectralColor(){
+    const rand = Math.random() * 100;
+    let cum = 0;
+    for(const sc of SPECTRAL_COLORS){
+      cum += sc.weight;
+      if(rand <= cum) return sc;
+    }
+    return SPECTRAL_COLORS[0];
+  }
+
+  function initStarfieldUniverse(){
+    starfieldUniverseEl = document.getElementById('starfieldUniverse');
+    starfieldCanvas = document.getElementById('starfieldCanvas');
+    warpHyperspaceBannerEl = document.getElementById('warpHyperspaceBanner');
+    warpProgressFillEl = document.getElementById('warpProgressFill');
+    starfieldHudEl = document.getElementById('starfieldHud');
+    gravWaveNoticeEl = document.getElementById('gravWaveNotice');
+
+    starZenDigitsEl = document.getElementById('starZenDigits');
+    starZenSecEl = document.getElementById('starZenSec');
+    starZenAmpmEl = document.getElementById('starZenAmpm');
+    starZenSubEl = document.getElementById('starZenSub');
+
+    const pulseBtn = document.getElementById('starPulseBtn');
+    const warpBoostBtn = document.getElementById('starWarpBoostBtn');
+    const unrollBtn = document.getElementById('starUnrollDashBtn');
+
+    if(pulseBtn) pulseBtn.addEventListener('click', () => pulseGravitationalWave());
+    if(warpBoostBtn) warpBoostBtn.addEventListener('click', () => boostWarpSpeed());
+    if(unrollBtn) unrollBtn.addEventListener('click', () => unrollAllRows());
+
+    if(starfieldCanvas){
+      starfieldCanvas.addEventListener('click', () => pulseGravitationalWave());
+    }
+
+    window.addEventListener('resize', () => {
+      if(isStarfieldActive) resizeStarfieldCanvas();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if(!isStarfieldActive) return;
+      const k = e.key || '';
+      if(k === 'Enter' || k === ' ' || k === 'Select' || k === 'Accept'){
+        e.preventDefault();
+        pulseGravitationalWave();
+      } else if(k === 'w' || k === 'W'){
+        e.preventDefault();
+        boostWarpSpeed();
+      } else if(k === '0' || k === 'Escape' || k === 'Back' || k === 'BrowserBack'){
+        e.preventDefault();
+        unrollAllRows();
+      }
+    });
+
+    initStarsPool();
+  }
+
+  function initStarsPool(){
+    stars = [];
+    for(let i = 0; i < NUM_STARS; i++){
+      const sc = pickSpectralColor();
+      stars.push({
+        x: (Math.random() - 0.5) * 1900,
+        y: (Math.random() - 0.5) * 1200,
+        z: Math.random() * 1000 + 1,
+        pz: 1000,
+        sx: 0,
+        sy: 0,
+        spx: 0,
+        spy: 0,
+        onScreen: false,
+        size: Math.random() * 1.6 + 0.8,
+        color: sc.color,
+        glow: sc.glow,
+        twinklePhase: Math.random() * Math.PI * 2,
+        twinkleSpeed: Math.random() * 0.035 + 0.02,
+        energy: 0
+      });
+    }
+  }
+
+  function resizeStarfieldCanvas(){
+    if(!starfieldCanvas || !starfieldUniverseEl) return;
+    const rect = starfieldUniverseEl.getBoundingClientRect();
+    starfieldWidth = rect.width || window.innerWidth;
+    starfieldHeight = rect.height || window.innerHeight;
+    starfieldDpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    starfieldCanvas.width = starfieldWidth * starfieldDpr;
+    starfieldCanvas.height = starfieldHeight * starfieldDpr;
+    starfieldCanvas.style.width = `${starfieldWidth}px`;
+    starfieldCanvas.style.height = `${starfieldHeight}px`;
+
+    starfieldCtx = starfieldCanvas.getContext('2d');
+  }
+
+  function updateStarZenClock(){
+    if(!starZenDigitsEl) return;
+    const now = new Date();
+    let hours = now.getHours();
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    if(hours === 0) hours = 12;
+
+    starZenDigitsEl.textContent = `${hours}:${minutes}`;
+    if(starZenSecEl) starZenSecEl.textContent = seconds;
+    if(starZenAmpmEl) starZenAmpmEl.textContent = ampm;
+
+    if(starZenSubEl){
+      const periodNameEl = document.getElementById('dayPeriodName');
+      const period = periodNameEl ? periodNameEl.textContent.trim() : 'DEEP COSMOS';
+      starZenSubEl.textContent = `${period} • CONSCIOUSNESS STARFIELD`;
+    }
+  }
+
+  function startStarfieldWarpHyperspace(){
+    if(isStarfieldActive) return;
+    isStarfieldActive = true;
+
+    if(starfieldUniverseEl){
+      starfieldUniverseEl.classList.add('is-active');
+      starfieldUniverseEl.setAttribute('aria-hidden', 'false');
+    }
+
+    resizeStarfieldCanvas();
+    updateStarZenClock();
+    if(zenClockInterval) clearInterval(zenClockInterval);
+    zenClockInterval = setInterval(updateStarZenClock, 1000);
+
+    // Periodic Gravitational Pulse every 60 seconds
+    if(autoPulseInterval) clearInterval(autoPulseInterval);
+    autoPulseInterval = setInterval(() => {
+      if(isStarfieldActive && currentWarpSpeed < 4){
+        pulseGravitationalWave(false);
+      }
+    }, 60000);
+
+    // Initial Hyperspace Warp Surge!
+    currentWarpSpeed = 24;
+    targetWarpSpeed = 24;
+
+    if(warpHyperspaceBannerEl && warpProgressFillEl){
+      warpHyperspaceBannerEl.classList.add('is-showing');
+      warpProgressFillEl.style.transition = 'none';
+      warpProgressFillEl.style.width = '0%';
+      void warpProgressFillEl.offsetWidth;
+      warpProgressFillEl.style.transition = 'width 2.2s linear';
+      warpProgressFillEl.style.width = '100%';
+
+      if(starfieldHudEl) starfieldHudEl.classList.remove('is-visible');
+
+      if(warpBannerTimer) clearTimeout(warpBannerTimer);
+      warpBannerTimer = setTimeout(() => {
+        targetWarpSpeed = 0.65;
+        if(warpHyperspaceBannerEl) warpHyperspaceBannerEl.classList.remove('is-showing');
+        if(starfieldHudEl) starfieldHudEl.classList.add('is-visible');
+      }, 2300);
+    }
+
+    // Trigger initial gravitational pulse from the Anchor Star
+    setTimeout(() => {
+      pulseGravitationalWave(true);
+    }, 350);
+
+    if(starfieldAnimId) cancelAnimationFrame(starfieldAnimId);
+    starfieldAnimId = requestAnimationFrame(renderStarfieldLoop);
+  }
+
+  function stopStarfieldWarpHyperspace(){
+    if(!isStarfieldActive) return;
+    isStarfieldActive = false;
+
+    if(warpBannerTimer) clearTimeout(warpBannerTimer);
+    if(gravNoticeTimer) clearTimeout(gravNoticeTimer);
+    if(zenClockInterval) clearInterval(zenClockInterval);
+    if(autoPulseInterval) clearInterval(autoPulseInterval);
+
+    if(starfieldAnimId){
+      cancelAnimationFrame(starfieldAnimId);
+      starfieldAnimId = null;
+    }
+
+    if(starfieldUniverseEl){
+      starfieldUniverseEl.classList.remove('is-active');
+      starfieldUniverseEl.setAttribute('aria-hidden', 'true');
+    }
+    if(warpHyperspaceBannerEl) warpHyperspaceBannerEl.classList.remove('is-showing');
+    if(starfieldHudEl) starfieldHudEl.classList.remove('is-visible');
+    if(gravWaveNoticeEl) gravWaveNoticeEl.classList.remove('is-showing');
+
+    if(starfieldCtx && starfieldCanvas){
+      starfieldCtx.clearRect(0, 0, starfieldCanvas.width, starfieldCanvas.height);
+    }
+  }
+
+  function boostWarpSpeed(){
+    if(!isStarfieldActive) return;
+    targetWarpSpeed = 22;
+    if(starfieldHudEl) starfieldHudEl.classList.remove('is-visible');
+    if(warpHyperspaceBannerEl){
+      const titleEl = warpHyperspaceBannerEl.querySelector('.warp-main-title');
+      if(titleEl) titleEl.textContent = 'BEGIN STARFIELD WARP HYPERSPACE!';
+      warpHyperspaceBannerEl.classList.add('is-showing');
+      if(warpProgressFillEl){
+        warpProgressFillEl.style.transition = 'none';
+        warpProgressFillEl.style.width = '0%';
+        void warpProgressFillEl.offsetWidth;
+        warpProgressFillEl.style.transition = 'width 1.6s linear';
+        warpProgressFillEl.style.width = '100%';
+      }
+    }
+    setTimeout(() => {
+      targetWarpSpeed = 0.65;
+      if(warpHyperspaceBannerEl) warpHyperspaceBannerEl.classList.remove('is-showing');
+      if(starfieldHudEl) starfieldHudEl.classList.add('is-visible');
+    }, 1700);
+  }
+
+  function pulseGravitationalWave(isSilent = false){
+    if(!isStarfieldActive || !starfieldWidth) return;
+    const ax = starfieldWidth * 0.5 + Math.sin(anchorDriftT * 0.0004) * 36;
+    const ay = starfieldHeight * 0.46 + Math.cos(anchorDriftT * 0.0003) * 22;
+
+    shockwaves.push({
+      x: ax,
+      y: ay,
+      r: 10,
+      maxR: Math.max(starfieldWidth, starfieldHeight) * 1.15,
+      speed: 20,
+      alpha: 0.95
+    });
+
+    stars.forEach(s => {
+      s.energy = 1.0;
+    });
+
+    if(!isSilent && gravWaveNoticeEl){
+      gravWaveNoticeEl.classList.add('is-showing');
+      if(gravNoticeTimer) clearTimeout(gravNoticeTimer);
+      gravNoticeTimer = setTimeout(() => {
+        gravWaveNoticeEl.classList.remove('is-showing');
+      }, 1900);
+    }
+  }
+
+  function renderStarfieldLoop(timestamp){
+    if(!isStarfieldActive) return;
+
+    anchorDriftT = timestamp || performance.now();
+    const ctx = starfieldCtx;
+    const w = starfieldWidth;
+    const h = starfieldHeight;
+    const dpr = starfieldDpr;
+
+    if(!ctx || w <= 0 || h <= 0){
+      starfieldAnimId = requestAnimationFrame(renderStarfieldLoop);
+      return;
+    }
+
+    ctx.save();
+    ctx.scale(dpr, dpr);
+
+    // Warp speed smooth dampening
+    currentWarpSpeed += (targetWarpSpeed - currentWarpSpeed) * 0.08;
+
+    // 1. Background / Canvas clearing
+    if(currentWarpSpeed > 5){
+      ctx.fillStyle = 'rgba(1, 4, 8, 0.42)';
+      ctx.fillRect(0, 0, w, h);
+    } else {
+      ctx.clearRect(0, 0, w, h);
+      const cx = w * 0.5;
+      const cy = h * 0.5;
+      const nebGrad = ctx.createRadialGradient(cx, cy, 30, cx, cy, Math.max(w, h) * 0.85);
+      nebGrad.addColorStop(0, 'rgba(10, 24, 42, 0.45)');
+      nebGrad.addColorStop(0.4, 'rgba(4, 14, 26, 0.25)');
+      nebGrad.addColorStop(1, 'rgba(1, 4, 8, 0.05)');
+      ctx.fillStyle = nebGrad;
+      ctx.fillRect(0, 0, w, h);
+    }
+
+    const cx = w * 0.5;
+    const cy = h * 0.48;
+
+    // 2. Update Stars in 3D perspective
+    const fov = 380;
+    for(let i = 0; i < stars.length; i++){
+      const s = stars[i];
+      s.pz = s.z;
+      s.z -= currentWarpSpeed;
+
+      if(s.z <= 1){
+        s.z = 1000;
+        s.pz = 1000;
+        s.x = (Math.random() - 0.5) * 1900;
+        s.y = (Math.random() - 0.5) * 1200;
+        s.energy = 0;
+      }
+
+      s.sx = (s.x / s.z) * fov + cx;
+      s.sy = (s.y / s.z) * fov + cy;
+      s.spx = (s.x / s.pz) * fov + cx;
+      s.spy = (s.y / s.pz) * fov + cy;
+
+      s.onScreen = (s.sx >= -20 && s.sx <= w + 20 && s.sy >= -20 && s.sy <= h + 20);
+
+      if(s.energy > 0.01){
+        s.energy *= 0.94;
+      } else {
+        s.energy = 0;
+      }
+    }
+
+    // 3. Draw Constellations of Consciousness (Neural Filaments)
+    if(currentWarpSpeed < 4){
+      const maxConnectDist = 95;
+      const maxDistSq = maxConnectDist * maxConnectDist;
+      ctx.lineWidth = 1.0;
+
+      for(let i = 0; i < stars.length; i++){
+        const s1 = stars[i];
+        if(!s1.onScreen || s1.z > 700) continue;
+
+        for(let j = i + 1; j < stars.length; j++){
+          const s2 = stars[j];
+          if(!s2.onScreen || s2.z > 700) continue;
+
+          const dx = s1.sx - s2.sx;
+          const dy = s1.sy - s2.sy;
+          const distSq = dx * dx + dy * dy;
+
+          if(distSq < maxDistSq){
+            const dist = Math.sqrt(distSq);
+            const distRatio = 1 - (dist / maxConnectDist);
+            const breathe = 0.5 + 0.5 * Math.sin(anchorDriftT * 0.002 + s1.twinklePhase);
+            let alpha = distRatio * 0.22 * breathe + (s1.energy + s2.energy) * 0.35;
+            alpha = Math.min(alpha, 0.75);
+
+            if(alpha > 0.03){
+              ctx.beginPath();
+              ctx.moveTo(s1.sx, s1.sy);
+              ctx.lineTo(s2.sx, s2.sy);
+              if(s1.energy > 0.3 || s2.energy > 0.3){
+                ctx.strokeStyle = `rgba(73, 230, 196, ${alpha})`;
+                ctx.shadowColor = '#49e6c4';
+                ctx.shadowBlur = 6;
+              } else {
+                ctx.strokeStyle = `rgba(56, 189, 248, ${alpha})`;
+                ctx.shadowBlur = 0;
+              }
+              ctx.stroke();
+            }
+          }
+        }
+      }
+      ctx.shadowBlur = 0;
+    }
+
+    // 4. Draw Stars (Dots or Warp Streaks)
+    for(let i = 0; i < stars.length; i++){
+      const s = stars[i];
+      if(!s.onScreen) continue;
+
+      const depthFactor = (1 - s.z / 1000);
+      const twinkle = 0.7 + 0.3 * Math.sin(anchorDriftT * s.twinkleSpeed + s.twinklePhase);
+      const alpha = Math.min(1, (depthFactor * 0.85 + 0.15) * twinkle + s.energy * 0.5);
+      const renderRadius = Math.max(0.6, s.size * depthFactor * (1 + s.energy * 0.8));
+
+      if(currentWarpSpeed > 2.5){
+        ctx.beginPath();
+        ctx.moveTo(s.spx, s.spy);
+        ctx.lineTo(s.sx, s.sy);
+        ctx.strokeStyle = s.color;
+        ctx.globalAlpha = Math.min(1, alpha * 1.3);
+        ctx.lineWidth = renderRadius * 1.6;
+        ctx.stroke();
+      } else {
+        ctx.beginPath();
+        ctx.arc(s.sx, s.sy, renderRadius, 0, Math.PI * 2);
+        ctx.fillStyle = s.color;
+        ctx.globalAlpha = alpha;
+        if(s.energy > 0.2 || depthFactor > 0.75){
+          ctx.shadowColor = s.glow;
+          ctx.shadowBlur = renderRadius * 5;
+        } else {
+          ctx.shadowBlur = 0;
+        }
+        ctx.fill();
+      }
+    }
+    ctx.shadowBlur = 0;
+    ctx.globalAlpha = 1.0;
+
+    // 5. Draw Meteors (Shooting Stars)
+    if(currentWarpSpeed < 3){
+      if(!lastMeteorSpawnTime) lastMeteorSpawnTime = anchorDriftT;
+      if(anchorDriftT - lastMeteorSpawnTime > (Math.random() * 2500 + 2500)){
+        lastMeteorSpawnTime = anchorDriftT;
+        const angle = (Math.PI / 4) + (Math.random() - 0.5) * 0.3;
+        const speed = Math.random() * 12 + 16;
+        meteors.push({
+          x: Math.random() * (w * 0.8),
+          y: Math.random() * (h * 0.4),
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          length: Math.random() * 80 + 70,
+          life: 1.0,
+          decay: Math.random() * 0.02 + 0.02
+        });
+      }
+
+      for(let m = meteors.length - 1; m >= 0; m--){
+        const met = meteors[m];
+        met.x += met.vx;
+        met.y += met.vy;
+        met.life -= met.decay;
+
+        if(met.life <= 0 || met.x > w + 50 || met.y > h + 50){
+          meteors.splice(m, 1);
+          continue;
+        }
+
+        const tailX = met.x - (met.vx / 18) * met.length;
+        const tailY = met.y - (met.vy / 18) * met.length;
+
+        const mGrad = ctx.createLinearGradient(tailX, tailY, met.x, met.y);
+        mGrad.addColorStop(0, 'rgba(56, 189, 248, 0)');
+        mGrad.addColorStop(0.7, `rgba(73, 230, 196, ${met.life * 0.6})`);
+        mGrad.addColorStop(1, `rgba(255, 255, 255, ${met.life})`);
+
+        ctx.beginPath();
+        ctx.moveTo(tailX, tailY);
+        ctx.lineTo(met.x, met.y);
+        ctx.strokeStyle = mGrad;
+        ctx.lineWidth = 2.0;
+        ctx.shadowColor = '#49e6c4';
+        ctx.shadowBlur = 10;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(met.x, met.y, 2.2, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+      }
+      ctx.shadowBlur = 0;
+    }
+
+    // 6. Draw Gravitational Wave Shockwaves
+    for(let sw = shockwaves.length - 1; sw >= 0; sw--){
+      const wave = shockwaves[sw];
+      wave.r += wave.speed;
+      wave.alpha = Math.max(0, (1 - wave.r / wave.maxR) * 0.9);
+
+      if(wave.r >= wave.maxR || wave.alpha <= 0.01){
+        shockwaves.splice(sw, 1);
+        continue;
+      }
+
+      ctx.beginPath();
+      ctx.arc(wave.x, wave.y, wave.r, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(73, 230, 196, ${wave.alpha * 0.65})`;
+      ctx.lineWidth = Math.max(1, 3.5 * (1 - wave.r / wave.maxR));
+      ctx.shadowColor = '#49e6c4';
+      ctx.shadowBlur = 12;
+      ctx.stroke();
+
+      if(wave.r > 30){
+        ctx.beginPath();
+        ctx.arc(wave.x, wave.y, wave.r * 0.88, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(56, 189, 248, ${wave.alpha * 0.35})`;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      }
+    }
+    ctx.shadowBlur = 0;
+
+    // 7. Draw The Centerpiece: ANCHOR STAR ("A Million Light-Years Away")
+    const ax = w * 0.5 + Math.sin(anchorDriftT * 0.0004) * 36;
+    const ay = h * 0.46 + Math.cos(anchorDriftT * 0.0003) * 22;
+
+    const coronaPulse = 0.85 + 0.15 * Math.sin(anchorDriftT * 0.0016);
+    const outerRadius = 115 * coronaPulse;
+    const outerGrad = ctx.createRadialGradient(ax, ay, 4, ax, ay, outerRadius);
+    outerGrad.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
+    outerGrad.addColorStop(0.12, 'rgba(56, 189, 248, 0.7)');
+    outerGrad.addColorStop(0.35, 'rgba(73, 230, 196, 0.28)');
+    outerGrad.addColorStop(0.7, 'rgba(192, 132, 252, 0.1)');
+    outerGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+
+    ctx.fillStyle = outerGrad;
+    ctx.beginPath();
+    ctx.arc(ax, ay, outerRadius, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 8-Point Diffraction Spikes (JWST / Hubble signature)
+    const spikeRot = anchorDriftT * 0.00015;
+    const spikeLength = 72 * (currentWarpSpeed > 4 ? 2.2 : coronaPulse);
+    const diagLength = 44 * (currentWarpSpeed > 4 ? 2.0 : coronaPulse);
+
+    function drawSpike(angle, length, width, colorA, colorB){
+      ctx.save();
+      ctx.translate(ax, ay);
+      ctx.rotate(angle);
+      const grad = ctx.createLinearGradient(0, 0, length, 0);
+      grad.addColorStop(0, colorA);
+      grad.addColorStop(0.4, colorB);
+      grad.addColorStop(1, 'rgba(0,0,0,0)');
+
+      ctx.beginPath();
+      ctx.moveTo(0, -width);
+      ctx.lineTo(length, 0);
+      ctx.lineTo(0, width);
+      ctx.lineTo(-length, 0);
+      ctx.closePath();
+      ctx.fillStyle = grad;
+      ctx.fill();
+      ctx.restore();
+    }
+
+    drawSpike(spikeRot, spikeLength, 1.8, 'rgba(255,255,255,0.98)', 'rgba(56, 189, 248, 0.6)');
+    drawSpike(spikeRot + Math.PI / 2, spikeLength, 1.8, 'rgba(255,255,255,0.98)', 'rgba(56, 189, 248, 0.6)');
+    drawSpike(spikeRot + Math.PI / 4, diagLength, 1.2, 'rgba(255,255,255,0.85)', 'rgba(73, 230, 196, 0.5)');
+    drawSpike(spikeRot - Math.PI / 4, diagLength, 1.2, 'rgba(255,255,255,0.85)', 'rgba(73, 230, 196, 0.5)');
+
+    // Anchor Star Core Brilliant Disc
+    ctx.beginPath();
+    ctx.arc(ax, ay, 5.5, 0, Math.PI * 2);
+    ctx.fillStyle = '#ffffff';
+    ctx.shadowColor = '#38bdf8';
+    ctx.shadowBlur = 18;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // Celestial Revolving Moons (Zero text, pure deep outer space)
+    if(currentWarpSpeed < 4){
+      ANCHOR_MOONS.forEach((moon) => {
+        // Subtle orbital trajectory path (Keplerian ring)
+        ctx.beginPath();
+        ctx.arc(ax, ay, moon.dist, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.12)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // Calculate revolving angle & position
+        const angle = anchorDriftT * moon.speed + moon.phase;
+        const mx = ax + Math.cos(angle) * moon.dist;
+        const my = ay + Math.sin(angle) * moon.dist;
+
+        // Faint trailing dust behind each moon
+        if(!moon.tail) moon.tail = [];
+        moon.tail.push({ x: mx, y: my, t: anchorDriftT });
+        if(moon.tail.length > 8) moon.tail.shift();
+
+        if(moon.tail.length > 1){
+          ctx.beginPath();
+          ctx.moveTo(moon.tail[0].x, moon.tail[0].y);
+          for(let k = 1; k < moon.tail.length; k++){
+            ctx.lineTo(moon.tail[k].x, moon.tail[k].y);
+          }
+          ctx.strokeStyle = moon.glow;
+          ctx.globalAlpha = 0.35;
+          ctx.lineWidth = moon.r * 0.8;
+          ctx.stroke();
+          ctx.globalAlpha = 1.0;
+        }
+
+        // Moon Body & Atmospheric Glow
+        ctx.beginPath();
+        ctx.arc(mx, my, moon.r, 0, Math.PI * 2);
+        ctx.fillStyle = moon.color;
+        ctx.shadowColor = moon.color;
+        ctx.shadowBlur = moon.r * 4;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      });
+    }
+
+    ctx.restore();
+    starfieldAnimId = requestAnimationFrame(renderStarfieldLoop);
+  }
+
   initRowSplitters();
   initRowArranger();
+  initStarfieldUniverse();
   init();
   checkServerVersion();
   setInterval(() => {

@@ -793,7 +793,7 @@
     display:grid;
     grid-template-columns: minmax(min-content, auto) minmax(min-content, auto);
     grid-template-rows: auto auto auto;
-    column-gap:clamp(16px, 4.5cqw, 36px);
+    column-gap:clamp(10px, 3.2cqw, 24px);
     row-gap:clamp(2px, 0.4vh, 4px);
     align-items:center;
     align-content:center;
@@ -810,7 +810,7 @@
     grid-row: 1;
     font-family:'Outfit',sans-serif;
     font-weight:900;
-    font-size:clamp(3.5rem, min(34cqw, 12.8vh), 7.8rem);
+    font-size:clamp(3.8rem, min(37cqw, 13.8vh), 8.5rem);
     letter-spacing:0.02em;
     color:#ffe600;
     line-height:0.86;
@@ -827,7 +827,7 @@
     grid-row: 2;
     font-family:'Outfit',sans-serif;
     font-weight:900;
-    font-size:clamp(1.1rem, min(10cqw, 3.4vh), 2.4rem);
+    font-size:clamp(1.2rem, min(10.8cqw, 3.6vh), 2.6rem);
     letter-spacing:0.12em;
     color:#ffe600;
     line-height:0.8;
@@ -843,7 +843,7 @@
     grid-row: 3;
     font-family:'Outfit',sans-serif;
     font-weight:900;
-    font-size:clamp(3.5rem, min(34cqw, 12.8vh), 7.8rem);
+    font-size:clamp(3.8rem, min(37cqw, 13.8vh), 8.5rem);
     letter-spacing:0.02em;
     color:#ffe600;
     line-height:0.86;
@@ -859,8 +859,8 @@
     grid-column: 2;
     grid-row: 1;
     font-family:'Outfit',sans-serif;
-    font-weight:800;
-    font-size:clamp(1.62rem, min(16.2cqw, 6.07vh), 3.72rem);
+    font-weight:600;
+    font-size:clamp(1.45rem, min(14.5cqw, 5.45vh), 3.35rem);
     letter-spacing:0.02em;
     color:#ffffff;
     line-height:0.86;
@@ -880,8 +880,8 @@
     grid-column: 2;
     grid-row: 3;
     font-family:'Outfit',sans-serif;
-    font-weight:800;
-    font-size:clamp(1.62rem, min(16.2cqw, 6.07vh), 3.72rem);
+    font-weight:600;
+    font-size:clamp(1.45rem, min(14.5cqw, 5.45vh), 3.35rem);
     letter-spacing:0.02em;
     color:#ffffff;
     line-height:0.86;
@@ -2374,7 +2374,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.090826.2053</span>
+        <span id="appVersionText">v1.090826.2057</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -2420,6 +2420,7 @@
       <div class="row-shutter-bar" id="shutterTopTier" title="Click to pull down and unroll row" role="button" tabindex="0" aria-label="Unroll Date, Clock & Weather row">
         <span class="shutter-slat-dot"></span>
         <span class="shutter-slat-label">DATE • CLOCK • CURRENT WEATHER <span class="shutter-unroll-hint">(click to pull down)</span></span>
+        <button type="button" class="shutter-unroll-all-btn" title="Unroll all window shades back down">⤓ UNROLL ALL</button>
       </div>
 
       <!-- CERTIFIED BLOCK 1: FULL-HEIGHT 4-TIER DATE & PERIOD -->
@@ -2556,6 +2557,7 @@
       <div class="row-shutter-bar" id="shutterPanelsRow" title="Click to pull down and unroll row" role="button" tabindex="0" aria-label="Unroll 8-Ball, Inspiration & Holidays row">
         <span class="shutter-slat-dot"></span>
         <span class="shutter-slat-label">ORACLE 8-BALL • DAILY INSPIRATION • CHECKIDAY <span class="shutter-unroll-hint">(click to pull down)</span></span>
+        <button type="button" class="shutter-unroll-all-btn" title="Unroll all window shades back down">⤓ UNROLL ALL</button>
       </div>
 
       <!-- MAGIC 8-BALL (Center-Left Square, replaces redundant Conditions) -->
@@ -2700,6 +2702,7 @@
       <div class="row-shutter-bar" id="shutterOutlook" title="Click to pull down and unroll row" role="button" tabindex="0" aria-label="Unroll 5-Day Outlook forecast row">
         <span class="shutter-slat-dot"></span>
         <span class="shutter-slat-label">5-DAY OUTLOOK FORECAST <span class="shutter-unroll-hint">(click to pull down)</span></span>
+        <button type="button" class="shutter-unroll-all-btn" title="Unroll all window shades back down">⤓ UNROLL ALL</button>
       </div>
     </div>
 
@@ -4175,7 +4178,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.090826.2053';
+  const CLIENT_APP_VERSION = 'v1.090826.2057';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -6151,7 +6154,56 @@
     }
   }
 
-  function updateRowCollapseUI(){
+  function updateUnrollAllButtons(collapsedIds){
+    VALID_ROW_IDS.forEach(id => {
+      const shutterId = `shutter${id.charAt(0).toUpperCase() + id.slice(1)}`;
+      const shutterBar = document.getElementById(shutterId);
+      if(shutterBar){
+        const unrollAllBtn = shutterBar.querySelector('.shutter-unroll-all-btn');
+        if(unrollAllBtn){
+          if(collapsedIds.length >= 2 && !!rowCollapsedState[id]){
+            unrollAllBtn.style.display = 'inline-flex';
+            unrollAllBtn.textContent = collapsedIds.length === 3 ? '⤓ UNROLL ALL (3)' : '⤓ UNROLL ALL';
+          } else {
+            unrollAllBtn.style.display = 'none';
+          }
+        }
+      }
+    });
+  }
+
+  function unrollAllRows(){
+    VALID_ROW_IDS.forEach(id => {
+      rowCollapsedState[id] = false;
+    });
+    saveCollapsedState();
+    updateRowCollapseUI(true);
+  }
+
+  function updateRowCollapseUI(animate = false){
+    const screenEl = document.getElementById('screen');
+    if(!screenEl) return;
+
+    // Separate into collapsed and active rows based on current saved order
+    const collapsedIds = currentRowOrder.filter(id => !!rowCollapsedState[id]);
+    const activeIds = currentRowOrder.filter(id => !rowCollapsedState[id]);
+
+    // ALL rolled-up shades reside docked at the top of the display stack!
+    // Active rows expand below them in their designated order.
+    const displayOrder = [...collapsedIds, ...activeIds];
+
+    displayOrder.forEach(id => {
+      const el = document.getElementById(id);
+      if(el && screenEl.contains(el)){
+        screenEl.appendChild(el);
+        if(animate){
+          el.classList.remove('row-swap-anim');
+          void el.offsetWidth;
+          el.classList.add('row-swap-anim');
+        }
+      }
+    });
+
     VALID_ROW_IDS.forEach(rowId => {
       const rowEl = document.getElementById(rowId);
       const isCollapsed = !!rowCollapsedState[rowId];
@@ -6176,19 +6228,15 @@
       }
     });
 
+    updateUnrollAllButtons(collapsedIds);
+    updateRowArrowControls();
     triggerAllContentRefits();
   }
 
   function toggleRowCollapse(rowId){
-    // Don't collapse if all other rows are already collapsed (keep at least one row active)
-    const currentlyCollapsedCount = VALID_ROW_IDS.filter(id => rowCollapsedState[id]).length;
-    if(!rowCollapsedState[rowId] && currentlyCollapsedCount >= VALID_ROW_IDS.length - 1){
-      // All other rows are collapsed, prevent blank screen or cycle
-      // But user can unroll anytime
-    }
     rowCollapsedState[rowId] = !rowCollapsedState[rowId];
     saveCollapsedState();
-    updateRowCollapseUI();
+    updateRowCollapseUI(true);
   }
 
   function updateRowArrowControls(){
@@ -6196,10 +6244,13 @@
     const screenEl = document.getElementById('screen');
     if(!screenEl) return;
 
+    const activeIds = currentRowOrder.filter(id => !rowCollapsedState[id]);
+
     currentRowOrder.forEach((rowId, index) => {
       const rowEl = document.getElementById(rowId);
       if(!rowEl) return;
 
+      const isCollapsed = !!rowCollapsedState[rowId];
       const ctrlId = `ctrl${rowId.charAt(0).toUpperCase() + rowId.slice(1)}`;
       let ctrlEl = document.getElementById(ctrlId);
       if(!ctrlEl){
@@ -6238,14 +6289,19 @@
       rowSlotClasses.forEach(c => ctrlEl.classList.remove(c));
       ctrlEl.classList.add(rowSlotClasses[index]);
 
-      // Update button titles & labels
+      // Update button visibility & titles based on active rows
       const upBtn = ctrlEl.querySelector('.row-arrow-up');
       const downBtn = ctrlEl.querySelector('.row-arrow-down');
-      if(upBtn){
-        upBtn.title = index === 1 ? 'Move row up (swap with top row)' : (index === 2 ? 'Move row up (swap with middle row)' : '');
-      }
-      if(downBtn){
-        downBtn.title = index === 0 ? 'Move row down (swap with middle row)' : (index === 1 ? 'Move row down (swap with bottom row)' : '');
+      if(!isCollapsed){
+        const activeIndex = activeIds.indexOf(rowId);
+        if(upBtn){
+          upBtn.style.display = activeIndex > 0 ? 'inline-flex' : 'none';
+          upBtn.title = 'Move row up';
+        }
+        if(downBtn){
+          downBtn.style.display = (activeIndex >= 0 && activeIndex < activeIds.length - 1) ? 'inline-flex' : 'none';
+          downBtn.title = 'Move row down';
+        }
       }
     });
   }
@@ -6288,47 +6344,36 @@
   }
 
   function moveRow(rowId, direction){
-    const currentIndex = currentRowOrder.indexOf(rowId);
-    if(currentIndex === -1) return;
+    const activeIds = currentRowOrder.filter(id => !rowCollapsedState[id]);
+    const activeIndex = activeIds.indexOf(rowId);
+    if(activeIndex === -1) return;
 
-    const newOrder = [...currentRowOrder];
-    if(direction === 'up' && currentIndex > 0){
-      const temp = newOrder[currentIndex];
-      newOrder[currentIndex] = newOrder[currentIndex - 1];
-      newOrder[currentIndex - 1] = temp;
+    if(direction === 'up' && activeIndex > 0){
+      const swapTargetId = activeIds[activeIndex - 1];
+      const idxA = currentRowOrder.indexOf(rowId);
+      const idxB = currentRowOrder.indexOf(swapTargetId);
+      const newOrder = [...currentRowOrder];
+      newOrder[idxA] = swapTargetId;
+      newOrder[idxB] = rowId;
       applyRowOrder(newOrder, true);
-    } else if(direction === 'down' && currentIndex < newOrder.length - 1){
-      const temp = newOrder[currentIndex];
-      newOrder[currentIndex] = newOrder[currentIndex + 1];
-      newOrder[currentIndex + 1] = temp;
+    } else if(direction === 'down' && activeIndex < activeIds.length - 1){
+      const swapTargetId = activeIds[activeIndex + 1];
+      const idxA = currentRowOrder.indexOf(rowId);
+      const idxB = currentRowOrder.indexOf(swapTargetId);
+      const newOrder = [...currentRowOrder];
+      newOrder[idxA] = swapTargetId;
+      newOrder[idxB] = rowId;
       applyRowOrder(newOrder, true);
     }
   }
 
   function applyRowOrder(order, animate = false){
     currentRowOrder = [...order];
-    const screenEl = document.getElementById('screen');
-    if(!screenEl) return;
-
     try {
       localStorage.setItem('wf_dashboard_row_order', JSON.stringify(order));
     } catch(e){}
 
-    // Re-append row containers in the desired order
-    order.forEach(id => {
-      const el = document.getElementById(id);
-      if(el && screenEl.contains(el)){
-        screenEl.appendChild(el);
-        if(animate){
-          el.classList.remove('row-swap-anim');
-          void el.offsetWidth; // trigger reflow
-          el.classList.add('row-swap-anim');
-        }
-      }
-    });
-
-    updateRowArrowControls();
-    updateRowCollapseUI();
+    updateRowCollapseUI(animate);
   }
 
   function initRowArranger(){
@@ -6343,6 +6388,15 @@
       const shutterId = `shutter${id.charAt(0).toUpperCase() + id.slice(1)}`;
       const shutterBar = document.getElementById(shutterId);
       if(shutterBar){
+        const unrollAllBtn = shutterBar.querySelector('.shutter-unroll-all-btn');
+        if(unrollAllBtn){
+          unrollAllBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            unrollAllRows();
+          });
+        }
+
         shutterBar.addEventListener('click', (e) => {
           e.stopPropagation();
           e.preventDefault();

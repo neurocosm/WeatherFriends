@@ -2001,30 +2001,29 @@
     user-select:none !important;
   }
 
-  /* ---- Floating TV Remote Resize HUD Hint Pill ---- */
+  /* ---- Floating TV Remote Resize HUD Control Center ---- */
   .remote-resize-hud{
     position:fixed;
-    bottom:clamp(18px, 3.2vh, 32px);
+    bottom:clamp(16px, 3vh, 32px);
     left:50%;
-    transform:translateX(-50%) translateY(20px);
+    transform:translateX(-50%) translateY(24px);
     opacity:0;
     pointer-events:none;
     z-index:9999;
     display:flex;
     align-items:center;
-    gap:10px;
-    background:rgba(2, 6, 8, 0.94);
-    border:1px solid #38bdf8;
-    border-radius:24px;
-    padding:7px 18px;
-    box-shadow:0 0 24px rgba(56, 189, 248, 0.4), 0 8px 30px rgba(0, 0, 0, 0.85);
-    backdrop-filter:blur(10px);
-    -webkit-backdrop-filter:blur(10px);
+    gap:14px;
+    background:rgba(2, 8, 12, 0.96);
+    border:1.5px solid #38bdf8;
+    border-radius:18px;
+    padding:10px 20px;
+    box-shadow:0 0 28px rgba(56, 189, 248, 0.45), 0 10px 36px rgba(0, 0, 0, 0.9);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
     transition:opacity 0.25s ease, transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.2);
     font-family:'Outfit', sans-serif;
-    font-size:clamp(0.72rem, 1.4vh, 0.85rem);
     color:rgba(240, 246, 252, 0.95);
-    white-space:nowrap;
+    max-width:94vw;
   }
   .remote-resize-hud.is-visible{
     opacity:1;
@@ -2033,39 +2032,129 @@
   }
   .remote-resize-hud .hud-icon{
     color:#38bdf8;
-    font-weight:700;
-    font-size:1.05em;
-    display:inline-flex;
+    font-size:1.5rem;
+    flex-shrink:0;
+    filter:drop-shadow(0 0 8px rgba(56, 189, 248, 0.6));
+  }
+  .remote-resize-hud .hud-content{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
     align-items:center;
   }
-  .remote-resize-hud .hud-key{
-    display:inline-block;
-    background:rgba(255, 255, 255, 0.12);
-    border:1px solid rgba(255, 255, 255, 0.25);
-    border-radius:5px;
-    padding:1px 6px;
-    font-family:'Share Tech Mono', monospace;
-    font-size:0.75rem;
-    color:#ffffff;
-    margin:0 2px;
+  .remote-resize-hud .hud-title-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    white-space:nowrap;
   }
-  .remote-resize-hud .hud-exit-btn{
-    margin-left:4px;
-    background:rgba(73, 230, 196, 0.18);
-    border:1px solid #49e6c4;
-    color:#49e6c4;
-    border-radius:12px;
-    padding:2px 9px;
-    font-size:0.68rem;
+  .remote-resize-hud .hud-title{
+    font-size:clamp(0.82rem, 1.5vh, 0.96rem);
     font-weight:600;
-    cursor:pointer;
-    transition:background 0.15s ease;
+    letter-spacing:0.03em;
+    color:#dcf3fc;
   }
-  .remote-resize-hud .hud-exit-btn:hover,
-  .remote-resize-hud .hud-exit-btn:focus-visible{
+  .remote-resize-hud .hud-title b{
+    color:#ffffff;
+    font-weight:700;
+  }
+  .remote-resize-hud .hud-pct-badge{
+    font-family:'Share Tech Mono', monospace;
+    font-size:clamp(0.72rem, 1.3vh, 0.85rem);
+    background:rgba(56, 189, 248, 0.15);
+    border:1px solid rgba(56, 189, 248, 0.5);
+    color:#7ed6fc;
+    border-radius:6px;
+    padding:2px 8px;
+    letter-spacing:0.05em;
+  }
+  .remote-resize-hud .hud-btn-group{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+  .remote-resize-hud .hud-btn{
+    background:rgba(14, 28, 36, 0.95);
+    border:1px solid rgba(140, 200, 210, 0.35);
+    color:#dce7ea;
+    border-radius:8px;
+    padding:6px 14px;
+    font-family:'Outfit', sans-serif;
+    font-size:clamp(0.74rem, 1.4vh, 0.88rem);
+    font-weight:700;
+    letter-spacing:0.04em;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    transition:background 0.15s ease, border-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+    user-select:none;
+    -webkit-tap-highlight-color:transparent;
+    min-height:32px;
+  }
+  .remote-resize-hud .hud-btn:hover{
+    background:rgba(56, 189, 248, 0.25);
+    border-color:#38bdf8;
+    color:#ffffff;
+    box-shadow:0 0 10px rgba(56, 189, 248, 0.5);
+    transform:scale(1.04);
+  }
+  .remote-resize-hud .hud-btn:active{
+    transform:scale(0.95);
+  }
+  .remote-resize-hud .hud-btn:focus-visible{
+    outline:2px solid #49e6c4;
+    outline-offset:2px;
+  }
+  .remote-resize-hud .hud-btn-left,
+  .remote-resize-hud .hud-btn-right{
+    border-color:rgba(56, 189, 248, 0.65);
+    color:#38bdf8;
+    font-weight:800;
+  }
+  .remote-resize-hud .hud-btn-left:hover,
+  .remote-resize-hud .hud-btn-right:hover{
+    background:rgba(56, 189, 248, 0.35);
+    color:#ffffff;
+  }
+  .remote-resize-hud .hud-btn-reset{
+    border-color:rgba(255, 182, 72, 0.5);
+    color:#ffb648;
+  }
+  .remote-resize-hud .hud-btn-reset:hover{
+    background:rgba(255, 182, 72, 0.25);
+    border-color:#ffb648;
+    color:#ffffff;
+    box-shadow:0 0 10px rgba(255, 182, 72, 0.5);
+  }
+  .remote-resize-hud .hud-btn-done{
+    background:rgba(73, 230, 196, 0.22);
+    border-color:#49e6c4;
+    color:#49e6c4;
+    font-weight:800;
+  }
+  .remote-resize-hud .hud-btn-done:hover{
     background:#49e6c4;
-    color:#020608;
-    outline:none;
+    color:#020709;
+    box-shadow:0 0 14px rgba(73, 230, 196, 0.7);
+  }
+  .remote-resize-hud .hud-hint{
+    font-size:clamp(0.65rem, 1.2vh, 0.76rem);
+    color:rgba(180, 215, 222, 0.75);
+    letter-spacing:0.02em;
+    white-space:nowrap;
+  }
+  .remote-resize-hud .hud-hint b{
+    color:#ffffff;
+    background:rgba(255, 255, 255, 0.12);
+    border:1px solid rgba(255, 255, 255, 0.22);
+    border-radius:4px;
+    padding:0 5px;
+    font-family:'Share Tech Mono', monospace;
+    font-weight:600;
   }
 
   /* ---- Bottom 5-day strip (1:1 Compact Blocks & Tightly Grouped Data) ---- */
@@ -2374,7 +2463,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.090826.2057</span>
+        <span id="appVersionText">v1.090826.2119</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -2709,11 +2798,21 @@
   </div>
 
   <!-- Smart TV Remote Horizontal Block Resize HUD Pill -->
-  <div class="remote-resize-hud" id="remoteResizeHud" role="status" aria-live="polite" aria-label="Block resize mode active">
+  <div class="remote-resize-hud" id="remoteResizeHud" role="dialog" aria-label="Block resize mode active">
     <span class="hud-icon">📐</span>
-    <span id="remoteResizeHudText">Resizing: Press <span class="hud-key">◀</span> <span class="hud-key">▶</span> to adjust</span>
-    <span class="hud-hint">Press <span class="hud-key">OK</span> to lock • <span class="hud-key">0</span> to reset</span>
-    <button type="button" class="hud-exit-btn" id="remoteResizeExitBtn" title="Lock and exit resize mode">Done</button>
+    <div class="hud-content">
+      <div class="hud-title-row">
+        <span id="remoteResizeHudText" class="hud-title">Resizing: <b>Date ↔ Clock</b></span>
+        <span class="hud-pct-badge" id="remoteResizePctBadge">38% | 24% | 38%</span>
+      </div>
+      <div class="hud-btn-group">
+        <button type="button" class="hud-btn hud-btn-left" id="remoteResizeLeftBtn" title="Shift seam left (Remote: ◀)">◀ SHIFT LEFT</button>
+        <button type="button" class="hud-btn hud-btn-right" id="remoteResizeRightBtn" title="Shift seam right (Remote: ▶)">SHIFT RIGHT ▶</button>
+        <button type="button" class="hud-btn hud-btn-reset" id="remoteResizeResetBtn" title="Reset proportions to default (Remote: 0)">↺ RESET</button>
+        <button type="button" class="hud-btn hud-btn-done" id="remoteResizeExitBtn" title="Save & exit resize mode (Remote: OK / Enter)">✓ DONE</button>
+      </div>
+      <div class="hud-hint" id="remoteResizeHudHint">Smart TV Remote: Press <b>◀</b> <b>▶</b> to nudge • <b>OK</b> to finish • <b>0</b> to reset</div>
+    </div>
   </div>
 
   <!-- Location Search & ZIP Code Modal (NOMAD / Weather Friends) -->
@@ -4178,7 +4277,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.090826.2057';
+  const CLIENT_APP_VERSION = 'v1.090826.2119';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -5720,9 +5819,14 @@
     const splitters = document.querySelectorAll('.row-splitter');
     const hudEl = document.getElementById('remoteResizeHud');
     const hudTextEl = document.getElementById('remoteResizeHudText');
+    const hudPctBadge = document.getElementById('remoteResizePctBadge');
+    const hudLeftBtn = document.getElementById('remoteResizeLeftBtn');
+    const hudRightBtn = document.getElementById('remoteResizeRightBtn');
+    const hudResetBtn = document.getElementById('remoteResizeResetBtn');
     const hudExitBtn = document.getElementById('remoteResizeExitBtn');
 
     let activeLockedSplitter = null;
+    const STEP_DELTA = 0.14; // ~5% width shift per remote press or click for clearly visible adjustments
 
     function getSplitterLabel(sp){
       if(!sp) return 'Blocks';
@@ -5736,11 +5840,27 @@
       return 'Blocks';
     }
 
+    function updateResizeHud(sp){
+      if(!hudEl) return;
+      const target = sp || activeLockedSplitter;
+      if(!target) return;
+      const rId = target.dataset.row;
+      if(hudTextEl){
+        hudTextEl.innerHTML = `Resizing: <b>${getSplitterLabel(target)}</b>`;
+      }
+      if(hudPctBadge && currentWeights[rId]){
+        const w = currentWeights[rId];
+        const sum = w[0] + w[1] + w[2];
+        const p0 = Math.round((w[0] / sum) * 100);
+        const p1 = Math.round((w[1] / sum) * 100);
+        const p2 = Math.round((w[2] / sum) * 100);
+        hudPctBadge.textContent = `${p0}% | ${p1}% | ${p2}%`;
+      }
+    }
+
     function showResizeHud(sp){
       if(!hudEl) return;
-      if(hudTextEl){
-        hudTextEl.innerHTML = `Resizing <b>${getSplitterLabel(sp)}</b>: Press <span class="hud-key">◀</span> <span class="hud-key">▶</span> to adjust`;
-      }
+      updateResizeHud(sp);
       hudEl.classList.add('is-visible');
     }
 
@@ -5782,14 +5902,66 @@
       }
     }
 
+    // Direct On-Screen TV HUD Interactive Buttons
+    if(hudLeftBtn){
+      hudLeftBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        if(activeLockedSplitter) nudgeSplitter(activeLockedSplitter, -STEP_DELTA);
+      });
+    }
+    if(hudRightBtn){
+      hudRightBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        if(activeLockedSplitter) nudgeSplitter(activeLockedSplitter, STEP_DELTA);
+      });
+    }
+    if(hudResetBtn){
+      hudResetBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        if(activeLockedSplitter) resetSplitterRow(activeLockedSplitter);
+      });
+    }
     if(hudExitBtn){
       hudExitBtn.addEventListener('click', (e) => {
         e.stopPropagation();
+        e.preventDefault();
         unlockSplitter(null, true);
       });
     }
 
-    // Step-wise adjust weights by delta (used by TV remote arrow keys and long-hold)
+    // Universal Smart TV Remote Key Identifier (Samsung Tizen, LG webOS, Android TV, Fire TV, Sony, Apple TV)
+    function isLeftKey(e){
+      const k = e.key || '';
+      const c = e.keyCode || e.which || 0;
+      return k === 'ArrowLeft' || k === 'Left' || k === 'UIKeyInputLeftArrow' || c === 37;
+    }
+    function isRightKey(e){
+      const k = e.key || '';
+      const c = e.keyCode || e.which || 0;
+      return k === 'ArrowRight' || k === 'Right' || k === 'UIKeyInputRightArrow' || c === 39;
+    }
+    function isOkKey(e){
+      const k = e.key || '';
+      const c = e.keyCode || e.which || 0;
+      return k === 'Enter' || k === 'Select' || k === 'Accept' || k === ' ' ||
+             c === 13 || c === 32 || c === 23 || c === 29443;
+    }
+    function isBackKey(e){
+      const k = e.key || '';
+      const c = e.keyCode || e.which || 0;
+      return k === 'Escape' || k === 'Back' || k === 'GoBack' || k === 'BrowserBack' || k === 'Backspace' ||
+             c === 27 || c === 8 || c === 461 || c === 10009;
+    }
+    function isResetKey(e){
+      const k = e.key || '';
+      const c = e.keyCode || e.which || 0;
+      return k === '0' || k === 'Numpad0' || c === 48 || c === 96;
+    }
+
+    // Step-wise adjust weights by delta (used by TV remote arrow keys, HUD buttons and long-hold)
     function nudgeSplitter(sp, deltaWeight){
       if(!sp) return;
       const rowId = sp.dataset.row;
@@ -5831,6 +6003,8 @@
         localStorage.setItem(`wf_layout_${rowId}_weights`, JSON.stringify(newW));
       }catch(err){}
 
+      updateResizeHud(sp);
+
       if(rowId === 'top'){
         if(typeof fitDateBlockToContainer === 'function') fitDateBlockToContainer();
         if(typeof fitWeatherBlockToContainer === 'function') fitWeatherBlockToContainer();
@@ -5850,6 +6024,7 @@
       currentWeights[rowId] = [...def];
       applyWeights(rowId, def);
       try{ localStorage.removeItem(`wf_layout_${rowId}_weights`); }catch(err){}
+      updateResizeHud(sp);
       if(rowId === 'top'){
         if(typeof fitDateBlockToContainer === 'function') fitDateBlockToContainer();
         if(typeof fitWeatherBlockToContainer === 'function') fitWeatherBlockToContainer();
@@ -5987,13 +6162,22 @@
       // Tap / Click handler:
       // - If long press triggered, do nothing
       // - If double click/tap (< 350ms), reset to default 1:1 proportions
-      // - If single click when not dragging, toggle lock mode
+      // - If already locked, clicking left or right half nudges that direction (great for TV pointer remotes)
+      // - Otherwise, toggles lock mode
       let lastTapTime = 0;
       splitter.addEventListener('click', (e) => {
         if(didLongPressTrigger) return;
         const now = Date.now();
         if(now - lastTapTime < 350){
           resetSplitterRow(splitter);
+        } else if(activeLockedSplitter === splitter){
+          const rect = splitter.getBoundingClientRect();
+          const clickX = e.clientX;
+          if(clickX < rect.left + rect.width / 2){
+            nudgeSplitter(splitter, -STEP_DELTA);
+          } else {
+            nudgeSplitter(splitter, STEP_DELTA);
+          }
         } else {
           toggleLockSplitter(splitter);
         }
@@ -6002,11 +6186,8 @@
 
       // Smart TV Remote & Keyboard Controls directly on focused splitter:
       splitter.addEventListener('keydown', (e) => {
-        const key = e.key || '';
-        const code = e.keyCode || 0;
-
         // Enter / Space / OK key on Smart TV Remote toggles lock mode
-        if(key === 'Enter' || key === ' ' || code === 13 || code === 32){
+        if(isOkKey(e)){
           e.preventDefault();
           e.stopPropagation();
           toggleLockSplitter(splitter);
@@ -6014,23 +6195,23 @@
         }
 
         // Left / Right arrows resize adjacent blocks
-        if(key === 'ArrowLeft' || code === 37){
+        if(isLeftKey(e)){
           e.preventDefault();
           e.stopPropagation();
           if(!activeLockedSplitter) lockSplitter(splitter);
-          nudgeSplitter(splitter, -0.04);
+          nudgeSplitter(splitter, -STEP_DELTA);
           return;
         }
-        if(key === 'ArrowRight' || code === 39){
+        if(isRightKey(e)){
           e.preventDefault();
           e.stopPropagation();
           if(!activeLockedSplitter) lockSplitter(splitter);
-          nudgeSplitter(splitter, 0.04);
+          nudgeSplitter(splitter, STEP_DELTA);
           return;
         }
 
-        // 0 key or Backspace resets to default
-        if(key === '0' || code === 48 || key === 'Numpad0' || code === 96){
+        // 0 key resets to default
+        if(isResetKey(e)){
           e.preventDefault();
           e.stopPropagation();
           resetSplitterRow(splitter);
@@ -6038,7 +6219,7 @@
         }
 
         // Escape / Back unlocks
-        if(key === 'Escape' || code === 27 || key === 'Backspace'){
+        if(isBackKey(e)){
           if(activeLockedSplitter){
             e.preventDefault();
             e.stopPropagation();
@@ -6052,20 +6233,22 @@
     // Allows Left/Right arrow nudges and OK / Escape locks from anywhere on the page
     window.addEventListener('keydown', (e) => {
       if(!activeLockedSplitter) return;
-      const key = e.key || '';
-      const code = e.keyCode || 0;
 
-      if(key === 'ArrowLeft' || code === 37){
+      if(isLeftKey(e)){
         e.preventDefault();
-        nudgeSplitter(activeLockedSplitter, -0.04);
-      } else if(key === 'ArrowRight' || code === 39){
+        e.stopPropagation();
+        nudgeSplitter(activeLockedSplitter, -STEP_DELTA);
+      } else if(isRightKey(e)){
         e.preventDefault();
-        nudgeSplitter(activeLockedSplitter, 0.04);
-      } else if(key === 'Enter' || key === ' ' || code === 13 || code === 32 || key === 'Escape' || code === 27){
+        e.stopPropagation();
+        nudgeSplitter(activeLockedSplitter, STEP_DELTA);
+      } else if(isOkKey(e) || isBackKey(e)){
         e.preventDefault();
+        e.stopPropagation();
         unlockSplitter(activeLockedSplitter, true);
-      } else if(key === '0' || code === 48 || key === 'Numpad0' || code === 96){
+      } else if(isResetKey(e)){
         e.preventDefault();
+        e.stopPropagation();
         resetSplitterRow(activeLockedSplitter);
       }
     });

@@ -580,70 +580,72 @@
     display:none !important;
   }
 
-  /* Rolled-up Horizontal Shutter / Shade Slat */
+  /* Rolled-up Horizontal Shutter / Shade Slat (Slim Profile: 16px) */
   .row-shutter-bar{
     display:none;
     width:100%;
-    height:22px;
+    height:16px;
     box-sizing:border-box;
     align-items:center;
     justify-content:center;
-    gap:10px;
+    gap:8px;
     background:repeating-linear-gradient(90deg, rgba(255,255,255,0.035) 0px, transparent 2px, transparent 6px),
                linear-gradient(180deg, rgba(14, 25, 30, 0.95), rgba(7, 14, 18, 0.95));
     border:1px solid rgba(73, 230, 196, 0.28);
-    border-radius:6px;
-    box-shadow:inset 0 1px 0 rgba(255,255,255,0.08), 0 2px 6px rgba(0,0,0,0.5);
+    border-radius:4px;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.08), 0 1px 4px rgba(0,0,0,0.5);
     cursor:pointer;
     color:rgba(180, 215, 222, 0.7);
     font-family:system-ui, -apple-system, sans-serif;
-    font-size:10px;
+    font-size:9px;
     font-weight:600;
-    letter-spacing:1.2px;
+    letter-spacing:1.1px;
     text-transform:uppercase;
+    line-height:1;
     user-select:none;
     -webkit-tap-highlight-color:transparent;
     transition:background 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
-    padding:0 12px;
+    padding:0 10px;
   }
   .row-shutter-bar:hover{
     border-color:rgba(255, 182, 72, 0.65);
     background:repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0px, transparent 2px, transparent 6px),
                linear-gradient(180deg, rgba(20, 32, 38, 0.98), rgba(11, 20, 24, 0.98));
     color:#ffb648;
-    box-shadow:inset 0 1px 0 rgba(255,255,255,0.15), 0 0 10px rgba(255, 182, 72, 0.2);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.15), 0 0 8px rgba(255, 182, 72, 0.2);
   }
   .row-shutter-bar .shutter-slat-dot{
     display:inline-block;
-    width:7px;
-    height:7px;
+    width:5px;
+    height:5px;
     border-radius:50%;
     background:#ffb648;
-    box-shadow:0 0 6px rgba(255,182,72,0.8);
+    box-shadow:0 0 5px rgba(255,182,72,0.8);
+    flex-shrink:0;
   }
   .row-shutter-bar .shutter-slat-label{
     display:inline-flex;
     align-items:center;
-    gap:8px;
+    gap:6px;
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
   }
   .row-shutter-bar .shutter-unroll-hint{
-    font-size:9px;
+    font-size:8px;
     opacity:0.6;
-    letter-spacing:0.6px;
+    letter-spacing:0.5px;
   }
 
-  /* Collapsed Row States (Rolled Up) */
+  /* Collapsed Row States (Rolled Up - 16px Slimline) */
   .is-row-collapsed{
     display:flex !important;
     flex-direction:row !important;
     align-items:center !important;
-    flex:0 0 22px !important;
-    min-height:22px !important;
-    max-height:22px !important;
-    height:22px !important;
+    flex:0 0 16px !important;
+    min-height:16px !important;
+    max-height:16px !important;
+    height:16px !important;
     padding:0 !important;
     margin:0 !important;
     gap:0 !important;
@@ -2750,7 +2752,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.090826.2207</span>
+        <span id="appVersionText">v1.090826.2231</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -2796,7 +2798,6 @@
       <div class="row-shutter-bar" id="shutterTopTier" title="Click to pull down and unroll row" role="button" tabindex="0" aria-label="Unroll Date, Clock & Weather row">
         <span class="shutter-slat-dot"></span>
         <span class="shutter-slat-label">DATE • CLOCK • CURRENT WEATHER <span class="shutter-unroll-hint">(click to pull down)</span></span>
-        <button type="button" class="shutter-unroll-all-btn" title="Unroll all window shades back down">⤓ UNROLL ALL</button>
       </div>
 
       <!-- CERTIFIED BLOCK 1: FULL-HEIGHT 4-TIER DATE & PERIOD -->
@@ -2933,7 +2934,6 @@
       <div class="row-shutter-bar" id="shutterPanelsRow" title="Click to pull down and unroll row" role="button" tabindex="0" aria-label="Unroll 8-Ball, Inspiration & Holidays row">
         <span class="shutter-slat-dot"></span>
         <span class="shutter-slat-label">ORACLE 8-BALL • DAILY INSPIRATION • CHECKIDAY <span class="shutter-unroll-hint">(click to pull down)</span></span>
-        <button type="button" class="shutter-unroll-all-btn" title="Unroll all window shades back down">⤓ UNROLL ALL</button>
       </div>
 
       <!-- MAGIC 8-BALL (Center-Left Square, replaces redundant Conditions) -->
@@ -3078,7 +3078,6 @@
       <div class="row-shutter-bar" id="shutterOutlook" title="Click to pull down and unroll row" role="button" tabindex="0" aria-label="Unroll 5-Day Outlook forecast row">
         <span class="shutter-slat-dot"></span>
         <span class="shutter-slat-label">5-DAY OUTLOOK FORECAST <span class="shutter-unroll-hint">(click to pull down)</span></span>
-        <button type="button" class="shutter-unroll-all-btn" title="Unroll all window shades back down">⤓ UNROLL ALL</button>
       </div>
     </div>
 
@@ -4665,7 +4664,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.090826.2207';
+  const CLIENT_APP_VERSION = 'v1.090826.2231';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -4801,7 +4800,8 @@
      SCREEN WAKE LOCK (KEEP TABLET AWAKE 24/7)
   --------------------------------------------------------------- */
   let wakeLockSentinel = null;
-  let keepAwakeEnabled = true;
+  // Remember user preference (defaults to true for always-on dashboard)
+  let keepAwakeEnabled = localStorage.getItem('wf_keep_awake') !== 'false';
   const wakeBtn = document.getElementById('wakeLockBtn');
   const wakeLabel = document.getElementById('wakeLockLabel');
 
@@ -4809,8 +4809,10 @@
     if(wakeBtn){
       if(active){
         wakeBtn.classList.add('active');
+        wakeBtn.title = 'Screen keep-awake is active (screen will not sleep). Tap to toggle off.';
       } else {
         wakeBtn.classList.remove('active');
+        wakeBtn.title = 'Screen keep-awake is turned off. Tap to re-enable.';
       }
     }
     if(wakeLabel){
@@ -4825,6 +4827,7 @@
     try{
       fallbackVideo = document.createElement('video');
       fallbackVideo.setAttribute('playsinline', '');
+      fallbackVideo.setAttribute('webkit-playsinline', '');
       fallbackVideo.setAttribute('muted', '');
       fallbackVideo.muted = true;
       fallbackVideo.loop = true;
@@ -4855,37 +4858,42 @@
   }
 
   async function requestScreenWakeLock(){
-    if(!keepAwakeEnabled) return;
+    if(!keepAwakeEnabled) {
+      updateWakeUI(false, 'AWAKE OFF');
+      return;
+    }
     if(!('wakeLock' in navigator)){
       // Older browser/tablet fallback: engage background video keep-awake
       startFallbackKeepAwake();
       updateWakeUI(true, 'AWAKE ON');
-      if(wakeBtn) wakeBtn.title = 'Legacy Keep-Awake active (media loop). Screen will stay on.';
       return;
     }
     try{
+      if(wakeLockSentinel !== null){
+        try{ await wakeLockSentinel.release(); }catch(e){}
+        wakeLockSentinel = null;
+      }
       wakeLockSentinel = await navigator.wakeLock.request('screen');
       updateWakeUI(true, 'AWAKE ON');
-      if(wakeBtn) wakeBtn.title = 'Screen Wake Lock is active. Display will remain on. Tap to toggle.';
       wakeLockSentinel.addEventListener('release', () => {
         wakeLockSentinel = null;
         if(keepAwakeEnabled && document.visibilityState === 'visible'){
           // Re-acquire if released by system while visible
           setTimeout(requestScreenWakeLock, 1000);
-        } else {
+        } else if(!keepAwakeEnabled) {
           updateWakeUI(false, 'AWAKE OFF');
         }
       });
     }catch(err){
-      // Many mobile browsers (iOS Safari, Android) require a user touch gesture before granting
+      // Many mobile browsers (iOS Safari, Android tablets) require a user gesture or fail initial auto-call
       startFallbackKeepAwake();
       updateWakeUI(true, 'AWAKE ON');
-      if(wakeBtn) wakeBtn.title = 'Keep-Awake engaged. Tap to toggle.';
     }
   }
 
   async function releaseScreenWakeLock(){
     keepAwakeEnabled = false;
+    localStorage.setItem('wf_keep_awake', 'false');
     stopFallbackKeepAwake();
     if(wakeLockSentinel !== null){
       try{
@@ -4894,27 +4902,36 @@
       wakeLockSentinel = null;
     }
     updateWakeUI(false, 'AWAKE OFF');
-    if(wakeBtn) wakeBtn.title = 'Screen keep-awake is turned off. Tap to re-enable.';
+  }
+
+  function toggleScreenWakeLock(){
+    if(keepAwakeEnabled){
+      releaseScreenWakeLock();
+    } else {
+      keepAwakeEnabled = true;
+      localStorage.setItem('wf_keep_awake', 'true');
+      requestScreenWakeLock();
+    }
   }
 
   if(wakeBtn){
     wakeBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      if(keepAwakeEnabled && wakeLockSentinel){
-        releaseScreenWakeLock();
-      } else {
-        keepAwakeEnabled = true;
-        requestScreenWakeLock();
-      }
+      e.preventDefault();
+      toggleScreenWakeLock();
     });
   }
 
   // Attempt initial request
-  requestScreenWakeLock();
+  if(keepAwakeEnabled){
+    requestScreenWakeLock();
+  } else {
+    updateWakeUI(false, 'AWAKE OFF');
+  }
 
-  // User interaction fallback (iOS 16.4+ / Android tablets)
+  // User interaction fallback (iOS Safari / Android tablets which block wake lock before first user tap)
   const handleWakeInteraction = () => {
-    if(keepAwakeEnabled && !wakeLockSentinel){
+    if(keepAwakeEnabled && !wakeLockSentinel && ('wakeLock' in navigator)){
       requestScreenWakeLock();
     }
   };
@@ -6781,24 +6798,6 @@
     }
   }
 
-  function updateUnrollAllButtons(collapsedIds){
-    VALID_ROW_IDS.forEach(id => {
-      const shutterId = `shutter${id.charAt(0).toUpperCase() + id.slice(1)}`;
-      const shutterBar = document.getElementById(shutterId);
-      if(shutterBar){
-        const unrollAllBtn = shutterBar.querySelector('.shutter-unroll-all-btn');
-        if(unrollAllBtn){
-          if(collapsedIds.length >= 2 && !!rowCollapsedState[id]){
-            unrollAllBtn.style.display = 'inline-flex';
-            unrollAllBtn.textContent = collapsedIds.length === 3 ? '⤓ UNROLL ALL (3)' : '⤓ UNROLL ALL';
-          } else {
-            unrollAllBtn.style.display = 'none';
-          }
-        }
-      }
-    });
-  }
-
   function unrollAllRows(){
     VALID_ROW_IDS.forEach(id => {
       rowCollapsedState[id] = false;
@@ -6855,7 +6854,6 @@
       }
     });
 
-    updateUnrollAllButtons(collapsedIds);
     updateRowArrowControls();
     triggerAllContentRefits();
 
@@ -7030,15 +7028,6 @@
       const shutterId = `shutter${id.charAt(0).toUpperCase() + id.slice(1)}`;
       const shutterBar = document.getElementById(shutterId);
       if(shutterBar){
-        const unrollAllBtn = shutterBar.querySelector('.shutter-unroll-all-btn');
-        if(unrollAllBtn){
-          unrollAllBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            unrollAllRows();
-          });
-        }
-
         shutterBar.addEventListener('click', (e) => {
           e.stopPropagation();
           e.preventDefault();

@@ -1821,8 +1821,8 @@
     align-items:center;
     justify-content:center;
     text-align:center;
-    width:88%;
-    max-height:80%;
+    width:72%;
+    max-height:68%;
     color:#e1f8ff;
     user-select:none;
     pointer-events:none;
@@ -2752,7 +2752,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.090826.2231</span>
+        <span id="appVersionText">v1.090926.0602</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -4664,7 +4664,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.090826.2231';
+  const CLIENT_APP_VERSION = 'v1.090926.0602';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -5575,8 +5575,8 @@
 
     // 5 Negative (■)
     { text: "DON'T COUNT ON IT", layouts: [["DON'T", "COUNT ON IT"], ["DON'T COUNT", "ON IT"]], type: 'negative' },
-    { text: 'MY REPLY IS NO', layouts: [['MY REPLY', 'IS NO']], type: 'negative' },
-    { text: 'MY SOURCES SAY NO', layouts: [['MY SOURCES', 'SAY NO']], type: 'negative' },
+    { text: 'MY REPLY IS NO', layouts: [['MY REPLY', 'IS NO'], ['MY', 'REPLY', 'IS NO']], type: 'negative' },
+    { text: 'MY SOURCES SAY NO', layouts: [['MY SOURCES', 'SAY NO'], ['MY', 'SOURCES', 'SAY NO']], type: 'negative' },
     { text: 'OUTLOOK NOT SO GOOD', layouts: [['OUTLOOK', 'NOT SO GOOD'], ['OUTLOOK', 'NOT SO', 'GOOD']], type: 'negative' },
     { text: 'VERY DOUBTFUL', layouts: [['VERY', 'DOUBTFUL']], type: 'negative' }
   ];
@@ -5592,23 +5592,25 @@
 
   /**
    * Fits 8-ball answer text dynamically to the inner viewable window:
-   * - Triangle is cleanly inscribed inside the circular fluid window (no clipped corners)
-   * - Text is bounded by the inner circular viewing window of the 8-ball (windowDiam * 0.82)
-   * - Words can gracefully overlap the floating triangle if necessary for maximum readability
-   * - Strict non-wrapping per line: words are NEVER chopped or split across lines
-   * - Automatically tests candidate line breaks and selects the layout that yields the largest font
+   * - Proportional Harmony: Outer Sphere -> Liquid Window (76%) -> Triangle Die (98%) -> Text Viewport (68%)
+   * - Text is strictly bounded by the circular chord of the floating die window so even with
+   *   random die tilting and TV font-hinting variations, letters are NEVER cropped against the glass
+   * - Strict non-wrapping per line: words are never split across lines
+   * - Automatically tests candidate line breaks and selects the layout that yields the largest, cleanest font
    */
   function fitEightballAnswer(ballSize, resp){
     if(!eightballAnswer || !resp) return;
     const candidateLayouts = resp.layouts || (resp.lines ? [resp.lines] : [[resp.text]]);
 
     // Effective viewable window diameter (liquid window is 76% of sphere)
-    const windowDiam = Math.max(80, ballSize * 0.76);
-    const safeLineWidth = windowDiam * 0.82;
-    const safeBlockHeight = windowDiam * 0.72;
+    const windowDiam = Math.max(70, ballSize * 0.76);
+    // Safe text bounds: 68% width & 62% height ensures text stays inside both the circular glass
+    // window and the equilateral die triangle, even under die rotation angles
+    const safeLineWidth = windowDiam * 0.68;
+    const safeBlockHeight = windowDiam * 0.62;
 
     let bestLayout = candidateLayouts[0];
-    let bestFontSize = 10;
+    let bestFontSize = 8;
 
     candidateLayouts.forEach(layout => {
       const numLines = layout.length;
@@ -5618,16 +5620,16 @@
       // Measure unscaled baseline width of each line at 16px
       const testPx = 16;
       eightballAnswer.style.fontSize = testPx + 'px';
-      eightballAnswer.style.lineHeight = '1.14';
+      eightballAnswer.style.lineHeight = '1.12';
 
       const lineEls = eightballAnswer.querySelectorAll('.eightball-line');
       let maxAllowedFontForLayout = 38;
 
-      // 1. Height constraint: total text height fits safely within circular window
-      const maxFontByHeight = Math.floor(safeBlockHeight / (numLines * 1.14));
+      // 1. Height constraint: total text height fits safely within floating die area
+      const maxFontByHeight = Math.floor(safeBlockHeight / (numLines * 1.12));
       if(maxFontByHeight < maxAllowedFontForLayout) maxAllowedFontForLayout = maxFontByHeight;
 
-      // 2. Width constraint per line: each line fits inside the circular window diameter
+      // 2. Width constraint per line: each line fits inside safe chord width
       for(let i = 0; i < lineEls.length; i++){
         const lineEl = lineEls[i];
         const unscaledW = Math.max(10, lineEl.offsetWidth);
@@ -5637,9 +5639,10 @@
         }
       }
 
-      // Cap according to line density for optical harmony
-      const maxCeiling = numLines === 1 ? 36 : (numLines === 2 ? 26 : 20);
-      const finalLayoutFontSize = Math.max(10, Math.min(maxCeiling, maxAllowedFontForLayout));
+      // Proportional ceiling: scale max font relative to ball diameter for unified visual harmony
+      // Single line max ~ 22% of ball; 2 lines ~ 15%; 3 lines ~ 12%
+      const dynamicCeiling = Math.round(ballSize * (numLines === 1 ? 0.22 : (numLines === 2 ? 0.15 : 0.12)));
+      const finalLayoutFontSize = Math.max(8, Math.min(dynamicCeiling, maxAllowedFontForLayout));
 
       if(finalLayoutFontSize > bestFontSize){
         bestFontSize = finalLayoutFontSize;
@@ -5650,7 +5653,7 @@
     // Render the winning layout at the maximum possible font size
     eightballAnswer.innerHTML = bestLayout.map(line => `<span class="eightball-line">${line}</span>`).join('');
     eightballAnswer.style.fontSize = bestFontSize + 'px';
-    eightballAnswer.style.lineHeight = '1.14';
+    eightballAnswer.style.lineHeight = '1.12';
   }
 
   /**
@@ -5694,8 +5697,8 @@
     last8BallIndex = nextIdx;
     const resp = EIGHTBALL_RESPONSES[nextIdx];
 
-    // Slight random rotation angle for floating triangle die realism (-12deg to +12deg)
-    const randomAngle = (Math.random() * 24 - 12).toFixed(1);
+    // Subtle random rotation angle for floating triangle die realism (-6deg to +6deg)
+    const randomAngle = (Math.random() * 12 - 6).toFixed(1);
 
     setTimeout(() => {
       if(eightballAnswer){

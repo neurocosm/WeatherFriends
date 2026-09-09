@@ -20,10 +20,33 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Outfit:wght@400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
+  @property --bezel-hi {
+    syntax: '<color>';
+    inherits: true;
+    initial-value: #f5f7f8;
+  }
+  @property --bezel {
+    syntax: '<color>';
+    inherits: true;
+    initial-value: #dfe3e6;
+  }
+  @property --bezel-lo {
+    syntax: '<color>';
+    inherits: true;
+    initial-value: #aab0b6;
+  }
+
   :root{
     --bezel:#dfe3e6;
     --bezel-hi:#f5f7f8;
     --bezel-lo:#aab0b6;
+    --bezel-inset-hi:rgba(255,255,255,0.60);
+    --bezel-inset-lo:rgba(0,0,0,0.15);
+    --brand-color:#5a6369;
+    --brand-b-color:#3d4449;
+    --dimmer-active-dot:#ffe600;
+    --dimmer-active-dot-border:#fff275;
+    --dimmer-active-dot-shadow:0 0 6px rgba(255,230,0,0.75);
     --screen-bg:#020608;
     --screen-bg-2:#040b0e;
     --teal:#49e6c4;
@@ -79,9 +102,10 @@
     background:linear-gradient(155deg,var(--bezel-hi),var(--bezel) 40%,var(--bezel-lo));
     border-radius:18px;
     padding:clamp(4px, 0.9vh, 8px) clamp(8px, 1.2vw, 12px);
-    box-shadow:0 25px 60px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -2px 6px rgba(0,0,0,0.15);
+    box-shadow:0 25px 60px rgba(0,0,0,0.55), inset 0 1px 0 var(--bezel-inset-hi, rgba(255,255,255,0.6)), inset 0 -2px 6px var(--bezel-inset-lo, rgba(0,0,0,0.15));
     overflow:hidden;
     box-sizing:border-box;
+    transition:background 0.35s ease, box-shadow 0.35s ease, --bezel-hi 0.35s ease, --bezel 0.35s ease, --bezel-lo 0.35s ease;
   }
   .device-top{
     display:flex;
@@ -156,9 +180,9 @@
     border-color:var(--teal);
   }
   .dimmer-dot-btn.active{
-    background:#ffe600;
-    border-color:#fff275;
-    box-shadow:0 0 6px rgba(255,230,0,0.75);
+    background:var(--dimmer-active-dot, #ffe600);
+    border-color:var(--dimmer-active-dot-border, #fff275);
+    box-shadow:var(--dimmer-active-dot-shadow, 0 0 6px rgba(255,230,0,0.75));
     transform:scale(1.15);
   }
   .dimmer-pct-label{
@@ -179,15 +203,17 @@
     font-weight:600;
     font-size:0.74rem;
     letter-spacing:0.02em;
-    color:#5a6369;
+    color:var(--brand-color, #5a6369);
     user-select:none;
     display:inline-flex;
     align-items:center;
     gap:8px;
+    transition:color 0.35s ease;
   }
   .device-top .brand b{
     font-weight:700;
-    color:#3d4449;
+    color:var(--brand-b-color, #3d4449);
+    transition:color 0.35s ease;
   }
   .device-top .version-pill{
     display:inline-flex;
@@ -2202,7 +2228,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.090826.2029</span>
+        <span id="appVersionText">v1.090826.2037</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -3969,7 +3995,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.090826.2029';
+  const CLIENT_APP_VERSION = 'v1.090826.2037';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -4243,11 +4269,86 @@
      - Persists in localStorage ('wf_board_dimmer_level')
   --------------------------------------------------------------- */
   const DIMMER_LEVELS = [
-    { pct: 100, label: '100%', val: 1.00, desc: 'Full Brightness' },
-    { pct: 75,  label: '75%',  val: 0.75, desc: 'Soft Day' },
-    { pct: 50,  label: '50%',  val: 0.50, desc: 'Ambient Evening' },
-    { pct: 25,  label: '25%',  val: 0.25, desc: 'Twilight Dim' },
-    { pct: 15,  label: '15%',  val: 0.15, desc: 'Night Glow' }
+    {
+      pct: 100,
+      label: '100%',
+      val: 1.00,
+      desc: 'Full Brightness',
+      bezelHi: '#f5f7f8',
+      bezel: '#dfe3e6',
+      bezelLo: '#aab0b6',
+      insetHi: 'rgba(255,255,255,0.60)',
+      insetLo: 'rgba(0,0,0,0.15)',
+      brandColor: '#5a6369',
+      brandBColor: '#3d4449',
+      activeDot: '#ffe600',
+      activeDotBorder: '#fff275',
+      activeDotShadow: '0 0 6px rgba(255,230,0,0.75)'
+    },
+    {
+      pct: 75,
+      label: '75%',
+      val: 0.75,
+      desc: 'Soft Day',
+      bezelHi: '#b8bfc5',
+      bezel: '#9ea7af',
+      bezelLo: '#78828b',
+      insetHi: 'rgba(255,255,255,0.32)',
+      insetLo: 'rgba(0,0,0,0.22)',
+      brandColor: '#4f575e',
+      brandBColor: '#32393f',
+      activeDot: '#f0d900',
+      activeDotBorder: '#fff275',
+      activeDotShadow: '0 0 5px rgba(240,217,0,0.60)'
+    },
+    {
+      pct: 50,
+      label: '50%',
+      val: 0.50,
+      desc: 'Ambient Evening',
+      bezelHi: '#707981',
+      bezel: '#59626a',
+      bezelLo: '#3f474e',
+      insetHi: 'rgba(255,255,255,0.15)',
+      insetLo: 'rgba(0,0,0,0.35)',
+      brandColor: '#8a949d',
+      brandBColor: '#abb6bf',
+      activeDot: '#d6c200',
+      activeDotBorder: '#e6d333',
+      activeDotShadow: '0 0 4px rgba(214,194,0,0.40)'
+    },
+    {
+      pct: 25,
+      label: '25%',
+      val: 0.25,
+      desc: 'Twilight Dim',
+      bezelHi: '#383e44',
+      bezel: '#282e34',
+      bezelLo: '#191d22',
+      insetHi: 'rgba(255,255,255,0.06)',
+      insetLo: 'rgba(0,0,0,0.50)',
+      brandColor: '#6d7780',
+      brandBColor: '#8d98a2',
+      activeDot: '#ab9b00',
+      activeDotBorder: '#bdad1c',
+      activeDotShadow: '0 0 3px rgba(171,155,0,0.25)'
+    },
+    {
+      pct: 15,
+      label: '15%',
+      val: 0.15,
+      desc: 'Night Glow',
+      bezelHi: '#1c2024',
+      bezel: '#13161a',
+      bezelLo: '#0a0d10',
+      insetHi: 'rgba(255,255,255,0.02)',
+      insetLo: 'rgba(0,0,0,0.65)',
+      brandColor: '#4f5760',
+      brandBColor: '#6e7882',
+      activeDot: '#827600',
+      activeDotBorder: '#968814',
+      activeDotShadow: 'none'
+    }
   ];
 
   let currentDimmerIndex = 0;
@@ -4261,8 +4362,22 @@
     currentDimmerIndex = safeIdx;
     const config = DIMMER_LEVELS[safeIdx];
 
-    // Update CSS custom property on root
-    document.documentElement.style.setProperty('--board-brightness', String(config.val));
+    // Update screen brightness and contrast via CSS custom property
+    const rootStyle = document.documentElement.style;
+    rootStyle.setProperty('--board-brightness', String(config.val));
+
+    // Proportionately update bezel to darker matte gray tones as dimmer drops
+    // Prevents the bezel perimeter from illuminating a dark room like a night light
+    if(config.bezelHi) rootStyle.setProperty('--bezel-hi', config.bezelHi);
+    if(config.bezel) rootStyle.setProperty('--bezel', config.bezel);
+    if(config.bezelLo) rootStyle.setProperty('--bezel-lo', config.bezelLo);
+    if(config.insetHi) rootStyle.setProperty('--bezel-inset-hi', config.insetHi);
+    if(config.insetLo) rootStyle.setProperty('--bezel-inset-lo', config.insetLo);
+    if(config.brandColor) rootStyle.setProperty('--brand-color', config.brandColor);
+    if(config.brandBColor) rootStyle.setProperty('--brand-b-color', config.brandBColor);
+    if(config.activeDot) rootStyle.setProperty('--dimmer-active-dot', config.activeDot);
+    if(config.activeDotBorder) rootStyle.setProperty('--dimmer-active-dot-border', config.activeDotBorder);
+    if(config.activeDotShadow) rootStyle.setProperty('--dimmer-active-dot-shadow', config.activeDotShadow);
 
     // Update UI dot states
     dimmerDotButtons.forEach((btn, idx) => {
@@ -4280,7 +4395,7 @@
     }
 
     if(boardDimmerEl){
-      boardDimmerEl.title = `Display Brightness: ${config.label} (${config.desc}) • Tap or press 'D' to change`;
+      boardDimmerEl.title = `Display Brightness: ${config.label} (${config.desc}) • Bezel adjusts to eliminate perimeter light • Tap or press 'D' to cycle`;
     }
 
     if(save){

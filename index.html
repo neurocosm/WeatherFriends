@@ -2673,8 +2673,8 @@
   .attic-box{
     width:var(--attic-box-width, 82%);
     max-width:260px;
-    height:var(--attic-box-height, 80%);
-    max-height:165px;
+    height:var(--attic-box-height, 88%);
+    max-height:182px;
     position:relative;
     display:flex;
     flex-direction:column;
@@ -2859,7 +2859,7 @@
     pointer-events:none;
   }
   .attic-box.opened .attic-card{
-    transform:translateY(-56px) scale(1) rotate(-1deg);
+    transform:translateY(-62px) scale(1) rotate(-1deg);
     opacity:1;
   }
   .attic-card-text{
@@ -4284,7 +4284,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.091026.0713</span>
+        <span id="appVersionText">v1.091026.0733</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -7156,7 +7156,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.091026.0713';
+  const CLIENT_APP_VERSION = 'v1.091026.0733';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -8274,13 +8274,14 @@
     // Proportional dimensions for Notebook & Attic Box
     const tomeWidth = Math.max(120, Math.min(350, Math.floor(w * 0.94)));
     const tomeHeight = Math.max(64, Math.min(210, Math.floor(h * 0.84)));
+    const boxHeight = Math.max(70, Math.min(230, Math.floor(h * 0.92))); // 10% taller
     if(notebookTome){
       notebookTome.style.setProperty('--notebook-width', tomeWidth + 'px');
       notebookTome.style.setProperty('--notebook-height', tomeHeight + 'px');
     }
     if(atticBox){
       atticBox.style.setProperty('--attic-box-width', tomeWidth + 'px');
-      atticBox.style.setProperty('--attic-box-height', tomeHeight + 'px');
+      atticBox.style.setProperty('--attic-box-height', boxHeight + 'px');
     }
 
     const currentResp = last8BallIndex >= 0 ? EIGHTBALL_RESPONSES[last8BallIndex] : EIGHTBALL_READY_RESP;

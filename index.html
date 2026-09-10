@@ -384,6 +384,114 @@
     50%{ opacity:0.5; }
   }
 
+  /* 8-Ball Panel Header - Oracle Mode Segmented Title Bar (Smart TV & Remote Friendly) */
+  .eightball-panel .panel-head{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:100%;
+    padding:3px 4px 4px 4px;
+    box-sizing:border-box;
+  }
+  .oracle-pill-shelf{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:4px;
+    background:rgba(0,0,0,0.45);
+    border:1px solid rgba(140,200,210,0.22);
+    border-radius:10px;
+    padding:2px 3px;
+    width:100%;
+    box-sizing:border-box;
+  }
+  .oracle-title-pill{
+    flex:1 1 0;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:4px;
+    background:transparent;
+    border:1px solid transparent;
+    border-radius:7px;
+    padding:3px 4px;
+    font-family:'Rajdhani',sans-serif;
+    font-weight:700;
+    font-size:clamp(0.66rem, 1.8cqw, 0.78rem);
+    letter-spacing:0.06em;
+    color:#7c929e;
+    cursor:pointer;
+    user-select:none;
+    transition:all 0.18s ease;
+    line-height:1.2;
+    outline:none;
+    -webkit-tap-highlight-color:transparent;
+    white-space:nowrap;
+  }
+  .oracle-title-pill:hover{
+    color:#e0f2fe;
+    background:rgba(255,255,255,0.06);
+    border-color:rgba(140,200,210,0.3);
+  }
+  .oracle-title-pill:focus-visible{
+    outline:2px solid #49e6c4;
+    outline-offset:1px;
+  }
+  .oracle-title-pill.is-active{
+    background:rgba(12,32,28,0.85);
+    border-color:rgba(73,230,196,0.60);
+    color:#49e6c4;
+    box-shadow:0 0 8px rgba(73,230,196,0.25);
+  }
+  .oracle-title-pill[data-oracle-mode="notebook"].is-active{
+    background:rgba(36,28,12,0.85);
+    border-color:rgba(255,215,72,0.60);
+    color:#ffd748;
+    box-shadow:0 0 8px rgba(255,215,72,0.25);
+  }
+  .oracle-title-pill[data-oracle-mode="box"].is-active{
+    background:rgba(36,20,10,0.85);
+    border-color:rgba(251,146,60,0.60);
+    color:#fb923c;
+    box-shadow:0 0 8px rgba(251,146,60,0.25);
+  }
+  .oracle-pill-icon{
+    font-size:0.75rem;
+    line-height:1;
+    display:inline-block;
+  }
+  .oracle-pill-name{
+    line-height:1;
+    display:inline-block;
+    vertical-align:middle;
+  }
+  .oracle-head-gear-btn{
+    background:transparent;
+    border:none;
+    outline:none;
+    padding:2px 4px;
+    margin-left:auto;
+    cursor:pointer;
+    color:#5a6e7a;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:4px;
+    transition:all 0.2s ease;
+    line-height:1;
+    user-select:none;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .oracle-head-gear-btn:hover{
+    color:#49e6c4;
+    background:rgba(255,255,255,0.06);
+    transform:rotate(30deg);
+  }
+  .oracle-head-gear-btn:focus-visible{
+    outline:2px solid #49e6c4;
+    outline-offset:1px;
+  }
+
   /* -------------------------------------------------------------
      DEEP NIGHT BEACON & MINIMALIST BEDROOM DIMMER (LEVEL 4 & 3)
      - Minimizes ambient light in a dark room
@@ -2602,6 +2710,52 @@
     background:#110903;
     clip-path:polygon(30% 0%, 70% 0%, 100% 40%, 70% 100%, 30% 100%, 0% 40%);
   }
+  /* Locked Chest Clasp with "unlock me" prompt */
+  .attic-lock-clasp{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:4px;
+    background:linear-gradient(135deg, #c49a45 0%, #8a6222 50%, #573a11 100%);
+    border:1px solid #e0be6c;
+    border-radius:4px;
+    padding:3px 8px;
+    box-shadow:0 3px 10px rgba(0,0,0,0.75), inset 0 1px 1px rgba(255,255,255,0.4);
+    z-index:9;
+    cursor:pointer;
+    user-select:none;
+    transition:transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
+    animation:lock-pulse 3s ease-in-out infinite;
+    white-space:nowrap;
+  }
+  @keyframes lock-pulse{
+    0%, 100%{ box-shadow:0 3px 10px rgba(0,0,0,0.75), inset 0 1px 1px rgba(255,255,255,0.4), 0 0 6px rgba(255,200,90,0.15); }
+    50%{ box-shadow:0 3px 14px rgba(0,0,0,0.9), inset 0 1px 1px rgba(255,255,255,0.6), 0 0 16px rgba(255,200,90,0.45); }
+  }
+  .attic-lock-icon{
+    font-size:0.75rem;
+    line-height:1;
+    display:inline-block;
+  }
+  .attic-lock-label{
+    font-family:'Rajdhani', sans-serif;
+    font-weight:700;
+    font-size:0.74rem;
+    letter-spacing:0.08em;
+    text-transform:lowercase;
+    color:#fff3d4;
+    text-shadow:0 1px 2px rgba(0,0,0,0.9);
+    line-height:1;
+  }
+  .attic-box.opened .attic-lock-clasp{
+    opacity:0;
+    pointer-events:none;
+    transform:translate(-50%, -35%) scale(0.6);
+  }
   /* Hinged Wooden Lid - Flips backward out of line-of-sight */
   .attic-box-lid{
     position:absolute;
@@ -3313,15 +3467,15 @@
     transform:translateX(-50%) translateY(0);
   }
 
-  /* ---- Bottom 5-day strip (1:1 Compact Blocks & Tightly Grouped Data) ---- */
+  /* ---- Bottom 5-day strip / Weather Friends Station Container ---- */
   .outlook{
-    display:grid;
-    grid-template-columns:repeat(5,1fr);
-    gap:clamp(6px, 1.1vw, 12px);
+    display:flex;
+    flex-direction:column;
+    position:relative;
     flex:0 0 auto;
     min-height:clamp(60px, 14vh, 130px);
     width:100%;
-    align-items:center;
+    align-items:stretch;
     justify-content:center;
   }
   .day-card{
@@ -3497,6 +3651,403 @@
     font-family:'Rajdhani';font-size:0.85rem;color:var(--amber);
   }
 
+  /* ==========================================================================
+     WEATHER FRIENDS MULTI-LOCATION STATION & SWAP VIEW STYLING
+     ========================================================================== */
+  .row-swap-view-btn{
+    background:transparent !important;
+    border:none !important;
+    outline:none;
+    width:20px;
+    height:20px;
+    padding:0;
+    margin:2px 0 0 0;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    color:#8ba3af;
+    opacity:0.80;
+    transition:all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    -webkit-tap-highlight-color:transparent;
+    line-height:1;
+    position:relative;
+    user-select:none;
+    box-shadow:none !important;
+  }
+  .row-swap-view-btn:hover{
+    opacity:1;
+    color:#49e6c4;
+    background:transparent !important;
+    border:none !important;
+    box-shadow:none !important;
+    transform:scale(1.15);
+  }
+  .row-swap-view-btn:active{
+    transform:scale(0.92);
+  }
+  .row-swap-view-btn:focus-visible{
+    outline:2px solid #49e6c4;
+    outline-offset:1px;
+  }
+  .row-swap-view-btn.is-friends-active{
+    background:transparent !important;
+    border:none !important;
+    color:#ffb648;
+    opacity:1;
+    box-shadow:none !important;
+  }
+  .row-swap-view-btn.is-friends-active:hover{
+    color:#ffe29c;
+    background:transparent !important;
+    border:none !important;
+    box-shadow:none !important;
+  }
+  /* Cool Sleek Minimal WF Monogram without border & lighter weight */
+  .row-swap-wf-badge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    line-height:1;
+    pointer-events:none;
+  }
+  .row-swap-wf-text{
+    font-family:'Outfit', sans-serif;
+    font-weight:600;
+    font-style:italic;
+    font-size:0.66rem;
+    letter-spacing:-0.03em;
+    display:inline-block;
+    transform:skewX(-4deg);
+    line-height:1;
+    transition:color 0.2s ease, text-shadow 0.2s ease;
+  }
+  .row-swap-view-btn.is-friends-active .row-swap-wf-text{
+    text-shadow:0 0 5px rgba(255,182,72,0.45);
+  }
+  .row-swap-icon{
+    width:15px;
+    height:15px;
+    stroke:currentColor;
+    stroke-width:2.2;
+    transition:transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .row-swap-view-btn.is-friends-active .row-swap-icon{
+    transform:rotate(180deg);
+  }
+  .is-row-collapsed .row-order-ctrl .row-swap-view-btn{
+    display:none !important;
+  }
+
+  /* Outlook container grids */
+  .outlook-forecast-grid{
+    display:grid;
+    grid-template-columns:repeat(5, 1fr);
+    gap:clamp(6px, 1.1vw, 12px);
+    width:100%;
+    align-items:center;
+    justify-content:center;
+    transition:opacity 0.22s ease, transform 0.22s ease;
+  }
+  .outlook-friends-grid{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:clamp(6px, 1.1vw, 12px);
+    width:100%;
+    align-items:center;
+    justify-content:center;
+    transition:opacity 0.22s ease, transform 0.22s ease;
+  }
+  .outlook-view-transition-in{
+    animation:tray-view-fade-in 0.22s ease-out forwards;
+  }
+  @keyframes tray-view-fade-in{
+    from{opacity:0; transform:scale(0.985);}
+    to{opacity:1; transform:scale(1);}
+  }
+
+  /* Friend Card Styling - High Visibility, Scalable, Space-Filling */
+  .friend-card{
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
+    justify-content:space-between;
+    aspect-ratio:1.20 / 1;
+    max-height:clamp(170px, 28vh, 250px);
+    gap:clamp(4px, 1.2cqw, 8px);
+    padding:clamp(10px, 2.8cqw, 16px) clamp(12px, 3.2cqw, 18px);
+    background:rgba(4, 11, 14, 0.78);
+    border:1px solid var(--grid-line);
+    border-radius:12px;
+    container-type:inline-size;
+    min-width:0;
+    overflow:hidden;
+    transition:background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.06), 0 3px 12px rgba(0,0,0,0.45);
+    margin:0 auto;
+    width:100%;
+    position:relative;
+    user-select:none;
+    box-sizing:border-box;
+  }
+  .friend-card:hover{
+    border-color:rgba(73, 230, 196, 0.55);
+    background:rgba(8, 24, 30, 0.88);
+    box-shadow:inset 0 1px 0 rgba(73,230,196,0.3), 0 6px 20px rgba(0,0,0,0.55);
+  }
+  .friend-card-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    width:100%;
+    min-width:0;
+    border-bottom:1px solid rgba(73, 230, 196, 0.18);
+    padding-bottom:clamp(4px, 1.2cqw, 6px);
+  }
+  .friend-meta-left{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    min-width:0;
+    flex:1 1 auto;
+  }
+  .friend-badge{
+    font-family:'Rajdhani', monospace;
+    font-weight:800;
+    font-size:clamp(0.74rem, 7.5cqw, 0.95rem);
+    letter-spacing:0.04em;
+    color:#62d9ff;
+    background:rgba(98, 217, 255, 0.14);
+    border:1px solid rgba(98, 217, 255, 0.35);
+    border-radius:4px;
+    padding:2px 5px;
+    line-height:1;
+    flex-shrink:0;
+    box-shadow:0 1px 4px rgba(0,0,0,0.3);
+  }
+  .friend-title-group{
+    display:flex;
+    flex-direction:column;
+    min-width:0;
+    overflow:hidden;
+  }
+  .friend-name{
+    font-family:'Outfit', sans-serif;
+    font-weight:700;
+    font-size:clamp(0.96rem, 9.8cqw, 1.32rem);
+    letter-spacing:0.01em;
+    color:#ffffff;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    line-height:1.2;
+    text-shadow:0 1px 3px rgba(0,0,0,0.7);
+  }
+  .friend-city{
+    font-family:'Rajdhani', sans-serif;
+    font-weight:700;
+    font-size:clamp(0.76rem, 7.6cqw, 1.02rem);
+    letter-spacing:0.03em;
+    color:#62d9ff;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    line-height:1.15;
+    opacity:0.95;
+  }
+  .friend-meta-right{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    flex-shrink:0;
+  }
+  .friend-clock-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    padding:clamp(2px, 0.8cqw, 4px) clamp(6px, 1.8cqw, 9px);
+    background:rgba(2, 8, 12, 0.82);
+    border:1px solid rgba(73, 230, 196, 0.32);
+    border-radius:5px;
+    font-family:'Orbitron', monospace;
+    font-size:clamp(0.72rem, 7.2cqw, 0.94rem);
+    font-weight:700;
+    color:#7effdb;
+    letter-spacing:0.03em;
+    white-space:nowrap;
+  }
+  .friend-day-tag{
+    font-size:0.62rem;
+    padding:1px 4px;
+    border-radius:3px;
+    background:rgba(255, 182, 72, 0.25);
+    color:#ffb648;
+    font-weight:800;
+    line-height:1;
+  }
+  .friend-edit-btn{
+    background:transparent;
+    border:none;
+    outline:none;
+    color:#9eb0b8;
+    opacity:0.65;
+    cursor:pointer;
+    padding:3px;
+    border-radius:3px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    transition:opacity 0.15s ease, color 0.15s ease, transform 0.15s ease;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .friend-edit-btn:hover{
+    opacity:1;
+    color:#49e6c4;
+    transform:scale(1.2);
+  }
+  .friend-weather-body{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:clamp(8px, 3.5cqw, 20px);
+    width:100%;
+    min-width:0;
+    flex:1 1 auto;
+    margin:clamp(2px, 1.2cqw, 8px) 0;
+  }
+  .friend-wx-visual{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+  }
+  .friend-wx-icon{
+    width:clamp(48px, 20cqw, 72px);
+    height:clamp(48px, 20cqw, 72px);
+    margin:0;
+    flex-shrink:0;
+    filter:drop-shadow(0 3px 8px rgba(0,0,0,0.65));
+  }
+  .friend-temp-col{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    justify-content:center;
+    min-width:0;
+    flex:1 1 auto;
+  }
+  .friend-temp-row{
+    display:flex;
+    align-items:baseline;
+    line-height:0.95;
+  }
+  .friend-temp-val{
+    font-family:'Outfit', sans-serif;
+    font-weight:800;
+    font-size:clamp(2.3rem, 25cqw, 3.6rem);
+    color:#ffffff;
+    letter-spacing:-0.03em;
+    text-shadow:0 2px 8px rgba(0,0,0,0.6);
+    font-variant-numeric:tabular-nums;
+  }
+  .friend-temp-unit{
+    font-family:'Outfit', sans-serif;
+    font-weight:500;
+    font-size:clamp(1.1rem, 11cqw, 1.65rem);
+    color:var(--teal);
+    margin-left:2px;
+  }
+  .friend-desc{
+    font-family:'Outfit', sans-serif;
+    font-weight:600;
+    font-size:clamp(0.84rem, 8.5cqw, 1.15rem);
+    color:#b5e4f4;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    max-width:100%;
+    text-align:right;
+    line-height:1.2;
+    margin-top:2px;
+  }
+  .friend-footer-strip{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    width:100%;
+    min-width:0;
+    padding-top:clamp(4px, 1.4cqw, 8px);
+    border-top:1px solid rgba(73, 230, 196, 0.16);
+    font-family:'Outfit', sans-serif;
+    font-size:clamp(0.82rem, 8cqw, 1.08rem);
+    color:#93b2be;
+    line-height:1;
+    margin-top:auto;
+  }
+  .friend-hilo{
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    font-weight:700;
+    white-space:nowrap;
+  }
+  .friend-hilo .hi{
+    color:#ff9574;
+    font-weight:700;
+  }
+  .friend-hilo .sep{
+    opacity:0.4;
+    margin:0 1px;
+  }
+  .friend-hilo .lo{
+    color:#64b5f6;
+    font-weight:700;
+  }
+  .friend-sub-meta{
+    display:inline-flex;
+    align-items:center;
+    gap:clamp(5px, 1.5cqw, 10px);
+    font-size:0.96em;
+    font-weight:600;
+    color:#9abecb;
+    white-space:nowrap;
+  }
+  .friend-sub-meta .friend-humidity{
+    color:#7effdb;
+    font-weight:700;
+  }
+  .friend-skeleton-bar{
+    background:rgba(73, 230, 196, 0.15);
+    border-radius:3px;
+    animation:skeleton-glow 1.5s infinite ease-in-out;
+  }
+  @keyframes skeleton-glow{
+    0%, 100%{ opacity: 0.35; }
+    50%{ opacity: 0.85; }
+  }
+
+  .friend-badge-choice{
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:4px;
+    padding:3px 6px;
+    font-size:1.15rem;
+    cursor:pointer;
+    transition:background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+    line-height:1;
+  }
+  .friend-badge-choice:hover{
+    background:rgba(73,230,196,0.15);
+    border-color:rgba(73,230,196,0.5);
+    transform:scale(1.15);
+  }
+  .friend-badge-choice.is-selected{
+    background:rgba(73,230,196,0.25);
+    border-color:#49e6c4;
+    box-shadow:0 0 8px rgba(73,230,196,0.4);
+  }
+
   /* ---- Responsive & Device Optimization ---- */
   /* Portrait / Mobile Narrow Fallback: allow smooth vertical flow when device is held vertically */
   @media (orientation: portrait), (max-width: 768px){
@@ -3565,18 +4116,35 @@
       padding:14px 10px !important;
     }
     .outlook{
-      display:grid !important;
-      grid-template-columns:repeat(5,minmax(64px,1fr)) !important;
-      overflow-x:auto !important;
+      display:block !important;
+      overflow-x:visible !important;
       flex:none !important;
       min-height:auto !important;
       padding-top:10px !important;
+    }
+    .outlook-forecast-grid{
+      display:grid !important;
+      grid-template-columns:repeat(5,minmax(64px,1fr)) !important;
+      overflow-x:auto !important;
       gap:8px !important;
+      padding-bottom:4px !important;
+    }
+    .outlook-friends-grid{
+      display:grid !important;
+      grid-template-columns:repeat(4,minmax(145px,1fr)) !important;
+      overflow-x:auto !important;
+      gap:8px !important;
+      padding-bottom:4px !important;
     }
     .day-card{
       aspect-ratio:auto !important;
       max-height:none !important;
       min-height:90px !important;
+    }
+    .friend-card{
+      aspect-ratio:auto !important;
+      max-height:none !important;
+      min-height:120px !important;
     }
   }
 
@@ -3618,7 +4186,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.090926.2112</span>
+        <span id="appVersionText">v1.090926.2203</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -3802,16 +4370,23 @@
         <span class="shutter-slat-label">ORACLE 8-BALL • DAILY INSPIRATION • CHECKIDAY <span class="shutter-unroll-hint">(click to pull down)</span></span>
       </div>
 
-      <!-- MAGIC 8-BALL (Center-Left Square, replaces redundant Conditions) -->
-      <div class="panel eightball-panel" id="panelEightball" title="Tap to shake the Magic 8-Ball">
-        <div class="panel-head">
-          <div class="ttl">
-            <svg class="icon glow-teal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <circle cx="12" cy="12" r="4"/>
-              <path d="M12 2a10 10 0 0 1 10 10"/>
-            </svg>
-            <span class="label glow-teal" id="eightballTitle">8-Ball <span class="eightball-sub-hint">(tap)</span></span>
+      <!-- ORACLE ARTIFACTS (Center-Left Square: 8-Ball, Notebook, Attic Chest) -->
+      <div class="panel eightball-panel" id="panelEightball" title="Tap to consult the Oracle">
+        <div class="panel-head oracle-panel-head">
+          <!-- Oracle Selector Pills as Title Bar -->
+          <div class="oracle-pill-shelf" id="oracleTitlePills" role="radiogroup" aria-label="Oracle Mode Selector">
+            <button type="button" class="oracle-title-pill is-active" id="pillOracleEightball" data-oracle-mode="eightball" role="radio" aria-checked="true" title="Magic 8-Ball" tabindex="0">
+              <span class="oracle-pill-icon">🎱</span>
+              <span class="oracle-pill-name">8-BALL</span>
+            </button>
+            <button type="button" class="oracle-title-pill" id="pillOracleNotebook" data-oracle-mode="notebook" role="radio" aria-checked="false" title="The Book of Answers" tabindex="0">
+              <span class="oracle-pill-icon">📖</span>
+              <span class="oracle-pill-name">NOTEBOOK</span>
+            </button>
+            <button type="button" class="oracle-title-pill" id="pillOracleBox" data-oracle-mode="box" role="radio" aria-checked="false" title="The Attic Chest" tabindex="0">
+              <span class="oracle-pill-icon">📦</span>
+              <span class="oracle-pill-name">CHEST</span>
+            </button>
           </div>
         </div>
 
@@ -3826,8 +4401,7 @@
                   <polygon points="50,7 50,71.5 12.8,71.5" fill="#091b26" opacity="0.45"/>
                 </svg>
                 <div class="eightball-answer-text" id="eightballAnswer">
-                  <span class="eightball-line">IT IS</span>
-                  <span class="eightball-line">CERTAIN</span>
+                  <span class="eightball-line">TAP ME</span>
                 </div>
               </div>
             </div>
@@ -3848,8 +4422,8 @@
                 <div class="open-book-page left">
                   <div class="open-book-page-curl"></div>
                   <div class="open-book-left-content">
-                    <div class="open-book-entry-num" id="notebookChapter">ENTRY VII</div>
-                    <div class="notebook-prompt-text" id="notebookPrompt">To what is hidden in plain sight:</div>
+                    <div class="open-book-entry-num" id="notebookChapter">NOTEBOOK</div>
+                    <div class="notebook-prompt-text" id="notebookPrompt">Hold your question in mind…</div>
                     <div class="open-book-flourish">❦</div>
                   </div>
                 </div>
@@ -3864,7 +4438,7 @@
                   <div class="open-book-page-curl"></div>
                   <div class="notebook-flipping-page"></div>
                   <div class="open-book-right-content">
-                    <div class="notebook-answer-text" id="notebookAnswer">Look closer at what you already dismissed.</div>
+                    <div class="notebook-answer-text" id="notebookAnswer">turn my pages</div>
                   </div>
                 </div>
               </div>
@@ -3879,7 +4453,7 @@
                 <div class="attic-lid-handle"></div>
               </div>
               <div class="attic-card" id="atticCard">
-                <div class="attic-card-text" id="atticAnswer">Signs point to: Ask your pet.</div>
+                <div class="attic-card-text" id="atticAnswer">Curiosity rewarded.</div>
                 <div class="attic-card-stamp">ATTIC VAULT</div>
               </div>
               <div class="attic-box-body">
@@ -3889,6 +4463,10 @@
                   <span class="box-rivet"></span>
                 </div>
                 <div class="attic-keyhole"></div>
+                <div class="attic-lock-clasp" id="atticLockClasp" title="Click to unlock">
+                  <span class="attic-lock-icon">🔒</span>
+                  <span class="attic-lock-label">unlock me</span>
+                </div>
                 <div class="box-brace right">
                   <span class="box-rivet"></span>
                   <span class="box-rivet"></span>
@@ -3995,10 +4573,10 @@
       </div>
     </div>
 
-    <!-- 5-DAY OUTLOOK -->
+    <!-- 5-DAY OUTLOOK & WEATHER FRIENDS MULTI-LOCATION STATION -->
     <div class="outlook" id="outlook">
-      <!-- 1-D Light Gray Row Reorder Stepper & Window-Shade Roller Toggle -->
-      <div class="row-order-ctrl slot-bottom" id="ctrlOutlook" data-row-id="outlook" aria-label="Reorder or collapse row">
+      <!-- 1-D Light Gray Row Reorder Stepper & Window-Shade Roller Toggle & View Swap -->
+      <div class="row-order-ctrl slot-bottom" id="ctrlOutlook" data-row-id="outlook" aria-label="Reorder, swap view, or collapse row">
         <button type="button" class="row-shutter-toggle" title="Roll up row (window shade)" aria-label="Roll up row (window shade)">
           <span class="row-shutter-dash"></span>
           <span class="row-shutter-dot"></span>
@@ -4015,13 +4593,24 @@
             <polyline points="19 12 12 19 5 12"/>
           </svg>
         </button>
+        <button type="button" class="row-swap-view-btn" id="outlookSwapBtn" title="Switch view: 5-Day Forecast ⇄ Weather Friends" aria-label="Switch between 5-Day Outlook and Weather Friends">
+          <span class="row-swap-wf-badge" aria-hidden="true">
+            <span class="row-swap-wf-text">WF</span>
+          </span>
+        </button>
       </div>
 
       <!-- Rolled-Up Horizontal Shutter / Shade Slat -->
-      <div class="row-shutter-bar" id="shutterOutlook" title="Click to pull down and unroll row" role="button" tabindex="0" aria-label="Unroll 5-Day Outlook forecast row">
+      <div class="row-shutter-bar" id="shutterOutlook" title="Click to pull down and unroll row" role="button" tabindex="0" aria-label="Unroll forecast or friends row">
         <span class="shutter-slat-dot"></span>
-        <span class="shutter-slat-label">5-DAY OUTLOOK FORECAST <span class="shutter-unroll-hint">(click to pull down)</span></span>
+        <span class="shutter-slat-label" id="shutterOutlookLabel">5-DAY OUTLOOK FORECAST <span class="shutter-unroll-hint">(click to pull down)</span></span>
       </div>
+
+      <!-- 5-Day Forecast Grid View -->
+      <div class="outlook-forecast-grid" id="outlookForecastGrid"></div>
+
+      <!-- Weather Friends Multi-Location Grid View -->
+      <div class="outlook-friends-grid" id="outlookFriendsGrid" style="display:none;"></div>
     </div>
 
     <!-- SECRET ORACLE MODE SELECTION MODAL (Accessed by Long-Pressing 8-Ball) -->
@@ -4182,6 +4771,91 @@
       </div>
     </div>
   </div>
+
+  <!-- Weather Friends Configuration Modal -->
+  <div class="loc-search-overlay" id="friendConfigModal" style="display:none;" role="dialog" aria-modal="true" aria-label="Configure Weather Friend">
+    <div class="loc-search-card" style="max-width:490px; width:95%;">
+      <div class="loc-search-head">
+        <div class="loc-search-title">👥 CONFIGURE WEATHER FRIEND</div>
+        <button class="loc-search-close" id="friendConfigCloseBtn" type="button" aria-label="Close">✕</button>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:12px; margin-top:10px;">
+        <!-- Friend Nickname & Badge Selector -->
+        <div>
+          <label style="display:block; font-family:'Orbitron',sans-serif; font-size:0.68rem; letter-spacing:0.1em; color:#7effdb; margin-bottom:4px;">FRIEND NICKNAME / LABEL</label>
+          <div style="display:flex; gap:8px;">
+            <div id="friendSelectedBadge" style="width:42px; height:38px; display:inline-flex; align-items:center; justify-content:center; background:#040e13; border:1px solid rgba(73,230,196,0.4); border-radius:6px; font-size:1.35rem; cursor:pointer; flex-shrink:0;" title="Click quick emoji below to change badge">🇨🇦</div>
+            <input type="text" id="friendNameInput" class="loc-search-input" placeholder="e.g. Mom & Dad, Dave, Sister Emily, Tokyo HQ..." autocomplete="off" style="flex:1 1 auto; margin-bottom:0;">
+          </div>
+        </div>
+
+        <!-- Quick Flag & Badge Selector -->
+        <div>
+          <div style="font-family:'Rajdhani',sans-serif; font-size:0.75rem; color:#9eb0b8; margin-bottom:4px;">Quick Flag & Avatar Selector:</div>
+          <div id="friendEmojiPickerRow" style="display:flex; flex-wrap:wrap; gap:5px;">
+            <button type="button" class="friend-badge-choice" data-badge="🇨🇦" title="Canada">🇨🇦</button>
+            <button type="button" class="friend-badge-choice" data-badge="🇺🇸" title="United States">🇺🇸</button>
+            <button type="button" class="friend-badge-choice" data-badge="🇬🇧" title="United Kingdom">🇬🇧</button>
+            <button type="button" class="friend-badge-choice" data-badge="🇯🇵" title="Japan">🇯🇵</button>
+            <button type="button" class="friend-badge-choice" data-badge="🇦🇺" title="Australia">🇦🇺</button>
+            <button type="button" class="friend-badge-choice" data-badge="🇩🇪" title="Germany">🇩🇪</button>
+            <button type="button" class="friend-badge-choice" data-badge="🇫🇷" title="France">🇫🇷</button>
+            <button type="button" class="friend-badge-choice" data-badge="🇮🇹" title="Italy">🇮🇹</button>
+            <button type="button" class="friend-badge-choice" data-badge="🇲🇽" title="Mexico">🇲🇽</button>
+            <button type="button" class="friend-badge-choice" data-badge="🇪🇸" title="Spain">🇪🇸</button>
+            <button type="button" class="friend-badge-choice" data-badge="🏠" title="Home">🏠</button>
+            <button type="button" class="friend-badge-choice" data-badge="💼" title="Office / Work">💼</button>
+            <button type="button" class="friend-badge-choice" data-badge="❤️" title="Family / Love">❤️</button>
+            <button type="button" class="friend-badge-choice" data-badge="🌟" title="Star">🌟</button>
+            <button type="button" class="friend-badge-choice" data-badge="🌴" title="Vacation">🌴</button>
+          </div>
+        </div>
+
+        <!-- Location Search Input -->
+        <div>
+          <label style="display:block; font-family:'Orbitron',sans-serif; font-size:0.68rem; letter-spacing:0.1em; color:#7effdb; margin-bottom:4px;">CITY, US ZIP, CANADIAN POSTAL, OR COUNTRY</label>
+          <div style="display:flex; gap:6px;">
+            <input type="text" id="friendLocSearchInput" class="loc-search-input" placeholder="e.g. Toronto, M5V, 90210, London, Tokyo, Paris..." autocomplete="off" style="flex:1 1 auto; margin-bottom:0;">
+            <button type="button" id="friendLocSearchBtn" class="loc-search-btn" style="flex-shrink:0;">SEARCH</button>
+          </div>
+        </div>
+
+        <!-- Search Results List -->
+        <div class="loc-search-results" id="friendSearchResults" style="max-height:140px; display:none;"></div>
+
+        <!-- Selected Location Capsule -->
+        <div id="friendSelectedLocPreview" style="padding:8px 10px; background:rgba(73,230,196,0.08); border:1px dashed rgba(73,230,196,0.4); border-radius:6px; font-family:'Outfit',sans-serif; font-size:0.84rem; color:#dce7ea; display:flex; align-items:center; justify-content:space-between; min-height:36px;">
+          <span id="friendSelectedLocText">📍 Current: Toronto, ON, Canada</span>
+          <span id="friendSelectedTzText" style="font-family:'Orbitron',monospace; font-size:0.68rem; color:#49e6c4;">America/Toronto</span>
+        </div>
+
+        <!-- Quick Presets -->
+        <div>
+          <div style="font-family:'Rajdhani',sans-serif; font-size:0.75rem; color:#9eb0b8; margin-bottom:4px;">Popular Presets:</div>
+          <div style="display:flex; flex-wrap:wrap; gap:6px;">
+            <button type="button" class="loc-quick-btn friend-preset-btn" data-name="Toronto, ON" data-city="Toronto, ON, Canada" data-lat="43.6532" data-lon="-79.3832" data-tz="America/Toronto" data-badge="🇨🇦">🇨🇦 Toronto</button>
+            <button type="button" class="loc-quick-btn friend-preset-btn" data-name="London, UK" data-city="London, England, UK" data-lat="51.5074" data-lon="-0.1278" data-tz="Europe/London" data-badge="🇬🇧">🇬🇧 London</button>
+            <button type="button" class="loc-quick-btn friend-preset-btn" data-name="Tokyo, JP" data-city="Tokyo, Japan" data-lat="35.6762" data-lon="139.6503" data-tz="Asia/Tokyo" data-badge="🇯🇵">🇯🇵 Tokyo</button>
+            <button type="button" class="loc-quick-btn friend-preset-btn" data-name="Honolulu, HI" data-city="Honolulu, HI, USA" data-lat="21.3069" data-lon="-157.8583" data-tz="Pacific/Honolulu" data-badge="🇺🇸">🇺🇸 Honolulu</button>
+            <button type="button" class="loc-quick-btn friend-preset-btn" data-name="Vancouver, BC" data-city="Vancouver, BC, Canada" data-lat="49.2827" data-lon="-123.1207" data-tz="America/Vancouver" data-badge="🇨🇦">🇨🇦 Vancouver</button>
+            <button type="button" class="loc-quick-btn friend-preset-btn" data-name="Paris, FR" data-city="Paris, France" data-lat="48.8566" data-lon="2.3522" data-tz="Europe/Paris" data-badge="🇫🇷">🇫🇷 Paris</button>
+            <button type="button" class="loc-quick-btn friend-preset-btn" data-name="New York, NY" data-city="New York, NY, USA" data-lat="40.7128" data-lon="-74.0060" data-tz="America/New_York" data-badge="🇺🇸">🇺🇸 New York</button>
+            <button type="button" class="loc-quick-btn friend-preset-btn" data-name="Sydney, AU" data-city="Sydney, Australia" data-lat="-33.8688" data-lon="151.2093" data-tz="Australia/Sydney" data-badge="🇦🇺">🇦🇺 Sydney</button>
+          </div>
+        </div>
+
+        <!-- Action Footer -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; gap:8px;">
+          <button type="button" id="friendResetBtn" class="loc-quick-btn" style="color:#ff8a65; border-color:rgba(255,138,101,0.4);">Reset Default</button>
+          <div style="display:flex; gap:8px;">
+            <button type="button" id="friendCancelBtn" class="loc-quick-btn">Cancel</button>
+            <button type="button" id="friendSaveBtn" class="loc-search-btn" style="padding:8px 20px;">SAVE FRIEND</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -4204,6 +4878,15 @@
   if(isStandalone){
     document.documentElement.classList.add('is-standalone');
   }
+
+  // Global active outlook tray view ('forecast' | 'friends')
+  var activeOutlookTrayView = 'forecast';
+  try {
+    const savedView = localStorage.getItem('wf_outlook_active_view');
+    if(savedView === 'friends' || savedView === 'forecast'){
+      activeOutlookTrayView = savedView;
+    }
+  } catch(e){}
 
   /* ---------------------------------------------------------------
      CLOCK + DATE (12-Hour / 24-Hour, Conversational Period, Full Date, DST)
@@ -4401,6 +5084,13 @@
       dstEl.textContent = hasDst ? 'DST' : 'ST';
       dstEl.title = hasDst ? 'Daylight Saving Time Active' : 'Standard Time Active';
     }
+
+    // Weather Friends Multi-Location real-time clock synchronization
+    try {
+      if(typeof updateFriendLiveClocks === 'function'){
+        updateFriendLiveClocks();
+      }
+    } catch(e){}
   }
 
   /* ---------------------------------------------------------------
@@ -4812,6 +5502,10 @@
     } else {
       if(typeof fitWeatherBlockToContainer === 'function') fitWeatherBlockToContainer();
     }
+
+    if(typeof renderWeatherFriends === 'function'){
+      renderWeatherFriends();
+    }
   }
 
   const topTempCol = document.getElementById('topWxTempCol') || document.querySelector('.top-wx-temp-col');
@@ -5162,42 +5856,55 @@
 
   const dayNames = ['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
 
+  function escapeHtml(str){
+    if(str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  let lastDailyData = null;
+  let lastCurData = null;
+
   function renderOutlook(daily, cur){
-    const el = document.getElementById('outlook');
-    if(!el) return;
-    const existingCtrl = document.getElementById('ctrlOutlook');
-    const existingShutter = document.getElementById('shutterOutlook');
-    el.innerHTML = '';
-    if(existingCtrl){
-      el.appendChild(existingCtrl);
-    }
-    if(existingShutter){
-      el.appendChild(existingShutter);
-    }
+    if(daily) lastDailyData = daily;
+    if(cur) lastCurData = cur;
+
+    const grid = document.getElementById('outlookForecastGrid');
+    if(!grid) return;
+    grid.innerHTML = '';
+
+    const dData = daily || lastDailyData;
+    const cData = cur || lastCurData;
+    if(!dData || !dData.time) return;
+
     // index 0 is today; show today + next 4
-    for(let i=0;i<5 && i<daily.time.length;i++){
-      const d = new Date(daily.time[i] + 'T12:00:00');
+    for(let i=0;i<5 && i<dData.time.length;i++){
+      const d = new Date(dData.time[i] + 'T12:00:00');
       const card = document.createElement('div');
       card.className = 'day-card' + (i === 0 ? ' is-today' : '');
       const dn = i===0 ? 'TODAY' : dayNames[d.getDay()];
-      const hi = toDisplayTemp(daily.temperature_2m_max[i]);
-      const lo = toDisplayTemp(daily.temperature_2m_min[i]);
-      const uv = Math.round(daily.uv_index_max ? (daily.uv_index_max[i] ?? 0) : 0);
+      const hi = toDisplayTemp(dData.temperature_2m_max[i]);
+      const lo = toDisplayTemp(dData.temperature_2m_min[i]);
+      const uv = Math.round(dData.uv_index_max ? (dData.uv_index_max[i] ?? 0) : 0);
       const ucol = uvColor(uv);
-      const humVal = daily.relative_humidity_2m_max ? daily.relative_humidity_2m_max[i] : null;
+      const humVal = dData.relative_humidity_2m_max ? dData.relative_humidity_2m_max[i] : null;
       const hum = humVal !== null && humVal !== undefined ? Math.round(humVal) : '--';
-      const desc = weatherDescription(daily.weather_code[i]);
+      const desc = weatherDescription(dData.weather_code[i]);
 
       let pressIn = '--';
-      if(daily.pressure_msl_mean && daily.pressure_msl_mean[i] != null){
-        pressIn = hpaToInHg(daily.pressure_msl_mean[i]).toFixed(2);
-      } else if(i === 0 && cur && cur.pressure_msl != null){
-        pressIn = hpaToInHg(cur.pressure_msl).toFixed(2);
+      if(dData.pressure_msl_mean && dData.pressure_msl_mean[i] != null){
+        pressIn = hpaToInHg(dData.pressure_msl_mean[i]).toFixed(2);
+      } else if(i === 0 && cData && cData.pressure_msl != null){
+        pressIn = hpaToInHg(cData.pressure_msl).toFixed(2);
       }
 
       card.innerHTML = `
         <div class="dname">${dn}</div>
-        <svg class="dicon" viewBox="0 0 100 100">${weatherIconSvg(daily.weather_code[i])}</svg>
+        <svg class="dicon" viewBox="0 0 100 100">${weatherIconSvg(dData.weather_code[i])}</svg>
         <div class="ddesc" title="${desc}">${desc}</div>
         <div class="hi-lo" role="button" tabindex="0" aria-label="Toggle temperature unit between Fahrenheit and Celsius" title="Tap to toggle °F / °C">
           <span class="hi" title="High ${hi}°${currentTempUnit}">${hi}°</span>
@@ -5233,8 +5940,621 @@
           </div>
         </div>
       `;
-      el.appendChild(card);
+      grid.appendChild(card);
     }
+  }
+
+  /* ===============================================================
+     WEATHER FRIENDS MULTI-LOCATION ENGINE (TRAY SWAP & PERSISTENCE)
+  =============================================================== */
+  const DEFAULT_WEATHER_FRIENDS = [
+    {
+      id: 'friend_1',
+      name: 'Mom & Dad',
+      locationName: 'Toronto, ON, Canada',
+      shortCity: 'Toronto, ON',
+      lat: 43.6532,
+      lon: -79.3832,
+      timezone: 'America/Toronto',
+      countryCode: 'CA',
+      admin1: 'ON',
+      badge: '🇨🇦'
+    },
+    {
+      id: 'friend_2',
+      name: 'Dave',
+      locationName: 'London, England, UK',
+      shortCity: 'London, UK',
+      lat: 51.5074,
+      lon: -0.1278,
+      timezone: 'Europe/London',
+      countryCode: 'GB',
+      admin1: 'England',
+      badge: '🇬🇧'
+    },
+    {
+      id: 'friend_3',
+      name: 'Tokyo HQ',
+      locationName: 'Tokyo, Japan',
+      shortCity: 'Tokyo, JP',
+      lat: 35.6762,
+      lon: 139.6503,
+      timezone: 'Asia/Tokyo',
+      countryCode: 'JP',
+      admin1: 'Tokyo',
+      badge: '🇯🇵'
+    },
+    {
+      id: 'friend_4',
+      name: 'Sister Emily',
+      locationName: 'Honolulu, HI, USA',
+      shortCity: 'Honolulu, HI',
+      lat: 21.3069,
+      lon: -157.8583,
+      timezone: 'Pacific/Honolulu',
+      countryCode: 'US',
+      admin1: 'HI',
+      badge: '🇺🇸'
+    }
+  ];
+
+  function countryCodeToFlagEmoji(code){
+    if(!code || typeof code !== 'string' || code.length !== 2) return '🌐';
+    try {
+      return String.fromCodePoint(...[...code.toUpperCase()].map(c => 0x1F1E6 + c.charCodeAt(0) - 65));
+    } catch(e){
+      return '📍';
+    }
+  }
+
+  function getSavedWeatherFriends(){
+    try {
+      const saved = localStorage.getItem('wf_weather_friends');
+      if(saved){
+        const parsed = JSON.parse(saved);
+        if(Array.isArray(parsed) && parsed.length >= 3){
+          return parsed;
+        }
+      }
+    } catch(e){}
+    return JSON.parse(JSON.stringify(DEFAULT_WEATHER_FRIENDS));
+  }
+
+  let weatherFriendsList = getSavedWeatherFriends();
+
+  function saveWeatherFriends(){
+    try {
+      localStorage.setItem('wf_weather_friends', JSON.stringify(weatherFriendsList));
+    } catch(e){}
+  }
+
+  try {
+    const savedView = localStorage.getItem('wf_outlook_active_view');
+    if(savedView === 'friends' || savedView === 'forecast'){
+      activeOutlookTrayView = savedView;
+    }
+  } catch(e){}
+
+  const friendWeatherCache = new Map();
+  const FRIEND_CACHE_TTL = 10 * 60 * 1000;
+
+  function getFriendTimeInfo(timeZone){
+    if(!timeZone) return { timeStr: '--:--', dayDiff: '' };
+    try {
+      const d = new Date();
+      const timeStr = new Intl.DateTimeFormat('en-US', {
+        timeZone,
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      }).format(d);
+
+      const localDay = d.getDate();
+      const friendDayPart = new Intl.DateTimeFormat('en-US', {
+        timeZone,
+        day: 'numeric'
+      }).format(d);
+      const friendDay = parseInt(friendDayPart, 10);
+      let dayDiff = '';
+      if(!isNaN(friendDay)){
+        if(friendDay > localDay || (localDay >= 28 && friendDay === 1)){
+          dayDiff = '+1d';
+        } else if(friendDay < localDay || (friendDay >= 28 && localDay === 1)){
+          dayDiff = '-1d';
+        }
+      }
+      return { timeStr, dayDiff };
+    } catch(e){
+      return { timeStr: '--:--', dayDiff: '' };
+    }
+  }
+
+  async function fetchSingleFriendWeather(friend, force = false){
+    const cached = friendWeatherCache.get(friend.id);
+    const now = Date.now();
+    if(!force && cached && (now - cached.timestamp < FRIEND_CACHE_TTL)){
+      return cached.data;
+    }
+
+    try {
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${friend.lat}&longitude=${friend.lon}`
+        + `&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m`
+        + `&daily=weather_code,temperature_2m_max,temperature_2m_min`
+        + `&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch&timezone=auto&forecast_days=1`;
+      const res = await fetch(url);
+      if(!res.ok) throw new Error('Failed to fetch friend weather');
+      const data = await res.json();
+      friendWeatherCache.set(friend.id, { data, timestamp: now });
+      return data;
+    } catch(err){
+      if(cached) return cached.data;
+      throw err;
+    }
+  }
+
+  function setOutlookView(view, animate = true){
+    activeOutlookTrayView = (view === 'friends') ? 'friends' : 'forecast';
+    try {
+      localStorage.setItem('wf_outlook_active_view', activeOutlookTrayView);
+    } catch(e){}
+
+    const outlookEl = document.getElementById('outlook');
+    const forecastGrid = document.getElementById('outlookForecastGrid');
+    const friendsGrid = document.getElementById('outlookFriendsGrid');
+    const swapBtn = document.getElementById('outlookSwapBtn');
+    const shutterLabel = document.getElementById('shutterOutlookLabel');
+
+    if(!outlookEl || !forecastGrid || !friendsGrid) return;
+
+    if(activeOutlookTrayView === 'friends'){
+      outlookEl.classList.add('is-friends-view');
+      if(swapBtn) {
+        swapBtn.classList.add('is-friends-active');
+        swapBtn.title = 'Switch view: Weather Friends ⇄ 5-Day Outlook';
+        swapBtn.setAttribute('aria-label', 'Switch to 5-Day Outlook forecast');
+      }
+      if(shutterLabel){
+        shutterLabel.innerHTML = 'WEATHER FRIENDS STATION • 4 LOCATIONS <span class="shutter-unroll-hint">(click to pull down)</span>';
+      }
+      forecastGrid.style.display = 'none';
+      friendsGrid.style.display = 'grid';
+
+      if(animate){
+        friendsGrid.classList.remove('outlook-view-transition-in');
+        void friendsGrid.offsetWidth;
+        friendsGrid.classList.add('outlook-view-transition-in');
+      }
+      renderWeatherFriends();
+    } else {
+      outlookEl.classList.remove('is-friends-view');
+      if(swapBtn) {
+        swapBtn.classList.remove('is-friends-active');
+        swapBtn.title = 'Switch view: 5-Day Outlook ⇄ Weather Friends';
+        swapBtn.setAttribute('aria-label', 'Switch to Weather Friends multi-location');
+      }
+      if(shutterLabel){
+        shutterLabel.innerHTML = '5-DAY OUTLOOK FORECAST <span class="shutter-unroll-hint">(click to pull down)</span>';
+      }
+      friendsGrid.style.display = 'none';
+      forecastGrid.style.display = 'grid';
+
+      if(animate){
+        forecastGrid.classList.remove('outlook-view-transition-in');
+        void forecastGrid.offsetWidth;
+        forecastGrid.classList.add('outlook-view-transition-in');
+      }
+      if(lastDailyData){
+        renderOutlook(lastDailyData, lastCurData);
+      }
+    }
+  }
+
+  function toggleOutlookView(){
+    const nextView = (activeOutlookTrayView === 'forecast') ? 'friends' : 'forecast';
+    setOutlookView(nextView, true);
+  }
+
+  async function renderWeatherFriends(forceRefresh = false){
+    const grid = document.getElementById('outlookFriendsGrid');
+    if(!grid) return;
+
+    grid.innerHTML = '';
+    weatherFriendsList.forEach((friend) => {
+      const card = document.createElement('div');
+      card.className = 'friend-card';
+      card.id = `card_${friend.id}`;
+      card.dataset.friendId = friend.id;
+
+      const cached = friendWeatherCache.get(friend.id);
+      const timeInfo = getFriendTimeInfo(friend.timezone);
+
+      if(cached && cached.data && cached.data.current){
+        populateFriendCardMarkup(card, friend, cached.data, timeInfo);
+      } else {
+        card.innerHTML = `
+          <div class="friend-card-header">
+            <div class="friend-meta-left">
+              <span class="friend-badge">${friend.badge || '📍'}</span>
+              <div class="friend-title-group">
+                <span class="friend-name">${escapeHtml(friend.name)}</span>
+                <span class="friend-city">${escapeHtml(friend.shortCity || friend.locationName)}</span>
+              </div>
+            </div>
+            <div class="friend-meta-right">
+              <div class="friend-clock-pill">
+                <span class="friend-live-time" data-tz="${friend.timezone}">${timeInfo.timeStr}</span>
+                ${timeInfo.dayDiff ? `<span class="friend-day-tag">${timeInfo.dayDiff}</span>` : ''}
+              </div>
+              <button type="button" class="friend-edit-btn" data-friend-id="${friend.id}" title="Configure ${escapeHtml(friend.name)}">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="friend-weather-body" style="padding:10px 0;">
+            <div class="friend-skeleton-bar" style="width:38px; height:38px; border-radius:50%;"></div>
+            <div style="display:flex; flex-direction:column; gap:6px; flex:1; align-items:flex-end;">
+              <div class="friend-skeleton-bar" style="width:64px; height:22px;"></div>
+              <div class="friend-skeleton-bar" style="width:75px; height:12px;"></div>
+            </div>
+          </div>
+          <div class="friend-footer-strip">
+            <span style="opacity:0.6; font-size:0.75rem;">Fetching satellite data…</span>
+          </div>
+        `;
+      }
+
+      grid.appendChild(card);
+    });
+
+    // Wire up edit buttons
+    grid.querySelectorAll('.friend-edit-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        openFriendConfigModal(btn.dataset.friendId);
+      });
+    });
+
+    // Fetch live weather concurrently
+    const fetchPromises = weatherFriendsList.map(async (friend) => {
+      try {
+        const data = await fetchSingleFriendWeather(friend, forceRefresh);
+        const card = document.getElementById(`card_${friend.id}`);
+        if(card){
+          const timeInfo = getFriendTimeInfo(friend.timezone);
+          populateFriendCardMarkup(card, friend, data, timeInfo);
+          const editBtn = card.querySelector('.friend-edit-btn');
+          if(editBtn){
+            editBtn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              openFriendConfigModal(friend.id);
+            });
+          }
+        }
+      } catch(err){
+        console.warn(`Could not load weather for ${friend.name}:`, err.message);
+      }
+    });
+
+    await Promise.allSettled(fetchPromises);
+  }
+
+  function populateFriendCardMarkup(card, friend, data, timeInfo){
+    const cur = data.current;
+    const daily = data.daily;
+    const temp = cur ? toDisplayTemp(cur.temperature_2m) : '--';
+    const feels = cur && cur.apparent_temperature != null ? toDisplayTemp(cur.apparent_temperature) : null;
+    const hi = daily && daily.temperature_2m_max ? toDisplayTemp(daily.temperature_2m_max[0]) : '--';
+    const lo = daily && daily.temperature_2m_min ? toDisplayTemp(daily.temperature_2m_min[0]) : '--';
+    const wxCode = cur ? cur.weather_code : 0;
+    const desc = cur ? weatherDescription(wxCode) : 'Fair';
+    const hum = cur && cur.relative_humidity_2m != null ? Math.round(cur.relative_humidity_2m) : null;
+
+    card.innerHTML = `
+      <div class="friend-card-header">
+        <div class="friend-meta-left">
+          <span class="friend-badge" title="${escapeHtml(friend.countryCode || '')}">${friend.badge || '📍'}</span>
+          <div class="friend-title-group">
+            <span class="friend-name" title="${escapeHtml(friend.name)}">${escapeHtml(friend.name)}</span>
+            <span class="friend-city" title="${escapeHtml(friend.locationName)}">${escapeHtml(friend.shortCity || friend.locationName)}</span>
+          </div>
+        </div>
+        <div class="friend-meta-right">
+          <div class="friend-clock-pill" title="Local Time in ${escapeHtml(friend.shortCity || friend.locationName)}">
+            <span class="friend-live-time" data-tz="${friend.timezone}">${timeInfo.timeStr}</span>
+            ${timeInfo.dayDiff ? `<span class="friend-day-tag">${timeInfo.dayDiff}</span>` : ''}
+          </div>
+          <button type="button" class="friend-edit-btn" data-friend-id="${friend.id}" title="Configure ${escapeHtml(friend.name)}'s location" aria-label="Configure location">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="friend-weather-body">
+        <svg class="friend-wx-icon" viewBox="0 0 100 100">${weatherIconSvg(wxCode)}</svg>
+        <div class="friend-temp-col">
+          <div class="friend-temp-row">
+            <span class="friend-temp-val">${temp}</span>
+            <span class="friend-temp-unit">°${currentTempUnit}</span>
+          </div>
+          <div class="friend-desc" title="${desc}">${desc}</div>
+        </div>
+      </div>
+
+      <div class="friend-footer-strip">
+        <div class="friend-hilo">
+          <span class="hi" title="High ${hi}°${currentTempUnit}">H:${hi}°</span>
+          <span class="sep">/</span>
+          <span class="lo" title="Low ${lo}°${currentTempUnit}">L:${lo}°</span>
+        </div>
+        <div class="friend-sub-meta">
+          ${feels != null ? `<span title="Feels like ${feels}°${currentTempUnit}">Feels ${feels}°</span>` : ''}
+          ${hum != null ? `<span title="Humidity: ${hum}%" style="margin-left:4px;">💧${hum}%</span>` : ''}
+        </div>
+      </div>
+    `;
+  }
+
+  function updateFriendLiveClocks(){
+    try {
+      if(typeof activeOutlookTrayView === 'undefined' || activeOutlookTrayView !== 'friends') return;
+      if(typeof getFriendTimeInfo !== 'function') return;
+      const clockSpans = document.querySelectorAll('.friend-live-time');
+      clockSpans.forEach(span => {
+        const tz = span.dataset.tz;
+        if(tz){
+          const info = getFriendTimeInfo(tz);
+          span.textContent = info.timeStr;
+        }
+      });
+    } catch(e){}
+  }
+
+  let editingFriendId = null;
+  let currentSelectedFriendLoc = null;
+
+  function openFriendConfigModal(friendId){
+    const friend = weatherFriendsList.find(f => f.id === friendId);
+    if(!friend) return;
+    editingFriendId = friendId;
+    currentSelectedFriendLoc = {
+      locationName: friend.locationName,
+      shortCity: friend.shortCity,
+      lat: friend.lat,
+      lon: friend.lon,
+      timezone: friend.timezone,
+      countryCode: friend.countryCode,
+      admin1: friend.admin1,
+      badge: friend.badge
+    };
+
+    const modal = document.getElementById('friendConfigModal');
+    const nameInput = document.getElementById('friendNameInput');
+    const badgePreview = document.getElementById('friendSelectedBadge');
+    const locInput = document.getElementById('friendLocSearchInput');
+    const resultsContainer = document.getElementById('friendSearchResults');
+    const locText = document.getElementById('friendSelectedLocText');
+    const tzText = document.getElementById('friendSelectedTzText');
+
+    if(!modal) return;
+
+    if(nameInput) nameInput.value = friend.name || '';
+    if(badgePreview) badgePreview.textContent = friend.badge || '📍';
+    if(locInput) locInput.value = '';
+    if(resultsContainer) {
+      resultsContainer.innerHTML = '';
+      resultsContainer.style.display = 'none';
+    }
+    if(locText) locText.textContent = `📍 Selected: ${friend.locationName || friend.shortCity}`;
+    if(tzText) tzText.textContent = friend.timezone || 'auto';
+
+    modal.style.display = 'flex';
+  }
+
+  function closeFriendConfigModal(){
+    const modal = document.getElementById('friendConfigModal');
+    if(modal) modal.style.display = 'none';
+    editingFriendId = null;
+    currentSelectedFriendLoc = null;
+  }
+
+  function saveEditedFriend(){
+    if(!editingFriendId) return;
+    const friend = weatherFriendsList.find(f => f.id === editingFriendId);
+    if(!friend) return;
+
+    const nameInput = document.getElementById('friendNameInput');
+    const badgePreview = document.getElementById('friendSelectedBadge');
+
+    const newName = nameInput ? nameInput.value.trim() : '';
+    if(newName) friend.name = newName;
+
+    if(badgePreview && badgePreview.textContent) {
+      friend.badge = badgePreview.textContent.trim();
+    }
+
+    if(currentSelectedFriendLoc){
+      friend.locationName = currentSelectedFriendLoc.locationName || friend.locationName;
+      friend.shortCity = currentSelectedFriendLoc.shortCity || friend.shortCity;
+      friend.lat = currentSelectedFriendLoc.lat ?? friend.lat;
+      friend.lon = currentSelectedFriendLoc.lon ?? friend.lon;
+      friend.timezone = currentSelectedFriendLoc.timezone || friend.timezone;
+      friend.countryCode = currentSelectedFriendLoc.countryCode || friend.countryCode;
+      friend.admin1 = currentSelectedFriendLoc.admin1 || friend.admin1;
+    }
+
+    saveWeatherFriends();
+    friendWeatherCache.delete(editingFriendId);
+    closeFriendConfigModal();
+    renderWeatherFriends(true);
+  }
+
+  async function performFriendLocSearch(){
+    const locInput = document.getElementById('friendLocSearchInput');
+    const resultsContainer = document.getElementById('friendSearchResults');
+    if(!locInput || !resultsContainer) return;
+    const query = locInput.value.trim();
+    if(!query) return;
+
+    resultsContainer.style.display = 'block';
+    resultsContainer.innerHTML = '<div style="padding:10px; color:#62d9ff; font-family:sans-serif; font-size:0.85rem;">Searching global satellites & postal registries…</div>';
+
+    try {
+      const res = await fetch(`/api/search-location?q=${encodeURIComponent(query)}`);
+      if(!res.ok) throw new Error('Search failed');
+      const data = await res.json();
+      const results = data.results || [];
+
+      if(results.length === 0){
+        resultsContainer.innerHTML = '<div style="padding:10px; color:#ffb648; font-family:sans-serif; font-size:0.85rem;">No locations found. Try a city name, US ZIP, or Canadian postal code.</div>';
+        return;
+      }
+
+      resultsContainer.innerHTML = '';
+      results.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'loc-result-item';
+        div.style.cssText = 'padding:8px 10px; cursor:pointer; border-bottom:1px solid rgba(73,230,196,0.12); display:flex; align-items:center; justify-content:space-between;';
+        
+        const flag = item.countryCode ? countryCodeToFlagEmoji(item.countryCode) : '📍';
+        div.innerHTML = `
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:1.2rem;">${flag}</span>
+            <div>
+              <div style="font-family:'Outfit',sans-serif; font-weight:600; color:#e0f2fe; font-size:0.88rem;">${escapeHtml(item.name)}</div>
+              <div style="font-family:'Rajdhani',sans-serif; font-size:0.75rem; color:#86a7b3;">${item.country || ''} • ${item.lat.toFixed(2)}, ${item.lon.toFixed(2)}</div>
+            </div>
+          </div>
+          <span style="font-family:'Orbitron',sans-serif; font-size:0.65rem; color:#49e6c4; padding:2px 6px; background:rgba(73,230,196,0.1); border-radius:3px;">SELECT</span>
+        `;
+
+        div.addEventListener('click', () => {
+          const short = item.name.split(',')[0].trim() + (item.admin1 ? ', ' + item.admin1 : '');
+          currentSelectedFriendLoc = {
+            locationName: item.name,
+            shortCity: short,
+            lat: item.lat,
+            lon: item.lon,
+            timezone: item.timezone || 'auto',
+            countryCode: item.countryCode,
+            admin1: item.admin1,
+            badge: flag
+          };
+
+          const locText = document.getElementById('friendSelectedLocText');
+          const tzText = document.getElementById('friendSelectedTzText');
+          const badgePreview = document.getElementById('friendSelectedBadge');
+          if(locText) locText.textContent = `📍 Selected: ${item.name}`;
+          if(tzText) tzText.textContent = item.timezone || 'auto';
+          if(badgePreview) badgePreview.textContent = flag;
+
+          resultsContainer.style.display = 'none';
+        });
+
+        resultsContainer.appendChild(div);
+      });
+    } catch(err){
+      resultsContainer.innerHTML = `<div style="padding:10px; color:#ff8a65; font-size:0.85rem;">Search error: ${escapeHtml(err.message)}</div>`;
+    }
+  }
+
+  function initWeatherFriendsEngine(){
+    const closeBtn = document.getElementById('friendConfigCloseBtn');
+    const cancelBtn = document.getElementById('friendCancelBtn');
+    const saveBtn = document.getElementById('friendSaveBtn');
+    const resetBtn = document.getElementById('friendResetBtn');
+    const searchBtn = document.getElementById('friendLocSearchBtn');
+    const searchInput = document.getElementById('friendLocSearchInput');
+
+    if(closeBtn) closeBtn.addEventListener('click', closeFriendConfigModal);
+    if(cancelBtn) cancelBtn.addEventListener('click', closeFriendConfigModal);
+    if(saveBtn) saveBtn.addEventListener('click', saveEditedFriend);
+
+    if(resetBtn){
+      resetBtn.addEventListener('click', () => {
+        if(!editingFriendId) return;
+        const def = DEFAULT_WEATHER_FRIENDS.find(f => f.id === editingFriendId);
+        if(!def) return;
+        currentSelectedFriendLoc = JSON.parse(JSON.stringify(def));
+        const nameInput = document.getElementById('friendNameInput');
+        const badgePreview = document.getElementById('friendSelectedBadge');
+        const locText = document.getElementById('friendSelectedLocText');
+        const tzText = document.getElementById('friendSelectedTzText');
+        if(nameInput) nameInput.value = def.name;
+        if(badgePreview) badgePreview.textContent = def.badge;
+        if(locText) locText.textContent = `📍 Selected: ${def.locationName}`;
+        if(tzText) tzText.textContent = def.timezone;
+      });
+    }
+
+    if(searchBtn) searchBtn.addEventListener('click', performFriendLocSearch);
+    if(searchInput){
+      searchInput.addEventListener('keydown', (e) => {
+        if(e.key === 'Enter'){
+          e.preventDefault();
+          performFriendLocSearch();
+        }
+      });
+    }
+
+    document.querySelectorAll('.friend-preset-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const city = btn.dataset.city;
+        const name = btn.dataset.name;
+        const lat = parseFloat(btn.dataset.lat);
+        const lon = parseFloat(btn.dataset.lon);
+        const tz = btn.dataset.tz;
+        const badge = btn.dataset.badge;
+
+        currentSelectedFriendLoc = {
+          locationName: city,
+          shortCity: name,
+          lat,
+          lon,
+          timezone: tz,
+          countryCode: badge === '🇨🇦' ? 'CA' : badge === '🇬🇧' ? 'GB' : badge === '🇯🇵' ? 'JP' : badge === '🇫🇷' ? 'FR' : badge === '🇦🇺' ? 'AU' : 'US',
+          admin1: '',
+          badge
+        };
+
+        const locText = document.getElementById('friendSelectedLocText');
+        const tzText = document.getElementById('friendSelectedTzText');
+        const badgePreview = document.getElementById('friendSelectedBadge');
+        if(locText) locText.textContent = `📍 Selected: ${city}`;
+        if(tzText) tzText.textContent = tz;
+        if(badgePreview) badgePreview.textContent = badge;
+      });
+    });
+
+    document.querySelectorAll('.friend-badge-choice').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const badge = btn.dataset.badge;
+        const badgePreview = document.getElementById('friendSelectedBadge');
+        if(badgePreview && badge) {
+          badgePreview.textContent = badge;
+        }
+      });
+    });
+
+    const swapBtn = document.getElementById('outlookSwapBtn');
+    if(swapBtn && !swapBtn._swapBound){
+      swapBtn._swapBound = true;
+      swapBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        toggleOutlookView();
+      });
+    }
+
+    setOutlookView(activeOutlookTrayView, false);
+  }
+
+  // Self-initialize the Weather Friends engine
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', initWeatherFriendsEngine);
+  } else {
+    initWeatherFriendsEngine();
   }
 
   function computeAlerts(cur){
@@ -5380,8 +6700,11 @@
       alertBoxEl.style.color = alerts.length ? 'var(--red)' : '';
     }
 
-    // 5-day outlook
+    // 5-day outlook or weather friends
     renderOutlook(daily, cur);
+    if(activeOutlookTrayView === 'friends'){
+      setOutlookView('friends', false);
+    }
 
     const condUpdatedEl = document.getElementById('condUpdated');
     if(condUpdatedEl) condUpdatedEl.textContent = 'Updated ' + fmtTime(new Date().toISOString());
@@ -5651,7 +6974,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.090926.2112';
+  const CLIENT_APP_VERSION = 'v1.090926.2203';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -6855,6 +8178,16 @@
     // Trigger proper sizing for current mode
     resizeEightball();
 
+    // Synchronize title bar oracle mode indicator pills
+    const titlePills = document.querySelectorAll('.oracle-title-pill');
+    if(titlePills && titlePills.length){
+      titlePills.forEach(pill => {
+        const isMatch = (pill.dataset.oracleMode === currentOracleMode);
+        pill.classList.toggle('is-active', isMatch);
+        pill.setAttribute('aria-checked', isMatch ? 'true' : 'false');
+      });
+    }
+
     // Populate initial text if first time in book mode
     if(currentOracleMode === 'notebook' && lastNotebookIndex < 0 && NOTEBOOK_RESPONSES.length > 0){
       const initItem = NOTEBOOK_RESPONSES[2]; // "Look closer at what you already dismissed."
@@ -6872,6 +8205,35 @@
     } catch(e){}
     updateOracleModeUI();
     closeOraclePicker();
+  }
+
+  // Bind title bar pills for 1-click artifact switching on Smart TVs and all devices
+  const oracleTitlePills = document.querySelectorAll('.oracle-title-pill');
+  if(oracleTitlePills){
+    oracleTitlePills.forEach(pill => {
+      pill.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        const mode = pill.dataset.oracleMode;
+        if(mode) setOracleMode(mode);
+      });
+      pill.addEventListener('keydown', (e) => {
+        if(e.key === 'Enter' || e.key === ' '){
+          e.preventDefault();
+          const mode = pill.dataset.oracleMode;
+          if(mode) setOracleMode(mode);
+        }
+      });
+    });
+  }
+
+  const oraclePickerTriggerBtn = document.getElementById('oraclePickerTriggerBtn');
+  if(oraclePickerTriggerBtn){
+    oraclePickerTriggerBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      openOraclePicker();
+    });
   }
 
   function openOraclePicker(){
@@ -8507,6 +9869,48 @@
           downBtn.title = 'Move row down';
         }
       }
+
+      // If this is the outlook row, ensure the swap button is present directly under the arrows
+      if(rowId === 'outlook'){
+        let swapBtn = ctrlEl.querySelector('.row-swap-view-btn');
+        if(!swapBtn){
+          swapBtn = document.createElement('button');
+          swapBtn.type = 'button';
+          swapBtn.className = 'row-swap-view-btn' + (activeOutlookTrayView === 'friends' ? ' is-friends-active' : '');
+          swapBtn.id = 'outlookSwapBtn';
+          swapBtn.setAttribute('title', activeOutlookTrayView === 'friends' ? 'Switch view: Weather Friends ⇄ 5-Day Outlook' : 'Switch view: 5-Day Outlook ⇄ Weather Friends');
+          swapBtn.setAttribute('aria-label', 'Switch view between 5-Day Outlook and Weather Friends');
+          swapBtn.innerHTML = `
+            <span class="row-swap-wf-badge" aria-hidden="true">
+              <span class="row-swap-wf-text">WF</span>
+            </span>
+          `;
+          ctrlEl.appendChild(swapBtn);
+          if(!swapBtn._swapBound){
+            swapBtn._swapBound = true;
+            swapBtn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              if(typeof toggleOutlookView === 'function') toggleOutlookView();
+            });
+          }
+        } else {
+          if(!swapBtn.querySelector('.row-swap-wf-badge')){
+            swapBtn.innerHTML = `
+              <span class="row-swap-wf-badge" aria-hidden="true">
+                <span class="row-swap-wf-text">WF</span>
+              </span>
+            `;
+          }
+          if(activeOutlookTrayView === 'friends'){
+            swapBtn.classList.add('is-friends-active');
+            swapBtn.setAttribute('title', 'Switch view: Weather Friends ⇄ 5-Day Outlook');
+          } else {
+            swapBtn.classList.remove('is-friends-active');
+            swapBtn.setAttribute('title', 'Switch view: 5-Day Outlook ⇄ Weather Friends');
+          }
+        }
+      }
     });
   }
 
@@ -8514,6 +9918,16 @@
     const toggleBtn = ctrlEl.querySelector('.row-shutter-toggle');
     const upBtn = ctrlEl.querySelector('.row-arrow-up');
     const downBtn = ctrlEl.querySelector('.row-arrow-down');
+    const swapBtn = ctrlEl.querySelector('.row-swap-view-btn');
+
+    if(swapBtn && !swapBtn._swapBound){
+      swapBtn._swapBound = true;
+      swapBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        if(typeof toggleOutlookView === 'function') toggleOutlookView();
+      });
+    }
 
     if(toggleBtn){
       toggleBtn.addEventListener('click', (e) => {

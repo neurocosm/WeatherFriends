@@ -144,13 +144,13 @@ app.get('/api/reverse-geocode', async (req, res) => {
   res.json({ city: 'Current Location' });
 });
 
-// Search location by City Name or ZIP Code (US, Canada, Global)
+// Search location by City Name, US ZIP, Canadian Postal Code, or International City
 app.get('/api/search-location', async (req, res) => {
   const query = req.query.q?.trim();
   if (!query) return res.status(400).json({ results: [] });
 
   try {
-    // If it looks like a 5-digit US zip code
+    // 1. If it looks like a 5-digit US zip code
     if (/^\d{5}$/.test(query)) {
       try {
         const zipRes = await fetch(`https://api.zippopotam.us/us/${query}`);
@@ -163,7 +163,9 @@ app.get('/api/search-location', async (req, res) => {
                 name: `${place['place name']}, ${place['state abbreviation']}`,
                 lat: parseFloat(place.latitude),
                 lon: parseFloat(place.longitude),
-                country: 'USA'
+                country: 'United States',
+                countryCode: 'US',
+                admin1: place['state abbreviation']
               }]
             });
           }
@@ -173,8 +175,36 @@ app.get('/api/search-location', async (req, res) => {
       }
     }
 
-    // Open-Meteo Geocoding
-    const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=6&language=en&format=json`);
+    // 2. If it looks like a Canadian postal code (e.g. M5V or M5V 2T6 or K1A0B1)
+    const cleanCa = query.replace(/\s+/g, '').toUpperCase();
+    if (/^[A-Z]\d[A-Z](?:\d[A-Z]\d)?$/.test(cleanCa)) {
+      try {
+        const fsa = cleanCa.slice(0, 3);
+        const caRes = await fetch(`https://api.zippopotam.us/ca/${fsa}`);
+        if (caRes.ok) {
+          const cd = await caRes.json();
+          const place = cd.places?.[0];
+          if (place) {
+            const shortPlace = place['place name'].split('(')[0].trim();
+            return res.json({
+              results: [{
+                name: `${shortPlace}, ${place['state abbreviation']}, Canada`,
+                lat: parseFloat(place.latitude),
+                lon: parseFloat(place.longitude),
+                country: 'Canada',
+                countryCode: 'CA',
+                admin1: place['state abbreviation']
+              }]
+            });
+          }
+        }
+      } catch (e) {
+        // fallback to open-meteo
+      }
+    }
+
+    // 3. Open-Meteo Geocoding (Global coverage)
+    const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=8&language=en&format=json`);
     if (geoRes.ok) {
       const gd = await geoRes.json();
       if (gd.results && gd.results.length > 0) {
@@ -182,7 +212,10 @@ app.get('/api/search-location', async (req, res) => {
           name: `${r.name}${r.admin1 ? ', ' + r.admin1 : ''}${r.country_code ? ' (' + r.country_code + ')' : ''}`,
           lat: r.latitude,
           lon: r.longitude,
-          country: r.country
+          country: r.country || r.country_code || '',
+          countryCode: (r.country_code || '').toUpperCase(),
+          admin1: r.admin1 || '',
+          timezone: r.timezone || ''
         }));
         return res.json({ results: list });
       }

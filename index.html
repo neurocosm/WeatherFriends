@@ -1698,6 +1698,68 @@
     letter-spacing:0.12em;
     text-transform:uppercase;
   }
+  .holiday-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:clamp(4px, 1cqw, 8px);
+    width:100%;
+    flex:0 0 auto;
+    margin-bottom:0;
+  }
+  .holiday-tabs{
+    display:inline-flex;
+    align-items:center;
+    gap:clamp(2px, 0.6cqw, 5px);
+    flex:1;
+    margin:0;
+    min-width:0;
+  }
+  .holiday-tab-btn{
+    background:rgba(4, 14, 20, 0.55);
+    border:1px solid rgba(56, 189, 248, 0.22);
+    color:var(--ink-dim);
+    font-family:'Outfit',sans-serif;
+    font-size:clamp(0.52rem, min(2.3cqw, 1.15vh), 0.68rem);
+    font-weight:700;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    padding:clamp(2px, 0.35vh, 4px) clamp(3px, 0.7cqw, 7px);
+    border-radius:6px;
+    cursor:pointer;
+    transition:all 0.18s ease;
+    white-space:nowrap;
+    text-align:center;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    line-height:1;
+    flex:1;
+    user-select:none;
+  }
+  .holiday-tab-btn:hover{
+    color:#ffffff;
+    border-color:rgba(56, 189, 248, 0.55);
+    background:rgba(56, 189, 248, 0.15);
+  }
+  .holiday-tab-btn.active{
+    background:rgba(56, 189, 248, 0.22);
+    border-color:#38bdf8;
+    color:#ffffff;
+    box-shadow:0 0 8px rgba(56, 189, 248, 0.4);
+  }
+  .holiday-tab-btn[data-channel="food"].active{
+    background:rgba(251, 191, 36, 0.22);
+    border-color:#fbbf24;
+    color:#ffffff;
+    box-shadow:0 0 8px rgba(251, 191, 36, 0.4);
+  }
+  .holiday-tab-btn[data-channel="tech"].active{
+    background:rgba(73, 230, 196, 0.22);
+    border-color:#49e6c4;
+    color:#ffffff;
+    box-shadow:0 0 8px rgba(73, 230, 196, 0.4);
+  }
   .holiday-nav-controls{
     display:flex;
     align-items:center;
@@ -1798,7 +1860,13 @@
     word-break:normal;
     overflow-wrap:break-word;
     text-wrap:balance;
+    hyphens:none;
     flex-shrink:0;
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:2;
+    overflow:hidden;
+    text-overflow:ellipsis;
     transition:opacity 0.2s ease, transform 0.2s ease;
   }
   .holiday-title.fading{
@@ -1815,8 +1883,13 @@
     margin:0;
     word-break:normal;
     overflow-wrap:break-word;
-    flex-shrink:0;
+    flex-shrink:1;
+    min-height:0;
+    max-height:100%;
     overflow:hidden;
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    text-overflow:ellipsis;
     transition:opacity 0.2s ease, transform 0.2s ease;
   }
   .holiday-summary.fading{
@@ -3545,7 +3618,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.090926.1312</span>
+        <span id="appVersionText">v1.090926.2112</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -3881,21 +3954,26 @@
         <div class="splitter-grip"></div>
       </div>
 
-      <!-- CHECKIDAY DAILY HOLIDAYS (Right-Center Block) -->
-      <div class="panel details-holiday-panel" id="panelDetails" title="Tap or click to rotate to the next holiday">
-        <div class="panel-head">
+      <!-- CHECKIDAY & MULTI-CHANNEL ROTATOR (Right-Center Block) -->
+      <div class="panel details-holiday-panel" id="panelDetails" title="Tap or click to rotate to the next item">
+        <div class="panel-head holiday-head">
           <div class="ttl">
-            <span class="label glow-blue" id="detailsTitle">Checkiday.com</span>
+            <span class="label glow-blue" id="detailsTitle">Holidays</span>
+          </div>
+          <div class="holiday-tabs" id="holidayTabs">
+            <button type="button" class="holiday-tab-btn active" data-channel="holidays" id="tabHolidays" title="General National & Global Holidays">Today</button>
+            <button type="button" class="holiday-tab-btn" data-channel="food" id="tabFoodHolidays" title="National Food & Drink Celebrations">Food</button>
+            <button type="button" class="holiday-tab-btn" data-channel="tech" id="tabTechHistory" title="This Day in Retro Tech & Space">Retro Tech</button>
           </div>
           <div class="holiday-nav-controls">
-            <span class="holiday-counter-badge" id="holidayCounterBadge" title="Current holiday in daily rotation">-- / --</span>
-            <button type="button" class="holiday-calendar-btn" id="holidayCalendarBtn" title="Today's date • Tap to rotate holiday" aria-label="Today's date">
+            <span class="holiday-counter-badge" id="holidayCounterBadge" title="Current item in daily rotation">-- / --</span>
+            <button type="button" class="holiday-calendar-btn" id="holidayCalendarBtn" title="Today's date • Tap to rotate item" aria-label="Today's date">
               <div class="cal-top-accent">
                 <span class="cal-pin"></span>
                 <span class="cal-pin"></span>
               </div>
               <div class="cal-day-body">
-                <span class="cal-day-num" id="holidayCalDay">6</span>
+                <span class="cal-day-num" id="holidayCalDay">9</span>
               </div>
             </button>
           </div>
@@ -5573,7 +5651,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.090926.1312';
+  const CLIENT_APP_VERSION = 'v1.090926.2112';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -7080,21 +7158,108 @@
      - Interactive controls (card tap, manual refresh ↻)
      - Smooth fade transitions and 15-minute rotation progress bar
   --------------------------------------------------------------- */
-  const CHECKIDAY_ROTATION_MS = 15 * 60 * 1000; // 15 minutes
-  let checkidayHolidays = [];
-  let currentHolidayIndex = 0;
-  let lastHolidayRotateTimestamp = 0;
-  let checkidayActiveDateKey = '';
-  let isFetchingCheckiday = false;
+  /* ---------------------------------------------------------------
+     MULTI-CHANNEL DISCOVERY & ROTATION ENGINE
+     - Three Dedicated Channels matching the Inspirations Tab Architecture:
+         1. 'holidays': General National & Global Celebrations (via Checkiday.com)
+         2. 'food': Culinary Holidays & Feast Days (via /api/food-holidays)
+         3. 'tech': This Day in Retro Tech & Space Exploration (via /api/tech-history)
+     - Full Stale-While-Revalidate caching per channel in localStorage
+     - Seamless tab switcher with channel-specific glowing accents
+     - Continuous 15-minute rotation loop within active channel
+     - Balanced dynamic auto-fit typography engine adapting to container size
+     - Tap card or calendar icon to advance to next celebration in active channel
+     - Double-tap calendar icon to force background feed re-sync
+     - Auto-refresh on midnight rollover & Smart TV wake-from-sleep
+  --------------------------------------------------------------- */
+  const HOLIDAY_ROTATION_MS = 15 * 60 * 1000; // 15 minutes per item
+
+  const CHANNEL_CONFIG = {
+    holidays: {
+      id: 'holidays',
+      label: 'Holidays',
+      glow: 'glow-blue',
+      titleColor: 'var(--blue)',
+      endpoint: '/api/checkiday?excludeFood=1',
+      dataKey: 'holidays',
+      tabId: 'tabHolidays',
+      fallbackTitle: "Loading Today's Holidays..."
+    },
+    food: {
+      id: 'food',
+      label: 'Food Days',
+      glow: 'glow-amber',
+      titleColor: '#fbbf24',
+      endpoint: '/api/food-holidays',
+      dataKey: 'holidays',
+      tabId: 'tabFoodHolidays',
+      fallbackTitle: "Loading Food Celebrations..."
+    },
+    tech: {
+      id: 'tech',
+      label: 'Retro Tech',
+      glow: 'glow-teal',
+      titleColor: '#49e6c4',
+      endpoint: '/api/tech-history',
+      dataKey: 'items',
+      tabId: 'tabTechHistory',
+      fallbackTitle: "Loading Tech History..."
+    }
+  };
+
+  let activeHolidayChannel = 'holidays';
+  try {
+    const savedChan = localStorage.getItem('wf_holiday_channel');
+    if (savedChan && CHANNEL_CONFIG[savedChan]) {
+      activeHolidayChannel = savedChan;
+    }
+  } catch(e){}
+
+  const channelData = {
+    holidays: [],
+    food: [],
+    tech: []
+  };
+
+  const channelIndices = {
+    holidays: 0,
+    food: 0,
+    tech: 0
+  };
+
+  const channelLastRotate = {
+    holidays: 0,
+    food: 0,
+    tech: 0
+  };
+
+  const channelFetching = {
+    holidays: false,
+    food: false,
+    tech: false
+  };
+
+  let holidayActiveDateKey = '';
 
   const holidayTitleEl = document.getElementById('holidayTitle');
   const holidaySummaryEl = document.getElementById('holidaySummary');
   const holidayContentArea = document.getElementById('holidayContentArea');
   const holidayCounterBadge = document.getElementById('holidayCounterBadge');
   const holidayCalendarBtn = document.getElementById('holidayCalendarBtn');
+  const holidayCalDayEl = document.getElementById('holidayCalDay');
+  const detailsTitleEl = document.getElementById('detailsTitle');
   const panelDetailsEl = document.getElementById('panelDetails');
+  const holidayTabBtns = document.querySelectorAll('.holiday-tab-btn');
 
-  // Smart dynamic text fitting buffer for Checkiday.com (Proportional Binary Max-Fill)
+  // Keep calendar day pin synchronized with current local date
+  function updateCalendarPinDay() {
+    if (holidayCalDayEl) {
+      holidayCalDayEl.textContent = String(new Date().getDate());
+    }
+  }
+  updateCalendarPinDay();
+
+  // Smart dynamic text fitting buffer for holidays (Proportional Binary Max-Fill)
   let holidayMeasureBuffer = null;
   let hBufTitle = null;
   let hBufSummary = null;
@@ -7104,13 +7269,13 @@
       holidayMeasureBuffer = document.createElement('div');
       holidayMeasureBuffer.id = 'holidayMeasureBuffer';
       holidayMeasureBuffer.style.cssText = 'position:fixed;top:-9999px;left:-9999px;visibility:hidden;pointer-events:none;z-index:-1000;white-space:normal;word-break:normal;overflow-wrap:break-word;box-sizing:border-box;display:flex;flex-direction:column;padding:0;margin:0;border:none;';
-      
+
       hBufTitle = document.createElement('div');
       hBufTitle.style.cssText = 'font-family:\'Outfit\',sans-serif;font-weight:600;letter-spacing:0.005em;margin:0;padding:0;flex-shrink:0;text-wrap:balance;line-height:1.16;';
-      
+
       hBufSummary = document.createElement('div');
       hBufSummary.style.cssText = 'font-family:\'Outfit\',sans-serif;font-weight:400;letter-spacing:0.01em;margin:0;padding:0;flex-shrink:0;line-height:1.46;';
-      
+
       holidayMeasureBuffer.appendChild(hBufTitle);
       holidayMeasureBuffer.appendChild(hBufSummary);
       document.body.appendChild(holidayMeasureBuffer);
@@ -7119,16 +7284,13 @@
   }
 
   /**
-   * HOLIDAY BALANCED AUTO-FIT ENGINE (Coordinated Proportional Fill)
+   * BALANCED AUTO-FIT ENGINE FOR DISCOVERY ITEMS
    * - Designed for consistent optical balance across Smart TVs, tablets, and browser tabs
-   * - Prominent, commanding headline title (blue display type) with 1.32x to 1.60x proportional ratio
-   * - Smaller, comfortable narrative body text that breathes and takes advantage of full card space
-   * - Rich two-sentence summaries favored when space permits, preventing awkward empty voids
-   * - Vertically centered layout ensures clean balance regardless of aspect ratio or title length
+   * - Adaptive typography scales according to channel and container proportions
    */
   function screenAndFitHolidayText() {
     if (!holidayContentArea || !holidayTitleEl || !holidaySummaryEl) return;
-    
+
     let availW = holidayContentArea.clientWidth;
     let availH = holidayContentArea.clientHeight;
     if (availW <= 40 || availH <= 40) {
@@ -7136,30 +7298,30 @@
       availH = 170;
     }
 
-    const holiday = (checkidayHolidays && checkidayHolidays[currentHolidayIndex]) || null;
-    if (!holiday) return;
+    const items = channelData[activeHolidayChannel] || [];
+    const idx = channelIndices[activeHolidayChannel] || 0;
+    const item = items[idx] || null;
+    const cfg = CHANNEL_CONFIG[activeHolidayChannel] || CHANNEL_CONFIG.holidays;
 
-    const title = (holiday.title || "National Holiday").trim();
-    const originText = (holiday.origin || holiday.primarySummary || holiday.description || "").trim();
-    const fullSummary = (holiday.summary || holiday.origin || holiday.description || "").trim();
+    if (!item) return;
+
+    const title = (item.title || "Daily Discovery").trim();
+    const conciseText = (item.primarySummary || item.description || item.origin || "").trim();
+    const fullSummary = (item.summary || item.origin || item.description || "").trim();
 
     const buf = getHolidayMeasureBuffer();
     const targetW = Math.max(120, availW - 6);
     const targetH = Math.max(80, availH - 4);
     buf.style.width = targetW + 'px';
 
-    // Ratio between Title and Summary:
-    // User requested: "the title should be larger (it can stay blue) but the text should BE smaller, but also take up more space. we need some better rules around this ratio."
-    // - Short titles (<= 24 chars): 1.58x ratio commanding the card
-    // - Medium titles (25-36 chars): 1.45x ratio for strong hierarchy
-    // - Long titles (> 36 chars): 1.32x ratio wrapping cleanly into two balanced headline lines
     const titleLen = title.length;
-    const titleRatio = titleLen > 36 ? 1.32 : (titleLen > 24 ? 1.45 : 1.58);
+    // Scale title ratio adaptively based on title length so long titles don't hog vertical space
+    const titleRatio = titleLen > 38 ? 1.18 : (titleLen > 24 ? 1.30 : 1.45);
+    const maxTitlePx = titleLen > 38 ? 23 : (titleLen > 24 ? 27 : 34);
 
-    // Test a candidate configuration at a given summaryPx
     function testFit(text, summaryPx) {
-      const titlePx = Math.min(36, Math.max(17.5, Math.round(summaryPx * titleRatio)));
-      const gapPx = Math.min(18, Math.max(6, Math.round(summaryPx * 0.58)));
+      const titlePx = Math.min(maxTitlePx, Math.max(15, Math.round(summaryPx * titleRatio)));
+      const gapPx = Math.min(14, Math.max(4, Math.round(summaryPx * 0.48)));
 
       hBufTitle.textContent = title;
       hBufTitle.style.fontSize = titlePx + 'px';
@@ -7178,8 +7340,7 @@
       return (rH <= targetH && rW <= targetW + 2);
     }
 
-    // Binary search for optimal summary font size between minPx and maxPx
-    function findBestSummaryPx(text, minPx = 13, maxPx = 23) {
+    function findBestSummaryPx(text, minPx = 13.5, maxPx = 22) {
       let low = Math.round(minPx * 2);
       let high = Math.round(maxPx * 2);
       let best = 0;
@@ -7189,46 +7350,66 @@
         const testPx = mid / 2;
         if (testFit(text, testPx)) {
           best = testPx;
-          low = mid + 1; // Fits! Try larger to maximize fill
+          low = mid + 1;
         } else {
-          high = mid - 1; // Overflows, step down
+          high = mid - 1;
         }
       }
       return best;
     }
 
-    // Text Selection Strategy:
-    // 1. If fullSummary exists and differs from originText, test if fullSummary fits at a comfortable reading size (>= 15px).
-    //    Using fullSummary gives rich 2-sentence context that naturally fills the card nicely!
-    let chosenText = fullSummary;
-    let chosenSummaryPx = 0;
+    // Progressively select the most informative text candidate that fits 100% inside target dimensions
+    function resolveFittingText() {
+      // 1. Try full summary if moderate length (<= 260 chars)
+      if (fullSummary && fullSummary.length <= 260) {
+        const px = findBestSummaryPx(fullSummary, 14.5, 20);
+        if (px >= 14.5) return { text: fullSummary, px };
+      }
 
-    if (fullSummary && fullSummary.length <= 340 && fullSummary !== originText) {
-      chosenSummaryPx = findBestSummaryPx(fullSummary, 14.5, 21);
+      // 2. Try concise text
+      const baseText = conciseText || fullSummary;
+      if (baseText) {
+        const px = findBestSummaryPx(baseText, 13.5, 22);
+        if (px >= 13.5) return { text: baseText, px };
+
+        // 3. Try splitting into complete sentences
+        const sentences = baseText.match(/[^.!?]+[.!?]+(?:\s+|$)/g);
+        if (sentences && sentences.length > 1) {
+          for (let count = sentences.length - 1; count >= 1; count--) {
+            const candidate = sentences.slice(0, count).join(' ').trim();
+            const candPx = findBestSummaryPx(candidate, 13.5, 22);
+            if (candPx >= 13.5) return { text: candidate, px: candPx };
+          }
+        }
+
+        // 4. If single sentence still doesn't fit at 13.5px, trim words cleanly with ellipsis
+        let words = baseText.split(/\s+/);
+        while (words.length > 6) {
+          words = words.slice(0, Math.max(5, Math.floor(words.length * 0.82)));
+          const candidate = words.join(' ').replace(/[,;:\-.\s]+$/, '') + '...';
+          const candPx = findBestSummaryPx(candidate, 13, 20);
+          if (candPx >= 13) return { text: candidate, px: candPx };
+        }
+      }
+
+      return { text: baseText || title, px: 13.5 };
     }
 
-    // 2. If fullSummary is too long (would force summary < 15px) or unavailable, use punchy originText:
-    if (chosenSummaryPx < 15) {
-      chosenText = originText || fullSummary;
-      chosenSummaryPx = findBestSummaryPx(chosenText, 14, 23);
-    }
+    const { text: chosenText, px: chosenSummaryPx } = resolveFittingText();
+    const finalTitlePx = Math.min(maxTitlePx, Math.max(15, Math.round(chosenSummaryPx * titleRatio)));
+    const finalGapPx = Math.min(14, Math.max(4, Math.round(chosenSummaryPx * 0.48)));
 
-    // Fallback if still 0
-    if (chosenSummaryPx === 0) {
-      chosenSummaryPx = 14.5;
-    }
-
-    const finalTitlePx = Math.min(36, Math.max(17.5, Math.round(chosenSummaryPx * titleRatio)));
-    const finalGapPx = Math.min(18, Math.max(6, Math.round(chosenSummaryPx * 0.58)));
-
-    // Apply the computed responsive typography and vertical spacing
     holidayTitleEl.textContent = title;
     holidayTitleEl.style.fontWeight = '600';
-    holidayTitleEl.style.color = 'var(--blue)';
+    holidayTitleEl.style.color = cfg.titleColor;
     holidayTitleEl.style.fontSize = finalTitlePx + 'px';
     holidayTitleEl.style.lineHeight = '1.16';
     holidayTitleEl.style.textWrap = 'balance';
     holidayTitleEl.style.whiteSpace = 'normal';
+
+    // Sync glow classes
+    holidayTitleEl.classList.remove('glow-blue', 'glow-amber', 'glow-teal');
+    holidayTitleEl.classList.add(cfg.glow);
 
     holidaySummaryEl.textContent = chosenText;
     holidaySummaryEl.style.fontWeight = '400';
@@ -7251,27 +7432,42 @@
   }
 
   function renderCurrentHoliday(animate = true){
-    if(!checkidayHolidays || checkidayHolidays.length === 0){
-      if(holidayTitleEl) holidayTitleEl.textContent = "Loading Today's Holidays...";
+    const items = channelData[activeHolidayChannel] || [];
+    const cfg = CHANNEL_CONFIG[activeHolidayChannel] || CHANNEL_CONFIG.holidays;
+
+    // Update panel header label & glow
+    if (detailsTitleEl) {
+      detailsTitleEl.textContent = cfg.label;
+      detailsTitleEl.classList.remove('glow-blue', 'glow-amber', 'glow-teal');
+      detailsTitleEl.classList.add(cfg.glow);
+    }
+
+    if(!items || items.length === 0){
+      if(holidayTitleEl) {
+        holidayTitleEl.textContent = cfg.fallbackTitle;
+        holidayTitleEl.style.color = cfg.titleColor;
+      }
       if(holidaySummaryEl) holidaySummaryEl.textContent = "";
       if(holidayCounterBadge) holidayCounterBadge.textContent = "-- / --";
       return;
     }
 
-    if(currentHolidayIndex < 0 || currentHolidayIndex >= checkidayHolidays.length){
-      currentHolidayIndex = 0;
+    let curIdx = channelIndices[activeHolidayChannel] || 0;
+    if(curIdx < 0 || curIdx >= items.length){
+      curIdx = 0;
+      channelIndices[activeHolidayChannel] = 0;
     }
 
-    const holiday = checkidayHolidays[currentHolidayIndex];
+    const item = items[curIdx];
 
     // Update counter badge: e.g. "2 / 11"
     if(holidayCounterBadge){
-      holidayCounterBadge.textContent = `${currentHolidayIndex + 1} / ${checkidayHolidays.length}`;
-      holidayCounterBadge.title = `Holiday ${currentHolidayIndex + 1} of ${checkidayHolidays.length} today`;
+      holidayCounterBadge.textContent = `${curIdx + 1} / ${items.length}`;
+      holidayCounterBadge.title = `${cfg.label} item ${curIdx + 1} of ${items.length} today`;
     }
 
     const applyContent = () => {
-      if(holidayTitleEl) holidayTitleEl.textContent = holiday.title || "National Holiday";
+      if(holidayTitleEl) holidayTitleEl.textContent = item.title || "Daily Celebration";
       screenAndFitHolidayText();
       if(holidayTitleEl) holidayTitleEl.classList.remove('fading');
       if(holidaySummaryEl) holidaySummaryEl.classList.remove('fading');
@@ -7280,83 +7476,108 @@
     if(animate && holidayTitleEl){
       holidayTitleEl.classList.add('fading');
       if(holidaySummaryEl) holidaySummaryEl.classList.add('fading');
-      setTimeout(applyContent, 160);
+      setTimeout(applyContent, 150);
     } else {
       applyContent();
     }
 
     // Persist current state in localStorage
     try{
-      localStorage.setItem('wf_checkiday_index', String(currentHolidayIndex));
-      localStorage.setItem('wf_checkiday_last_rotate', String(lastHolidayRotateTimestamp));
-      localStorage.setItem('wf_checkiday_date', checkidayActiveDateKey);
+      localStorage.setItem(`wf_${activeHolidayChannel}_index`, String(curIdx));
+      localStorage.setItem(`wf_${activeHolidayChannel}_last_rotate`, String(channelLastRotate[activeHolidayChannel] || Date.now()));
+      localStorage.setItem('wf_holiday_date', holidayActiveDateKey);
+      localStorage.setItem('wf_holiday_channel', activeHolidayChannel);
     }catch(e){}
   }
 
   function rotateHoliday(direction = 1, isManual = false){
-    if(!checkidayHolidays || checkidayHolidays.length <= 1) return;
-    currentHolidayIndex = (currentHolidayIndex + direction + checkidayHolidays.length) % checkidayHolidays.length;
-    lastHolidayRotateTimestamp = Date.now();
+    const items = channelData[activeHolidayChannel] || [];
+    if(!items || items.length <= 1) return;
+    channelIndices[activeHolidayChannel] = (channelIndices[activeHolidayChannel] + direction + items.length) % items.length;
+    channelLastRotate[activeHolidayChannel] = Date.now();
     renderCurrentHoliday(true);
   }
 
-  async function loadCheckidayFeed(forceRefresh = false){
-    if(isFetchingCheckiday) return;
-    isFetchingCheckiday = true;
+  function setHolidayChannel(channelId, forceFetch = false){
+    if(!CHANNEL_CONFIG[channelId]) channelId = 'holidays';
+    activeHolidayChannel = channelId;
 
+    try{
+      localStorage.setItem('wf_holiday_channel', channelId);
+    }catch(e){}
+
+    // Update tab button styles
+    holidayTabBtns.forEach(btn => {
+      if(btn.getAttribute('data-channel') === channelId){
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+
+    const items = channelData[channelId] || [];
+    if(items.length > 0 && !forceFetch){
+      renderCurrentHoliday(true);
+    } else {
+      fetchHolidayChannel(channelId, forceFetch);
+    }
+  }
+
+  async function fetchHolidayChannel(channelId, forceRefresh = false){
+    if(!CHANNEL_CONFIG[channelId]) return;
+    if(channelFetching[channelId]) return;
+    channelFetching[channelId] = true;
+
+    const cfg = CHANNEL_CONFIG[channelId];
     const todayKey = getLocalDateKey();
-    checkidayActiveDateKey = todayKey;
+    holidayActiveDateKey = todayKey;
+    updateCalendarPinDay();
 
     // 1. Instant Cache Display (Stale-While-Revalidate):
-    // If we have cached data for today, render it immediately so the TV UI is instantly responsive.
-    // If cached data is from yesterday or older, immediately purge it to prevent stale holidays!
     try{
-      const savedDate = localStorage.getItem('wf_checkiday_date');
-      const savedListRaw = localStorage.getItem('wf_checkiday_list');
-      
+      const savedDate = localStorage.getItem('wf_holiday_date');
+      const savedListRaw = localStorage.getItem(`wf_${channelId}_list`);
+
       if(savedDate && savedDate !== todayKey){
-        console.log(`[Checkiday] Purging stale holidays from ${savedDate} (current date is ${todayKey})`);
-        localStorage.removeItem('wf_checkiday_list');
-        localStorage.removeItem('wf_checkiday_index');
-        localStorage.removeItem('wf_checkiday_last_rotate');
-        localStorage.setItem('wf_checkiday_date', todayKey);
-        if(holidayTitleEl) holidayTitleEl.textContent = "Loading Today's Holidays...";
-        if(holidaySummaryEl) holidaySummaryEl.textContent = "";
-        if(holidayCounterBadge) holidayCounterBadge.textContent = "-- / --";
+        localStorage.removeItem(`wf_${channelId}_list`);
+        localStorage.removeItem(`wf_${channelId}_index`);
+        localStorage.removeItem(`wf_${channelId}_last_rotate`);
+        localStorage.setItem('wf_holiday_date', todayKey);
       } else if(!forceRefresh && savedListRaw){
         const parsed = JSON.parse(savedListRaw);
-        if(Array.isArray(parsed) && parsed.length > 0 && parsed[0].origin){
-          checkidayHolidays = parsed;
-
-          const savedIdx = parseInt(localStorage.getItem('wf_checkiday_index') || '0', 10);
-          const savedLastRotate = parseInt(localStorage.getItem('wf_checkiday_last_rotate') || '0', 10);
+        if(Array.isArray(parsed) && parsed.length > 0){
+          channelData[channelId] = parsed;
+          const savedIdx = parseInt(localStorage.getItem(`wf_${channelId}_index`) || '0', 10);
+          const savedLastRotate = parseInt(localStorage.getItem(`wf_${channelId}_last_rotate`) || '0', 10);
 
           if(!isNaN(savedLastRotate) && savedLastRotate > 0){
             const elapsed = Date.now() - savedLastRotate;
-            if(elapsed >= CHECKIDAY_ROTATION_MS){
-              const intervalsElapsed = Math.floor(elapsed / CHECKIDAY_ROTATION_MS);
-              currentHolidayIndex = (savedIdx + intervalsElapsed) % checkidayHolidays.length;
-              lastHolidayRotateTimestamp = Date.now() - (elapsed % CHECKIDAY_ROTATION_MS);
+            if(elapsed >= HOLIDAY_ROTATION_MS){
+              const intervalsElapsed = Math.floor(elapsed / HOLIDAY_ROTATION_MS);
+              channelIndices[channelId] = (savedIdx + intervalsElapsed) % channelData[channelId].length;
+              channelLastRotate[channelId] = Date.now() - (elapsed % HOLIDAY_ROTATION_MS);
             } else {
-              currentHolidayIndex = (savedIdx >= 0 && savedIdx < checkidayHolidays.length) ? savedIdx : 0;
-              lastHolidayRotateTimestamp = savedLastRotate;
+              channelIndices[channelId] = (savedIdx >= 0 && savedIdx < channelData[channelId].length) ? savedIdx : 0;
+              channelLastRotate[channelId] = savedLastRotate;
             }
           } else {
-            currentHolidayIndex = (savedIdx >= 0 && savedIdx < checkidayHolidays.length) ? savedIdx : 0;
-            lastHolidayRotateTimestamp = Date.now();
+            channelIndices[channelId] = (savedIdx >= 0 && savedIdx < channelData[channelId].length) ? savedIdx : 0;
+            channelLastRotate[channelId] = Date.now();
           }
 
-          renderCurrentHoliday(false);
-          // NOTE: We do NOT return early here. We still proceed to verify with server in the background!
+          if(channelId === activeHolidayChannel){
+            renderCurrentHoliday(false);
+          }
         }
       }
     }catch(e){}
 
-    // 2. Fetch fresh feed from server proxy (Guaranteed network fetch with cache-busting)
+    // 2. Fetch fresh feed from server proxy
     try{
       const clientTz = (window.Intl && Intl.DateTimeFormat().resolvedOptions().timeZone) || 'America/New_York';
-      const fetchUrl = `/api/checkiday?_t=${Date.now()}&tz=${encodeURIComponent(clientTz)}&date=${todayKey}${forceRefresh ? '&refresh=1' : ''}`;
-      
+      const sep = cfg.endpoint.includes('?') ? '&' : '?';
+      const fetchUrl = `${cfg.endpoint}${sep}_t=${Date.now()}&tz=${encodeURIComponent(clientTz)}&date=${todayKey}${forceRefresh ? '&refresh=1' : ''}`;
+
       const res = await fetch(fetchUrl, {
         cache: 'no-store',
         headers: {
@@ -7367,49 +7588,70 @@
 
       if(res.ok){
         const data = await res.json();
-        if(data && Array.isArray(data.holidays) && data.holidays.length > 0){
+        const rawItems = data[cfg.dataKey] || data.holidays || data.items || [];
+        if(Array.isArray(rawItems) && rawItems.length > 0){
           const effectiveDate = data.date || todayKey;
-          checkidayActiveDateKey = effectiveDate;
+          holidayActiveDateKey = effectiveDate;
 
-          // Check if data actually updated
-          const currentFirstTitle = checkidayHolidays[0] ? checkidayHolidays[0].title : '';
-          const newFirstTitle = data.holidays[0] ? data.holidays[0].title : '';
-          const hasDataChanged = (currentFirstTitle !== newFirstTitle) || (checkidayHolidays.length !== data.holidays.length);
+          channelData[channelId] = rawItems;
 
-          checkidayHolidays = data.holidays;
-
-          const savedDate = localStorage.getItem('wf_checkiday_date');
+          const savedDate = localStorage.getItem('wf_holiday_date');
           const isNewDay = savedDate !== effectiveDate;
-          
-          if(isNewDay || hasDataChanged){
-            currentHolidayIndex = 0;
-            lastHolidayRotateTimestamp = Date.now();
+
+          if(isNewDay){
+            channelIndices[channelId] = 0;
+            channelLastRotate[channelId] = Date.now();
           } else {
-            const savedIdx = parseInt(localStorage.getItem('wf_checkiday_index') || '0', 10);
-            currentHolidayIndex = (savedIdx >= 0 && savedIdx < checkidayHolidays.length) ? savedIdx : 0;
-            lastHolidayRotateTimestamp = parseInt(localStorage.getItem('wf_checkiday_last_rotate') || String(Date.now()), 10);
+            const savedIdx = parseInt(localStorage.getItem(`wf_${channelId}_index`) || '0', 10);
+            channelIndices[channelId] = (savedIdx >= 0 && savedIdx < channelData[channelId].length) ? savedIdx : 0;
+            channelLastRotate[channelId] = parseInt(localStorage.getItem(`wf_${channelId}_last_rotate`) || String(Date.now()), 10);
           }
 
           try{
-            localStorage.setItem('wf_checkiday_date', effectiveDate);
-            localStorage.setItem('wf_checkiday_list', JSON.stringify(checkidayHolidays));
-            localStorage.setItem('wf_checkiday_index', String(currentHolidayIndex));
-            localStorage.setItem('wf_checkiday_last_rotate', String(lastHolidayRotateTimestamp));
+            localStorage.setItem('wf_holiday_date', effectiveDate);
+            localStorage.setItem(`wf_${channelId}_list`, JSON.stringify(rawItems));
+            localStorage.setItem(`wf_${channelId}_index`, String(channelIndices[channelId]));
+            localStorage.setItem(`wf_${channelId}_last_rotate`, String(channelLastRotate[channelId]));
           }catch(e){}
 
-          renderCurrentHoliday(true);
+          if(channelId === activeHolidayChannel){
+            renderCurrentHoliday(true);
+          }
         }
       }
     }catch(err){
-      console.warn('Failed to fetch Checkiday feed:', err);
+      console.warn(`[Discovery Engine] Failed to fetch channel ${channelId}:`, err);
     }finally{
-      isFetchingCheckiday = false;
+      channelFetching[channelId] = false;
     }
   }
 
-  // Interactive controls: tap card or calendar button to rotate to the next holiday
+  // Preload all channels so tab switches are lightning-fast
+  async function loadAllChannels(forceRefresh = false){
+    const channels = ['holidays', 'food', 'tech'];
+    // Prioritize currently active channel first
+    await fetchHolidayChannel(activeHolidayChannel, forceRefresh);
+    // Background load the others
+    channels.filter(c => c !== activeHolidayChannel).forEach(c => {
+      fetchHolidayChannel(c, forceRefresh);
+    });
+  }
+
+  // Tab switcher click handlers
+  holidayTabBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const targetChan = btn.getAttribute('data-channel');
+      if(targetChan && targetChan !== activeHolidayChannel){
+        setHolidayChannel(targetChan, false);
+      }
+    });
+  });
+
+  // Tap anywhere on card or calendar button to advance to next item in active channel
   if(panelDetailsEl){
-    panelDetailsEl.addEventListener('click', () => {
+    panelDetailsEl.addEventListener('click', (e) => {
+      if(e.target.closest('#holidayTabs')) return;
       rotateHoliday(1, true);
     });
   }
@@ -7419,79 +7661,84 @@
       e.stopPropagation();
       rotateHoliday(1, true);
     });
-    // Optional power-action: double-clicking the calendar icon forces a fresh feed pull
+    // Power-action: double-clicking calendar icon forces a fresh re-fetch across all channels
     holidayCalendarBtn.addEventListener('dblclick', (e) => {
       e.stopPropagation();
       try{
-        localStorage.removeItem('wf_checkiday_list');
-        localStorage.removeItem('wf_checkiday_date');
-        localStorage.removeItem('wf_checkiday_index');
-        localStorage.removeItem('wf_checkiday_last_rotate');
+        ['holidays', 'food', 'tech'].forEach(c => {
+          localStorage.removeItem(`wf_${c}_list`);
+          localStorage.removeItem(`wf_${c}_index`);
+          localStorage.removeItem(`wf_${c}_last_rotate`);
+        });
+        localStorage.removeItem('wf_holiday_date');
       }catch(err){}
-      loadCheckidayFeed(true);
+      loadAllChannels(true);
     });
   }
 
   // Background timer: checks 15m rotation progress & rollover to next day at midnight
   setInterval(() => {
-    // A. Check if the calendar date changed to the next day
+    // A. Check if calendar date changed to the next day
     const currentDay = getLocalDateKey();
-    if(checkidayActiveDateKey && currentDay !== checkidayActiveDateKey){
-      console.log('[Checkiday] Date changed to next day (' + currentDay + '). Fetching next holiday set...');
-      loadCheckidayFeed(true);
+    if(holidayActiveDateKey && currentDay !== holidayActiveDateKey){
+      console.log('[Discovery Engine] Date rolled over (' + currentDay + '). Re-fetching all channels...');
+      loadAllChannels(true);
       return;
     }
 
-    // B. Check 15-minute rotation cycle
-    if(checkidayHolidays && checkidayHolidays.length > 1 && lastHolidayRotateTimestamp > 0){
-      const elapsed = Date.now() - lastHolidayRotateTimestamp;
-      if(elapsed >= CHECKIDAY_ROTATION_MS){
+    // B. Check 15-minute rotation cycle for active channel
+    const items = channelData[activeHolidayChannel] || [];
+    const lastRotate = channelLastRotate[activeHolidayChannel] || 0;
+    if(items.length > 1 && lastRotate > 0){
+      const elapsed = Date.now() - lastRotate;
+      if(elapsed >= HOLIDAY_ROTATION_MS){
         rotateHoliday(1, false);
       }
     }
   }, 1000);
 
-  // Smart TV & Standby Wakeup Recovery:
-  // When a Smart TV wakes from sleep, HDMI input switches back, or the window gains focus
+  // Smart TV & Standby Wakeup Recovery
   document.addEventListener('visibilitychange', () => {
     if(document.visibilityState === 'visible'){
+      updateCalendarPinDay();
       const currentDay = getLocalDateKey();
-      if(checkidayActiveDateKey && currentDay !== checkidayActiveDateKey){
+      if(holidayActiveDateKey && currentDay !== holidayActiveDateKey){
         console.log('[Smart TV Wake] New date detected on wake:', currentDay);
-        loadCheckidayFeed(true);
+        loadAllChannels(true);
         if(typeof fetchInspiration === 'function') fetchInspiration(currentInspirationType, true);
       } else {
-        loadCheckidayFeed(false);
+        loadAllChannels(false);
       }
       if(typeof checkServerVersion === 'function') checkServerVersion();
     }
   });
 
   window.addEventListener('focus', () => {
+    updateCalendarPinDay();
     const currentDay = getLocalDateKey();
-    if(checkidayActiveDateKey && currentDay !== checkidayActiveDateKey){
-      loadCheckidayFeed(true);
+    if(holidayActiveDateKey && currentDay !== holidayActiveDateKey){
+      loadAllChannels(true);
     }
   });
 
   window.addEventListener('online', () => {
-    console.log('[Smart TV] Network restored, re-verifying daily feed...');
-    loadCheckidayFeed(true);
+    console.log('[Smart TV] Network restored, re-verifying discovery channels...');
+    loadAllChannels(true);
     if(typeof checkServerVersion === 'function') checkServerVersion();
   });
 
-  // Smart TV Remote & Keyboard Controls:
-  // Pressing 'r'/'R', or color buttons (Red/Green) on a Sony/Smart TV remote triggers a fresh reload
+  // Remote controls: 'r'/'R' or Color buttons refresh
   window.addEventListener('keydown', (e) => {
     const key = e.key || '';
     if(key === 'r' || key === 'R' || key === 'ColorF0Red' || key === 'ColorF1Green'){
-      console.log('[Smart TV Remote] Triggered feed refresh via remote key:', key);
-      loadCheckidayFeed(true);
+      console.log('[Smart TV Remote] Triggered discovery channels reload via remote key:', key);
+      loadAllChannels(true);
     }
   });
 
   // Initial load
-  loadCheckidayFeed(false);
+  setHolidayChannel(activeHolidayChannel, false);
+  loadAllChannels(false);
 
   /* ---------------------------------------------------------------
      INTERACTIVE ROW SEAM SPLITTERS (HORIZONTAL RESIZING)

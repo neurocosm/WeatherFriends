@@ -538,6 +538,18 @@ async function enrichHolidaySummaries(items) {
   return items;
 }
 
+const FOOD_REGEX = /\b(food|foods|dish|dishes|cuisine|cooking|baking|drink|drinks|beer|brew|ale|lager|wine|coffee|espresso|latte|cappuccino|tea|pizza|burger|burgers|cheeseburger|sandwich|sandwiches|steak|steaks|schnitzel|soup|salad|bread|cake|pie|pies|cookie|cookies|taco|tacos|pasta|noodle|noodles|cheese|ice cream|chocolate|chocolates|apple|banana|pancake|pancakes|waffle|waffles|bbq|barbecue|grill|donut|donuts|doughnut|doughnuts|pretzel|pretzels|rice|curry|sushi|seafood|fish|lobster|crab|bacon|sausage|egg|eggs|muffin|muffins|popcorn|cocktail|cocktails|smoothie|cider|whiskey|bourbon|rum|vodka|tequila|dessert|desserts|honey|pickle|pickles|potato|potatoes|nacho|nachos|burrito|burritos|avocado|guacamole|watermelon|peach|cherry|cherries|strawberry|strawberries|blueberry|blueberries)\b/i;
+const EXCLUDE_FOOD_REGEX = /\b(awareness|disorder|syndrome|disease|prevention|abuse|cancer|teddy|bear)\b/i;
+
+function filterHolidayList(list, excludeFood) {
+  if (!excludeFood || !Array.isArray(list)) return list;
+  const filtered = list.filter(it => {
+    const fullText = `${it.title} ${it.description || ''} ${it.summary || ''}`;
+    return !(FOOD_REGEX.test(fullText) && !EXCLUDE_FOOD_REGEX.test(it.title) && !EXCLUDE_FOOD_REGEX.test(fullText));
+  });
+  return (filtered.length > 0) ? filtered : list;
+}
+
 app.get('/api/checkiday', async (req, res) => {
   // Always prevent smart TV and browser disk caching on API data
   res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0');
@@ -559,6 +571,7 @@ app.get('/api/checkiday', async (req, res) => {
   }
 
   const force = req.query.refresh === '1';
+  const excludeFood = req.query.excludeFood === '1';
 
   // Automatically reset cache if calendar date changed from previous day
   if (checkidayCache.dateKey && checkidayCache.dateKey !== dateKey) {
@@ -568,12 +581,13 @@ app.get('/api/checkiday', async (req, res) => {
 
   // Return cached result if same calendar day and fetched within 60 minutes
   if (!force && checkidayCache.dateKey === dateKey && checkidayCache.holidays.length > 0 && (Date.now() - checkidayCache.fetchedAt < 60 * 60 * 1000)) {
+    const holidays = filterHolidayList(checkidayCache.holidays, excludeFood);
     return res.json({
       success: true,
       date: checkidayCache.dateKey,
       cached: true,
-      count: checkidayCache.holidays.length,
-      holidays: checkidayCache.holidays,
+      count: holidays.length,
+      holidays,
       serverTime: Date.now()
     });
   }
@@ -655,11 +669,12 @@ app.get('/api/checkiday', async (req, res) => {
           holidays: items
         };
 
+        const holidays = filterHolidayList(items, excludeFood);
         return res.json({
           success: true,
           date: dateKey,
-          count: items.length,
-          holidays: items,
+          count: holidays.length,
+          holidays,
           serverTime: Date.now()
         });
       }
@@ -669,9 +684,9 @@ app.get('/api/checkiday', async (req, res) => {
   }
 
   // If server cache exists for today, prefer that over static backup
-  const fallbackList = (checkidayCache.dateKey === dateKey && checkidayCache.holidays.length > 0)
+  const fallbackList = filterHolidayList((checkidayCache.dateKey === dateKey && checkidayCache.holidays.length > 0)
     ? checkidayCache.holidays
-    : CHECKIDAY_BACKUP_HOLIDAYS;
+    : CHECKIDAY_BACKUP_HOLIDAYS, excludeFood);
 
   res.json({
     success: true,
@@ -679,6 +694,676 @@ app.get('/api/checkiday', async (req, res) => {
     count: fallbackList.length,
     holidays: fallbackList,
     fallback: true,
+    serverTime: Date.now()
+  });
+});
+
+/* ===============================================================
+   FOOD & DRINK HOLIDAYS API ROUTE (/api/food-holidays)
+   - Powered by comprehensive 365-day culinary registry (Julee Ho Food Marketing Directory)
+   - Live filters and merges culinary celebrations from Checkiday
+   - Enriches with appetizing food trivia, emojis, and origin lore
+   - Provides guaranteed 365-day fallback coverage for every calendar day
+=============================================================== */
+let foodHolidaysCache = { dateKey: '', fetchedAt: 0, holidays: [] };
+
+// 365-Day Julee Ho Culinary Registry loader & live updater
+let JULEE_HO_365_CALENDAR = {};
+try {
+  const calPath = path.join(__dirname, 'food-calendar-365.json');
+  if (fs.existsSync(calPath)) {
+    JULEE_HO_365_CALENDAR = JSON.parse(fs.readFileSync(calPath, 'utf8'));
+    console.log(`[Food Calendar] Loaded 365-day registry with ${Object.keys(JULEE_HO_365_CALENDAR).length} days`);
+  }
+} catch (err) {
+  console.warn('[Food Calendar] Could not load local food-calendar-365.json:', err.message);
+}
+
+// Background sync function to refresh Julee Ho 365-day food list
+async function syncJuleeHoFoodCalendar() {
+  try {
+    const res = await fetch('https://juleeho.com/food-marketing-blog/food-holidays-the-most-comprehensive-365-day-list', {
+      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' }
+    });
+    if (!res.ok) return;
+    let html = await res.text();
+    html = html.replace(/&nbsp;/g, ' ');
+
+    const regex = /<p[^>]*style="white-space:pre-wrap;"[^>]*>([^<]+)<\/p>/gi;
+    let match;
+    const items = [];
+    while ((match = regex.exec(html)) !== null) {
+      items.push(match[1].trim());
+    }
+
+    const monthMap = {
+      january: '01', february: '02', march: '03', april: '04',
+      may: '05', june: '06', july: '07', august: '08',
+      september: '09', october: '10', november: '11', december: '12'
+    };
+
+    const newCalendar = {};
+    for (const text of items) {
+      const clean = text.replace(/\s+/g, ' ').trim();
+      if (!clean || clean.length < 5) continue;
+      if (clean.startsWith('If you work in the food space') || clean.includes('Food Holidays list')) continue;
+
+      const m1 = clean.match(/^(.*?)\s*[-–—:]*\s*(January|February|March|April|May|June|July|August|September|October|November|December)\s*[-–—:]*\s*(\d{1,2})\b/i);
+      const m2 = clean.match(/^(January|February|March|April|May|June|July|August|September|October|November|December)\s*[-–—:]*\s*(\d{1,2})\s*[-–—:]\s*(.*?)$/i);
+      
+      if (m1 && m1[1].trim().length > 2) {
+        let holiday = m1[1].trim().replace(/^[–—\-:\s]+|[–—\-:\s]+$/g, '').trim();
+        const month = monthMap[m1[2].toLowerCase()];
+        const day = m1[3].padStart(2, '0');
+        const key = `${month}-${day}`;
+        if (!newCalendar[key]) newCalendar[key] = [];
+        if (!newCalendar[key].includes(holiday)) newCalendar[key].push(holiday);
+      } else if (m2 && m2[3].trim().length > 2) {
+        let holiday = m2[3].trim().replace(/^[–—\-:\s]+|[–—\-:\s]+$/g, '').trim();
+        const month = monthMap[m2[1].toLowerCase()];
+        const day = m2[2].padStart(2, '0');
+        const key = `${month}-${day}`;
+        if (!newCalendar[key]) newCalendar[key] = [];
+        if (!newCalendar[key].includes(holiday)) newCalendar[key].push(holiday);
+      }
+    }
+
+    if (!newCalendar['02-29']) {
+      newCalendar['02-29'] = ['National Surf and Turf Day (Leap Year Celebration)'];
+    }
+
+    if (Object.keys(newCalendar).length >= 300) {
+      JULEE_HO_365_CALENDAR = newCalendar;
+      fs.writeFileSync(path.join(__dirname, 'food-calendar-365.json'), JSON.stringify(newCalendar, null, 2), 'utf8');
+      console.log(`[Food Calendar] Successfully synced 365-day registry (${Object.keys(newCalendar).length} days) from Julee Ho blog`);
+    }
+  } catch (e) {
+    console.warn('[Food Calendar] Background sync error:', e.message);
+  }
+}
+
+// Automatically sync if calendar has low count
+if (Object.keys(JULEE_HO_365_CALENDAR).length < 300) {
+  syncJuleeHoFoodCalendar();
+}
+
+function getFoodEmoji(title = '') {
+  const t = title.toLowerCase();
+  if (/chicken|poultry|turkey/i.test(t)) return '🍗';
+  if (/steak|beef|brisket|ribeye|prime rib/i.test(t)) return '🥩';
+  if (/barbecue|sparerib|ribs|bbq|pork/i.test(t)) return '🍖';
+  if (/bacon/i.test(t)) return '🥓';
+  if (/hot dog|sausage|bratwurst/i.test(t)) return '🌭';
+  if (/burger|cheeseburger/i.test(t)) return '🍔';
+  if (/pizza/i.test(t)) return '🍕';
+  if (/sandwich|hoagie|sub|panini|blt|grilled cheese/i.test(t)) return '🥪';
+  if (/taco|burrito|enchilada|chipotle|tamale|nacho/i.test(t)) return '🌮';
+  if (/pasta|spaghetti|noodle|lasagna|ravioli|macaroni|fettuccine/i.test(t)) return '🍝';
+  if (/sushi|sashimi/i.test(t)) return '🍣';
+  if (/fish|salmon|tuna|seafood|clam|oyster|shrimp|lobster|crab/i.test(t)) return '🦞';
+  if (/soup|stew|chowder|chili|broth/i.test(t)) return '🍲';
+  if (/salad|greens/i.test(t)) return '🥗';
+  if (/bread|toast|bagel|croissant|biscuit|schnitzel|pretzel/i.test(t)) return '🥖';
+  if (/cheese|fondue|gouda/i.test(t)) return '🧀';
+  if (/pancake|crepe/i.test(t)) return '🥞';
+  if (/waffle/i.test(t)) return '🧇';
+  if (/egg|omelet|frittata/i.test(t)) return '🍳';
+  if (/curry|samosa|street food/i.test(t)) return '🥟';
+  if (/ice cream|sundae|gelato|sorbet|popsicle/i.test(t)) return '🍦';
+  if (/chocolate|fudge|truffle|cocoa/i.test(t)) return '🍫';
+  if (/cake|cheesecake|cupcake/i.test(t)) return '🍰';
+  if (/pie|tart|cobbler/i.test(t)) return '🥧';
+  if (/cookie|biscuit|shortbread/i.test(t)) return '🍪';
+  if (/donut|doughnut/i.test(t)) return '🍩';
+  if (/coffee|espresso|latte|cappuccino|mocha/i.test(t)) return '☕';
+  if (/tea|chai|matcha/i.test(t)) return '🍵';
+  if (/beer|brew|ale|lager|stout|oktoberfest/i.test(t)) return '🍺';
+  if (/wine|champagne|prosecco|sangria/i.test(t)) return '🍷';
+  if (/cocktail|margarita|martini|bloody mary|mimosa|mojito/i.test(t)) return '🍸';
+  if (/rum|whiskey|bourbon|vodka|tequila|gin|brandy|liqueur/i.test(t)) return '🥃';
+  if (/cherry|cherries/i.test(t)) return '🍒';
+  if (/strawberry|strawberries/i.test(t)) return '🍓';
+  if (/apple|cider/i.test(t)) return '🍎';
+  if (/banana/i.test(t)) return '🍌';
+  if (/watermelon|melon/i.test(t)) return '🍉';
+  if (/grape/i.test(t)) return '🍇';
+  if (/lemon|lime|citrus/i.test(t)) return '🍋';
+  if (/peach/i.test(t)) return '🍑';
+  if (/potato|fries|tater/i.test(t)) return '🥔';
+  if (/popcorn/i.test(t)) return '🍿';
+  return '🍽️';
+}
+
+function getAppetizingDescription(title = '') {
+  const t = title.toLowerCase();
+  if (/tamale/i.test(t)) return 'Honoring traditional masa packets wrapped in corn husks, steamed tender with savory meats, chilies, and holiday love.';
+  if (/pumpkin pie/i.test(t)) return 'Celebrating velvety spiced pumpkin custard baked in flaky pastry crust, topped with generous dollops of whipped cream.';
+  if (/bloody mary/i.test(t)) return 'A classic brunch cocktail featuring zesty seasoned tomato juice, horseradish, Worcestershire, celery, and savory garnishes.';
+  if (/irish food/i.test(t)) return 'Celebrating hearty heritage comfort dishes: traditional soda bread, shepherd’s pie, colcannon, and rich beef stew.';
+  if (/barbecued sparerib|spareribs/i.test(t)) return 'Honoring tender, smoky slow-cooked pork spareribs glazed in caramelized sweet and tangy barbecue sauces.';
+  if (/grilled cheese/i.test(t)) return 'Celebrating golden griddled comfort food perfection with gooey melted cheese toasted between crisp slices of artisan bread.';
+  if (/sushi/i.test(t)) return 'Honoring Japanese culinary artistry: delicate cuts of fresh fish, seasoned vinegared rice, and handcrafted nori rolls.';
+  if (/cherry tart/i.test(t)) return 'Celebrating sweet and tart ruby cherries baked into buttery pastry shells with light glaze and almond essence.';
+  if (/caramel apple/i.test(t)) return 'Crisp autumn orchard apples dipped in warm, buttery caramel and rolled in chopped nuts or sea salt.';
+  if (/cake/i.test(t)) return 'Honoring multi-layered, frosted confectionery masterpieces that mark celebrations, birthdays, and sweet moments.';
+  if (/i love food/i.test(t)) return 'An unapologetic celebration of worldwide flavors, home-cooked feasts, comfort bites, and culinary craftsmanship.';
+  if (/bratwurst/i.test(t)) return 'Celebrating savory German sausages simmered in beer and grilled over glowing charcoal with spicy mustard and sauerkraut.';
+  if (/rum/i.test(t)) return 'Celebrating sugarcane spirits distilled into rich dark, spiced, and golden rums across tropical islands.';
+  if (/picnic/i.test(t)) return 'Celebrating outdoor feasts in the sunshine with fresh sandwiches, chilled drinks, and good friends.';
+  if (/buffet/i.test(t)) return 'Celebrating all-you-can-eat spreads featuring endless culinary varieties from around the world.';
+  if (/cream puff/i.test(t)) return 'Delicate, airy choux pastry shells filled with velvety sweet pastry cream and dusted with powdered sugar.';
+  return `A delicious celebration honoring ${title.replace(/^[\p{Emoji}\u200d\s]+/u, '')} with favorite recipes, tasty pairings, and culinary tradition.`;
+}
+
+const CURATED_FOOD_CALENDAR = {
+  '09-01': [
+    { title: '🥖 National French Toast Day', description: 'Celebrating thick slices of egg-battered brioche crisped golden on the griddle with warm maple syrup.' },
+    { title: '🥟 World Samosa Day', description: 'Dedicated to the crispy, golden spiced potato and pea pastry beloved across global street food cultures.' }
+  ],
+  '09-02': [
+    { title: '🫐 National Blueberry Popsicle Day', description: 'Cooling down summer afternoons with vibrant fresh blueberry juice frozen on wooden sticks.' }
+  ],
+  '09-03': [
+    { title: '🥓 National Bacon Day', description: 'Honoring sizzling, hickory-smoked, crispy bacon slices paired with breakfasts, burgers, and maple glazes.' }
+  ],
+  '09-04': [
+    { title: '🌰 National Macadamia Nut Day', description: 'Celebrating the buttery, rich, golden-roasted native Australian nuts famous in gourmet cookies and confections.' }
+  ],
+  '09-05': [
+    { title: '🍕 National Cheese Pizza Day', description: 'Honoring the timeless perfection of bubbling mozzarella, rich seasoned tomato marinara, and crisp oven-fired crust.' }
+  ],
+  '09-06': [
+    { title: '☕ National Coffee Ice Cream Day', description: 'Blends two of life\'s greatest treats: bold roasted espresso and velvety, churned sweet cream.' }
+  ],
+  '09-07': [
+    { title: '🍺 National Beer Lover\'s Day', description: 'Celebrating craft breweries, time-honored brewing traditions, and crisp refreshing hops across the globe.' },
+    { title: '🌰 National Acorn Squash Day', description: 'Welcoming autumn harvest tables with sweet, tender roasted acorn squash drizzled in brown sugar and butter.' }
+  ],
+  '09-08': [
+    { title: '🥣 National Date Nut Bread Day', description: 'Celebrating the warm, spiced, sweet loaf studded with rich Medjool dates and crunchy toasted walnuts.' }
+  ],
+  '09-09': [
+    { title: '🍗 National Grilled Chicken Day', description: 'Honoring juicy flame-grilled, citrus-herb marinated chicken cuts crisped over open coals with smoky barbecue glazes.' },
+    { title: '🥩 National Steak au Poivre Day', description: 'Honoring the French bistro classic of prime tenderloin crusted in cracked black peppercorns and flamed with cognac cream.' },
+    { title: '🥖 National Wiener Schnitzel Day', description: 'Austria\'s culinary crown jewel: tender cutlets coated in crisp golden breadcrumbs and finished with fresh lemon.' },
+    { title: '🍲 National "I Love Food" Day', description: 'An unapologetic celebration of worldwide flavors, home-cooked feasts, comfort bites, and culinary craftsmanship.' },
+    { title: '🥟 World Samosa & Street Food Celebration', description: 'Celebrating golden, crispy pastry triangles packed with spiced potatoes, peas, and fragrant herbs enjoyed worldwide.' },
+    { title: '🍺 International Buy a Priest a Beer Day', description: 'A lighthearted tradition celebrating fellowship, neighborly cheer, and sharing a cold pint.' }
+  ],
+  '09-10': [
+    { title: '📺 National TV Dinner Day', description: 'Celebrating Swanson\'s 1953 mid-century cultural revolution that brought convenient three-compartment hot trays to living rooms.' }
+  ],
+  '09-11': [
+    { title: '🌶️ National Hot Cross Bun Day', description: 'Spiced sweet yeast buns packed with raisins, cinnamon, and marked with iconic icing crosses.' }
+  ],
+  '09-12': [
+    { title: '🍫 National Chocolate Milkshake Day', description: 'Rich chocolate ganache or Dutch cocoa blended thick with vanilla ice cream and topped with whipped cream.' }
+  ],
+  '09-13': [
+    { title: '🍫 International Chocolate Day', description: 'Honoring Milton Hershey\'s birthday and celebrating the ancient Mayan food of the gods enjoyed worldwide.' },
+    { title: '🍪 National Peanut Butter Day', description: 'Celebrating creamy and crunchy roasted peanut butter in sandwiches, cookies, and spooned straight from the jar.' }
+  ],
+  '09-14': [
+    { title: '🍩 National Cream-Filled Donut Day', description: 'Golden fried yeast rings injected with luscious Bavarian custard or sweet whipped marshmallow cream.' }
+  ],
+  '09-15': [
+    { title: '🧀 National Double Cheeseburger Day', description: 'Two seared beef patties, two layers of gooey melted American cheddar, and classic griddle onions.' },
+    { title: '🧀 National Linguine Day', description: 'Celebrating Italy\'s delicate ribbon pasta tossed in rich white clam sauce or fragrant Genovese pesto.' }
+  ],
+  '09-16': [
+    { title: '🥑 National Guacamole Day', description: 'Creamy Hass avocados mashed fresh with lime juice, minced cilantro, diced red onion, and jalapeños.' }
+  ],
+  '09-17': [
+    { title: '🥧 National Apple Dumpling Day', description: 'Whole crisp tart apples wrapped in flaky buttery pastry, baked until caramelised and bathed in cinnamon syrup.' }
+  ],
+  '09-18': [
+    { title: '🍔 National Cheeseburger Day', description: 'The ultimate American diner classic: juicy flame-grilled patties, melted cheddar, pickles, and toasted brioche.' }
+  ],
+  '09-19': [
+    { title: '🧈 National Butterscotch Pudding Day', description: 'Velvety cooked custard rich with browned butter, dark brown sugar, cream, and a pinch of sea salt.' }
+  ],
+  '09-20': [
+    { title: '🍕 National Pepperoni Pizza Day', description: 'America\'s favorite slice: crisp cups of spiced cured pepperoni, melted whole-milk mozzarella, and charred crust.' }
+  ],
+  '09-21': [
+    { title: '🍪 National Pecan Cookie Day', description: 'Buttery shortbread cookies packed with roasted Georgia pecans and rolled in confectioner\'s sugar.' }
+  ],
+  '09-22': [
+    { title: '🍦 National White Chocolate Day', description: 'Silky cocoa butter, sweet milk solids, and bourbon vanilla crafted into decadent bars and truffles.' }
+  ],
+  '09-23': [
+    { title: '🥧 Great American Pot Pie Day', description: 'Tender pulled chicken or beef simmered with garden vegetables in rich gravy under a golden puff pastry lid.' }
+  ],
+  '09-24': [
+    { title: '🥞 National Cherries Jubilee Day', description: 'Dark pitted cherries flamed with Kirsch liqueur and ladled warm over rich scoops of vanilla bean ice cream.' }
+  ],
+  '09-25': [
+    { title: '🦞 National Lobster Day', description: 'Sweet Atlantic Maine lobster tails steamed fresh, served with lemon wedges and hot drawn butter.' }
+  ],
+  '09-26': [
+    { title: '🥞 National Pancake Day', description: 'Fluffy buttermilk flapjacks stacked high, melting sweet cream butter and drizzled with warm amber syrup.' }
+  ],
+  '09-27': [
+    { title: '🥩 National Corned Beef Hash Day', description: 'Slow-cured beef diced with crispy griddled potatoes and caramelized onions, topped with sunny eggs.' }
+  ],
+  '09-28': [
+    { title: '☕ National Drink Beer Day', description: 'Raising a frosty stein to centuries of master brewing craftsmanship, malt, and aromatic hops.' }
+  ],
+  '09-29': [
+    { title: '☕ National Coffee Day', description: 'Celebrating the world\'s favorite energizing brew: fresh pour-overs, rich espressos, and morning roasts.' }
+  ],
+  '09-30': [
+    { title: '🍷 National Mulled Wine Day', description: 'Red wine simmered warm with cinnamon sticks, whole cloves, star anise, and fresh orange peel.' }
+  ]
+};
+
+app.get('/api/food-holidays', async (req, res) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+
+  const now = new Date();
+  const tz = req.query.tz || 'America/New_York';
+  let realTodayKey;
+  try {
+    realTodayKey = new Intl.DateTimeFormat('en-CA', { timeZone: tz }).format(now);
+  } catch (e) {
+    realTodayKey = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York' }).format(now);
+  }
+  let dateKey = realTodayKey;
+  if (req.query.date && /^\d{4}-\d{2}-\d{2}$/.test(req.query.date)) {
+    dateKey = req.query.date;
+  }
+
+  const mmDd = dateKey.slice(5); // e.g. "09-09"
+  const force = req.query.refresh === '1';
+
+  if (!force && foodHolidaysCache.dateKey === dateKey && foodHolidaysCache.holidays.length > 0 && (Date.now() - foodHolidaysCache.fetchedAt < 60 * 60 * 1000)) {
+    return res.json({
+      success: true,
+      date: foodHolidaysCache.dateKey,
+      cached: true,
+      count: foodHolidaysCache.holidays.length,
+      holidays: foodHolidaysCache.holidays,
+      serverTime: Date.now()
+    });
+  }
+
+  const foodItems = [];
+
+  // 1. Seed with curated culinary calendar for this date (rich descriptions & verified dishes)
+  const curatedToday = CURATED_FOOD_CALENDAR[mmDd] || [];
+  curatedToday.forEach(cItem => {
+    foodItems.push({
+      title: cItem.title,
+      description: cItem.description,
+      link: 'https://www.checkiday.com',
+      source: 'Curated Culinary Registry'
+    });
+  });
+
+  // 2. Supplement with Julee Ho 365-Day Culinary Registry for this date
+  const juleeHoToday = JULEE_HO_365_CALENDAR[mmDd] || [];
+  juleeHoToday.forEach(hName => {
+    const cleanName = hName.replace(/^[\p{Emoji}\u200d\s]+/u, '').replace(/["“”'‘’]/g, '').toLowerCase().trim();
+    const existing = foodItems.find(f => {
+      const cleanF = f.title.replace(/^[\p{Emoji}\u200d\s]+/u, '').replace(/["“”'‘’]/g, '').toLowerCase().trim();
+      return cleanF.includes(cleanName) || cleanName.includes(cleanF);
+    });
+    if (!existing) {
+      const emoji = getFoodEmoji(hName);
+      const title = /^[\p{Emoji}\u200d]+/u.test(hName) ? hName : `${emoji} ${hName}`;
+      foodItems.push({
+        title,
+        description: getAppetizingDescription(hName),
+        link: 'https://juleeho.com/food-marketing-blog/food-holidays-the-most-comprehensive-365-day-list',
+        source: 'Julee Ho 365-Day Culinary Registry'
+      });
+    }
+  });
+
+  // 3. Discover and merge additional food celebrations from today's live Checkiday feed (only if querying today)
+  if (dateKey === realTodayKey) {
+    try {
+      let checkidayItems = [];
+      if (checkidayCache.dateKey === dateKey && checkidayCache.holidays.length > 0) {
+        checkidayItems = checkidayCache.holidays;
+      } else {
+        const cRes = await fetch(`http://127.0.0.1:${PORT}/api/checkiday?date=${dateKey}&tz=${encodeURIComponent(tz)}`);
+        if (cRes.ok) {
+          const cData = await cRes.json();
+          if (cData && Array.isArray(cData.holidays)) {
+            checkidayItems = cData.holidays;
+          }
+        }
+      }
+
+      checkidayItems.forEach(item => {
+        const fullText = `${item.title} ${item.description || ''} ${item.summary || ''}`;
+        if (FOOD_REGEX.test(fullText) && !EXCLUDE_FOOD_REGEX.test(item.title) && !EXCLUDE_FOOD_REGEX.test(fullText)) {
+          const cleanTitle = item.title.replace(/^[\p{Emoji}\u200d\s]+/u, '').replace(/["“”'‘’]/g, '').toLowerCase().trim();
+          const existing = foodItems.find(f => {
+            const cleanF = f.title.replace(/^[\p{Emoji}\u200d\s]+/u, '').replace(/["“”'‘’]/g, '').toLowerCase().trim();
+            return cleanF.includes(cleanTitle) || cleanTitle.includes(cleanF);
+          });
+
+          if (existing) {
+            if (item.link) existing.link = item.link;
+          } else {
+            let title = item.title;
+            if (!/^[\p{Emoji}\u200d]+/u.test(title)) {
+              const emoji = getFoodEmoji(title);
+              title = `${emoji} ${title}`;
+            }
+            foodItems.push({
+              title,
+              description: item.summary || item.origin || item.description || getAppetizingDescription(item.title),
+              link: item.link || 'https://www.checkiday.com',
+              source: 'Checkiday Culinary'
+            });
+          }
+        }
+      });
+    } catch (err) {
+      console.warn('[Food Holidays] Checkiday extract failed:', err.message);
+    }
+  }
+
+  // 3. If empty, provide gourmet fallback
+  if (foodItems.length === 0) {
+    foodItems.push(
+      { title: '🍽️ World Food Discovery Day', description: 'Celebrating global comfort foods, heritage recipes, and savoring new culinary flavours.', link: 'https://www.checkiday.com' },
+      { title: '☕ Morning Roast Appreciation Day', description: 'Honoring artisanal coffee roasters, espresso craftsmanship, and cozy morning rituals.', link: 'https://www.checkiday.com' }
+    );
+  }
+
+  // 4. Culinary Ranking: iconic meals & hearty dishes lead first, broad food days next, beverage observances last
+  function getFoodPriority(title = '') {
+    const t = title.toLowerCase();
+    // Iconic savory and sweet main dishes (Highest Priority = 1)
+    if (/chicken|poultry|steak|beef|schnitzel|pizza|burger|cheeseburger|pasta|linguine|taco|dumpling|samosa|pie|pancake|waffle|bacon|lobster|pot pie|donut|curry|hash|guacamole|french toast|sandwich|hoagie/i.test(t)) {
+      return 1;
+    }
+    // Celebratory culinary appreciation (Priority = 2)
+    if (/i love food|food day|cooking|baking|culinary/i.test(t)) {
+      return 2;
+    }
+    // Sweets, desserts, nuts, produce (Priority = 3)
+    if (/chocolate|ice cream|cookie|pudding|bread|nut|fruit|squash|dates|popsicle/i.test(t)) {
+      return 3;
+    }
+    // Beverages, beer, wine, cocktail, coffee, novelty observances (Priority = 4)
+    if (/beer|priest|wine|cocktail|drink|alcohol|brew|coffee|espresso|cider/i.test(t)) {
+      return 4;
+    }
+    return 2;
+  }
+
+  foodItems.sort((a, b) => getFoodPriority(a.title) - getFoodPriority(b.title));
+
+  foodHolidaysCache = {
+    dateKey,
+    fetchedAt: Date.now(),
+    holidays: foodItems
+  };
+
+  res.json({
+    success: true,
+    date: dateKey,
+    count: foodItems.length,
+    holidays: foodItems,
+    serverTime: Date.now()
+  });
+});
+
+/* ===============================================================
+   THIS DAY IN RETRO TECH & SPACE API ROUTE (/api/tech-history)
+   - Live ingests Marcel Brown's official "This Day in Tech History" RSS
+   - Enriches with curated computing & space exploration milestones
+   - Decodes entities, strips boilerplate, extracts vintage year
+=============================================================== */
+let techHistoryCache = { dateKey: '', fetchedAt: 0, items: [] };
+
+const TECH_BACKUP_EVENTS = [
+  { title: "The First Computer “Bug” (1945)", year: "1945", description: "Operators of the Harvard Mark II find a moth trapped in relay #70 in panel F. The bug is taped into their logbook with the note: 'First actual case of bug being found.' This coined the modern term 'debugging'.", primarySummary: "Operators of the Harvard Mark II find a moth trapped in relay #70 in panel F. The bug is taped into their logbook, coining the modern term 'debugging'.", source: "This Day in Tech History" },
+  { title: "Remote Computing Pioneer (1940)", year: "1940", description: "Mathematician George Stibitz demonstrates the first remote operation of a computer using a Teletype terminal connected via standard telegraph lines to Bell Labs.", primarySummary: "Mathematician George Stibitz demonstrates the first remote operation of a computer using a Teletype terminal connected via standard telegraph lines to Bell Labs.", source: "Tech History Archives" },
+  { title: "Space Shuttle Discovery STS-64 (1994)", year: "1994", description: "Space Shuttle Discovery launches on mission STS-64, performing the first untethered spacewalk in ten years to test the SAFER astronaut jetpack.", primarySummary: "Space Shuttle Discovery launches on mission STS-64, performing the first untethered spacewalk in ten years to test the SAFER astronaut jetpack.", source: "NASA Space History" },
+  { title: "Space Shuttle Atlantis STS-115 (2006)", year: "2006", description: "Space Shuttle Atlantis launches to the International Space Station, delivering and installing the massive P3/P4 solar truss segment.", primarySummary: "Space Shuttle Atlantis launches to the International Space Station, delivering and installing the massive P3/P4 solar truss segment.", source: "NASA Space History" }
+];
+
+function cleanTechHistoryText(rawDesc, rawTitle) {
+  if (!rawDesc) return { concise: rawTitle || '', full: rawTitle || '', year: '' };
+
+  // 1. Split into paragraphs and pick the story paragraph (discard attribution footer paragraph)
+  const paragraphs = String(rawDesc).split(/<\/p>/i);
+  const contentParagraph = paragraphs.find(p => !/is original content of|This Day in Tech History/i.test(p)) || paragraphs[0] || '';
+
+  // 2. Decode HTML entities and strip markup
+  let clean = contentParagraph
+    .replace(/<!\[CDATA\[/g, '')
+    .replace(/\]\]>/g, '')
+    .replace(/<[^>]*>/g, '')
+    .replace(/&#8220;/g, '"').replace(/&#8221;/g, '"')
+    .replace(/&#8216;/g, "'").replace(/&#8217;/g, "'")
+    .replace(/&#8211;/g, '–').replace(/&#8212;/g, '—')
+    .replace(/&#8230;/g, '...')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'")
+    .replace(/&#39;/g, "'")
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/is original content of This Day in Tech History\.?/gi, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  // 3. Extract year if description starts with "Month Day, Year"
+  const yearMatch = clean.match(/^(?:[A-Za-z]+\s+\d{1,2},\s+)?(\d{4})\s+/);
+  let year = yearMatch ? yearMatch[1] : '';
+  if (yearMatch) {
+    clean = clean.slice(yearMatch[0].length).trim();
+  }
+
+  // 4. Strip duplicate title or "[Title] is original content" lingering at end
+  if (rawTitle) {
+    const plainTitle = rawTitle.replace(/^["“”'‘’\s]+|["“”'‘’\s]+$/g, '').trim();
+    clean = clean.replace(new RegExp('(?:\\[\\.{3}\\]|\\.{3}|\\…)?\\s*["“”\'‘’]?' + plainTitle.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&') + '["“”\'‘’]?\\s*$', 'i'), '').trim();
+  }
+
+  const wasTruncated = /\.{3,}$/.test(clean);
+  clean = clean.replace(/\s*\.{3,}\s*$/, '').trim();
+
+  // 5. Split into sentences with protection for common abbreviations
+  const protectedText = clean
+    .replace(/\b(Inc|Corp|Co|Ltd|Gov|Dept|Gen|Col|Maj|Capt|Lt|Sgt|St|Mr|Mrs|Ms|Dr|Prof|Rev|vs|approx|no)\./gi, '$1{{DOT}}')
+    .replace(/\b(U\.S|e\.g|i\.e)\./gi, '$1{{DOT}}')
+    .replace(/(\d)\.(\d)/g, '$1{{DECIMAL}}$2');
+
+  const rawSentences = protectedText.match(/[^.!?]+(?:[.!?]+|$)/g) || [protectedText];
+  const sentences = rawSentences.map(p => p
+    .replace(/\{\{DOT\}\}/g, '.')
+    .replace(/\{\{DECIMAL\}\}/g, '.')
+    .trim()
+  ).filter(Boolean);
+
+  // If source feed cut off with an incomplete sentence, drop the trailing fragment
+  if (wasTruncated && sentences.length > 1) {
+    const last = sentences[sentences.length - 1];
+    if (last.length < 45 || /^(?:but|and|or|however|so|yet|because|this was|which was|that was)\b/i.test(last) || /\b(?:the|a|an|in|on|at|to|of|for|with|by|from|about|into|through|during|before|after|above|below|is|was|are|were|be|been|being)\.?$/i.test(last)) {
+      sentences.pop();
+    }
+  }
+
+  let full = sentences.join(' ').trim();
+  if (full && !/[.!?]$/.test(full)) full += '.';
+
+  let concise = '';
+  for (const s of sentences) {
+    const cleanS = /[.!?]$/.test(s) ? s : s + '.';
+    if (!concise) {
+      concise = cleanS;
+    } else if ((concise + ' ' + cleanS).length <= 180) {
+      concise += ' ' + cleanS;
+    } else {
+      break;
+    }
+  }
+  if (!concise && sentences.length > 0) {
+    concise = sentences[0];
+  }
+  if (concise && !/[.!?]$/.test(concise)) concise += '.';
+
+  return {
+    year,
+    concise: concise || full,
+    full: full || concise
+  };
+}
+
+app.get('/api/tech-history', async (req, res) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+
+  const now = new Date();
+  const tz = req.query.tz || 'America/New_York';
+  let dateKey;
+  try {
+    dateKey = new Intl.DateTimeFormat('en-CA', { timeZone: tz }).format(now);
+  } catch (e) {
+    dateKey = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York' }).format(now);
+  }
+  if (req.query.date && /^\d{4}-\d{2}-\d{2}$/.test(req.query.date)) {
+    dateKey = req.query.date;
+  }
+
+  const parts = dateKey.split('-');
+  const mm = parts[1] || '09';
+  const dd = parts[2] || '09';
+  const force = req.query.refresh === '1';
+
+  if (!force && techHistoryCache.dateKey === dateKey && techHistoryCache.items.length > 0 && (Date.now() - techHistoryCache.fetchedAt < 60 * 60 * 1000)) {
+    return res.json({
+      success: true,
+      date: techHistoryCache.dateKey,
+      cached: true,
+      count: techHistoryCache.items.length,
+      items: techHistoryCache.items,
+      serverTime: Date.now()
+    });
+  }
+
+  const results = [];
+
+  // 1. Ingest Marcel Brown's official "This Day in Tech History" RSS
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 4500);
+    const feedRes = await fetch('https://feedpress.me/ThisDayInTechHistory', {
+      signal: controller.signal,
+      headers: {
+        'User-Agent': 'WeatherFriendsConsole/1.3 (TechHistoryFeed)'
+      }
+    });
+    clearTimeout(timeoutId);
+
+    if (feedRes.ok) {
+      const xml = await feedRes.text();
+      const itemRegex = /<item>([\s\S]*?)<\/item>/gi;
+      let match;
+      while ((match = itemRegex.exec(xml)) !== null && results.length < 4) {
+        const itemXml = match[1];
+        const titleM = itemXml.match(/<title>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/title>/i);
+        const descM = itemXml.match(/<description>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/description>/i);
+        const linkM = itemXml.match(/<link>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/link>/i);
+
+        const rawTitle = (titleM ? titleM[1] : '')
+          .replace(/<!\[CDATA\[/g, '')
+          .replace(/\]\]>/g, '')
+          .replace(/&#8220;/g, '"').replace(/&#8221;/g, '"')
+          .replace(/&#8216;/g, "'").replace(/&#8217;/g, "'")
+          .replace(/&amp;/g, '&')
+          .trim();
+
+        if (rawTitle) {
+          const { year, concise, full } = cleanTechHistoryText(descM ? descM[1] : '', rawTitle);
+
+          results.push({
+            title: year ? `${rawTitle} (${year})` : rawTitle,
+            year: year || 'Retro Tech',
+            description: concise || rawTitle,
+            summary: full || concise || rawTitle,
+            primarySummary: concise || rawTitle,
+            origin: concise || rawTitle,
+            link: linkM ? linkM[1].trim() : 'https://thisdayintechhistory.com',
+            source: 'This Day in Tech History'
+          });
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('[Tech History] RSS ingestion notice:', err.message);
+  }
+
+  // 2. Enrich with Wikipedia "On This Day" Computing & Space Milestones
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3500);
+    const wikiRes = await fetch(`https://en.wikipedia.org/api/rest_v1/feed/onthisday/events/${mm}/${dd}`, {
+      signal: controller.signal,
+      headers: { 'User-Agent': 'WeatherFriendsConsole/1.3 (OnThisDayTech)' }
+    });
+    clearTimeout(timeoutId);
+
+    if (wikiRes.ok) {
+      const wikiData = await wikiRes.json();
+      if (wikiData && Array.isArray(wikiData.events)) {
+        const techFilter = /(computer|computing|software|hardware|space|nasa|satellite|apollo|bug|robot|video game|arcade|internet|atari|nintendo|apple|ibm|transistor|radio|telescope|astronomy|physics|spacewalk|shuttle|cosmonaut|astronaut|microprocessor|semiconductor|laser)/i;
+        const matches = wikiData.events.filter(e => techFilter.test(e.text));
+        matches.slice(0, 5).forEach(ev => {
+          const rawText = (ev.text || '').replace(/<[^>]*>/g, '').trim();
+          if (/drone/i.test(rawText)) return; // filter modern military drones
+
+          let label = `Milestone of ${ev.year}`;
+          if (/space shuttle/i.test(rawText)) label = 'Space Shuttle Mission';
+          else if (/satellite/i.test(rawText)) label = 'Orbital Satellite Launch';
+          else if (/computer/i.test(rawText)) label = 'Computing Pioneer';
+          else if (/broadcast|radio/i.test(rawText)) label = 'Broadcasting Milestone';
+          else if (/telescope|astronomy/i.test(rawText)) label = 'Cosmic Observation';
+
+          const { concise, full } = cleanTechHistoryText(rawText, label);
+
+          results.push({
+            title: `${label} (${ev.year})`,
+            year: String(ev.year),
+            description: concise || rawText,
+            summary: full || rawText,
+            primarySummary: concise || rawText,
+            origin: concise || rawText,
+            link: (ev.pages && ev.pages[0] && ev.pages[0].content_urls && ev.pages[0].content_urls.desktop && ev.pages[0].content_urls.desktop.page) || 'https://en.wikipedia.org',
+            source: 'Tech History Archives'
+          });
+        });
+      }
+    }
+  } catch (err) {
+    console.warn('[Tech History] Wikipedia API notice:', err.message);
+  }
+
+  const finalItems = results.length > 0 ? results : TECH_BACKUP_EVENTS;
+
+  techHistoryCache = {
+    dateKey,
+    fetchedAt: Date.now(),
+    items: finalItems
+  };
+
+  res.json({
+    success: true,
+    date: dateKey,
+    count: finalItems.length,
+    items: finalItems,
+    fallback: results.length === 0,
     serverTime: Date.now()
   });
 });

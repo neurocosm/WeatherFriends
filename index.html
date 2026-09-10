@@ -18,7 +18,7 @@
 <meta property="og:description" content="Weather Friends app by BostonyFX - Smart display weather console with live forecasts, precision local station data, barometric tracking, and environmental monitoring.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Outfit:wght@400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Outfit:wght@400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Special+Elite&display=swap" rel="stylesheet">
 <style>
   @property --bezel-hi {
     syntax: '<color>';
@@ -382,6 +382,148 @@
   @keyframes pulseWake{
     0%,100%{ opacity:1; }
     50%{ opacity:0.5; }
+  }
+
+  /* -------------------------------------------------------------
+     DEEP NIGHT BEACON & MINIMALIST BEDROOM DIMMER (LEVEL 4 & 3)
+     - Minimizes ambient light in a dark room
+     - Active dimmer dot shines softly as the sole emerald beacon
+     - Awake button, brand text, and inactive dots fade into chassis
+  ------------------------------------------------------------- */
+  /* Level 4: Deep Night Beacon Mode (8%) */
+  html[data-dim-level="4"] .device{
+    box-shadow:0 10px 30px rgba(0,0,0,0.95);
+  }
+  html[data-dim-level="4"] .device-dimmer{
+    background:rgba(0,0,0,0.60);
+    border-color:rgba(16,185,129,0.22);
+    box-shadow:none;
+  }
+  html[data-dim-level="4"] .dimmer-icon{
+    opacity:0.04;
+    stroke:#10b981;
+  }
+  html[data-dim-level="4"] .dimmer-pct-label{
+    opacity:0.05;
+  }
+  html[data-dim-level="4"] .dimmer-dot-btn:not(.active){
+    opacity:0.03;
+    background:rgba(255,255,255,0.02);
+    border-color:transparent;
+  }
+  /* The Emerald Beacon: Sole illuminated dot */
+  html[data-dim-level="4"] .dimmer-dot-btn.active{
+    background:#10b981 !important;
+    border-color:#34d399 !important;
+    box-shadow:0 0 8px rgba(16,185,129,0.85), 0 0 2px #34d399 !important;
+    transform:scale(1.22);
+  }
+  /* Gentle reveal on dimmer hover for tactile control */
+  html[data-dim-level="4"] .device-dimmer:hover .dimmer-icon,
+  html[data-dim-level="4"] .device-dimmer:hover .dimmer-pct-label{
+    opacity:0.7;
+  }
+  html[data-dim-level="4"] .device-dimmer:hover .dimmer-dot-btn:not(.active){
+    opacity:0.35;
+    border-color:rgba(255,255,255,0.18);
+  }
+
+  /* Extinguish Awake button light while keeping wake-lock 100% active */
+  html[data-dim-level="4"] .wake-pill{
+    opacity:0.03;
+    background:transparent !important;
+    border-color:transparent !important;
+    box-shadow:none !important;
+    color:transparent !important;
+  }
+  html[data-dim-level="4"] .wake-pill .wake-dot{
+    background:#060b0e !important;
+    animation:none !important;
+    box-shadow:none !important;
+  }
+  html[data-dim-level="4"] .wake-pill:hover{
+    opacity:0.8;
+    background:rgba(12,32,28,0.7) !important;
+    border-color:rgba(73,230,196,0.3) !important;
+    color:#49e6c4 !important;
+  }
+  html[data-dim-level="4"] .wake-pill:hover .wake-dot{
+    background:#49e6c4 !important;
+  }
+
+  /* Dim brand logo and version pill on top bar */
+  html[data-dim-level="4"] .device-top .brand,
+  html[data-dim-level="4"] .device-top .version-pill{
+    opacity:0.03;
+    transition:opacity 0.25s ease;
+  }
+  html[data-dim-level="4"] .device-top:hover .brand,
+  html[data-dim-level="4"] .device-top:hover .version-pill{
+    opacity:0.6;
+  }
+
+  /* Minimalist Screen Night Mode (Level 4): pure dark void & softened scanlines */
+  html[data-dim-level="4"] .screen{
+    background:#000102;
+    box-shadow:inset 0 0 70px #000;
+  }
+  html[data-dim-level="4"] .screen::after{
+    opacity:0.08;
+  }
+
+  /* Level 3 (Twilight Dim - 25%): Subdued awake pill and dimmer */
+  html[data-dim-level="3"] .wake-pill.active{
+    background:rgba(8, 20, 18, 0.4);
+    border-color:rgba(73,230,196,0.22);
+    color:rgba(73,230,196,0.55);
+  }
+  html[data-dim-level="3"] .wake-pill.active .wake-dot{
+    animation:none;
+    opacity:0.5;
+  }
+  html[data-dim-level="3"] .dimmer-icon{
+    opacity:0.35;
+  }
+  html[data-dim-level="3"] .dimmer-pct-label{
+    opacity:0.4;
+  }
+
+  /* Hyperspace Low-Light Tuning (Levels 3 and 4) */
+  html[data-dim-level="3"] .starfield-universe,
+  html[data-dim-level="4"] .starfield-universe{
+    background:#000000 !important;
+  }
+  html[data-dim-level="3"] .warp-hyperspace-banner,
+  html[data-dim-level="4"] .warp-hyperspace-banner{
+    background:rgba(0, 0, 0, 0.88) !important;
+    border:1px solid rgba(56, 189, 248, 0.25) !important;
+    box-shadow:0 8px 30px rgba(0, 0, 0, 0.95) !important;
+    padding:16px 26px !important;
+  }
+  html[data-dim-level="3"] .warp-alert-pill,
+  html[data-dim-level="4"] .warp-alert-pill{
+    animation:none !important;
+    box-shadow:none !important;
+    border-color:rgba(56, 189, 248, 0.3) !important;
+    color:rgba(56, 189, 248, 0.75) !important;
+  }
+  html[data-dim-level="3"] .warp-main-title,
+  html[data-dim-level="4"] .warp-main-title{
+    text-shadow:none !important;
+    font-size:clamp(1.1rem, 2.2vh, 1.4rem) !important;
+    color:#e0f2fe !important;
+  }
+  html[data-dim-level="3"] .starfield-hud,
+  html[data-dim-level="4"] .starfield-hud{
+    background:rgba(0, 0, 0, 0.82) !important;
+    border:1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow:0 8px 30px rgba(0, 0, 0, 0.95) !important;
+  }
+  html[data-dim-level="3"] .star-core-dot,
+  html[data-dim-level="4"] .star-core-dot{
+    animation:none !important;
+    box-shadow:0 0 6px #38bdf8 !important;
+    opacity:0.6 !important;
   }
 
   .screen{
@@ -1861,6 +2003,657 @@
     animation:eightballWobble 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
   }
 
+  /* ---- SECRET ORACLE MODE SELECTOR MODAL (Long-Press Trigger) ---- */
+  .oracle-picker-backdrop{
+    position:fixed;
+    inset:0;
+    z-index:99999;
+    background:rgba(3, 8, 12, 0.78);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:16px;
+    animation:oracleFadeIn 0.22s ease-out;
+  }
+  .oracle-picker-backdrop.active{
+    display:flex;
+  }
+  @keyframes oracleFadeIn{
+    from{ opacity:0; }
+    to{ opacity:1; }
+  }
+  .oracle-picker-modal{
+    background:radial-gradient(ellipse at 50% 0%, #15222b 0%, #0a131a 75%, #050b0f 100%);
+    border:1px solid rgba(73, 230, 196, 0.4);
+    box-shadow:0 12px 40px rgba(0,0,0,0.85), 0 0 24px rgba(73, 230, 196, 0.18);
+    border-radius:14px;
+    width:100%;
+    max-width:440px;
+    padding:20px;
+    box-sizing:border-box;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    user-select:none;
+    transform:scale(1);
+    animation:oracleModalPop 0.25s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  }
+  @keyframes oracleModalPop{
+    from{ transform:scale(0.92); opacity:0; }
+    to{ transform:scale(1); opacity:1; }
+  }
+  .oracle-picker-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border-bottom:1px solid rgba(73, 230, 196, 0.18);
+    padding-bottom:10px;
+  }
+  .oracle-picker-title{
+    font-family:'Outfit',sans-serif;
+    font-size:1.05rem;
+    font-weight:800;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:#e1f8ff;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .oracle-picker-subtitle{
+    font-family:'Outfit',sans-serif;
+    font-size:0.75rem;
+    color:rgba(180, 210, 225, 0.7);
+    margin-top:2px;
+  }
+  .oracle-close-btn{
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.12);
+    color:rgba(220,235,245,0.85);
+    border-radius:50%;
+    width:32px;
+    height:32px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    font-size:1.1rem;
+    transition:background 0.15s ease, color 0.15s ease;
+  }
+  .oracle-close-btn:hover{
+    background:rgba(255, 90, 90, 0.25);
+    border-color:rgba(255, 90, 90, 0.4);
+    color:#ff8e8e;
+  }
+  .oracle-options-grid{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .oracle-option-card{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:12px 14px;
+    border-radius:10px;
+    background:rgba(12, 22, 29, 0.75);
+    border:1px solid rgba(255,255,255,0.08);
+    cursor:pointer;
+    transition:all 0.18s ease;
+  }
+  .oracle-option-card:hover, .oracle-option-card:focus{
+    background:rgba(20, 36, 48, 0.95);
+    border-color:rgba(73, 230, 196, 0.5);
+    transform:translateX(3px);
+  }
+  .oracle-option-card.selected{
+    background:linear-gradient(90deg, rgba(16, 45, 52, 0.9) 0%, rgba(10, 28, 35, 0.8) 100%);
+    border-color:rgba(73, 230, 196, 0.85);
+    box-shadow:0 0 14px rgba(73, 230, 196, 0.2);
+  }
+  .oracle-opt-icon{
+    font-size:1.8rem;
+    line-height:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:42px;
+    height:42px;
+    border-radius:8px;
+    background:rgba(0,0,0,0.35);
+    border:1px solid rgba(255,255,255,0.06);
+    flex-shrink:0;
+  }
+  .oracle-opt-info{
+    display:flex;
+    flex-direction:column;
+    flex:1;
+  }
+  .oracle-opt-name{
+    font-family:'Outfit',sans-serif;
+    font-weight:700;
+    font-size:0.92rem;
+    color:#ffffff;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .oracle-opt-badge{
+    font-size:0.65rem;
+    padding:1px 6px;
+    border-radius:10px;
+    background:rgba(73, 230, 196, 0.2);
+    color:#49e6c4;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+  }
+  .oracle-opt-desc{
+    font-family:'Outfit',sans-serif;
+    font-size:0.75rem;
+    color:rgba(180, 205, 220, 0.7);
+    margin-top:2px;
+    line-height:1.25;
+  }
+
+  /* ---- ARTIFACT STYLES: NOTEBOOK ("BOOK OF ANSWERS") ---- */
+  .notebook-container{
+    display:none;
+    width:100%;
+    height:100%;
+    position:relative;
+    align-items:center;
+    justify-content:center;
+    perspective:900px;
+  }
+  .oracle-mode-notebook .notebook-container{
+    display:flex;
+  }
+  .oracle-mode-notebook #eightballSphere{
+    display:none !important;
+  }
+  .oracle-mode-box #eightballSphere{
+    display:none !important;
+  }
+
+  /* ---- ARTIFACT STYLES: OPEN BOOK OF ANSWERS ---- */
+  .open-book-wrapper{
+    width:var(--notebook-width, 94%);
+    max-width:350px;
+    height:var(--notebook-height, 86%);
+    max-height:205px;
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    perspective:1000px;
+    user-select:none;
+    cursor:pointer;
+    transition:transform 0.18s ease;
+  }
+  .open-book-wrapper:hover{
+    transform:scale(1.02);
+  }
+  .open-book-shadow{
+    position:absolute;
+    bottom:0;
+    width:94%;
+    height:18px;
+    border-radius:50%;
+    background:radial-gradient(ellipse at center, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 75%);
+    pointer-events:none;
+    z-index:0;
+  }
+  /* Outer Hardbound Leather Cover Edges visible behind pages */
+  .open-book-cover-edge{
+    position:absolute;
+    top:4px;
+    bottom:4px;
+    width:49%;
+    background:linear-gradient(180deg, #1c2630 0%, #0d141a 100%);
+    border:1px solid #334856;
+    z-index:1;
+    pointer-events:none;
+  }
+  .open-book-cover-edge.left{
+    left:2px;
+    border-radius:6px 0 0 6px;
+    box-shadow:-4px 6px 14px rgba(0,0,0,0.85);
+  }
+  .open-book-cover-edge.right{
+    right:2px;
+    border-radius:0 6px 6px 0;
+    box-shadow:4px 6px 14px rgba(0,0,0,0.85);
+  }
+  /* Realistic Fan of stacked pages beneath open leaf */
+  .open-book-pages-stack{
+    position:absolute;
+    top:8px;
+    bottom:8px;
+    width:48%;
+    background:repeating-linear-gradient(180deg, #ded2be 0px, #ded2be 1px, #bfa88c 1px, #bfa88c 2px);
+    z-index:2;
+    pointer-events:none;
+    opacity:0.9;
+  }
+  .open-book-pages-stack.left{
+    left:5px;
+    border-radius:4px 0 0 4px;
+    border-left:1px solid #8e7354;
+  }
+  .open-book-pages-stack.right{
+    right:5px;
+    border-radius:0 4px 4px 0;
+    border-right:1px solid #8e7354;
+  }
+  /* Open Tome Spread Container */
+  .open-book-spread{
+    position:relative;
+    width:97%;
+    height:94%;
+    display:flex;
+    z-index:3;
+  }
+  /* Left and Right Arched Pages */
+  .open-book-page{
+    flex:1;
+    background:radial-gradient(ellipse at 50% 30%, #fffef8 0%, #f7ecd5 70%, #ebd7b3 100%);
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:8px 10px;
+    box-sizing:border-box;
+    box-shadow:inset 0 0 10px rgba(120, 80, 40, 0.15);
+    overflow:hidden;
+  }
+  .open-book-page.left{
+    border-radius:6px 2px 2px 6px;
+    border:1px solid #c2a884;
+    border-right:none;
+    /* Gentle 3D arching curve toward spine */
+    box-shadow:
+      inset 8px 0 16px rgba(255,255,255,0.7),
+      inset -18px 0 20px rgba(70, 45, 20, 0.35),
+      -2px 3px 8px rgba(0,0,0,0.35);
+  }
+  .open-book-page.right{
+    border-radius:2px 6px 6px 2px;
+    border:1px solid #c2a884;
+    border-left:none;
+    /* Gentle 3D arching curve toward spine */
+    box-shadow:
+      inset -8px 0 16px rgba(255,255,255,0.7),
+      inset 18px 0 20px rgba(70, 45, 20, 0.35),
+      2px 3px 8px rgba(0,0,0,0.35);
+  }
+
+  /* Left Page Two-Page Content: Chapter header, philosophical inquiry & fleur */
+  .open-book-left-content{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    width:100%;
+    height:100%;
+    text-align:center;
+    z-index:2;
+    padding:4px;
+    box-sizing:border-box;
+    transition:opacity 0.2s ease, transform 0.2s ease;
+  }
+  .open-book-left-content.fading{
+    opacity:0;
+    transform:translateY(3px);
+  }
+  .open-book-entry-num{
+    font-family:'Outfit', sans-serif;
+    font-size:clamp(0.55rem, 1.0vw, 0.65rem);
+    font-weight:700;
+    letter-spacing:0.18em;
+    color:#744b1c;
+    text-transform:uppercase;
+    margin-bottom:6px;
+    opacity:0.85;
+  }
+  .notebook-prompt-text{
+    font-family:'Special Elite', 'Share Tech Mono', serif;
+    color:#2f1f10;
+    font-size:clamp(0.70rem, 1.3vw, 0.86rem);
+    font-weight:700;
+    line-height:1.32;
+    text-align:center;
+    width:100%;
+    max-width:96%;
+    word-break:keep-all;
+    overflow-wrap:normal;
+    hyphens:none;
+    letter-spacing:0.01em;
+  }
+  .open-book-flourish{
+    font-size:0.85rem;
+    color:#936329;
+    margin-top:6px;
+    opacity:0.6;
+    line-height:1;
+  }
+
+  /* Right Page Two-Page Content: Revelation */
+  .open-book-right-content{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    width:100%;
+    height:100%;
+    text-align:center;
+    z-index:5;
+    padding:4px;
+    box-sizing:border-box;
+  }
+
+  /* Center Spine Seam & Satin Bookmark Ribbon */
+  .open-book-spine-seam{
+    width:8px;
+    background:linear-gradient(90deg, rgba(40,25,12,0.6) 0%, rgba(15,10,5,0.9) 50%, rgba(40,25,12,0.6) 100%);
+    box-shadow:0 0 8px rgba(0,0,0,0.75);
+    position:relative;
+    z-index:4;
+    display:flex;
+    justify-content:center;
+  }
+  .open-book-ribbon-marker{
+    position:absolute;
+    top:0;
+    width:8px;
+    height:75%;
+    background:#b52626;
+    border-radius:0 0 2px 2px;
+    box-shadow:2px 2px 5px rgba(0,0,0,0.6);
+    clip-path:polygon(0 0, 100% 0, 100% 100%, 50% 84%, 0 100%);
+    pointer-events:none;
+  }
+
+  /* Animated Page-Turn Leaf across the spread */
+  .notebook-flipping-page{
+    position:absolute;
+    right:0;
+    top:0;
+    bottom:0;
+    width:100%;
+    background:linear-gradient(90deg, #f2e2c4 0%, #fffbf0 50%, #edd9b5 100%);
+    border-radius:2px 6px 6px 2px;
+    border:1px solid #c2a884;
+    box-shadow:-6px 0 16px rgba(0,0,0,0.5);
+    transform-origin:left center;
+    opacity:0;
+    pointer-events:none;
+    z-index:6;
+  }
+  .open-book-wrapper.flipping .notebook-flipping-page{
+    animation:openBookTurn 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+  @keyframes openBookTurn{
+    0%{ transform:rotateY(0deg); opacity:1; }
+    50%{ transform:rotateY(-90deg) skewY(-2deg); opacity:0.95; }
+    100%{ transform:rotateY(-175deg) skewY(2deg); opacity:0; }
+  }
+
+  /* Answer Text: Crystal Clear, Deep Ink on Bright Parchment (No hyphenated splits!) */
+  .notebook-answer-text{
+    font-family:'Special Elite', 'Share Tech Mono', serif;
+    color:#120c06 !important;
+    font-size:clamp(0.70rem, 1.3vw, 0.88rem);
+    font-weight:800;
+    line-height:1.3;
+    text-align:center;
+    width:100%;
+    max-width:98%;
+    word-break:keep-all;
+    overflow-wrap:normal;
+    hyphens:none;
+    white-space:normal;
+    letter-spacing:0.01em;
+    z-index:5;
+    text-shadow:0 1px 1px rgba(255,255,255,0.8);
+    transition:opacity 0.2s ease, transform 0.2s ease;
+  }
+  .notebook-answer-text.fading{
+    opacity:0;
+    transform:translateY(3px);
+  }
+
+  /* ---- ARTIFACT STYLES: ATTIC BOX ("BOX OF WORDS") ---- */
+  .box-container{
+    display:none;
+    width:100%;
+    height:100%;
+    position:relative;
+    align-items:center;
+    justify-content:center;
+    perspective:700px;
+  }
+  .oracle-mode-box .box-container{
+    display:flex;
+  }
+  .attic-box{
+    width:var(--attic-box-width, 82%);
+    max-width:260px;
+    height:var(--attic-box-height, 80%);
+    max-height:165px;
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-end;
+    cursor:pointer;
+    user-select:none;
+  }
+  /* Shadow beneath box */
+  .attic-box-shadow{
+    position:absolute;
+    bottom:0;
+    width:85%;
+    height:12px;
+    border-radius:50%;
+    background:radial-gradient(ellipse at center, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0) 75%);
+    pointer-events:none;
+  }
+  /* Wooden Chest Body - Lowered height so card stands clear above */
+  .attic-box-body{
+    width:100%;
+    height:54%;
+    background:linear-gradient(180deg, #442d1f 0%, #322116 50%, #24160d 100%);
+    border-radius:3px 3px 6px 6px;
+    border:2px solid #5a3e2b;
+    box-shadow:
+      inset 0 2px 4px rgba(255,255,255,0.1),
+      inset 0 -3px 6px rgba(0,0,0,0.6),
+      0 6px 18px rgba(0,0,0,0.7),
+      0 0 10px rgba(200, 130, 60, 0.12);
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:visible;
+    box-sizing:border-box;
+    /* Wood plank vertical grooves */
+    background-image:
+      repeating-linear-gradient(90deg, transparent, transparent 32px, rgba(0,0,0,0.3) 32px, rgba(0,0,0,0.3) 34px);
+  }
+  /* Brass Corner Braces & Rivets on Box */
+  .box-brace{
+    position:absolute;
+    width:10px;
+    height:100%;
+    background:linear-gradient(90deg, #87612f 0%, #b88a48 50%, #68481e 100%);
+    border-left:1px solid #4a3212;
+    border-right:1px solid #35230b;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-around;
+    align-items:center;
+    padding:3px 0;
+    box-sizing:border-box;
+  }
+  .box-brace.left{ left:10px; }
+  .box-brace.right{ right:10px; }
+  .box-rivet{
+    width:4px;
+    height:4px;
+    border-radius:50%;
+    background:#2b190a;
+    box-shadow:inset 0 1px 1px rgba(255,255,255,0.4);
+  }
+  /* Antique Keyhole / Latch */
+  .attic-keyhole{
+    width:18px;
+    height:20px;
+    background:linear-gradient(135deg, #a67c3b 0%, #68471b 100%);
+    border-radius:3px;
+    border:1px solid #412a0d;
+    box-shadow:0 2px 4px rgba(0,0,0,0.7);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    z-index:4;
+  }
+  .attic-keyhole::after{
+    content:'';
+    width:4px;
+    height:7px;
+    background:#110903;
+    clip-path:polygon(30% 0%, 70% 0%, 100% 40%, 70% 100%, 30% 100%, 0% 40%);
+  }
+  /* Hinged Wooden Lid - Flips backward out of line-of-sight */
+  .attic-box-lid{
+    position:absolute;
+    bottom:calc(54% - 2px);
+    left:-2px;
+    right:-2px;
+    height:20px;
+    background:linear-gradient(180deg, #5c3c27 0%, #462c1c 80%, #382114 100%);
+    border-radius:5px 5px 2px 2px;
+    border:2px solid #6e4a32;
+    border-bottom:2px solid #20130a;
+    box-shadow:0 3px 6px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.18);
+    transform-origin:center bottom;
+    transition:transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index:6;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .attic-lid-handle{
+    width:24px;
+    height:5px;
+    border:2px solid #9e7436;
+    border-bottom:none;
+    border-radius:2px 2px 0 0;
+  }
+  /* When Box opens: Lid swings back down flat against the top edge so it never occludes text */
+  .attic-box.opened .attic-box-lid{
+    transform:rotateX(-105deg) translateY(-2px);
+    opacity:0.85;
+  }
+  /* The Pop-Out Index Card / Stamped Ticket - pops high and proudly out of the chest */
+  .attic-card{
+    position:absolute;
+    bottom:10px;
+    width:86%;
+    max-width:225px;
+    background:#fcf7eb;
+    border:1px solid #8e6c43;
+    border-radius:4px;
+    box-shadow:0 8px 24px rgba(0,0,0,0.75), inset 0 0 8px rgba(160, 120, 70, 0.12);
+    padding:8px 12px;
+    box-sizing:border-box;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    z-index:7;
+    transition:transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+    transform:translateY(0) scale(0.85);
+    opacity:0;
+    pointer-events:none;
+  }
+  .attic-box.opened .attic-card{
+    transform:translateY(-56px) scale(1) rotate(-1deg);
+    opacity:1;
+  }
+  .attic-card-text{
+    font-family:'Special Elite', 'Share Tech Mono', monospace;
+    color:#1a0f05;
+    font-size:clamp(0.72rem, 1.4vw, 0.90rem);
+    font-weight:800;
+    line-height:1.24;
+    text-align:center;
+    width:100%;
+    word-break:normal;
+    overflow-wrap:break-word;
+    letter-spacing:0.02em;
+    text-shadow:0 1px 1px rgba(255,255,255,0.7);
+  }
+  .attic-card-stamp{
+    margin-top:4px;
+    font-size:0.58rem;
+    font-family:'Outfit',sans-serif;
+    font-weight:800;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:#8b3a2b;
+    border:1px solid rgba(139, 58, 43, 0.4);
+    padding:1px 5px;
+    border-radius:3px;
+    transform:rotate(3deg);
+  }
+
+  /* Dust Particles Puff Effect */
+  .dust-particle{
+    position:absolute;
+    width:4px;
+    height:4px;
+    border-radius:50%;
+    background:rgba(235, 215, 175, 0.75);
+    box-shadow:0 0 4px rgba(255, 240, 200, 0.6);
+    pointer-events:none;
+    opacity:0;
+    z-index:8;
+  }
+  @keyframes dustFly{
+    0%{
+      opacity:0.9;
+      transform:translate(0, 0) scale(1);
+    }
+    100%{
+      opacity:0;
+      transform:translate(var(--dust-x, 15px), var(--dust-y, -35px)) scale(0.2);
+    }
+  }
+  .dust-particle.poof{
+    animation:dustFly 0.75s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+  }
+
+  /* Box Shake / Rumble Animation */
+  @keyframes boxRumble{
+    0%{ transform:translate(0, 0) rotate(0deg); }
+    15%{ transform:translate(-3px, -2px) rotate(-2deg); }
+    30%{ transform:translate(4px, 2px) rotate(2.5deg); }
+    45%{ transform:translate(-3px, 1px) rotate(-1.5deg); }
+    60%{ transform:translate(3px, -2px) rotate(1deg); }
+    75%{ transform:translate(-1px, 2px) rotate(-0.5deg); }
+    100%{ transform:translate(0, 0) rotate(0deg); }
+  }
+  .attic-box.rumbling{
+    animation:boxRumble 0.4s ease-in-out both;
+  }
+
+
   .uv-row{display:flex;flex-direction:column;gap:4px;}
   .uv-track{height:clamp(7px, 1.3vh, 10px);border-radius:6px;background:#10181c;overflow:hidden;box-shadow:inset 0 0 3px #000;}
   .uv-fill{height:100%;border-radius:6px;transition:width 600ms ease;}
@@ -2730,7 +3523,7 @@
 <div class="device">
   <div class="device-top">
     <!-- 5-Dot Board Dimmer (Far Left) -->
-    <div class="device-dimmer" id="boardDimmer" role="group" aria-label="Board Brightness Dimmer" title="Adjust display brightness (100%, 75%, 50%, 25%, 15%) • Tap to cycle • Key: D">
+    <div class="device-dimmer" id="boardDimmer" role="group" aria-label="Board Brightness Dimmer" title="Adjust display brightness (100%, 75%, 50%, 25%, 8%) • Tap to cycle • Key: D">
       <svg class="dimmer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
         <circle cx="12" cy="12" r="4.5"/>
         <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.93 4.93l1.77 1.77M17.3 17.3l1.77 1.77M4.93 19.07l1.77-1.77M17.3 6.7l1.77-1.77"/>
@@ -2740,7 +3533,7 @@
         <button type="button" class="dimmer-dot-btn" data-level="1" data-pct="75%" title="75% Brightness (Soft Day)" aria-label="75% Brightness"></button>
         <button type="button" class="dimmer-dot-btn" data-level="2" data-pct="50%" title="50% Brightness (Ambient Evening)" aria-label="50% Brightness"></button>
         <button type="button" class="dimmer-dot-btn" data-level="3" data-pct="25%" title="25% Brightness (Twilight Dim)" aria-label="25% Brightness"></button>
-        <button type="button" class="dimmer-dot-btn" data-level="4" data-pct="15%" title="15% Brightness (Night Glow)" aria-label="15% Brightness"></button>
+        <button type="button" class="dimmer-dot-btn" data-level="4" data-pct="8%" title="8% Brightness (Deep Night Beacon)" aria-label="8% Brightness"></button>
       </div>
       <span class="dimmer-pct-label" id="dimmerPctLabel">100%</span>
     </div>
@@ -2752,7 +3545,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.090926.0602</span>
+        <span id="appVersionText">v1.090926.1312</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -2950,6 +3743,7 @@
         </div>
 
         <div class="eightball-stage">
+          <!-- 1. TRADITIONAL MAGIC 8-BALL SPHERE -->
           <div class="eightball-sphere" id="eightballSphere">
             <div class="eightball-window">
               <div class="eightball-die" id="eightballDie">
@@ -2963,6 +3757,77 @@
                   <span class="eightball-line">CERTAIN</span>
                 </div>
               </div>
+            </div>
+          </div>
+
+          <!-- 2. THE BOOK OF ANSWERS (Open Tome with Arched Pages & Crisp Parchment) -->
+          <div class="notebook-container" id="notebookContainer">
+            <div class="open-book-wrapper" id="notebookTome">
+              <div class="open-book-shadow"></div>
+              <div class="open-book-cover-edge left"></div>
+              <div class="open-book-cover-edge right"></div>
+              <div class="open-book-pages-stack left"></div>
+              <div class="open-book-pages-stack right"></div>
+              
+              <!-- Open Tome Spread -->
+              <div class="open-book-spread">
+                <!-- Left Page: Question / Inquiry / Preamble -->
+                <div class="open-book-page left">
+                  <div class="open-book-page-curl"></div>
+                  <div class="open-book-left-content">
+                    <div class="open-book-entry-num" id="notebookChapter">ENTRY VII</div>
+                    <div class="notebook-prompt-text" id="notebookPrompt">To what is hidden in plain sight:</div>
+                    <div class="open-book-flourish">❦</div>
+                  </div>
+                </div>
+
+                <!-- Center Spine Cleft & Bookmark Ribbon -->
+                <div class="open-book-spine-seam">
+                  <div class="open-book-ribbon-marker"></div>
+                </div>
+
+                <!-- Right Page: The Answer / Revelation -->
+                <div class="open-book-page right">
+                  <div class="open-book-page-curl"></div>
+                  <div class="notebook-flipping-page"></div>
+                  <div class="open-book-right-content">
+                    <div class="notebook-answer-text" id="notebookAnswer">Look closer at what you already dismissed.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. THE ATTIC BOX / BOX OF WORDS (Aged wooden chest with dust puff) -->
+          <div class="box-container" id="boxContainer">
+            <div class="attic-box" id="atticBox">
+              <div class="attic-box-shadow"></div>
+              <div class="attic-box-lid" id="atticBoxLid">
+                <div class="attic-lid-handle"></div>
+              </div>
+              <div class="attic-card" id="atticCard">
+                <div class="attic-card-text" id="atticAnswer">Signs point to: Ask your pet.</div>
+                <div class="attic-card-stamp">ATTIC VAULT</div>
+              </div>
+              <div class="attic-box-body">
+                <div class="box-brace left">
+                  <span class="box-rivet"></span>
+                  <span class="box-rivet"></span>
+                  <span class="box-rivet"></span>
+                </div>
+                <div class="attic-keyhole"></div>
+                <div class="box-brace right">
+                  <span class="box-rivet"></span>
+                  <span class="box-rivet"></span>
+                  <span class="box-rivet"></span>
+                </div>
+              </div>
+              <!-- Floating dust particle motes for puff effect -->
+              <span class="dust-particle" style="--dust-x:-25px; --dust-y:-35px; top:20px; left:40%;"></span>
+              <span class="dust-particle" style="--dust-x:20px; --dust-y:-42px; top:18px; left:55%;"></span>
+              <span class="dust-particle" style="--dust-x:-12px; --dust-y:-48px; top:15px; left:48%;"></span>
+              <span class="dust-particle" style="--dust-x:32px; --dust-y:-28px; top:22px; left:65%;"></span>
+              <span class="dust-particle" style="--dust-x:-35px; --dust-y:-25px; top:24px; left:30%;"></span>
             </div>
           </div>
         </div>
@@ -3078,6 +3943,50 @@
       <div class="row-shutter-bar" id="shutterOutlook" title="Click to pull down and unroll row" role="button" tabindex="0" aria-label="Unroll 5-Day Outlook forecast row">
         <span class="shutter-slat-dot"></span>
         <span class="shutter-slat-label">5-DAY OUTLOOK FORECAST <span class="shutter-unroll-hint">(click to pull down)</span></span>
+      </div>
+    </div>
+
+    <!-- SECRET ORACLE MODE SELECTION MODAL (Accessed by Long-Pressing 8-Ball) -->
+    <div class="oracle-picker-backdrop" id="oraclePickerBackdrop" role="dialog" aria-modal="true" aria-labelledby="oraclePickerTitle">
+      <div class="oracle-picker-modal">
+        <div class="oracle-picker-header">
+          <div>
+            <div class="oracle-picker-title" id="oraclePickerTitle">
+              <span>✦</span> Secret Oracle Selector
+            </div>
+            <div class="oracle-picker-subtitle">Choose which oracle artifact inhabits this slot</div>
+          </div>
+          <button type="button" class="oracle-close-btn" id="oracleCloseBtn" aria-label="Close selector">✕</button>
+        </div>
+
+        <div class="oracle-options-grid">
+          <!-- Option 1: Classic 8-Ball -->
+          <div class="oracle-option-card" data-oracle-mode="eightball" tabindex="0" role="button">
+            <div class="oracle-opt-icon">🎱</div>
+            <div class="oracle-opt-info">
+              <div class="oracle-opt-name">Magic 8-Ball <span class="oracle-opt-badge">Default</span></div>
+              <div class="oracle-opt-desc">Classic liquid-filled oracle sphere with floating icosahedron die.</div>
+            </div>
+          </div>
+
+          <!-- Option 2: The Book of Answers -->
+          <div class="oracle-option-card" data-oracle-mode="notebook" tabindex="0" role="button">
+            <div class="oracle-opt-icon">📖</div>
+            <div class="oracle-opt-info">
+              <div class="oracle-opt-name">The Book of Answers <span class="oracle-opt-badge">Open Tome</span></div>
+              <div class="oracle-opt-desc">Open vintage book with arched pages, bookmark ribbon, and crisp high-contrast wisdom.</div>
+            </div>
+          </div>
+
+          <!-- Option 3: The Attic Box -->
+          <div class="oracle-option-card" data-oracle-mode="box" tabindex="0" role="button">
+            <div class="oracle-opt-icon">📦</div>
+            <div class="oracle-opt-info">
+              <div class="oracle-opt-name">The Attic Box <span class="oracle-opt-badge">Dust & Vault</span></div>
+              <div class="oracle-opt-desc">Aged timber chest that rumbles, puffs real dust motes, and pops a stamped answer card.</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -4664,7 +5573,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.090926.0602';
+  const CLIENT_APP_VERSION = 'v1.090926.1312';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -5009,32 +5918,32 @@
       label: '25%',
       val: 0.25,
       desc: 'Twilight Dim',
-      bezelHi: '#383e44',
-      bezel: '#282e34',
-      bezelLo: '#191d22',
-      insetHi: 'rgba(255,255,255,0.06)',
-      insetLo: 'rgba(0,0,0,0.50)',
-      brandColor: '#6d7780',
-      brandBColor: '#8d98a2',
-      activeDot: '#ab9b00',
-      activeDotBorder: '#bdad1c',
-      activeDotShadow: '0 0 3px rgba(171,155,0,0.25)'
+      bezelHi: '#252b30',
+      bezel: '#1a1f24',
+      bezelLo: '#101418',
+      insetHi: 'rgba(255,255,255,0.03)',
+      insetLo: 'rgba(0,0,0,0.60)',
+      brandColor: '#454e56',
+      brandBColor: '#5c6770',
+      activeDot: '#059669',
+      activeDotBorder: '#10b981',
+      activeDotShadow: '0 0 5px rgba(16,185,129,0.50)'
     },
     {
-      pct: 15,
-      label: '15%',
-      val: 0.15,
-      desc: 'Night Glow',
-      bezelHi: '#1c2024',
-      bezel: '#13161a',
-      bezelLo: '#0a0d10',
-      insetHi: 'rgba(255,255,255,0.02)',
-      insetLo: 'rgba(0,0,0,0.65)',
-      brandColor: '#4f5760',
-      brandBColor: '#6e7882',
-      activeDot: '#827600',
-      activeDotBorder: '#968814',
-      activeDotShadow: 'none'
+      pct: 8,
+      label: '8%',
+      val: 0.08,
+      desc: 'Deep Night Beacon',
+      bezelHi: '#06080a',
+      bezel: '#030406',
+      bezelLo: '#010203',
+      insetHi: 'transparent',
+      insetLo: 'rgba(0,0,0,0.95)',
+      brandColor: '#12161a',
+      brandBColor: '#1a2026',
+      activeDot: '#10b981',
+      activeDotBorder: '#34d399',
+      activeDotShadow: '0 0 8px rgba(16,185,129,0.85), 0 0 2px #34d399'
     }
   ];
 
@@ -5048,6 +5957,9 @@
     const safeIdx = (index >= 0 && index < DIMMER_LEVELS.length) ? index : 0;
     currentDimmerIndex = safeIdx;
     const config = DIMMER_LEVELS[safeIdx];
+
+    // Set data-dim-level on documentElement so CSS rules can respond immediately
+    document.documentElement.setAttribute('data-dim-level', String(safeIdx));
 
     // Update screen brightness and contrast via CSS custom property
     const rootStyle = document.documentElement.style;
@@ -5675,11 +6587,346 @@
     eightballSphere.style.width = targetDiameter + 'px';
     eightballSphere.style.height = targetDiameter + 'px';
 
+    // Proportional dimensions for Notebook & Attic Box
+    const tomeWidth = Math.max(120, Math.min(350, Math.floor(w * 0.94)));
+    const tomeHeight = Math.max(64, Math.min(210, Math.floor(h * 0.84)));
+    if(notebookTome){
+      notebookTome.style.setProperty('--notebook-width', tomeWidth + 'px');
+      notebookTome.style.setProperty('--notebook-height', tomeHeight + 'px');
+    }
+    if(atticBox){
+      atticBox.style.setProperty('--attic-box-width', tomeWidth + 'px');
+      atticBox.style.setProperty('--attic-box-height', tomeHeight + 'px');
+    }
+
     const currentResp = EIGHTBALL_RESPONSES[last8BallIndex >= 0 ? last8BallIndex : 0];
     fitEightballAnswer(targetDiameter, currentResp);
   }
 
+  /* ---------------------------------------------------------------
+     ORACLE ARTIFACTS ENGINE (8-BALL, NOTEBOOK & ATTIC BOX)
+     - Secret Long-Press switcher opens Oracle Selection Modal
+     - Mode 1: Traditional Magic 8-Ball
+     - Mode 2: The Old Notebook ("The Booth at the End" philosophical entries)
+     - Mode 3: The Attic Box ("The Box of Words" with dust puffs and cooky/playful prompts)
+     - Mode choice persisted in localStorage: 'wf_oracle_mode'
+  --------------------------------------------------------------- */
+
+  // Responses for The Book of Answers: Paired spread with Inquiry on left and Revelation on right
+  const NOTEBOOK_RESPONSES = [
+    {
+      entry: "ENTRY I",
+      prompt: "When standing at the threshold:",
+      answer: "The door is already unlocked. Push."
+    },
+    {
+      entry: "ENTRY II",
+      prompt: "Concerning the road ahead:",
+      answer: "The task is harder than you think, but worth it."
+    },
+    {
+      entry: "ENTRY III",
+      prompt: "To what was set aside:",
+      answer: "Look closer at what you already dismissed."
+    },
+    {
+      entry: "ENTRY IV",
+      prompt: "On unspoken thoughts:",
+      answer: "Say what you actually mean today."
+    },
+    {
+      entry: "ENTRY V",
+      prompt: "Before taking action:",
+      answer: "Not yet. Let the dust settle first."
+    },
+    {
+      entry: "ENTRY VI",
+      prompt: "In search of purpose:",
+      answer: "What you seek is also seeking you."
+    },
+    {
+      entry: "ENTRY VII",
+      prompt: "Regarding your instincts:",
+      answer: "The answer is written in your first thought."
+    },
+    {
+      entry: "ENTRY VIII",
+      prompt: "Signs along the way:",
+      answer: "Notice the third thing you encounter today."
+    },
+    {
+      entry: "ENTRY IX",
+      prompt: "When conflict arises:",
+      answer: "A quiet retreat brings the louder victory."
+    },
+    {
+      entry: "ENTRY X",
+      prompt: "In moments of doubt:",
+      answer: "You already know the right choice. Proceed."
+    },
+    {
+      entry: "ENTRY XI",
+      prompt: "When patience wanes:",
+      answer: "Forgive the delay; timing is working for you."
+    },
+    {
+      entry: "ENTRY XII",
+      prompt: "At the crossroads:",
+      answer: "It requires one small sacrifice of pride."
+    },
+    {
+      entry: "ENTRY XIII",
+      prompt: "Examining motives:",
+      answer: "Look behind the reason they gave you."
+    },
+    {
+      entry: "ENTRY XIV",
+      prompt: "On integrity:",
+      answer: "The bargain is fair only if you keep your word."
+    },
+    {
+      entry: "ENTRY XV",
+      prompt: "When facing a dilemma:",
+      answer: "Sleep on it. Morning light changes the terms."
+    },
+    {
+      entry: "ENTRY XVI",
+      prompt: "To take the leap:",
+      answer: "Begin before you feel completely ready."
+    }
+  ];
+
+  // Responses for The Attic Box (Playful, Cooky, Tactile Wisdom)
+  const BOX_RESPONSES = [
+    "Signs point to: Ask your pet.",
+    "Honestly? Take a 20-minute nap first.",
+    "Yes, but definitely wear comfortable shoes.",
+    "Only if nobody is recording video.",
+    "Outlook says: Probably bad idea, definitely good story.",
+    "Check under the couch cushions first.",
+    "Do it. Regret is much heavier than mistakes.",
+    "Signs say: Grab a snack and re-evaluate.",
+    "Proceed, but maintain plausible deniability.",
+    "A resounding yes, with a side of caution.",
+    "Consult your gut, not your fear.",
+    "All dust settles eventually. Go for it.",
+    "You have a 73.4% chance of triumph.",
+    "The attic spirits say: Why not today?",
+    "Keep it simple. You're overthinking it.",
+    "Yes! And celebrate with something tasty."
+  ];
+
+  let currentOracleMode = 'eightball';
+  try {
+    const savedMode = localStorage.getItem('wf_oracle_mode');
+    if(savedMode && ['eightball', 'notebook', 'box'].includes(savedMode)){
+      currentOracleMode = savedMode;
+    }
+  } catch(e){}
+
+  const oraclePickerBackdrop = document.getElementById('oraclePickerBackdrop');
+  const oracleCloseBtn = document.getElementById('oracleCloseBtn');
+  const oracleOptionCards = document.querySelectorAll('.oracle-option-card');
+  const eightballTitleEl = document.getElementById('eightballTitle');
+
+  const notebookContainer = document.getElementById('notebookContainer');
+  const notebookTome = document.getElementById('notebookTome');
+  const notebookAnswerEl = document.getElementById('notebookAnswer');
+  const notebookPromptEl = document.getElementById('notebookPrompt');
+  const notebookChapterEl = document.getElementById('notebookChapter');
+  const openBookLeftContent = document.querySelector('.open-book-left-content');
+
+  const boxContainer = document.getElementById('boxContainer');
+  const atticBox = document.getElementById('atticBox');
+  const atticAnswerEl = document.getElementById('atticAnswer');
+
+  let isFlippingNotebook = false;
+  let isRumblingBox = false;
+  let lastNotebookIndex = -1;
+  let lastBoxIndex = -1;
+
+  function updateOracleModeUI(){
+    if(!eightballPanel) return;
+
+    // Reset state classes
+    eightballPanel.classList.remove('oracle-mode-eightball', 'oracle-mode-notebook', 'oracle-mode-box');
+    eightballPanel.classList.add(`oracle-mode-${currentOracleMode}`);
+
+    // Update panel label & subhint
+    if(eightballTitleEl){
+      if(currentOracleMode === 'eightball'){
+        eightballTitleEl.innerHTML = `8-Ball <span class="eightball-sub-hint">(tap)</span>`;
+      } else if(currentOracleMode === 'notebook'){
+        eightballTitleEl.innerHTML = `Book of Answers <span class="eightball-sub-hint">(turn)</span>`;
+      } else if(currentOracleMode === 'box'){
+        eightballTitleEl.innerHTML = `Attic Box <span class="eightball-sub-hint">(open)</span>`;
+      }
+    }
+
+    // Update selection highlight in secret modal
+    if(oracleOptionCards){
+      oracleOptionCards.forEach(card => {
+        if(card.dataset.oracleMode === currentOracleMode){
+          card.classList.add('selected');
+        } else {
+          card.classList.remove('selected');
+        }
+      });
+    }
+
+    // Trigger proper sizing for current mode
+    resizeEightball();
+
+    // Populate initial text if first time in book mode
+    if(currentOracleMode === 'notebook' && lastNotebookIndex < 0 && NOTEBOOK_RESPONSES.length > 0){
+      const initItem = NOTEBOOK_RESPONSES[2]; // "Look closer at what you already dismissed."
+      if(notebookAnswerEl) notebookAnswerEl.textContent = initItem.answer;
+      if(notebookChapterEl) notebookChapterEl.textContent = initItem.entry;
+      if(notebookPromptEl) notebookPromptEl.textContent = initItem.prompt;
+    }
+  }
+
+  function setOracleMode(newMode){
+    if(!['eightball', 'notebook', 'box'].includes(newMode)) return;
+    currentOracleMode = newMode;
+    try {
+      localStorage.setItem('wf_oracle_mode', newMode);
+    } catch(e){}
+    updateOracleModeUI();
+    closeOraclePicker();
+  }
+
+  function openOraclePicker(){
+    if(!oraclePickerBackdrop) return;
+    oraclePickerBackdrop.classList.add('active');
+    updateOracleModeUI();
+  }
+
+  function closeOraclePicker(){
+    if(!oraclePickerBackdrop) return;
+    oraclePickerBackdrop.classList.remove('active');
+  }
+
+  if(oracleCloseBtn){
+    oracleCloseBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeOraclePicker();
+    });
+  }
+  if(oraclePickerBackdrop){
+    oraclePickerBackdrop.addEventListener('click', (e) => {
+      if(e.target === oraclePickerBackdrop){
+        closeOraclePicker();
+      }
+    });
+  }
+  if(oracleOptionCards){
+    oracleOptionCards.forEach(card => {
+      card.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const mode = card.dataset.oracleMode;
+        if(mode) setOracleMode(mode);
+      });
+      card.addEventListener('keydown', (e) => {
+        if(e.key === 'Enter' || e.key === ' '){
+          e.preventDefault();
+          const mode = card.dataset.oracleMode;
+          if(mode) setOracleMode(mode);
+        }
+      });
+    });
+  }
+
+  // Notebook Page Turning Animation & Oracle Logic
+  function turnNotebookPage(){
+    if(isFlippingNotebook || !notebookTome) return;
+    isFlippingNotebook = true;
+    notebookTome.classList.add('flipping');
+
+    if(notebookAnswerEl){
+      notebookAnswerEl.classList.add('fading');
+    }
+    if(openBookLeftContent){
+      openBookLeftContent.classList.add('fading');
+    }
+
+    let nextIdx = Math.floor(Math.random() * NOTEBOOK_RESPONSES.length);
+    if(nextIdx === lastNotebookIndex){
+      nextIdx = (nextIdx + 1) % NOTEBOOK_RESPONSES.length;
+    }
+    lastNotebookIndex = nextIdx;
+    const item = NOTEBOOK_RESPONSES[nextIdx];
+
+    setTimeout(() => {
+      if(notebookAnswerEl && item){
+        notebookAnswerEl.textContent = item.answer;
+        notebookAnswerEl.classList.remove('fading');
+      }
+      if(item){
+        if(notebookChapterEl) notebookChapterEl.textContent = item.entry;
+        if(notebookPromptEl) notebookPromptEl.textContent = item.prompt;
+      }
+      if(openBookLeftContent){
+        openBookLeftContent.classList.remove('fading');
+      }
+    }, 280);
+
+    setTimeout(() => {
+      if(notebookTome) notebookTome.classList.remove('flipping');
+      isFlippingNotebook = false;
+    }, 600);
+  }
+
+  // Attic Box Rumble, Dust Puff & Pop-out Card Animation
+  function openAtticBox(){
+    if(isRumblingBox || !atticBox) return;
+    isRumblingBox = true;
+
+    // First rumble the box
+    atticBox.classList.remove('opened');
+    atticBox.classList.add('rumbling');
+
+    // Trigger dust particles puff
+    const dustMotes = atticBox.querySelectorAll('.dust-particle');
+    dustMotes.forEach(mote => {
+      mote.classList.remove('poof');
+      void mote.offsetWidth; // trigger reflow
+      mote.classList.add('poof');
+    });
+
+    let nextIdx = Math.floor(Math.random() * BOX_RESPONSES.length);
+    if(nextIdx === lastBoxIndex){
+      nextIdx = (nextIdx + 1) % BOX_RESPONSES.length;
+    }
+    lastBoxIndex = nextIdx;
+    const newAnswer = BOX_RESPONSES[nextIdx];
+
+    setTimeout(() => {
+      if(atticAnswerEl){
+        atticAnswerEl.textContent = newAnswer;
+      }
+      if(atticBox){
+        atticBox.classList.remove('rumbling');
+        atticBox.classList.add('opened');
+      }
+    }, 380);
+
+    setTimeout(() => {
+      isRumblingBox = false;
+    }, 800);
+  }
+
   function shakeEightBall(){
+    if(currentOracleMode === 'notebook'){
+      turnNotebookPage();
+      return;
+    }
+    if(currentOracleMode === 'box'){
+      openAtticBox();
+      return;
+    }
+
+    // Classic 8-Ball mode
     if(isShaking8Ball) return;
     isShaking8Ball = true;
 
@@ -5731,12 +6978,82 @@
     }, 700);
   }
 
+  // LONG-PRESS DETECTION ON 8-BALL PANEL (Works with mouse, touch, and TV remotes)
+  let oracleLongPressTimer = null;
+  let didOracleLongPress = false;
+  const ORACLE_LONG_PRESS_MS = 650; // 650ms to open secret menu
+
   if(eightballPanel){
+    function startOracleLongPress(){
+      didOracleLongPress = false;
+      if(oracleLongPressTimer) clearTimeout(oracleLongPressTimer);
+      oracleLongPressTimer = setTimeout(() => {
+        didOracleLongPress = true;
+        openOraclePicker();
+      }, ORACLE_LONG_PRESS_MS);
+    }
+
+    function cancelOracleLongPress(){
+      if(oracleLongPressTimer){
+        clearTimeout(oracleLongPressTimer);
+        oracleLongPressTimer = null;
+      }
+    }
+
+    eightballPanel.addEventListener('pointerdown', (e) => {
+      // Left click or primary touch only
+      if(e.button !== undefined && e.button !== 0) return;
+      startOracleLongPress();
+    });
+    eightballPanel.addEventListener('pointerup', (e) => {
+      cancelOracleLongPress();
+    });
+    eightballPanel.addEventListener('pointerleave', (e) => {
+      cancelOracleLongPress();
+    });
+    eightballPanel.addEventListener('pointercancel', (e) => {
+      cancelOracleLongPress();
+    });
+
     eightballPanel.addEventListener('click', (e) => {
       e.stopPropagation();
+      if(didOracleLongPress){
+        didOracleLongPress = false;
+        return;
+      }
       shakeEightBall();
     });
+
+    // Keyboard support (e.g. OK button on TV remotes or keyboard)
+    let oracleKeyHoldTimer = null;
+    let didOracleKeyHold = false;
+    eightballPanel.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter' || e.key === ' '){
+        if(!oracleKeyHoldTimer){
+          didOracleKeyHold = false;
+          oracleKeyHoldTimer = setTimeout(() => {
+            didOracleKeyHold = true;
+            openOraclePicker();
+          }, ORACLE_LONG_PRESS_MS);
+        }
+      }
+    });
+    eightballPanel.addEventListener('keyup', (e) => {
+      if(e.key === 'Enter' || e.key === ' '){
+        if(oracleKeyHoldTimer){
+          clearTimeout(oracleKeyHoldTimer);
+          oracleKeyHoldTimer = null;
+        }
+        if(!didOracleKeyHold){
+          shakeEightBall();
+        }
+        didOracleKeyHold = false;
+      }
+    });
   }
+
+  // Initialize UI on page load
+  updateOracleModeUI();
 
   // Observe resizing of the 8-ball stage to dynamically scale sphere to available bounds
   if(window.ResizeObserver && eightballStage){
@@ -7243,26 +8560,32 @@
       }
     }, 60000);
 
-    // Initial Hyperspace Warp Surge!
-    currentWarpSpeed = 24;
-    targetWarpSpeed = 24;
+    // Initial Hyperspace Warp Surge (Muted for low-dimmer / deep night bedroom mode)
+    const isNightDim = currentDimmerIndex >= 3;
+    if(isNightDim){
+      currentWarpSpeed = 3.5;
+      targetWarpSpeed = 0.45;
+    } else {
+      currentWarpSpeed = 24;
+      targetWarpSpeed = 24;
+    }
 
     if(warpHyperspaceBannerEl && warpProgressFillEl){
       warpHyperspaceBannerEl.classList.add('is-showing');
       warpProgressFillEl.style.transition = 'none';
       warpProgressFillEl.style.width = '0%';
       void warpProgressFillEl.offsetWidth;
-      warpProgressFillEl.style.transition = 'width 2.2s linear';
+      warpProgressFillEl.style.transition = isNightDim ? 'width 1.2s linear' : 'width 2.2s linear';
       warpProgressFillEl.style.width = '100%';
 
       if(starfieldHudEl) starfieldHudEl.classList.remove('is-visible');
 
       if(warpBannerTimer) clearTimeout(warpBannerTimer);
       warpBannerTimer = setTimeout(() => {
-        targetWarpSpeed = 0.65;
+        targetWarpSpeed = isNightDim ? 0.45 : 0.65;
         if(warpHyperspaceBannerEl) warpHyperspaceBannerEl.classList.remove('is-showing');
         if(starfieldHudEl) starfieldHudEl.classList.add('is-visible');
-      }, 2300);
+      }, isNightDim ? 1300 : 2300);
     }
 
     // Trigger initial gravitational pulse from the Anchor Star
@@ -7371,9 +8694,17 @@
     // Warp speed smooth dampening
     currentWarpSpeed += (targetWarpSpeed - currentWarpSpeed) * 0.08;
 
+    // Dimmer-aware Hyperspace night tuning
+    const isNightDim = currentDimmerIndex >= 3;
+    const nightScale = currentDimmerIndex === 4 ? 0.28 : (currentDimmerIndex === 3 ? 0.60 : 1.0);
+
     // 1. Background / Canvas clearing
-    if(currentWarpSpeed > 5){
+    if(currentWarpSpeed > 5 && !isNightDim){
       ctx.fillStyle = 'rgba(1, 4, 8, 0.42)';
+      ctx.fillRect(0, 0, w, h);
+    } else if(isNightDim){
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = '#000000';
       ctx.fillRect(0, 0, w, h);
     } else {
       ctx.clearRect(0, 0, w, h);
@@ -7441,14 +8772,14 @@
             const dist = Math.sqrt(distSq);
             const distRatio = 1 - (dist / maxConnectDist);
             const breathe = 0.5 + 0.5 * Math.sin(anchorDriftT * 0.002 + s1.twinklePhase);
-            let alpha = distRatio * 0.22 * breathe + (s1.energy + s2.energy) * 0.35;
-            alpha = Math.min(alpha, 0.75);
+            let alpha = (distRatio * 0.22 * breathe + (s1.energy + s2.energy) * 0.35) * nightScale;
+            alpha = Math.min(alpha, 0.75 * nightScale);
 
-            if(alpha > 0.03){
+            if(alpha > 0.02){
               ctx.beginPath();
               ctx.moveTo(s1.sx, s1.sy);
               ctx.lineTo(s2.sx, s2.sy);
-              if(s1.energy > 0.3 || s2.energy > 0.3){
+              if((s1.energy > 0.3 || s2.energy > 0.3) && !isNightDim){
                 ctx.strokeStyle = `rgba(73, 230, 196, ${alpha})`;
                 ctx.shadowColor = '#49e6c4';
                 ctx.shadowBlur = 6;
@@ -7471,8 +8802,8 @@
 
       const depthFactor = (1 - s.z / 1000);
       const twinkle = 0.7 + 0.3 * Math.sin(anchorDriftT * s.twinkleSpeed + s.twinklePhase);
-      const alpha = Math.min(1, (depthFactor * 0.85 + 0.15) * twinkle + s.energy * 0.5);
-      const renderRadius = Math.max(0.6, s.size * depthFactor * (1 + s.energy * 0.8));
+      const alpha = Math.min(1, (depthFactor * 0.85 + 0.15) * twinkle + s.energy * 0.5) * nightScale;
+      const renderRadius = Math.max(0.5, s.size * depthFactor * (1 + s.energy * 0.8));
 
       if(currentWarpSpeed > 2.5){
         ctx.beginPath();
@@ -7480,14 +8811,14 @@
         ctx.lineTo(s.sx, s.sy);
         ctx.strokeStyle = s.color;
         ctx.globalAlpha = Math.min(1, alpha * 1.3);
-        ctx.lineWidth = renderRadius * 1.6;
+        ctx.lineWidth = renderRadius * (isNightDim ? 1.1 : 1.6);
         ctx.stroke();
       } else {
         ctx.beginPath();
         ctx.arc(s.sx, s.sy, renderRadius, 0, Math.PI * 2);
         ctx.fillStyle = s.color;
         ctx.globalAlpha = alpha;
-        if(s.energy > 0.2 || depthFactor > 0.75){
+        if(!isNightDim && (s.energy > 0.2 || depthFactor > 0.75)){
           ctx.shadowColor = s.glow;
           ctx.shadowBlur = renderRadius * 5;
         } else {
@@ -7587,13 +8918,20 @@
     const ay = h * 0.46 + Math.cos(anchorDriftT * 0.0003) * 22;
 
     const coronaPulse = 0.85 + 0.15 * Math.sin(anchorDriftT * 0.0016);
-    const outerRadius = 115 * coronaPulse;
+    const outerRadius = 115 * coronaPulse * (isNightDim ? 0.65 : 1.0);
     const outerGrad = ctx.createRadialGradient(ax, ay, 4, ax, ay, outerRadius);
-    outerGrad.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
-    outerGrad.addColorStop(0.12, 'rgba(56, 189, 248, 0.7)');
-    outerGrad.addColorStop(0.35, 'rgba(73, 230, 196, 0.28)');
-    outerGrad.addColorStop(0.7, 'rgba(192, 132, 252, 0.1)');
-    outerGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    if(isNightDim){
+      outerGrad.addColorStop(0, `rgba(255, 255, 255, ${0.40 * nightScale})`);
+      outerGrad.addColorStop(0.2, `rgba(56, 189, 248, ${0.22 * nightScale})`);
+      outerGrad.addColorStop(0.6, `rgba(73, 230, 196, ${0.08 * nightScale})`);
+      outerGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    } else {
+      outerGrad.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
+      outerGrad.addColorStop(0.12, 'rgba(56, 189, 248, 0.7)');
+      outerGrad.addColorStop(0.35, 'rgba(73, 230, 196, 0.28)');
+      outerGrad.addColorStop(0.7, 'rgba(192, 132, 252, 0.1)');
+      outerGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    }
 
     ctx.fillStyle = outerGrad;
     ctx.beginPath();
@@ -7602,8 +8940,8 @@
 
     // 8-Point Diffraction Spikes (JWST / Hubble signature)
     const spikeRot = anchorDriftT * 0.00015;
-    const spikeLength = 72 * (currentWarpSpeed > 4 ? 2.2 : coronaPulse);
-    const diagLength = 44 * (currentWarpSpeed > 4 ? 2.0 : coronaPulse);
+    const spikeLength = 72 * (currentWarpSpeed > 4 ? 2.2 : coronaPulse) * nightScale;
+    const diagLength = 44 * (currentWarpSpeed > 4 ? 2.0 : coronaPulse) * nightScale;
 
     function drawSpike(angle, length, width, colorA, colorB){
       ctx.save();
@@ -7625,17 +8963,19 @@
       ctx.restore();
     }
 
-    drawSpike(spikeRot, spikeLength, 1.8, 'rgba(255,255,255,0.98)', 'rgba(56, 189, 248, 0.6)');
-    drawSpike(spikeRot + Math.PI / 2, spikeLength, 1.8, 'rgba(255,255,255,0.98)', 'rgba(56, 189, 248, 0.6)');
-    drawSpike(spikeRot + Math.PI / 4, diagLength, 1.2, 'rgba(255,255,255,0.85)', 'rgba(73, 230, 196, 0.5)');
-    drawSpike(spikeRot - Math.PI / 4, diagLength, 1.2, 'rgba(255,255,255,0.85)', 'rgba(73, 230, 196, 0.5)');
+    const spikeAlpha1 = isNightDim ? (0.6 * nightScale) : 0.98;
+    const spikeAlpha2 = isNightDim ? (0.3 * nightScale) : 0.6;
+    drawSpike(spikeRot, spikeLength, isNightDim ? 1.0 : 1.8, `rgba(255,255,255,${spikeAlpha1})`, `rgba(56, 189, 248, ${spikeAlpha2})`);
+    drawSpike(spikeRot + Math.PI / 2, spikeLength, isNightDim ? 1.0 : 1.8, `rgba(255,255,255,${spikeAlpha1})`, `rgba(56, 189, 248, ${spikeAlpha2})`);
+    drawSpike(spikeRot + Math.PI / 4, diagLength, isNightDim ? 0.7 : 1.2, `rgba(255,255,255,${spikeAlpha1 * 0.85})`, `rgba(73, 230, 196, ${spikeAlpha2 * 0.8})`);
+    drawSpike(spikeRot - Math.PI / 4, diagLength, isNightDim ? 0.7 : 1.2, `rgba(255,255,255,${spikeAlpha1 * 0.85})`, `rgba(73, 230, 196, ${spikeAlpha2 * 0.8})`);
 
     // Anchor Star Core Brilliant Disc
     ctx.beginPath();
-    ctx.arc(ax, ay, 5.5, 0, Math.PI * 2);
+    ctx.arc(ax, ay, isNightDim ? 3.5 : 5.5, 0, Math.PI * 2);
     ctx.fillStyle = '#ffffff';
     ctx.shadowColor = '#38bdf8';
-    ctx.shadowBlur = 18;
+    ctx.shadowBlur = isNightDim ? 3 : 18;
     ctx.fill();
     ctx.shadowBlur = 0;
 

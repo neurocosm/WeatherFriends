@@ -146,8 +146,21 @@ app.get('/api/reverse-geocode', async (req, res) => {
 
 // Search location by City Name, US ZIP, Canadian Postal Code, or International City
 app.get('/api/search-location', async (req, res) => {
-  const query = req.query.q?.trim();
-  if (!query) return res.status(400).json({ results: [] });
+  const rawQuery = req.query.q?.trim();
+  if (!rawQuery) return res.status(400).json({ results: [] });
+
+  const query = rawQuery;
+  const results = [];
+  const seenKeys = new Set();
+
+  const addResult = (r) => {
+    if (!r || r.lat == null || r.lon == null) return;
+    const key = `${parseFloat(r.lat).toFixed(2)},${parseFloat(r.lon).toFixed(2)}`;
+    if (!seenKeys.has(key)) {
+      seenKeys.add(key);
+      results.push(r);
+    }
+  };
 
   try {
     // 1. If it looks like a 5-digit US zip code
@@ -158,67 +171,157 @@ app.get('/api/search-location', async (req, res) => {
           const zd = await zipRes.json();
           const place = zd.places?.[0];
           if (place) {
-            return res.json({
-              results: [{
-                name: `${place['place name']}, ${place['state abbreviation']}`,
-                lat: parseFloat(place.latitude),
-                lon: parseFloat(place.longitude),
-                country: 'United States',
-                countryCode: 'US',
-                admin1: place['state abbreviation']
-              }]
+            addResult({
+              name: `${place['place name']}, ${place['state abbreviation']}`,
+              lat: parseFloat(place.latitude),
+              lon: parseFloat(place.longitude),
+              country: 'United States',
+              countryCode: 'US',
+              admin1: place['state abbreviation']
             });
           }
         }
-      } catch (e) {
-        // fallback to open-meteo
-      }
+      } catch (e) {}
     }
 
-    // 2. If it looks like a Canadian postal code (e.g. M5V or M5V 2T6 or K1A0B1)
-    const cleanCa = query.replace(/\s+/g, '').toUpperCase();
-    if (/^[A-Z]\d[A-Z](?:\d[A-Z]\d)?$/.test(cleanCa)) {
+    // 2. Canadian postal code (e.g. T0C 0J0, T0C, M5V 2T6, T0C0J0)
+    const cleanCa = query.replace(/[\s\-]+/g, '').toUpperCase();
+    const isCaPostal = /^[A-Z]\d[A-Z](\d[A-Z]\d)?$/.test(cleanCa);
+    if (isCaPostal) {
+      // 2a. Zippopotam FSA lookup (first 3 chars)
+      const fsa = cleanCa.slice(0, 3);
       try {
-        const fsa = cleanCa.slice(0, 3);
-        const caRes = await fetch(`https://api.zippopotam.us/ca/${fsa}`);
-        if (caRes.ok) {
-          const cd = await caRes.json();
-          const place = cd.places?.[0];
-          if (place) {
-            const shortPlace = place['place name'].split('(')[0].trim();
-            return res.json({
-              results: [{
-                name: `${shortPlace}, ${place['state abbreviation']}, Canada`,
-                lat: parseFloat(place.latitude),
-                lon: parseFloat(place.longitude),
+        const caZipRes = await fetch(`https://api.zippopotam.us/ca/${fsa}`);
+        if (caZipRes.ok) {
+          const czd = await caZipRes.json();
+          if (czd.places && czd.places.length > 0) {
+            for (const p of czd.places) {
+              const pName = p['place name'] || '';
+              const cleanPlace = pName.includes('(') ? pName.replace(/^.*\((.*)\).*$/, '$1') : pName;
+              addResult({
+                name: `${cleanPlace || pName}, ${p['state abbreviation'] || p.state}, Canada`,
+                lat: parseFloat(p.latitude),
+                lon: parseFloat(p.longitude),
                 country: 'Canada',
                 countryCode: 'CA',
-                admin1: place['state abbreviation']
-              }]
+                admin1: p['state abbreviation'] || p.state
+              });
+            }
+          }
+        }
+      } catch (e) {}
+
+      // 2b. Nominatim postalcode query for exact postal codes
+      try {
+        const formattedCode = cleanCa.length === 6 ? `${cleanCa.slice(0,3)} ${cleanCa.slice(3)}` : cleanCa;
+        const nomPostRes = await fetch(`https://nominatim.openstreetmap.org/search?postalcode=${encodeURIComponent(formattedCode)}&country=Canada&format=json&addressdetails=1`, {
+          headers: { 'User-Agent': 'WeatherFriendsConsole/2.0 (applet@studio.google)' }
+        });
+        if (nomPostRes.ok) {
+          const npd = await nomPostRes.json();
+          if (Array.isArray(npd) && npd.length > 0) {
+            for (const item of npd) {
+              const a = item.address || {};
+              const place = a.town || a.city || a.village || a.county || a.municipality || formattedCode;
+              const prov = a.state || a.province || 'Canada';
+              addResult({
+                name: `${place}, ${prov}, Canada`,
+                lat: parseFloat(item.lat),
+                lon: parseFloat(item.lon),
+                country: 'Canada',
+                countryCode: 'CA',
+                admin1: a.state || a.province
+              });
+            }
+          }
+        }
+      } catch (e) {}
+    }
+
+    // 3. Multi-word search, province/state names, or city names (e.g. "Bentley, AB", "Bentley Alberta", "London, UK")
+    try {
+      const nomUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&addressdetails=1&limit=8`;
+      const nomRes = await fetch(nomUrl, { headers: { 'User-Agent': 'WeatherFriendsApp/2.0 (applet@studio.google)' } });
+      if (nomRes.ok) {
+        const nomData = await nomRes.json();
+        if (Array.isArray(nomData)) {
+          for (const item of nomData) {
+            const addr = item.address || {};
+            const city = addr.town || addr.city || addr.village || addr.municipality || addr.hamlet || addr.county || item.name;
+            const state = addr.state || addr.province || addr.region || '';
+            const country = addr.country || '';
+            const countryCode = (addr.country_code || '').toUpperCase();
+            const displayName = `${city}${state ? ', ' + state : ''}${countryCode ? ' (' + countryCode + ')' : ''}`;
+            addResult({
+              name: displayName,
+              lat: parseFloat(item.lat),
+              lon: parseFloat(item.lon),
+              country: country || countryCode,
+              countryCode: countryCode,
+              admin1: state
             });
           }
         }
-      } catch (e) {
-        // fallback to open-meteo
+      }
+    } catch (e) {}
+
+    // 4. Open-Meteo Geocoding (Global coverage with comma-split fallback)
+    try {
+      const parts = query.split(',').map(s => s.trim()).filter(Boolean);
+      const searchTerms = [query];
+      if (parts.length > 1) {
+        searchTerms.push(parts[0]);
+      }
+
+      for (const term of searchTerms) {
+        const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(term)}&count=10&language=en&format=json`);
+        if (geoRes.ok) {
+          const gd = await geoRes.json();
+          if (gd.results && gd.results.length > 0) {
+            let items = gd.results;
+            if (parts.length > 1) {
+              const qualifier = parts[1].toLowerCase();
+              items.sort((a, b) => {
+                const aMatch = (a.admin1 && a.admin1.toLowerCase().includes(qualifier)) || (a.country && a.country.toLowerCase().includes(qualifier)) || (a.country_code && a.country_code.toLowerCase() === qualifier);
+                const bMatch = (b.admin1 && b.admin1.toLowerCase().includes(qualifier)) || (b.country && b.country.toLowerCase().includes(qualifier)) || (b.country_code && b.country_code.toLowerCase() === qualifier);
+                return (bMatch ? 1 : 0) - (aMatch ? 1 : 0);
+              });
+            }
+
+            for (const r of items) {
+              addResult({
+                name: `${r.name}${r.admin1 ? ', ' + r.admin1 : ''}${r.country_code ? ' (' + r.country_code + ')' : ''}`,
+                lat: r.latitude,
+                lon: r.longitude,
+                country: r.country || r.country_code || '',
+                countryCode: (r.country_code || '').toUpperCase(),
+                admin1: r.admin1 || '',
+                timezone: r.timezone || ''
+              });
+            }
+            if (results.length >= 6) break;
+          }
+        }
+      }
+    } catch (e) {}
+
+    // Ensure all top results have timezone resolved for accurate friend live clocks
+    for (const r of results.slice(0, 5)) {
+      if (!r.timezone && r.lat != null && r.lon != null) {
+        try {
+          const tzRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${r.lat}&longitude=${r.lon}&timezone=auto`);
+          if (tzRes.ok) {
+            const tzData = await tzRes.json();
+            if (tzData && tzData.timezone) {
+              r.timezone = tzData.timezone;
+            }
+          }
+        } catch (e) {}
       }
     }
 
-    // 3. Open-Meteo Geocoding (Global coverage)
-    const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=8&language=en&format=json`);
-    if (geoRes.ok) {
-      const gd = await geoRes.json();
-      if (gd.results && gd.results.length > 0) {
-        const list = gd.results.map(r => ({
-          name: `${r.name}${r.admin1 ? ', ' + r.admin1 : ''}${r.country_code ? ' (' + r.country_code + ')' : ''}`,
-          lat: r.latitude,
-          lon: r.longitude,
-          country: r.country || r.country_code || '',
-          countryCode: (r.country_code || '').toUpperCase(),
-          admin1: r.admin1 || '',
-          timezone: r.timezone || ''
-        }));
-        return res.json({ results: list });
-      }
+    if (results.length > 0) {
+      return res.json({ results });
     }
   } catch (err) {
     console.error('Geocoding search error:', err.message);
@@ -227,10 +330,13 @@ app.get('/api/search-location', async (req, res) => {
   res.json({ results: [] });
 });
 
-// Free Inspiration API (Positive Quotes, Philosophy / Stoic, Scripture / Biblical)
+// Free Inspiration API (Positive Quotes, Philosophy / Stoic & World Wisdom, Scripture / Biblical)
 const RECENT_QUOTES = new Set();
 const RECENT_QUEUE = [];
-const MAX_RECENT = 75;
+const MAX_RECENT = 120;
+
+const RECENT_AUTHORS = [];
+const MAX_RECENT_AUTHORS = 25;
 
 function isRecentlyServed(text) {
   if (!text) return false;
@@ -249,6 +355,39 @@ function recordServedQuote(text) {
   }
 }
 
+function isRecentlyServedAuthor(author) {
+  if (!author) return false;
+  const key = author.toLowerCase().trim();
+  return RECENT_AUTHORS.includes(key);
+}
+
+function recordServedAuthor(author) {
+  if (!author) return;
+  const key = author.toLowerCase().trim();
+  RECENT_AUTHORS.push(key);
+  if (RECENT_AUTHORS.length > MAX_RECENT_AUTHORS) {
+    RECENT_AUTHORS.shift();
+  }
+}
+
+function formatQuoteText(str) {
+  if (!str) return '';
+  let clean = str.replace(/\s+/g, ' ').trim();
+  const words = clean.split(' ');
+  if (words.length > 4) {
+    const capCount = words.filter(w => /^[A-Z]/.test(w)).length;
+    if (capCount / words.length > 0.7) {
+      clean = clean.charAt(0).toUpperCase() + clean.slice(1).toLowerCase()
+        .replace(/\bi\b/g, 'I')
+        .replace(/\bi'm\b/g, "I'm")
+        .replace(/\bi'll\b/g, "I'll")
+        .replace(/\bi'd\b/g, "I'd")
+        .replace(/\bi've\b/g, "I've");
+    }
+  }
+  return clean;
+}
+
 const INSPIRATION_FALLBACKS = {
   positive: [
     { text: "Wherever you go, no matter what the weather, always bring your own sunshine.", author: "Anthony J. D'Angelo" },
@@ -258,7 +397,6 @@ const INSPIRATION_FALLBACKS = {
     { text: "Start where you are. Use what you have. Do what you can.", author: "Arthur Ashe" },
     { text: "Act as if what you do makes a difference. It does.", author: "William James" },
     { text: "It always seems impossible until it's done.", author: "Nelson Mandela" },
-    { text: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
     { text: "A warm smile is the universal language of kindness.", author: "William Arthur Ward" },
     { text: "Happiness is not by chance, but by choice.", author: "Jim Rohn" },
     { text: "You are never too old to set another goal or to dream a new dream.", author: "C.S. Lewis" },
@@ -270,27 +408,49 @@ const INSPIRATION_FALLBACKS = {
     { text: "The secret of getting ahead is getting started.", author: "Mark Twain" },
     { text: "Joy is not in things; it is in us.", author: "Richard Wagner" },
     { text: "Your time is limited, so don't waste it living someone else's life.", author: "Steve Jobs" },
-    { text: "Turn your wounds into wisdom.", author: "Oprah Winfrey" }
+    { text: "Turn your wounds into wisdom.", author: "Oprah Winfrey" },
+    { text: "You will face many defeats in life, but never let yourself be defeated.", author: "Maya Angelou" }
   ],
   philosophy: [
+    { text: "Nature does not hurry, yet everything is accomplished.", author: "Lao Tzu" },
+    { text: "The unexamined life is not worth living.", author: "Socrates" },
+    { text: "Be kind, for everyone you meet is fighting a harder battle.", author: "Plato" },
+    { text: "We are what we repeatedly do. Excellence, then, is not an act, but a habit.", author: "Aristotle" },
     { text: "You have power over your mind - not outside events. Realize this, and you will find strength.", author: "Marcus Aurelius" },
     { text: "We suffer more often in imagination than in reality.", author: "Seneca" },
-    { text: "Waste no more time arguing about what a good man should be. Be one.", author: "Marcus Aurelius" },
-    { text: "No person has the power to have everything they want, but it is in their power not to want what they haven't.", author: "Seneca" },
-    { text: "The unexamined life is not worth living.", author: "Socrates" },
-    { text: "Nature does not hurry, yet everything is accomplished.", author: "Lao Tzu" },
-    { text: "It is the mark of an educated mind to be able to entertain a thought without accepting it.", author: "Aristotle" },
     { text: "First say to yourself what you would be; and then do what you have to do.", author: "Epictetus" },
-    { text: "When you arise in the morning think of what a privilege it is to be alive: to breathe, to think, to enjoy, to love.", author: "Marcus Aurelius" },
-    { text: "The key is to keep company only with people who uplift you, whose presence calls forth your best.", author: "Epictetus" },
-    { text: "Happiness resides not in possessions, and not in gold, happiness dwells in the soul.", author: "Democritus" },
     { text: "He who has a why to live can bear almost any how.", author: "Friedrich Nietzsche" },
-    { text: "Knowing others is wisdom, knowing yourself is enlightenment.", author: "Lao Tzu" },
-    { text: "Dwell on the beauty of life. Watch the stars, and see yourself running with them.", author: "Marcus Aurelius" },
-    { text: "Difficulties strengthen the mind, as labor does the body.", author: "Seneca" },
-    { text: "Wealth consists not in having great possessions, but in having few wants.", author: "Epictetus" },
-    { text: "It is not that we have a short time to live, but that we waste a lot of it.", author: "Seneca" },
-    { text: "Man conquers the world by conquering himself.", author: "Zeno of Citium" }
+    { text: "To live is the rarest thing in the world. Most people exist, that is all.", author: "Oscar Wilde" },
+    { text: "Peace comes from within. Do not seek it without.", author: "Gautama Buddha" },
+    { text: "Smile, breathe and go slowly.", author: "Thich Nhat Hanh" },
+    { text: "Yesterday I was clever, so I wanted to change the world. Today I am wise, so I am changing myself.", author: "Rumi" },
+    { text: "Trees are poems that the earth writes upon the sky.", author: "Kahlil Gibran" },
+    { text: "To be yourself in a world that is constantly trying to make you something else is the greatest accomplishment.", author: "Ralph Waldo Emerson" },
+    { text: "Go confidently in the direction of your dreams. Live the life you have imagined.", author: "Henry David Thoreau" },
+    { text: "Happiness resides not in possessions, and not in gold, happiness dwells in the soul.", author: "Democritus" },
+    { text: "For small creatures such as we the vastness is bearable only through love.", author: "Carl Sagan" },
+    { text: "The only way to make sense out of change is to plunge into it, move with it, and join the dance.", author: "Alan Watts" },
+    { text: "Flow with whatever may happen, and let your mind be free: Stay centered by accepting whatever you are doing.", author: "Zhuangzi" },
+    { text: "No man ever steps in the same river twice, for it's not the same river and he's not the same man.", author: "Heraclitus" },
+    { text: "Life can only be understood backwards; but it must be lived forwards.", author: "Søren Kierkegaard" },
+    { text: "The greatest happiness of life is the conviction that we are loved.", author: "Victor Hugo" },
+    { text: "In the depth of winter, I finally learned that within me there lay an invincible summer.", author: "Albert Camus" },
+    { text: "Everything can be taken from a man but one thing: the last of human freedoms—to choose one's attitude.", author: "Viktor Frankl" },
+    { text: "Change your thoughts and you change your world.", author: "Norman Vincent Peale" },
+    { text: "Those who know do not speak. Those who speak do not know.", author: "Lao Tzu" },
+    { text: "The mind is everything. What you think you become.", author: "Gautama Buddha" },
+    { text: "To know what you know and what you do not know, that is true knowledge.", author: "Confucius" },
+    { text: "In the midst of chaos, there is also opportunity.", author: "Sun Tzu" },
+    { text: "Reserve your right to think, for even to think wrongly is better than not to think at all.", author: "Hypatia" },
+    { text: "I think, therefore I am.", author: "René Descartes" },
+    { text: "Peace is not an absence of war, it is a virtue, a state of mind, a disposition for benevolence.", author: "Baruch Spinoza" },
+    { text: "Judge a man by his questions rather than by his answers.", author: "Voltaire" },
+    { text: "I am not what happened to me, I am what I choose to become.", author: "Carl Jung" },
+    { text: "One is not born, but rather becomes, a woman.", author: "Simone de Beauvoir" },
+    { text: "The good life is one inspired by love and guided by knowledge.", author: "Bertrand Russell" },
+    { text: "Tell me, what is it you plan to do with your one wild and precious life?", author: "Mary Oliver" },
+    { text: "Not all those who wander are lost.", author: "J.R.R. Tolkien" },
+    { text: "Do not go where the path may lead, go instead where there is no path and leave a trail.", author: "Ralph Waldo Emerson" }
   ],
   scripture: [
     { text: "For I know the plans I have for you, declares the Lord, plans for peace and not for evil, to give you a future and a hope.", author: "Jeremiah 29:11" },
@@ -375,27 +535,33 @@ app.get('/api/inspiration', async (req, res) => {
         }
       }
     } else if (type === 'philosophy') {
-      // Tier 1: Stoic Quotes API (Marcus Aurelius, Seneca, Epictetus)
-      const sqRes = await timedFetch('https://stoic-quotes.com/api/quote');
-      if (sqRes && sqRes.ok) {
-        const sqData = await sqRes.json();
-        if (sqData && sqData.text) {
-          const cleanText = sqData.text.replace(/\s+/g, ' ').trim();
-          if (!isRecentlyServed(cleanText)) {
-            recordServedQuote(cleanText);
-            return res.json({ text: cleanText, author: sqData.author || 'Stoic Wisdom', category: 'philosophy' });
-          }
-        }
-      }
-
-      // Tier 2: ZenQuotes API
+      // Tier 1: ZenQuotes API (Broad international pool of philosophers)
       const zRes = await timedFetch('https://zenquotes.io/api/random');
       if (zRes && zRes.ok) {
         const zData = await zRes.json();
         if (Array.isArray(zData) && zData[0] && zData[0].q) {
           const cleanText = zData[0].q.replace(/\s+/g, ' ').trim();
-          recordServedQuote(cleanText);
-          return res.json({ text: cleanText, author: zData[0].a || 'Philosopher', category: 'philosophy' });
+          const author = zData[0].a || 'Wisdom';
+          if (!isRecentlyServed(cleanText) && !isRecentlyServedAuthor(author)) {
+            recordServedQuote(cleanText);
+            recordServedAuthor(author);
+            return res.json({ text: cleanText, author, category: 'philosophy' });
+          }
+        }
+      }
+
+      // Tier 2: Stoic Quotes API (only if author not recently served)
+      const sqRes = await timedFetch('https://stoic-quotes.com/api/quote');
+      if (sqRes && sqRes.ok) {
+        const sqData = await sqRes.json();
+        if (sqData && sqData.text) {
+          const cleanText = sqData.text.replace(/\s+/g, ' ').trim();
+          const author = sqData.author || 'Stoic Wisdom';
+          if (!isRecentlyServed(cleanText) && !isRecentlyServedAuthor(author)) {
+            recordServedQuote(cleanText);
+            recordServedAuthor(author);
+            return res.json({ text: cleanText, author, category: 'philosophy' });
+          }
         }
       }
     } else {
@@ -405,10 +571,12 @@ app.get('/api/inspiration', async (req, res) => {
       if (djRes && djRes.ok) {
         const djData = await djRes.json();
         if (djData && djData.quote) {
-          const cleanText = djData.quote.replace(/\s+/g, ' ').trim();
-          if (!isRecentlyServed(cleanText)) {
+          const cleanText = formatQuoteText(djData.quote);
+          const author = djData.author || 'Inspirational';
+          if (!isRecentlyServed(cleanText) && !isRecentlyServedAuthor(author)) {
             recordServedQuote(cleanText);
-            return res.json({ text: cleanText, author: djData.author || 'Inspirational', category: 'positive' });
+            recordServedAuthor(author);
+            return res.json({ text: cleanText, author, category: 'positive' });
           }
         }
       }
@@ -418,9 +586,13 @@ app.get('/api/inspiration', async (req, res) => {
       if (zRes && zRes.ok) {
         const zData = await zRes.json();
         if (Array.isArray(zData) && zData[0] && zData[0].q) {
-          const cleanText = zData[0].q.replace(/\s+/g, ' ').trim();
-          recordServedQuote(cleanText);
-          return res.json({ text: cleanText, author: zData[0].a || 'Inspirational', category: 'positive' });
+          const cleanText = formatQuoteText(zData[0].q);
+          const author = zData[0].a || 'Inspirational';
+          if (!isRecentlyServed(cleanText) && !isRecentlyServedAuthor(author)) {
+            recordServedQuote(cleanText);
+            recordServedAuthor(author);
+            return res.json({ text: cleanText, author, category: 'positive' });
+          }
         }
       }
     }
@@ -428,11 +600,17 @@ app.get('/api/inspiration', async (req, res) => {
     console.warn(`[Inspiration API] Live fetch error for ${type}:`, err.message);
   }
 
-  // Graceful fallback from expanded pool prioritizing non-recently served items
-  const unserved = pool.filter(item => !isRecentlyServed(item.text));
-  const candidatePool = unserved.length > 0 ? unserved : pool;
+  // Graceful fallback from expanded pool prioritizing non-recently served items and non-repeated authors
+  let candidatePool = pool.filter(item => !isRecentlyServed(item.text) && !isRecentlyServedAuthor(item.author));
+  if (candidatePool.length === 0) {
+    candidatePool = pool.filter(item => !isRecentlyServed(item.text));
+  }
+  if (candidatePool.length === 0) {
+    candidatePool = pool;
+  }
   const item = candidatePool[Math.floor(Math.random() * candidatePool.length)];
   recordServedQuote(item.text);
+  recordServedAuthor(item.author);
   res.json({ text: item.text, author: item.author, category: type });
 });
 

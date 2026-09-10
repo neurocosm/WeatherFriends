@@ -62,7 +62,13 @@
     --grid-line:rgba(140,200,210,0.14);
     --board-brightness:1.0;
   }
-  *{box-sizing:border-box;}
+  *{
+    box-sizing:border-box;
+    text-shadow:none !important;
+  }
+  *::before, *::after{
+    text-shadow:none !important;
+  }
   html{
     margin:0;padding:0;
     width:100%;
@@ -82,6 +88,9 @@
     background:#0b0d0f;
     font-family:'Rajdhani',sans-serif;
     color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    text-rendering:optimizeLegibility;
     overflow:hidden;
     display:flex;
     flex-direction:column;
@@ -155,6 +164,50 @@
   .device-dimmer:hover .dimmer-icon{
     opacity:1;
     transform:rotate(20deg);
+  }
+  .dimmer-slider-wrap{
+    display:inline-flex;
+    align-items:center;
+    margin:0 2px;
+  }
+  .dimmer-slider{
+    -webkit-appearance:none;
+    appearance:none;
+    width:52px;
+    height:4px;
+    background:rgba(255,255,255,0.20);
+    border-radius:2px;
+    outline:none;
+    cursor:pointer;
+    transition:background 0.2s ease;
+  }
+  .dimmer-slider:hover{
+    background:rgba(73,230,196,0.40);
+  }
+  .dimmer-slider::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    appearance:none;
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:var(--teal, #49e6c4);
+    border:1px solid #ffffff;
+    box-shadow:0 0 5px rgba(73,230,196,0.8);
+    cursor:pointer;
+    transition:transform 0.15s ease, background-color 0.15s ease;
+  }
+  .dimmer-slider::-webkit-slider-thumb:hover{
+    transform:scale(1.25);
+    background:#ffffff;
+  }
+  .dimmer-slider::-moz-range-thumb{
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:var(--teal, #49e6c4);
+    border:1px solid #ffffff;
+    box-shadow:0 0 5px rgba(73,230,196,0.8);
+    cursor:pointer;
   }
   .dimmer-dots-cluster{
     display:inline-flex;
@@ -1587,9 +1640,9 @@
   .fine{font-size:clamp(0.70rem, 1.3vh, 0.78rem);font-family:'Rajdhani';font-weight:600;opacity:0.8;}
 
   @keyframes powerOn{
-    0%{opacity:0; filter:blur(4px); transform:translateY(4px);}
+    0%{opacity:0; transform:translateY(4px);}
     60%{opacity:0.4;}
-    100%{opacity:1; filter:blur(0); transform:translateY(0);}
+    100%{opacity:1; transform:translateY(0);}
   }
 
   .forecast-icon-wrap{display:flex;justify-content:center;padding:clamp(1px, 0.4vh, 6px) 0;}
@@ -2118,12 +2171,10 @@
   .eightball-die.sinking{
     opacity:0.08;
     transform:scale(0.55) rotate(18deg) translateY(12px);
-    filter:blur(3px);
   }
   .eightball-die.surfacing{
     opacity:1;
     transform:scale(1) rotate(0deg) translateY(0);
-    filter:blur(0);
   }
   .eightball-triangle-svg{
     width:100%;
@@ -2599,7 +2650,6 @@
     white-space:normal;
     letter-spacing:0.01em;
     z-index:5;
-    text-shadow:0 1px 1px rgba(255,255,255,0.8);
     transition:opacity 0.2s ease, transform 0.2s ease;
   }
   .notebook-answer-text.fading{
@@ -2746,9 +2796,8 @@
     font-weight:700;
     font-size:0.74rem;
     letter-spacing:0.08em;
-    text-transform:lowercase;
+    text-transform:none;
     color:#fff3d4;
-    text-shadow:0 1px 2px rgba(0,0,0,0.9);
     line-height:1;
   }
   .attic-box.opened .attic-lock-clasp{
@@ -2824,7 +2873,6 @@
     word-break:normal;
     overflow-wrap:break-word;
     letter-spacing:0.02em;
-    text-shadow:0 1px 1px rgba(255,255,255,0.7);
   }
   .attic-card-stamp{
     margin-top:4px;
@@ -3720,10 +3768,10 @@
     display:inline-block;
     transform:skewX(-4deg);
     line-height:1;
-    transition:color 0.2s ease, text-shadow 0.2s ease;
+    transition:color 0.2s ease;
   }
   .row-swap-view-btn.is-friends-active .row-swap-wf-text{
-    text-shadow:0 0 5px rgba(255,182,72,0.45);
+    color:#ffb648;
   }
   .row-swap-icon{
     width:15px;
@@ -3751,10 +3799,10 @@
   }
   .outlook-friends-grid{
     display:grid;
-    grid-template-columns:repeat(4, 1fr);
-    gap:clamp(6px, 1.1vw, 12px);
+    grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
+    gap:clamp(8px, 1.4vw, 16px);
     width:100%;
-    align-items:center;
+    align-items:stretch;
     justify-content:center;
     transition:opacity 0.22s ease, transform 0.22s ease;
   }
@@ -3766,16 +3814,16 @@
     to{opacity:1; transform:scale(1);}
   }
 
-  /* Friend Card Styling - High Visibility, Scalable, Space-Filling */
+  /* Friend Card Styling - High Visibility, Scalable, Hard-Left Temp, Hard-Right Telemetry, No Bold Fonts */
   .friend-card{
     display:flex;
     flex-direction:column;
     align-items:stretch;
     justify-content:space-between;
-    aspect-ratio:1.20 / 1;
-    max-height:clamp(170px, 28vh, 250px);
-    gap:clamp(4px, 1.2cqw, 8px);
-    padding:clamp(10px, 2.8cqw, 16px) clamp(12px, 3.2cqw, 18px);
+    height:100%;
+    min-height:160px;
+    gap:clamp(3px, 0.9cqw, 6px);
+    padding:clamp(10px, 2cqw, 14px) clamp(12px, 2.4cqw, 16px);
     background:rgba(4, 11, 14, 0.78);
     border:1px solid var(--grid-line);
     border-radius:12px;
@@ -3799,91 +3847,67 @@
     display:flex;
     align-items:center;
     justify-content:space-between;
-    gap:8px;
+    gap:6px;
     width:100%;
     min-width:0;
-    border-bottom:1px solid rgba(73, 230, 196, 0.18);
-    padding-bottom:clamp(4px, 1.2cqw, 6px);
   }
   .friend-meta-left{
     display:flex;
     align-items:center;
-    gap:8px;
+    gap:7px;
     min-width:0;
     flex:1 1 auto;
   }
   .friend-badge{
-    font-family:'Rajdhani', monospace;
-    font-weight:800;
-    font-size:clamp(0.74rem, 7.5cqw, 0.95rem);
-    letter-spacing:0.04em;
-    color:#62d9ff;
-    background:rgba(98, 217, 255, 0.14);
-    border:1px solid rgba(98, 217, 255, 0.35);
-    border-radius:4px;
-    padding:2px 5px;
+    font-size:1.15rem;
     line-height:1;
     flex-shrink:0;
-    box-shadow:0 1px 4px rgba(0,0,0,0.3);
-  }
-  .friend-title-group{
-    display:flex;
-    flex-direction:column;
-    min-width:0;
-    overflow:hidden;
   }
   .friend-name{
     font-family:'Outfit', sans-serif;
-    font-weight:700;
-    font-size:clamp(0.96rem, 9.8cqw, 1.32rem);
+    font-weight:400;
+    font-size:clamp(1.05rem, 6.2cqw, 1.30rem);
     letter-spacing:0.01em;
     color:#ffffff;
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
     line-height:1.2;
-    text-shadow:0 1px 3px rgba(0,0,0,0.7);
-  }
-  .friend-city{
-    font-family:'Rajdhani', sans-serif;
-    font-weight:700;
-    font-size:clamp(0.76rem, 7.6cqw, 1.02rem);
-    letter-spacing:0.03em;
-    color:#62d9ff;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    line-height:1.15;
-    opacity:0.95;
   }
   .friend-meta-right{
     display:flex;
     align-items:center;
-    gap:6px;
+    gap:5px;
     flex-shrink:0;
   }
   .friend-clock-pill{
     display:inline-flex;
     align-items:center;
     gap:4px;
-    padding:clamp(2px, 0.8cqw, 4px) clamp(6px, 1.8cqw, 9px);
-    background:rgba(2, 8, 12, 0.82);
+    padding:2px 7px;
+    background:rgba(2, 8, 12, 0.85);
     border:1px solid rgba(73, 230, 196, 0.32);
     border-radius:5px;
-    font-family:'Orbitron', monospace;
-    font-size:clamp(0.72rem, 7.2cqw, 0.94rem);
-    font-weight:700;
+    font-family:'Share Tech Mono', monospace;
+    font-size:clamp(0.70rem, 4.2cqw, 0.88rem);
+    font-weight:400;
     color:#7effdb;
-    letter-spacing:0.03em;
+    letter-spacing:0.02em;
     white-space:nowrap;
+    cursor:pointer;
+    transition:border-color 0.15s ease, background 0.15s ease;
+  }
+  .friend-clock-pill:hover{
+    border-color:#49e6c4;
+    background:rgba(73, 230, 196, 0.15);
   }
   .friend-day-tag{
     font-size:0.62rem;
-    padding:1px 4px;
+    padding:1px 3px;
     border-radius:3px;
     background:rgba(255, 182, 72, 0.25);
     color:#ffb648;
-    font-weight:800;
+    font-weight:400;
     line-height:1;
   }
   .friend-edit-btn{
@@ -3904,83 +3928,160 @@
   .friend-edit-btn:hover{
     opacity:1;
     color:#49e6c4;
-    transform:scale(1.2);
+    transform:scale(1.15);
   }
+
+  /* Subhead Row: Location & Mini Weather Condition */
+  .friend-subhead-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    width:100%;
+    min-width:0;
+    border-bottom:1px solid rgba(73, 230, 196, 0.15);
+    padding-bottom:4px;
+    margin-bottom:1px;
+  }
+  .friend-city{
+    font-family:'Outfit', sans-serif;
+    font-weight:400;
+    font-size:clamp(0.78rem, 4.8cqw, 0.94rem);
+    letter-spacing:0.02em;
+    color:#62d9ff;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    line-height:1.2;
+    flex:1 1 auto;
+    opacity:0.95;
+  }
+  .friend-cond-mini{
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    font-family:'Outfit', sans-serif;
+    font-weight:400;
+    font-size:clamp(0.74rem, 4.4cqw, 0.88rem);
+    color:#b5e4f4;
+    white-space:nowrap;
+    flex-shrink:0;
+  }
+  .friend-cond-icon{
+    width:16px;
+    height:16px;
+    flex-shrink:0;
+  }
+
+  /* Body: Hard-Left Temp + Hard-Right Telemetry */
   .friend-weather-body{
     display:flex;
     align-items:center;
     justify-content:space-between;
-    gap:clamp(8px, 3.5cqw, 20px);
+    gap:8px;
     width:100%;
     min-width:0;
     flex:1 1 auto;
-    margin:clamp(2px, 1.2cqw, 8px) 0;
-  }
-  .friend-wx-visual{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    flex-shrink:0;
-  }
-  .friend-wx-icon{
-    width:clamp(48px, 20cqw, 72px);
-    height:clamp(48px, 20cqw, 72px);
-    margin:0;
-    flex-shrink:0;
-    filter:drop-shadow(0 3px 8px rgba(0,0,0,0.65));
+    margin:2px 0;
   }
   .friend-temp-col{
+    display:inline-flex;
+    align-items:center;
+    cursor:pointer;
+    user-select:none;
+    transition:transform 0.15s ease;
+  }
+  .friend-temp-col:hover{
+    transform:scale(1.03);
+  }
+  .friend-temp-combo{
+    display:inline-flex;
+    align-items:flex-start;
+    line-height:0.88;
+  }
+  .friend-temp-num{
+    font-family:'Outfit', sans-serif;
+    font-weight:400;
+    font-size:clamp(2.4rem, 15cqw, 3.5rem);
+    color:#ffffff;
+    letter-spacing:-0.03em;
+    line-height:0.88;
+    font-variant-numeric:tabular-nums;
+  }
+  .friend-temp-unit-stack{
+    display:inline-flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-start;
+    margin-left:3px;
+    line-height:1;
+  }
+  .friend-deg{
+    font-family:'Outfit', sans-serif;
+    font-weight:400;
+    font-size:clamp(1.05rem, 6.5cqw, 1.50rem);
+    color:var(--teal);
+    line-height:0.75;
+  }
+  .friend-unit{
+    font-family:'Outfit', sans-serif;
+    font-weight:400;
+    font-size:clamp(0.80rem, 4.8cqw, 1.10rem);
+    color:var(--teal);
+    line-height:0.85;
+  }
+
+  /* HARD-RIGHT Telemetry Stack (Uniform size, unbolded, icons instead of letters) */
+  .friend-telemetry-col{
     display:flex;
     flex-direction:column;
     align-items:flex-end;
-    justify-content:center;
-    min-width:0;
-    flex:1 1 auto;
+    gap:3.5px;
+    flex-shrink:0;
   }
-  .friend-temp-row{
-    display:flex;
-    align-items:baseline;
-    line-height:0.95;
-  }
-  .friend-temp-val{
-    font-family:'Outfit', sans-serif;
-    font-weight:800;
-    font-size:clamp(2.3rem, 25cqw, 3.6rem);
-    color:#ffffff;
-    letter-spacing:-0.03em;
-    text-shadow:0 2px 8px rgba(0,0,0,0.6);
-    font-variant-numeric:tabular-nums;
-  }
-  .friend-temp-unit{
-    font-family:'Outfit', sans-serif;
-    font-weight:500;
-    font-size:clamp(1.1rem, 11cqw, 1.65rem);
-    color:var(--teal);
-    margin-left:2px;
-  }
-  .friend-desc{
-    font-family:'Outfit', sans-serif;
-    font-weight:600;
-    font-size:clamp(0.84rem, 8.5cqw, 1.15rem);
-    color:#b5e4f4;
+  .friend-telem-row{
+    display:inline-flex;
+    align-items:center;
+    justify-content:flex-end;
+    gap:5px;
+    line-height:1;
     white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    max-width:100%;
-    text-align:right;
-    line-height:1.2;
-    margin-top:2px;
   }
+  .friend-telem-icon{
+    width:13px;
+    height:13px;
+    flex-shrink:0;
+  }
+  .friend-telem-reading{
+    display:inline-flex;
+    align-items:baseline;
+    gap:2px;
+    font-family:'Outfit', sans-serif;
+    font-weight:400;
+    font-size:clamp(0.78rem, 4.8cqw, 0.92rem);
+    line-height:1;
+  }
+  .friend-telem-val{
+    font-weight:400;
+    letter-spacing:-0.01em;
+  }
+  .friend-telem-unit{
+    font-size:0.82em;
+    opacity:0.85;
+  }
+
+  /* Footer Strip: Hi / Lo & Feels Like */
   .friend-footer-strip{
     display:flex;
     align-items:center;
     justify-content:space-between;
     width:100%;
     min-width:0;
-    padding-top:clamp(4px, 1.4cqw, 8px);
+    padding-top:4px;
     border-top:1px solid rgba(73, 230, 196, 0.16);
     font-family:'Outfit', sans-serif;
-    font-size:clamp(0.82rem, 8cqw, 1.08rem);
+    font-size:clamp(0.76rem, 4.6cqw, 0.90rem);
+    font-weight:400;
     color:#93b2be;
     line-height:1;
     margin-top:auto;
@@ -3989,12 +4090,12 @@
     display:inline-flex;
     align-items:center;
     gap:4px;
-    font-weight:700;
+    font-weight:400;
     white-space:nowrap;
   }
   .friend-hilo .hi{
     color:#ff9574;
-    font-weight:700;
+    font-weight:400;
   }
   .friend-hilo .sep{
     opacity:0.4;
@@ -4002,20 +4103,14 @@
   }
   .friend-hilo .lo{
     color:#64b5f6;
-    font-weight:700;
+    font-weight:400;
   }
   .friend-sub-meta{
     display:inline-flex;
     align-items:center;
-    gap:clamp(5px, 1.5cqw, 10px);
-    font-size:0.96em;
-    font-weight:600;
+    font-weight:400;
     color:#9abecb;
     white-space:nowrap;
-  }
-  .friend-sub-meta .friend-humidity{
-    color:#7effdb;
-    font-weight:700;
   }
   .friend-skeleton-bar{
     background:rgba(73, 230, 196, 0.15);
@@ -4131,7 +4226,7 @@
     }
     .outlook-friends-grid{
       display:grid !important;
-      grid-template-columns:repeat(4,minmax(145px,1fr)) !important;
+      grid-template-columns:repeat(auto-fit,minmax(180px,1fr)) !important;
       overflow-x:auto !important;
       gap:8px !important;
       padding-bottom:4px !important;
@@ -4144,7 +4239,7 @@
     .friend-card{
       aspect-ratio:auto !important;
       max-height:none !important;
-      min-height:120px !important;
+      min-height:140px !important;
     }
   }
 
@@ -4163,18 +4258,21 @@
 
 <div class="device">
   <div class="device-top">
-    <!-- 5-Dot Board Dimmer (Far Left) -->
-    <div class="device-dimmer" id="boardDimmer" role="group" aria-label="Board Brightness Dimmer" title="Adjust display brightness (100%, 75%, 50%, 25%, 8%) • Tap to cycle • Key: D">
+    <!-- 5-Dot Board Dimmer & Continuous Hardware Slider (Far Left) -->
+    <div class="device-dimmer" id="boardDimmer" role="group" aria-label="Board Brightness Dimmer" title="Adjust display brightness (100%, 75%, 50%, 25%, 12%) • Drag continuous slider or tap presets • Key: D">
       <svg class="dimmer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
         <circle cx="12" cy="12" r="4.5"/>
         <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.93 4.93l1.77 1.77M17.3 17.3l1.77 1.77M4.93 19.07l1.77-1.77M17.3 6.7l1.77-1.77"/>
       </svg>
+      <div class="dimmer-slider-wrap">
+        <input type="range" class="dimmer-slider" id="dimmerSlider" min="10" max="100" step="1" value="100" aria-label="Continuous brightness slider (10% - 100%)" title="Continuous dimmer slider">
+      </div>
       <div class="dimmer-dots-cluster" id="dimmerDots">
         <button type="button" class="dimmer-dot-btn active" data-level="0" data-pct="100%" title="100% Brightness (Full Day)" aria-label="100% Brightness"></button>
         <button type="button" class="dimmer-dot-btn" data-level="1" data-pct="75%" title="75% Brightness (Soft Day)" aria-label="75% Brightness"></button>
         <button type="button" class="dimmer-dot-btn" data-level="2" data-pct="50%" title="50% Brightness (Ambient Evening)" aria-label="50% Brightness"></button>
         <button type="button" class="dimmer-dot-btn" data-level="3" data-pct="25%" title="25% Brightness (Twilight Dim)" aria-label="25% Brightness"></button>
-        <button type="button" class="dimmer-dot-btn" data-level="4" data-pct="8%" title="8% Brightness (Deep Night Beacon)" aria-label="8% Brightness"></button>
+        <button type="button" class="dimmer-dot-btn" data-level="4" data-pct="12%" title="12% Brightness (Deep Night Beacon)" aria-label="12% Brightness"></button>
       </div>
       <span class="dimmer-pct-label" id="dimmerPctLabel">100%</span>
     </div>
@@ -4186,7 +4284,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.090926.2203</span>
+        <span id="appVersionText">v1.091026.0713</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -4365,16 +4463,21 @@
       </div>
 
       <!-- Rolled-Up Horizontal Shutter / Shade Slat -->
-      <div class="row-shutter-bar" id="shutterPanelsRow" title="Click to pull down and unroll row" role="button" tabindex="0" aria-label="Unroll 8-Ball, Inspiration & Holidays row">
+      <div class="row-shutter-bar" id="shutterPanelsRow" title="Click to pull down and unroll row" role="button" tabindex="0" aria-label="Unroll Inquire, Inspiration & Holidays row">
         <span class="shutter-slat-dot"></span>
-        <span class="shutter-slat-label">ORACLE 8-BALL • DAILY INSPIRATION • CHECKIDAY <span class="shutter-unroll-hint">(click to pull down)</span></span>
+        <span class="shutter-slat-label">INQUIRE • DAILY INSPIRATION • CHECKIDAY <span class="shutter-unroll-hint">(click to pull down)</span></span>
       </div>
 
-      <!-- ORACLE ARTIFACTS (Center-Left Square: 8-Ball, Notebook, Attic Chest) -->
-      <div class="panel eightball-panel" id="panelEightball" title="Tap to consult the Oracle">
+      <!-- ORACLE / INQUIRE ARTIFACTS (Center-Left Square: 8-Ball, Notebook, Attic Chest) -->
+      <div class="panel eightball-panel" id="panelEightball" title="Tap to consult Inquire">
         <div class="panel-head oracle-panel-head">
+          <div class="ttl" style="display:inline-flex; align-items:center; gap:5px;">
+            <span class="label glow-teal" id="inquireTitle" style="display:inline-flex; align-items:center; gap:4px; font-weight:700; letter-spacing:0.04em;">
+              <span class="inquire-interrobang" style="font-size:1.15em; line-height:1; color:var(--teal);">‽</span> INQUIRE
+            </span>
+          </div>
           <!-- Oracle Selector Pills as Title Bar -->
-          <div class="oracle-pill-shelf" id="oracleTitlePills" role="radiogroup" aria-label="Oracle Mode Selector">
+          <div class="oracle-pill-shelf" id="oracleTitlePills" role="radiogroup" aria-label="Inquire Artifact Mode">
             <button type="button" class="oracle-title-pill is-active" id="pillOracleEightball" data-oracle-mode="eightball" role="radio" aria-checked="true" title="Magic 8-Ball" tabindex="0">
               <span class="oracle-pill-icon">🎱</span>
               <span class="oracle-pill-name">8-BALL</span>
@@ -4438,7 +4541,7 @@
                   <div class="open-book-page-curl"></div>
                   <div class="notebook-flipping-page"></div>
                   <div class="open-book-right-content">
-                    <div class="notebook-answer-text" id="notebookAnswer">turn my pages</div>
+                    <div class="notebook-answer-text" id="notebookAnswer">Turn My Pages</div>
                   </div>
                 </div>
               </div>
@@ -4465,7 +4568,7 @@
                 <div class="attic-keyhole"></div>
                 <div class="attic-lock-clasp" id="atticLockClasp" title="Click to unlock">
                   <span class="attic-lock-icon">🔒</span>
-                  <span class="attic-lock-label">unlock me</span>
+                  <span class="attic-lock-label">Unlock Me</span>
                 </div>
                 <div class="box-brace right">
                   <span class="box-rivet"></span>
@@ -5951,14 +6054,16 @@
     {
       id: 'friend_1',
       name: 'Mom & Dad',
-      locationName: 'Toronto, ON, Canada',
-      shortCity: 'Toronto, ON',
-      lat: 43.6532,
-      lon: -79.3832,
-      timezone: 'America/Toronto',
+      locationName: 'Bentley, AB, Canada',
+      shortCity: 'Bentley, AB',
+      lat: 52.4172,
+      lon: -114.0532,
+      timezone: 'America/Edmonton',
       countryCode: 'CA',
-      admin1: 'ON',
-      badge: '🇨🇦'
+      admin1: 'AB',
+      badge: '🇨🇦',
+      tempUnit: 'C',
+      timeFormat: '12'
     },
     {
       id: 'friend_2',
@@ -5970,7 +6075,9 @@
       timezone: 'Europe/London',
       countryCode: 'GB',
       admin1: 'England',
-      badge: '🇬🇧'
+      badge: '🇬🇧',
+      tempUnit: 'C',
+      timeFormat: '12'
     },
     {
       id: 'friend_3',
@@ -5982,19 +6089,9 @@
       timezone: 'Asia/Tokyo',
       countryCode: 'JP',
       admin1: 'Tokyo',
-      badge: '🇯🇵'
-    },
-    {
-      id: 'friend_4',
-      name: 'Sister Emily',
-      locationName: 'Honolulu, HI, USA',
-      shortCity: 'Honolulu, HI',
-      lat: 21.3069,
-      lon: -157.8583,
-      timezone: 'Pacific/Honolulu',
-      countryCode: 'US',
-      admin1: 'HI',
-      badge: '🇺🇸'
+      badge: '🇯🇵',
+      tempUnit: 'C',
+      timeFormat: '24'
     }
   ];
 
@@ -6009,10 +6106,10 @@
 
   function getSavedWeatherFriends(){
     try {
-      const saved = localStorage.getItem('wf_weather_friends');
+      const saved = localStorage.getItem('wf_weather_friends_v3');
       if(saved){
         const parsed = JSON.parse(saved);
-        if(Array.isArray(parsed) && parsed.length >= 3){
+        if(Array.isArray(parsed) && parsed.length >= 2){
           return parsed;
         }
       }
@@ -6024,7 +6121,7 @@
 
   function saveWeatherFriends(){
     try {
-      localStorage.setItem('wf_weather_friends', JSON.stringify(weatherFriendsList));
+      localStorage.setItem('wf_weather_friends_v3', JSON.stringify(weatherFriendsList));
     } catch(e){}
   }
 
@@ -6038,15 +6135,16 @@
   const friendWeatherCache = new Map();
   const FRIEND_CACHE_TTL = 10 * 60 * 1000;
 
-  function getFriendTimeInfo(timeZone){
+  function getFriendTimeInfo(timeZone, timeFormat = '12'){
     if(!timeZone) return { timeStr: '--:--', dayDiff: '' };
     try {
       const d = new Date();
+      const is24 = (timeFormat === '24');
       const timeStr = new Intl.DateTimeFormat('en-US', {
         timeZone,
         hour: 'numeric',
         minute: '2-digit',
-        hour12: true
+        hour12: !is24
       }).format(d);
 
       const localDay = d.getDate();
@@ -6078,8 +6176,8 @@
 
     try {
       const url = `https://api.open-meteo.com/v1/forecast?latitude=${friend.lat}&longitude=${friend.lon}`
-        + `&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m`
-        + `&daily=weather_code,temperature_2m_max,temperature_2m_min`
+        + `&current=temperature_2m,relative_humidity_2m,apparent_temperature,pressure_msl,weather_code,wind_speed_10m,uv_index`
+        + `&daily=weather_code,temperature_2m_max,temperature_2m_min,uv_index_max,relative_humidity_2m_max,pressure_msl_mean`
         + `&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch&timezone=auto&forecast_days=1`;
       const res = await fetch(url);
       if(!res.ok) throw new Error('Failed to fetch friend weather');
@@ -6110,11 +6208,13 @@
       outlookEl.classList.add('is-friends-view');
       if(swapBtn) {
         swapBtn.classList.add('is-friends-active');
-        swapBtn.title = 'Switch view: Weather Friends ⇄ 5-Day Outlook';
+        const swapText = swapBtn.querySelector('.row-swap-wf-text');
+        if(swapText) swapText.textContent = '5';
+        swapBtn.title = 'Switch view: 5-Day Outlook';
         swapBtn.setAttribute('aria-label', 'Switch to 5-Day Outlook forecast');
       }
       if(shutterLabel){
-        shutterLabel.innerHTML = 'WEATHER FRIENDS STATION • 4 LOCATIONS <span class="shutter-unroll-hint">(click to pull down)</span>';
+        shutterLabel.innerHTML = 'WEATHER FRIENDS • 3 LOCATIONS <span class="shutter-unroll-hint">(click to pull down)</span>';
       }
       forecastGrid.style.display = 'none';
       friendsGrid.style.display = 'grid';
@@ -6129,7 +6229,9 @@
       outlookEl.classList.remove('is-friends-view');
       if(swapBtn) {
         swapBtn.classList.remove('is-friends-active');
-        swapBtn.title = 'Switch view: 5-Day Outlook ⇄ Weather Friends';
+        const swapText = swapBtn.querySelector('.row-swap-wf-text');
+        if(swapText) swapText.textContent = 'WF';
+        swapBtn.title = 'Switch view: Weather Friends';
         swapBtn.setAttribute('aria-label', 'Switch to Weather Friends multi-location');
       }
       if(shutterLabel){
@@ -6166,7 +6268,7 @@
       card.dataset.friendId = friend.id;
 
       const cached = friendWeatherCache.get(friend.id);
-      const timeInfo = getFriendTimeInfo(friend.timezone);
+      const timeInfo = getFriendTimeInfo(friend.timezone, friend.timeFormat || '12');
 
       if(cached && cached.data && cached.data.current){
         populateFriendCardMarkup(card, friend, cached.data, timeInfo);
@@ -6177,7 +6279,6 @@
               <span class="friend-badge">${friend.badge || '📍'}</span>
               <div class="friend-title-group">
                 <span class="friend-name">${escapeHtml(friend.name)}</span>
-                <span class="friend-city">${escapeHtml(friend.shortCity || friend.locationName)}</span>
               </div>
             </div>
             <div class="friend-meta-right">
@@ -6190,11 +6291,15 @@
               </button>
             </div>
           </div>
-          <div class="friend-weather-body" style="padding:10px 0;">
-            <div class="friend-skeleton-bar" style="width:38px; height:38px; border-radius:50%;"></div>
-            <div style="display:flex; flex-direction:column; gap:6px; flex:1; align-items:flex-end;">
-              <div class="friend-skeleton-bar" style="width:64px; height:22px;"></div>
-              <div class="friend-skeleton-bar" style="width:75px; height:12px;"></div>
+          <div class="friend-subhead-row">
+            <span class="friend-city">${escapeHtml(friend.shortCity || friend.locationName)}</span>
+          </div>
+          <div class="friend-weather-body" style="padding:8px 0;">
+            <div class="friend-skeleton-bar" style="width:48px; height:32px; border-radius:4px;"></div>
+            <div style="display:flex; flex-direction:column; gap:4px; align-items:flex-end;">
+              <div class="friend-skeleton-bar" style="width:56px; height:10px;"></div>
+              <div class="friend-skeleton-bar" style="width:56px; height:10px;"></div>
+              <div class="friend-skeleton-bar" style="width:56px; height:10px;"></div>
             </div>
           </div>
           <div class="friend-footer-strip">
@@ -6221,7 +6326,7 @@
         const data = await fetchSingleFriendWeather(friend, forceRefresh);
         const card = document.getElementById(`card_${friend.id}`);
         if(card){
-          const timeInfo = getFriendTimeInfo(friend.timezone);
+          const timeInfo = getFriendTimeInfo(friend.timezone, friend.timeFormat || '12');
           populateFriendCardMarkup(card, friend, data, timeInfo);
           const editBtn = card.querySelector('.friend-edit-btn');
           if(editBtn){
@@ -6240,16 +6345,41 @@
     await Promise.allSettled(fetchPromises);
   }
 
+  function toFriendUnitTemp(tempF, unit){
+    if(tempF == null || isNaN(tempF)) return '--';
+    if(unit === 'C'){
+      return Math.round((tempF - 32) * 5 / 9);
+    }
+    return Math.round(tempF);
+  }
+
   function populateFriendCardMarkup(card, friend, data, timeInfo){
     const cur = data.current;
     const daily = data.daily;
-    const temp = cur ? toDisplayTemp(cur.temperature_2m) : '--';
-    const feels = cur && cur.apparent_temperature != null ? toDisplayTemp(cur.apparent_temperature) : null;
-    const hi = daily && daily.temperature_2m_max ? toDisplayTemp(daily.temperature_2m_max[0]) : '--';
-    const lo = daily && daily.temperature_2m_min ? toDisplayTemp(daily.temperature_2m_min[0]) : '--';
+
+    // Auto-detect unit if not set: default non-US locations to °C
+    if(!friend.tempUnit){
+      const isNonUs = friend.countryCode && friend.countryCode.toUpperCase() !== 'US';
+      friend.tempUnit = isNonUs ? 'C' : 'F';
+    }
+    const unit = friend.tempUnit;
+
+    const tempVal = cur ? toFriendUnitTemp(cur.temperature_2m, unit) : '--';
+    const feelsVal = cur && cur.apparent_temperature != null ? toFriendUnitTemp(cur.apparent_temperature, unit) : null;
+    const hiVal = daily && daily.temperature_2m_max ? toFriendUnitTemp(daily.temperature_2m_max[0], unit) : '--';
+    const loVal = daily && daily.temperature_2m_min ? toFriendUnitTemp(daily.temperature_2m_min[0], unit) : '--';
     const wxCode = cur ? cur.weather_code : 0;
     const desc = cur ? weatherDescription(wxCode) : 'Fair';
-    const hum = cur && cur.relative_humidity_2m != null ? Math.round(cur.relative_humidity_2m) : null;
+
+    // Telemetry items with crisp visual icons
+    const hum = cur && cur.relative_humidity_2m != null ? Math.round(cur.relative_humidity_2m) : '--';
+    const uv = cur && cur.uv_index != null ? Math.round(cur.uv_index) : (daily && daily.uv_index_max ? Math.round(daily.uv_index_max[0]) : 0);
+    let pressIn = '--';
+    if(cur && cur.pressure_msl != null){
+      pressIn = hpaToInHg(cur.pressure_msl).toFixed(2);
+    } else if(daily && daily.pressure_msl_mean && daily.pressure_msl_mean[0] != null){
+      pressIn = hpaToInHg(daily.pressure_msl_mean[0]).toFixed(2);
+    }
 
     card.innerHTML = `
       <div class="friend-card-header">
@@ -6257,12 +6387,11 @@
           <span class="friend-badge" title="${escapeHtml(friend.countryCode || '')}">${friend.badge || '📍'}</span>
           <div class="friend-title-group">
             <span class="friend-name" title="${escapeHtml(friend.name)}">${escapeHtml(friend.name)}</span>
-            <span class="friend-city" title="${escapeHtml(friend.locationName)}">${escapeHtml(friend.shortCity || friend.locationName)}</span>
           </div>
         </div>
         <div class="friend-meta-right">
-          <div class="friend-clock-pill" title="Local Time in ${escapeHtml(friend.shortCity || friend.locationName)}">
-            <span class="friend-live-time" data-tz="${friend.timezone}">${timeInfo.timeStr}</span>
+          <div class="friend-clock-pill" data-friend-id="${friend.id}" role="button" tabindex="0" title="Local Time in ${escapeHtml(friend.shortCity || friend.locationName)} • Tap to toggle 12h / 24h">
+            <span class="friend-live-time" data-tz="${friend.timezone}" data-tf="${friend.timeFormat || '12'}">${timeInfo.timeStr}</span>
             ${timeInfo.dayDiff ? `<span class="friend-day-tag">${timeInfo.dayDiff}</span>` : ''}
           </div>
           <button type="button" class="friend-edit-btn" data-friend-id="${friend.id}" title="Configure ${escapeHtml(friend.name)}'s location" aria-label="Configure location">
@@ -6271,29 +6400,83 @@
         </div>
       </div>
 
+      <div class="friend-subhead-row">
+        <span class="friend-city" title="${escapeHtml(friend.locationName)}">${escapeHtml(friend.shortCity || friend.locationName)}</span>
+        <div class="friend-cond-mini" title="${desc}">
+          <svg class="friend-cond-icon" viewBox="0 0 100 100">${weatherIconSvg(wxCode)}</svg>
+          <span>${desc}</span>
+        </div>
+      </div>
+
       <div class="friend-weather-body">
-        <svg class="friend-wx-icon" viewBox="0 0 100 100">${weatherIconSvg(wxCode)}</svg>
-        <div class="friend-temp-col">
-          <div class="friend-temp-row">
-            <span class="friend-temp-val">${temp}</span>
-            <span class="friend-temp-unit">°${currentTempUnit}</span>
+        <!-- HARD LEFT: Large Temperature Display (Tap to toggle °F / °C) -->
+        <div class="friend-temp-col" data-friend-id="${friend.id}" role="button" tabindex="0" title="Tap to toggle °F / °C for ${escapeHtml(friend.name)}">
+          <div class="friend-temp-combo">
+            <span class="friend-temp-num">${tempVal}</span>
+            <div class="friend-temp-unit-stack">
+              <span class="friend-deg">°</span>
+              <span class="friend-unit">${unit}</span>
+            </div>
           </div>
-          <div class="friend-desc" title="${desc}">${desc}</div>
+        </div>
+
+        <!-- HARD RIGHT: 3 Telemetry Rows with Icons -->
+        <div class="friend-telemetry-col">
+          <div class="friend-telem-row" title="Relative Humidity: ${hum}%">
+            <svg class="friend-telem-icon glow-blue" viewBox="0 0 24 24" fill="rgba(56,189,248,0.12)" stroke="#38bdf8" stroke-width="1.6"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+            <span class="friend-telem-reading glow-blue"><span class="friend-telem-val">${hum}</span><span class="friend-telem-unit">%</span></span>
+          </div>
+          <div class="friend-telem-row" title="UV Index: ${uv}">
+            <svg class="friend-telem-icon glow-teal" viewBox="0 0 24 24" fill="none" stroke="#49e6c4" stroke-width="1.6"><circle cx="12" cy="12" r="4" fill="rgba(73, 230, 196, 0.12)"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+            <span class="friend-telem-reading glow-teal"><span class="friend-telem-val">${uv}</span><span class="friend-telem-unit">UV</span></span>
+          </div>
+          <div class="friend-telem-row" title="Barometric Pressure: ${pressIn} in">
+            <svg class="friend-telem-icon glow-purple" viewBox="0 0 24 24" fill="none" stroke="#cf7dff"><circle cx="12" cy="12" r="9.5" stroke="currentColor" stroke-width="1.5"/><path d="M 6.5 13.5 A 6.5 6.5 0 1 1 17.5 13.5" stroke="currentColor" stroke-width="1.7" stroke-dasharray="3.2 1.6" stroke-linecap="butt" fill="none"/><circle cx="12" cy="12" r="1.9" fill="currentColor"/><path d="M12 12 L16.8 9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            <span class="friend-telem-reading glow-purple"><span class="friend-telem-val">${pressIn}</span><span class="friend-telem-unit">in</span></span>
+          </div>
         </div>
       </div>
 
       <div class="friend-footer-strip">
         <div class="friend-hilo">
-          <span class="hi" title="High ${hi}°${currentTempUnit}">H:${hi}°</span>
+          <span class="hi" title="High ${hiVal}°${unit}">H:${hiVal}°</span>
           <span class="sep">/</span>
-          <span class="lo" title="Low ${lo}°${currentTempUnit}">L:${lo}°</span>
+          <span class="lo" title="Low ${loVal}°${unit}">L:${loVal}°</span>
         </div>
         <div class="friend-sub-meta">
-          ${feels != null ? `<span title="Feels like ${feels}°${currentTempUnit}">Feels ${feels}°</span>` : ''}
-          ${hum != null ? `<span title="Humidity: ${hum}%" style="margin-left:4px;">💧${hum}%</span>` : ''}
+          ${feelsVal != null ? `<span title="Feels like ${feelsVal}°${unit}">Feels ${feelsVal}°</span>` : ''}
         </div>
       </div>
     `;
+
+    // Event listeners for independent toggles on this card
+    const tempCol = card.querySelector('.friend-temp-col');
+    if(tempCol){
+      tempCol.addEventListener('click', (e) => {
+        e.stopPropagation();
+        friend.tempUnit = (friend.tempUnit === 'C') ? 'F' : 'C';
+        saveWeatherFriends();
+        const cached = friendWeatherCache.get(friend.id);
+        if(cached && cached.data){
+          const tInfo = getFriendTimeInfo(friend.timezone, friend.timeFormat || '12');
+          populateFriendCardMarkup(card, friend, cached.data, tInfo);
+        }
+      });
+    }
+
+    const clockPill = card.querySelector('.friend-clock-pill');
+    if(clockPill){
+      clockPill.addEventListener('click', (e) => {
+        e.stopPropagation();
+        friend.timeFormat = (friend.timeFormat === '24') ? '12' : '24';
+        saveWeatherFriends();
+        const cached = friendWeatherCache.get(friend.id);
+        if(cached && cached.data){
+          const tInfo = getFriendTimeInfo(friend.timezone, friend.timeFormat || '12');
+          populateFriendCardMarkup(card, friend, cached.data, tInfo);
+        }
+      });
+    }
   }
 
   function updateFriendLiveClocks(){
@@ -6660,7 +6843,6 @@
       const uvRounded = Math.round(uv);
       topUvEl.textContent = uvRounded;
       topUvEl.style.color = col;
-      topUvEl.style.textShadow = `0 0 10px ${col}66`;
       if(topUvTagEl){
         topUvTagEl.textContent = uvCategory(uv);
         topUvTagEl.style.color = col;
@@ -6974,7 +7156,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.090926.2203';
+  const CLIENT_APP_VERSION = 'v1.091026.0713';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -7331,9 +7513,9 @@
       activeDotShadow: '0 0 5px rgba(16,185,129,0.50)'
     },
     {
-      pct: 8,
-      label: '8%',
-      val: 0.08,
+      pct: 12,
+      label: '12%',
+      val: 0.12,
       desc: 'Deep Night Beacon',
       bezelHi: '#06080a',
       bezel: '#030406',
@@ -7352,6 +7534,7 @@
   const boardDimmerEl = document.getElementById('boardDimmer');
   const dimmerDotsContainer = document.getElementById('dimmerDots');
   const dimmerPctLabel = document.getElementById('dimmerPctLabel');
+  const dimmerSlider = document.getElementById('dimmerSlider');
   const dimmerDotButtons = dimmerDotsContainer ? Array.from(dimmerDotsContainer.querySelectorAll('.dimmer-dot-btn')) : [];
 
   function applyBoardDimmer(index, save = true){
@@ -7366,8 +7549,12 @@
     const rootStyle = document.documentElement.style;
     rootStyle.setProperty('--board-brightness', String(config.val));
 
+    // Sync slider element
+    if(dimmerSlider){
+      dimmerSlider.value = String(config.pct);
+    }
+
     // Proportionately update bezel to darker matte gray tones as dimmer drops
-    // Prevents the bezel perimeter from illuminating a dark room like a night light
     if(config.bezelHi) rootStyle.setProperty('--bezel-hi', config.bezelHi);
     if(config.bezel) rootStyle.setProperty('--bezel', config.bezel);
     if(config.bezelLo) rootStyle.setProperty('--bezel-lo', config.bezelLo);
@@ -7395,12 +7582,68 @@
     }
 
     if(boardDimmerEl){
-      boardDimmerEl.title = `Display Brightness: ${config.label} (${config.desc}) • Bezel adjusts to eliminate perimeter light • Tap or press 'D' to cycle`;
+      boardDimmerEl.title = `Display Brightness: ${config.label} (${config.desc}) • Adjust slider or tap dots/press 'D' to step`;
     }
 
     if(save){
       try{
         localStorage.setItem('wf_board_dimmer_level', String(safeIdx));
+        localStorage.removeItem('wf_board_dimmer_custom_pct');
+      }catch(e){}
+    }
+  }
+
+  function applyContinuousBrightness(pctVal, save = true){
+    const clampedPct = Math.max(10, Math.min(100, Math.round(pctVal)));
+    const val = clampedPct / 100;
+    const rootStyle = document.documentElement.style;
+    rootStyle.setProperty('--board-brightness', String(val));
+
+    if(dimmerSlider) dimmerSlider.value = String(clampedPct);
+    if(dimmerPctLabel) dimmerPctLabel.textContent = `${clampedPct}%`;
+
+    // Match nearest preset for bezel styling
+    let closestIdx = 0;
+    let minDiff = 999;
+    DIMMER_LEVELS.forEach((lvl, idx) => {
+      const diff = Math.abs(lvl.pct - clampedPct);
+      if(diff < minDiff){
+        minDiff = diff;
+        closestIdx = idx;
+      }
+    });
+    currentDimmerIndex = closestIdx;
+    document.documentElement.setAttribute('data-dim-level', String(closestIdx));
+
+    // Update preset dots highlight (active only if matches preset)
+    dimmerDotButtons.forEach((btn) => {
+      const dotPct = parseInt(btn.getAttribute('data-pct'), 10);
+      if(dotPct === clampedPct){
+        btn.classList.add('active');
+        btn.setAttribute('aria-pressed', 'true');
+      } else {
+        btn.classList.remove('active');
+        btn.setAttribute('aria-pressed', 'false');
+      }
+    });
+
+    const config = DIMMER_LEVELS[closestIdx];
+    if(config.bezelHi) rootStyle.setProperty('--bezel-hi', config.bezelHi);
+    if(config.bezel) rootStyle.setProperty('--bezel', config.bezel);
+    if(config.bezelLo) rootStyle.setProperty('--bezel-lo', config.bezelLo);
+    if(config.insetHi) rootStyle.setProperty('--bezel-inset-hi', config.insetHi);
+    if(config.insetLo) rootStyle.setProperty('--bezel-inset-lo', config.insetLo);
+    if(config.brandColor) rootStyle.setProperty('--brand-color', config.brandColor);
+    if(config.brandBColor) rootStyle.setProperty('--brand-b-color', config.brandBColor);
+
+    if(boardDimmerEl){
+      boardDimmerEl.title = `Display Brightness: ${clampedPct}% • Drag slider or tap dots/press 'D' to step`;
+    }
+
+    if(save){
+      try{
+        localStorage.setItem('wf_board_dimmer_custom_pct', String(clampedPct));
+        localStorage.setItem('wf_board_dimmer_level', String(closestIdx));
       }catch(e){}
     }
   }
@@ -7423,10 +7666,24 @@
     });
   });
 
-  // Tap anywhere on dimmer cluster cycles to next level
+  // Bind continuous range slider
+  if(dimmerSlider){
+    dimmerSlider.addEventListener('input', (e) => {
+      e.stopPropagation();
+      applyContinuousBrightness(parseFloat(dimmerSlider.value), true);
+    });
+    dimmerSlider.addEventListener('change', (e) => {
+      e.stopPropagation();
+      applyContinuousBrightness(parseFloat(dimmerSlider.value), true);
+    });
+    dimmerSlider.addEventListener('pointerdown', (e) => e.stopPropagation());
+    dimmerSlider.addEventListener('click', (e) => e.stopPropagation());
+  }
+
+  // Tap anywhere on dimmer cluster (outside slider & dots) cycles to next level
   if(boardDimmerEl){
     boardDimmerEl.addEventListener('click', (e) => {
-      if(e.target.closest('.dimmer-dot-btn')) return; // handled by dot button
+      if(e.target.closest('.dimmer-dot-btn') || e.target.closest('.dimmer-slider-wrap')) return;
       cycleBoardDimmer(true);
     });
   }
@@ -7443,18 +7700,28 @@
     }
   });
 
-  // Restore saved dimmer level on startup
+  // Restore saved dimmer level on startup (slider custom pct or preset level)
   try{
-    const savedLevel = localStorage.getItem('wf_board_dimmer_level');
-    if(savedLevel !== null){
-      const parsedLevel = parseInt(savedLevel, 10);
-      if(!isNaN(parsedLevel) && parsedLevel >= 0 && parsedLevel < DIMMER_LEVELS.length){
-        applyBoardDimmer(parsedLevel, false);
+    const savedCustomPct = localStorage.getItem('wf_board_dimmer_custom_pct');
+    if(savedCustomPct !== null){
+      const parsedPct = parseFloat(savedCustomPct);
+      if(!isNaN(parsedPct) && parsedPct >= 10 && parsedPct <= 100){
+        applyContinuousBrightness(parsedPct, false);
       } else {
         applyBoardDimmer(0, false);
       }
     } else {
-      applyBoardDimmer(0, false);
+      const savedLevel = localStorage.getItem('wf_board_dimmer_level');
+      if(savedLevel !== null){
+        const parsedLevel = parseInt(savedLevel, 10);
+        if(!isNaN(parsedLevel) && parsedLevel >= 0 && parsedLevel < DIMMER_LEVELS.length){
+          applyBoardDimmer(parsedLevel, false);
+        } else {
+          applyBoardDimmer(0, false);
+        }
+      } else {
+        applyBoardDimmer(0, false);
+      }
     }
   }catch(e){
     applyBoardDimmer(0, false);
@@ -7901,7 +8168,13 @@
   const eightballAnswer = document.getElementById('eightballAnswer');
 
   let isShaking8Ball = false;
-  let last8BallIndex = 0;
+  let last8BallIndex = -1; // -1 = Ready mode ("TAP ME")
+
+  const EIGHTBALL_READY_RESP = {
+    text: 'TAP ME',
+    layouts: [['TAP ME']],
+    type: 'affirmative'
+  };
 
   /**
    * Fits 8-ball answer text dynamically to the inner viewable window:
@@ -7967,6 +8240,16 @@
     eightballAnswer.innerHTML = bestLayout.map(line => `<span class="eightball-line">${line}</span>`).join('');
     eightballAnswer.style.fontSize = bestFontSize + 'px';
     eightballAnswer.style.lineHeight = '1.12';
+
+    // Set crisp text color based on response type (zero text-shadow FX)
+    eightballAnswer.style.textShadow = 'none';
+    if(resp.type === 'affirmative' || resp.type === 'ready'){
+      eightballAnswer.style.color = '#e1f8ff';
+    } else if(resp.type === 'neutral'){
+      eightballAnswer.style.color = '#fff6dc';
+    } else {
+      eightballAnswer.style.color = '#ffdada';
+    }
   }
 
   /**
@@ -8000,7 +8283,7 @@
       atticBox.style.setProperty('--attic-box-height', tomeHeight + 'px');
     }
 
-    const currentResp = EIGHTBALL_RESPONSES[last8BallIndex >= 0 ? last8BallIndex : 0];
+    const currentResp = last8BallIndex >= 0 ? EIGHTBALL_RESPONSES[last8BallIndex] : EIGHTBALL_READY_RESP;
     fitEightballAnswer(targetDiameter, currentResp);
   }
 
@@ -8188,12 +8471,20 @@
       });
     }
 
-    // Populate initial text if first time in book mode
-    if(currentOracleMode === 'notebook' && lastNotebookIndex < 0 && NOTEBOOK_RESPONSES.length > 0){
-      const initItem = NOTEBOOK_RESPONSES[2]; // "Look closer at what you already dismissed."
-      if(notebookAnswerEl) notebookAnswerEl.textContent = initItem.answer;
-      if(notebookChapterEl) notebookChapterEl.textContent = initItem.entry;
-      if(notebookPromptEl) notebookPromptEl.textContent = initItem.prompt;
+    // Populate ready mode text for the 3 oracles if not yet consulted
+    if(lastNotebookIndex < 0){
+      if(notebookAnswerEl) notebookAnswerEl.textContent = 'Turn My Pages';
+      if(notebookChapterEl) notebookChapterEl.textContent = 'NOTEBOOK';
+      if(notebookPromptEl) notebookPromptEl.textContent = 'Hold your question in mind…';
+    }
+    if(lastBoxIndex < 0){
+      if(atticBox) atticBox.classList.remove('opened', 'rumbling');
+      const lockLabel = document.querySelector('.attic-lock-label');
+      if(lockLabel) lockLabel.textContent = 'Unlock Me';
+    }
+    if(last8BallIndex < 0){
+      const ballSize = eightballSphere ? (eightballSphere.clientWidth || 160) : 160;
+      fitEightballAnswer(ballSize, EIGHTBALL_READY_RESP);
     }
   }
 
@@ -8392,16 +8683,14 @@
         const currentBallSize = eightballSphere ? (eightballSphere.clientWidth || 160) : 160;
         fitEightballAnswer(currentBallSize, resp);
 
-        // Subtle color tinting based on traditional oracle tone
+        // Subtle color tinting based on traditional oracle tone (zero text-shadow FX)
+        eightballAnswer.style.textShadow = 'none';
         if(resp.type === 'affirmative'){
           eightballAnswer.style.color = '#e1f8ff';
-          eightballAnswer.style.textShadow = '0 0 8px rgba(73, 230, 196, 0.9), 0 1px 4px rgba(0,0,0,0.9)';
         } else if(resp.type === 'neutral'){
           eightballAnswer.style.color = '#fff6dc';
-          eightballAnswer.style.textShadow = '0 0 8px rgba(255, 215, 72, 0.8), 0 1px 4px rgba(0,0,0,0.9)';
         } else {
           eightballAnswer.style.color = '#ffdada';
-          eightballAnswer.style.textShadow = '0 0 8px rgba(255, 110, 110, 0.8), 0 1px 4px rgba(0,0,0,0.9)';
         }
       }
 

@@ -642,7 +642,9 @@ const CURATED_ORIGINS = {
   'national shrink day': 'Honors psychologists and psychiatrists on September 5, celebrating Bob Newhart\'s birthday and his famous TV therapist role.',
   'national tailgating day': 'Celebrating pregame food, grilling, and fan camaraderie outside stadiums on the first Saturday of September.',
   'world beard day': 'Observed on the first Saturday in September as a global celebration of facial hair, grooming traditions, and camaraderie.',
-  'world samosa day': 'Dedicated to the crispy, savory spiced pastry originating in Central Asia and celebrated across global street food cultures.'
+  'world samosa day': 'Dedicated to the crispy, savory spiced pastry originating in Central Asia and celebrated across global street food cultures.',
+  'r u ok? day (australia)': 'Founded in 2009 by Gavin Larkin to remind people to regularly check in with family, friends, and colleagues to start meaningful life-saving conversations.',
+  'r u ok? day': 'Founded in 2009 by Gavin Larkin to remind people to regularly check in with family, friends, and colleagues to start meaningful life-saving conversations.'
 };
 
 const CHECKIDAY_BACKUP_HOLIDAYS = [
@@ -716,16 +718,35 @@ async function enrichHolidaySummaries(items) {
             .trim();
 
           // Extract first 1-2 complete sentences
-          const rawSentences = clean.match(/[^.!?]+[.!?]+(\s|$)/g) || [];
-          const validSentences = rawSentences
-            .map(s => s.trim())
+          // Split on sentence terminals: (. ! ?) followed by whitespace and capital letter, or end of string,
+          // while avoiding naive cuts on mid-sentence names (e.g. "R U OK?,")
+          const rawSplit = clean.split(/(?<=[.!?]["”\x27]?)\s+(?=[A-Z0-9])/);
+          const completeSentences = [];
+          for (let seg of rawSplit) {
+            seg = seg.trim();
+            if (!seg) continue;
+            if (completeSentences.length > 0) {
+              const prev = completeSentences[completeSentences.length - 1];
+              const prevIsQuestionInName = /\b[A-Z0-9\s]+\?\s*$/i.test(prev);
+              const currentIsContinuation = /^(?:Day|Week|Month|Year|,|its|their|the\b|a\b|an\b|\b[A-Z][a-z0-9]*\b.*?\b(?:is|are|was|were|has|have|had|founded|celebrates?|honors?|marks?)\b)/i.test(seg);
+              const incomplete = !/[.!?]["”\x27]?$/.test(prev) || /^[a-z,;]/.test(seg) || (prevIsQuestionInName && currentIsContinuation);
+              if (incomplete) {
+                completeSentences[completeSentences.length - 1] = prev + " " + seg;
+                continue;
+              }
+            }
+            completeSentences.push(seg);
+          }
+
+          const validSentences = completeSentences
+            .map(s => s.replace(/^[\s,;:\-–—]+/, '').trim())
             .filter(s => s.length > 20 && !s.endsWith('…') && !s.endsWith('...'));
 
           if (validSentences.length > 0) {
             item.primarySummary = validSentences[0];
             item.summary = validSentences.slice(0, 2).join(' ').trim();
           } else {
-            const noEllipsis = clean.replace(/[…\.]{2,}.*$/, '').trim();
+            const noEllipsis = clean.replace(/[…\.]{2,}.*$/, '').replace(/^[\s,;:\-–—]+/, '').trim();
             item.primarySummary = noEllipsis || clean;
             item.summary = noEllipsis || clean;
           }

@@ -1099,7 +1099,7 @@
     display:grid;
     grid-template-columns: minmax(min-content, auto) minmax(min-content, auto);
     grid-template-rows: auto auto auto;
-    column-gap:clamp(10px, 3.2cqw, 24px);
+    column-gap:clamp(11px, 3.36cqw, 25px);
     row-gap:clamp(2px, 0.4vh, 4px);
     align-items:center;
     align-content:center;
@@ -1171,8 +1171,8 @@
     color:#ffffff;
     line-height:0.86;
     align-self:center;
-    justify-self:end;
-    text-align:right;
+    justify-self:start;
+    text-align:left;
     width:100%;
     font-variant-numeric: tabular-nums;
     font-feature-settings: "tnum" 1;
@@ -1192,8 +1192,8 @@
     color:#ffffff;
     line-height:0.86;
     align-self:center;
-    justify-self:end;
-    text-align:right;
+    justify-self:start;
+    text-align:left;
     width:100%;
     font-variant-numeric: tabular-nums;
     font-feature-settings: "tnum" 1;
@@ -2567,6 +2567,10 @@
     text-transform:uppercase;
     margin-bottom:6px;
     opacity:0.85;
+  }
+  .open-book-entry-num:empty{
+    margin-bottom:0;
+    display:none;
   }
   .notebook-prompt-text{
     font-family:'Outfit', sans-serif;
@@ -4264,7 +4268,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.091026.2223</span>
+        <span id="appVersionText">v1.091026.2237</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -4493,7 +4497,7 @@
                 <div class="open-book-page left">
                   <div class="open-book-page-curl"></div>
                   <div class="open-book-left-content">
-                    <div class="open-book-entry-num" id="notebookChapter">NOTEBOOK</div>
+                    <div class="open-book-entry-num" id="notebookChapter"></div>
                     <div class="notebook-prompt-text" id="notebookPrompt">Hold your question in mind…</div>
                     <div class="open-book-flourish">❦</div>
                   </div>
@@ -7112,7 +7116,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.091026.2223';
+  const CLIENT_APP_VERSION = 'v1.091026.2237';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -8431,7 +8435,7 @@
     // Populate ready mode text for the 3 oracles if not yet consulted
     if(lastNotebookIndex < 0){
       if(notebookAnswerEl) notebookAnswerEl.textContent = 'Turn My Pages';
-      if(notebookChapterEl) notebookChapterEl.textContent = 'NOTEBOOK';
+      if(notebookChapterEl) notebookChapterEl.textContent = '';
       if(notebookPromptEl) notebookPromptEl.textContent = 'Hold your question in mind…';
     }
     if(lastBoxIndex < 0){
@@ -8914,8 +8918,11 @@
     if (!item) return;
 
     const title = (item.title || "Daily Discovery").trim();
-    const conciseText = (item.primarySummary || item.description || item.origin || "").trim();
-    const fullSummary = (item.summary || item.origin || item.description || "").trim();
+    const rawConcise = (item.primarySummary || item.description || item.origin || "").trim();
+    const rawFull = (item.summary || item.origin || item.description || "").trim();
+    const cleanLeadingPunct = (s) => (s || '').replace(/^[\s,;:\-–—\.]+(?=[a-zA-Z0-9"“'‘])/, '').trim();
+    const conciseText = cleanLeadingPunct(rawConcise);
+    const fullSummary = cleanLeadingPunct(rawFull);
 
     const buf = getHolidayMeasureBuffer();
     const targetW = Math.max(120, availW - 6);
@@ -9043,9 +9050,9 @@
     const items = channelData[activeHolidayChannel] || [];
     const cfg = CHANNEL_CONFIG[activeHolidayChannel] || CHANNEL_CONFIG.holidays;
 
-    // Update panel header label (clean, no glow)
+    // Keep panel header label always as CELEBRATE (clean, no glow)
     if (detailsTitleEl) {
-      detailsTitleEl.textContent = cfg.label;
+      detailsTitleEl.textContent = 'Celebrate';
       detailsTitleEl.classList.remove('glow-blue', 'glow-amber', 'glow-teal');
     }
 
@@ -9153,6 +9160,13 @@
       } else if(!forceRefresh && savedListRaw){
         const parsed = JSON.parse(savedListRaw);
         if(Array.isArray(parsed) && parsed.length > 0){
+          // Sanitize any previously cached items with leading punctuation
+          const cleanPunct = (s) => (s || '').replace(/^[\s,;:\-–—\.]+(?=[a-zA-Z0-9"“'‘])/, '').trim();
+          parsed.forEach(it => {
+            if(it.primarySummary) it.primarySummary = cleanPunct(it.primarySummary);
+            if(it.summary) it.summary = cleanPunct(it.summary);
+            if(it.origin) it.origin = cleanPunct(it.origin);
+          });
           channelData[channelId] = parsed;
           const savedIdx = parseInt(localStorage.getItem(`wf_${channelId}_index`) || '0', 10);
           const savedLastRotate = parseInt(localStorage.getItem(`wf_${channelId}_last_rotate`) || '0', 10);

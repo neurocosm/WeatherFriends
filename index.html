@@ -726,6 +726,14 @@
     box-shadow:0 0 6px #38bdf8 !important;
     opacity:0.6 !important;
   }
+  html[data-dim-level="3"] .grav-wave-notice{
+    color:rgba(73, 230, 196, 0.45) !important;
+    text-shadow:none !important;
+  }
+  html[data-dim-level="4"] .grav-wave-notice{
+    color:rgba(73, 230, 196, 0.25) !important;
+    text-shadow:none !important;
+  }
 
   .screen{
     position:relative;
@@ -3505,6 +3513,12 @@
     box-shadow:0 0 16px rgba(56, 189, 248, 0.7);
     transform:translateY(-1px);
   }
+  .star-btn-pulse.is-pulsing{
+    background:#38bdf8 !important;
+    color:#020a10 !important;
+    box-shadow:0 0 20px rgba(56, 189, 248, 0.95), 0 0 32px rgba(73, 230, 196, 0.7) !important;
+    transform:scale(1.05);
+  }
   .star-btn-warp{
     background:rgba(192, 132, 252, 0.15);
     border:1px solid #c084fc;
@@ -3535,26 +3549,29 @@
   }
   .grav-wave-notice{
     position:absolute;
-    top:28%;
+    top:59%;
     left:50%;
-    transform:translateX(-50%) translateY(10px);
+    transform:translateX(-50%) translateY(4px);
     font-family:'Orbitron', sans-serif;
-    font-size:clamp(0.72rem, 1.3vh, 0.88rem);
-    font-weight:700;
-    letter-spacing:0.2em;
-    color:#49e6c4;
-    background:rgba(2, 12, 18, 0.88);
-    border:1px solid rgba(73, 230, 196, 0.6);
-    border-radius:100px;
-    padding:6px 20px;
-    box-shadow:0 0 20px rgba(73, 230, 196, 0.4);
+    font-size:clamp(0.56rem, 0.95vh, 0.68rem);
+    font-weight:600;
+    letter-spacing:0.22em;
+    text-align:center;
+    color:rgba(73, 230, 196, 0.72);
+    text-shadow:0 0 8px rgba(73, 230, 196, 0.35);
+    background:transparent !important;
+    border:none !important;
+    border-radius:0 !important;
+    padding:0 !important;
+    box-shadow:none !important;
     opacity:0;
     pointer-events:none;
-    transition:opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    transition:opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     z-index:25;
+    white-space:nowrap;
   }
   .grav-wave-notice.is-showing{
-    opacity:1;
+    opacity:0.85;
     transform:translateX(-50%) translateY(0);
   }
 
@@ -4290,7 +4307,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.091126.0551</span>
+        <span id="appVersionText">v1.091126.0601</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -7138,7 +7155,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.091126.0551';
+  const CLIENT_APP_VERSION = 'v1.091126.0601';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -10654,6 +10671,8 @@
 
     const warpBoostBtn = document.getElementById('starWarpBoostBtn');
     if(warpBoostBtn) warpBoostBtn.classList.remove('is-boosting');
+    const pulseBtn = document.getElementById('starPulseBtn');
+    if(pulseBtn) pulseBtn.classList.remove('is-pulsing');
 
     if(starfieldCtx && starfieldCanvas){
       starfieldCtx.clearRect(0, 0, starfieldCanvas.width, starfieldCanvas.height);
@@ -10699,6 +10718,14 @@
     stars.forEach(s => {
       s.energy = 1.0;
     });
+
+    const pulseBtn = document.getElementById('starPulseBtn');
+    if(pulseBtn){
+      pulseBtn.classList.add('is-pulsing');
+      setTimeout(() => {
+        if(pulseBtn) pulseBtn.classList.remove('is-pulsing');
+      }, 350);
+    }
 
     if(!isSilent && gravWaveNoticeEl){
       gravWaveNoticeEl.classList.add('is-showing');

@@ -438,75 +438,80 @@
   }
 
   /* 8-Ball Panel Header - Oracle Mode Segmented Title Bar (Smart TV & Remote Friendly) */
-  .eightball-panel .panel-head{
+  .oracle-panel-head{
     display:flex;
     align-items:center;
-    justify-content:center;
+    justify-content:flex-start;
+    gap:clamp(6px, 1.2cqw, 12px);
     width:100%;
-    padding:3px 4px 4px 4px;
+    flex:0 0 auto;
+    margin-bottom:0;
+    padding:0;
     box-sizing:border-box;
   }
   .oracle-pill-shelf{
-    display:flex;
+    display:inline-flex;
     align-items:center;
-    justify-content:space-between;
-    gap:4px;
-    background:rgba(0,0,0,0.45);
-    border:1px solid rgba(140,200,210,0.22);
-    border-radius:10px;
-    padding:2px 3px;
-    width:100%;
+    gap:clamp(3px, 0.8cqw, 6px);
+    flex:1;
+    margin:0;
+    min-width:0;
+    background:transparent;
+    border:none;
+    border-radius:0;
+    padding:0;
     box-sizing:border-box;
   }
   .oracle-title-pill{
-    flex:1 1 0;
+    background:rgba(4, 14, 20, 0.55);
+    border:1px solid rgba(73, 230, 196, 0.22);
+    color:var(--ink-dim);
+    font-family:'Outfit',sans-serif;
+    font-size:clamp(0.56rem, min(2.6cqw, 1.15vh), 0.70rem);
+    font-weight:700;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    padding:clamp(2px, 0.35vh, 4px) clamp(3px, 0.8cqw, 8px);
+    border-radius:6px;
+    cursor:pointer;
+    transition:all 0.18s ease;
+    white-space:nowrap;
+    text-align:center;
     display:inline-flex;
     align-items:center;
     justify-content:center;
-    gap:4px;
-    background:transparent;
-    border:1px solid transparent;
-    border-radius:7px;
-    padding:3px 4px;
-    font-family:'Rajdhani',sans-serif;
-    font-weight:700;
-    font-size:clamp(0.66rem, 1.8cqw, 0.78rem);
-    letter-spacing:0.06em;
-    color:#7c929e;
-    cursor:pointer;
+    line-height:1;
+    flex:1;
     user-select:none;
-    transition:all 0.18s ease;
-    line-height:1.2;
     outline:none;
     -webkit-tap-highlight-color:transparent;
-    white-space:nowrap;
   }
   .oracle-title-pill:hover{
-    color:#e0f2fe;
-    background:rgba(255,255,255,0.06);
-    border-color:rgba(140,200,210,0.3);
+    color:#ffffff;
+    border-color:rgba(73, 230, 196, 0.55);
+    background:rgba(73, 230, 196, 0.15);
   }
   .oracle-title-pill:focus-visible{
     outline:2px solid #49e6c4;
     outline-offset:1px;
   }
   .oracle-title-pill.is-active{
-    background:rgba(12,32,28,0.85);
-    border-color:rgba(73,230,196,0.60);
-    color:#49e6c4;
-    box-shadow:0 0 8px rgba(73,230,196,0.25);
+    background:rgba(73, 230, 196, 0.22);
+    border-color:#49e6c4;
+    color:#ffffff;
+    box-shadow:0 0 8px rgba(73, 230, 196, 0.35);
   }
   .oracle-title-pill[data-oracle-mode="notebook"].is-active{
-    background:rgba(36,28,12,0.85);
-    border-color:rgba(255,215,72,0.60);
-    color:#ffd748;
-    box-shadow:0 0 8px rgba(255,215,72,0.25);
+    background:rgba(255, 215, 72, 0.22);
+    border-color:#ffd748;
+    color:#ffffff;
+    box-shadow:0 0 8px rgba(255, 215, 72, 0.35);
   }
   .oracle-title-pill[data-oracle-mode="box"].is-active{
-    background:rgba(36,20,10,0.85);
-    border-color:rgba(251,146,60,0.60);
-    color:#fb923c;
-    box-shadow:0 0 8px rgba(251,146,60,0.25);
+    background:rgba(251, 146, 60, 0.22);
+    border-color:#fb923c;
+    color:#ffffff;
+    box-shadow:0 0 8px rgba(251, 146, 60, 0.35);
   }
   .oracle-pill-icon{
     font-size:0.75rem;
@@ -1263,14 +1268,6 @@
     transition:font-size 0.08s ease;
   }
 
-  .loc-edit-hint{
-    font-size:clamp(0.85rem, 2.4cqw, 1.15rem);
-    color:#46f1ab;
-    opacity:0.85;
-    margin-left:2px;
-    flex:none;
-  }
-
   .top-cond-summary{
     display:inline-flex;
     align-items:center;
@@ -1282,8 +1279,8 @@
   }
 
   .top-cond-icon-wrap{
-    width:clamp(16px, min(4.4cqw, 2.7vh), 24px);
-    height:clamp(16px, min(4.4cqw, 2.7vh), 24px);
+    width:clamp(20px, min(5.3cqw, 3.3vh), 30px);
+    height:clamp(20px, min(5.3cqw, 3.3vh), 30px);
     display:flex;
     align-items:center;
     justify-content:center;
@@ -1690,8 +1687,12 @@
     width:100%;
     flex:0 0 auto;
     margin-bottom:0;
+    padding:0;
+    box-sizing:border-box;
   }
-  #inspireTitle{
+  #inquireTitle,
+  #inspireTitle,
+  #detailsTitle{
     font-family:'Outfit',sans-serif;
     font-weight:800;
     font-size:clamp(0.65rem, 1.3vh, 0.78rem);
@@ -1699,6 +1700,9 @@
     text-transform:uppercase;
     white-space:nowrap;
     line-height:1;
+    color:var(--ink);
+    margin:0;
+    padding:0;
   }
   .inspire-tabs{
     display:inline-flex;
@@ -1707,10 +1711,15 @@
     flex:1;
     margin:0;
     min-width:0;
+    background:transparent;
+    border:none;
+    border-radius:0;
+    padding:0;
+    box-sizing:border-box;
   }
   .inspire-tab-btn{
     background:rgba(4, 14, 20, 0.55);
-    border:1px solid rgba(179, 136, 255, 0.25);
+    border:1px solid rgba(179, 136, 255, 0.22);
     color:var(--ink-dim);
     font-family:'Outfit',sans-serif;
     font-size:clamp(0.56rem, min(2.6cqw, 1.15vh), 0.70rem);
@@ -1728,6 +1737,9 @@
     justify-content:center;
     line-height:1;
     flex:1;
+    user-select:none;
+    outline:none;
+    -webkit-tap-highlight-color:transparent;
   }
   .inspire-tab-btn:hover{
     color:#ffffff;
@@ -1842,7 +1854,7 @@
     min-height:0;
     overflow:hidden;
     padding:clamp(6px, 1.2vh, 12px) clamp(8px, 1.2vw, 14px);
-    gap:clamp(4px, 0.8vh, 8px);
+    gap:clamp(3px, 0.6vh, 6px);
     cursor:pointer;
     user-select:none;
     -webkit-tap-highlight-color:transparent;
@@ -1852,40 +1864,40 @@
     border-color:rgba(56, 189, 248, 0.45);
     box-shadow:0 0 16px rgba(56, 189, 248, 0.12);
   }
-  #detailsTitle{
-    font-family:'Outfit',sans-serif;
-    font-weight:800;
-    font-size:clamp(0.76rem, 1.4vh, 0.90rem);
-    letter-spacing:0.12em;
-    text-transform:uppercase;
-  }
   .holiday-head{
     display:flex;
     align-items:center;
-    justify-content:space-between;
-    gap:clamp(4px, 1cqw, 8px);
+    justify-content:flex-start;
+    gap:clamp(6px, 1.2cqw, 12px);
     width:100%;
     flex:0 0 auto;
     margin-bottom:0;
+    padding:0;
+    box-sizing:border-box;
   }
   .holiday-tabs{
     display:inline-flex;
     align-items:center;
-    gap:clamp(2px, 0.6cqw, 5px);
+    gap:clamp(3px, 0.8cqw, 6px);
     flex:1;
     margin:0;
     min-width:0;
+    background:transparent;
+    border:none;
+    border-radius:0;
+    padding:0;
+    box-sizing:border-box;
   }
   .holiday-tab-btn{
     background:rgba(4, 14, 20, 0.55);
     border:1px solid rgba(56, 189, 248, 0.22);
     color:var(--ink-dim);
     font-family:'Outfit',sans-serif;
-    font-size:clamp(0.52rem, min(2.3cqw, 1.15vh), 0.68rem);
+    font-size:clamp(0.56rem, min(2.6cqw, 1.15vh), 0.70rem);
     font-weight:700;
     letter-spacing:0.04em;
     text-transform:uppercase;
-    padding:clamp(2px, 0.35vh, 4px) clamp(3px, 0.7cqw, 7px);
+    padding:clamp(2px, 0.35vh, 4px) clamp(3px, 0.8cqw, 8px);
     border-radius:6px;
     cursor:pointer;
     transition:all 0.18s ease;
@@ -1897,6 +1909,8 @@
     line-height:1;
     flex:1;
     user-select:none;
+    outline:none;
+    -webkit-tap-highlight-color:transparent;
   }
   .holiday-tab-btn:hover{
     color:#ffffff;
@@ -2004,9 +2018,9 @@
     min-height:0;
     display:flex;
     flex-direction:column;
-    justify-content:center;
-    padding:clamp(2px, 0.4vh, 6px) 0;
-    gap:clamp(6px, 1.2vh, 14px);
+    justify-content:flex-start;
+    padding:clamp(1px, 0.3vh, 3px) 0 0 0;
+    gap:clamp(4px, 0.8vh, 10px);
     overflow:hidden;
     position:relative;
   }
@@ -2067,6 +2081,9 @@
     user-select:none;
     -webkit-tap-highlight-color:transparent;
     overflow:hidden;
+    font-family:'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+    padding:clamp(6px, 1.2vh, 12px) clamp(8px, 1.2vw, 14px);
+    gap:clamp(3px, 0.6vh, 6px);
     transition:border-color 0.25s ease, box-shadow 0.25s ease;
   }
   .eightball-panel:hover{
@@ -2552,10 +2569,10 @@
     opacity:0.85;
   }
   .notebook-prompt-text{
-    font-family:'Special Elite', 'Share Tech Mono', serif;
+    font-family:'Outfit', sans-serif;
     color:#2f1f10;
     font-size:clamp(0.70rem, 1.3vw, 0.86rem);
-    font-weight:700;
+    font-weight:600;
     line-height:1.32;
     text-align:center;
     width:100%;
@@ -2636,10 +2653,10 @@
 
   /* Answer Text: Crystal Clear, Deep Ink on Bright Parchment (No hyphenated splits!) */
   .notebook-answer-text{
-    font-family:'Special Elite', 'Share Tech Mono', serif;
+    font-family:'Outfit', sans-serif;
     color:#120c06 !important;
     font-size:clamp(0.70rem, 1.3vw, 0.88rem);
-    font-weight:800;
+    font-weight:700;
     line-height:1.3;
     text-align:center;
     width:100%;
@@ -2792,10 +2809,10 @@
     display:inline-block;
   }
   .attic-lock-label{
-    font-family:'Rajdhani', sans-serif;
-    font-weight:700;
-    font-size:0.74rem;
-    letter-spacing:0.08em;
+    font-family:'Outfit', sans-serif;
+    font-weight:600;
+    font-size:0.75rem;
+    letter-spacing:0.04em;
     text-transform:none;
     color:#fff3d4;
     line-height:1;
@@ -2863,16 +2880,16 @@
     opacity:1;
   }
   .attic-card-text{
-    font-family:'Special Elite', 'Share Tech Mono', monospace;
+    font-family:'Outfit', sans-serif;
     color:#1a0f05;
-    font-size:clamp(0.72rem, 1.4vw, 0.90rem);
-    font-weight:800;
-    line-height:1.24;
+    font-size:clamp(0.74rem, 1.4vw, 0.92rem);
+    font-weight:700;
+    line-height:1.26;
     text-align:center;
     width:100%;
     word-break:normal;
     overflow-wrap:break-word;
-    letter-spacing:0.02em;
+    letter-spacing:0.01em;
   }
   .attic-card-stamp{
     margin-top:4px;
@@ -4247,7 +4264,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.091026.2143</span>
+        <span id="appVersionText">v1.091026.2223</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -4336,7 +4353,6 @@
               <circle cx="12" cy="11" r="2.5"/>
             </svg>
             <span class="top-city-name" id="cityName">Waltham, MA</span>
-            <span class="loc-edit-hint glow-teal" title="Change location">✎</span>
             <span id="coordsText" style="display:none;"></span>
           </button>
 
@@ -4426,33 +4442,22 @@
       </div>
 
       <!-- Rolled-Up Horizontal Shutter / Shade Slat -->
-      <div class="row-shutter-bar" id="shutterPanelsRow" title="Click to pull down and unroll row" role="button" tabindex="0" aria-label="Unroll Inquire, Inspiration & Holidays row">
+      <div class="row-shutter-bar" id="shutterPanelsRow" title="Click to pull down and unroll row" role="button" tabindex="0" aria-label="Unroll Inquire, Inspiration & Celebrate row">
         <span class="shutter-slat-dot"></span>
-        <span class="shutter-slat-label">INQUIRE • DAILY INSPIRATION • CHECKIDAY <span class="shutter-unroll-hint">(click to pull down)</span></span>
+        <span class="shutter-slat-label">INQUIRE • DAILY INSPIRATION • CELEBRATE <span class="shutter-unroll-hint">(click to pull down)</span></span>
       </div>
 
       <!-- ORACLE / INQUIRE ARTIFACTS (Center-Left Square: 8-Ball, Notebook, Attic Chest) -->
       <div class="panel eightball-panel" id="panelEightball" title="Tap to consult Inquire">
         <div class="panel-head oracle-panel-head">
-          <div class="ttl" style="display:inline-flex; align-items:center; gap:5px;">
-            <span class="label glow-teal" id="inquireTitle" style="display:inline-flex; align-items:center; gap:4px; font-weight:700; letter-spacing:0.04em;">
-              <span class="inquire-interrobang" style="font-size:1.15em; line-height:1; color:var(--teal);">‽</span> INQUIRE
-            </span>
+          <div class="ttl">
+            <span class="label" id="inquireTitle">Inquire</span>
           </div>
           <!-- Oracle Selector Pills as Title Bar -->
           <div class="oracle-pill-shelf" id="oracleTitlePills" role="radiogroup" aria-label="Inquire Artifact Mode">
-            <button type="button" class="oracle-title-pill is-active" id="pillOracleEightball" data-oracle-mode="eightball" role="radio" aria-checked="true" title="Magic 8-Ball" tabindex="0">
-              <span class="oracle-pill-icon">🎱</span>
-              <span class="oracle-pill-name">8-BALL</span>
-            </button>
-            <button type="button" class="oracle-title-pill" id="pillOracleNotebook" data-oracle-mode="notebook" role="radio" aria-checked="false" title="The Book of Answers" tabindex="0">
-              <span class="oracle-pill-icon">📖</span>
-              <span class="oracle-pill-name">NOTEBOOK</span>
-            </button>
-            <button type="button" class="oracle-title-pill" id="pillOracleBox" data-oracle-mode="box" role="radio" aria-checked="false" title="The Attic Chest" tabindex="0">
-              <span class="oracle-pill-icon">📦</span>
-              <span class="oracle-pill-name">CHEST</span>
-            </button>
+            <button type="button" class="oracle-title-pill is-active" id="pillOracleEightball" data-oracle-mode="eightball" role="radio" aria-checked="true" title="Magic 8-Ball" tabindex="0">8-Ball</button>
+            <button type="button" class="oracle-title-pill" id="pillOracleNotebook" data-oracle-mode="notebook" role="radio" aria-checked="false" title="The Book of Answers" tabindex="0">Notebook</button>
+            <button type="button" class="oracle-title-pill" id="pillOracleBox" data-oracle-mode="box" role="radio" aria-checked="false" title="The Attic Chest" tabindex="0">Chest</button>
           </div>
         </div>
 
@@ -4568,7 +4573,7 @@
       <div class="panel inspiration-panel" id="inspirationPanel" title="Tap or click text to get a new quote">
         <div class="panel-head inspire-head">
           <div class="ttl">
-            <span class="label glow-purple" id="inspireTitle">Inspiration</span>
+            <span class="label" id="inspireTitle">Inspiration</span>
           </div>
           <div class="inspire-tabs" id="inspireTabs">
             <button type="button" class="inspire-tab-btn active" data-type="positive" id="tabPositive" title="Relatable Positive Quotes">Positive</button>
@@ -4598,33 +4603,21 @@
         <div class="splitter-grip"></div>
       </div>
 
-      <!-- CHECKIDAY & MULTI-CHANNEL ROTATOR (Right-Center Block) -->
-      <div class="panel details-holiday-panel" id="panelDetails" title="Tap or click to rotate to the next item">
+      <!-- CELEBRATIONS & MULTI-CHANNEL ROTATOR (Right-Center Block) -->
+      <div class="panel details-holiday-panel" id="panelDetails" title="Tap or click to rotate to the next celebration">
         <div class="panel-head holiday-head">
           <div class="ttl">
-            <span class="label glow-blue" id="detailsTitle">Holidays</span>
+            <span class="label" id="detailsTitle">Celebrate</span>
           </div>
           <div class="holiday-tabs" id="holidayTabs">
-            <button type="button" class="holiday-tab-btn active" data-channel="holidays" id="tabHolidays" title="General National & Global Holidays">Today</button>
+            <button type="button" class="holiday-tab-btn active" data-channel="holidays" id="tabHolidays" title="General National & Global Celebrations">Today</button>
             <button type="button" class="holiday-tab-btn" data-channel="food" id="tabFoodHolidays" title="National Food & Drink Celebrations">Food</button>
             <button type="button" class="holiday-tab-btn" data-channel="tech" id="tabTechHistory" title="This Day in Retro Tech & Space">Retro Tech</button>
-          </div>
-          <div class="holiday-nav-controls">
-            <span class="holiday-counter-badge" id="holidayCounterBadge" title="Current item in daily rotation">-- / --</span>
-            <button type="button" class="holiday-calendar-btn" id="holidayCalendarBtn" title="Today's date • Tap to rotate item" aria-label="Today's date">
-              <div class="cal-top-accent">
-                <span class="cal-pin"></span>
-                <span class="cal-pin"></span>
-              </div>
-              <div class="cal-day-body">
-                <span class="cal-day-num" id="holidayCalDay">9</span>
-              </div>
-            </button>
           </div>
         </div>
 
         <div class="holiday-content-area" id="holidayContentArea">
-          <div class="holiday-title glow-blue" id="holidayTitle">Loading Today's Holidays...</div>
+          <div class="holiday-title glow-blue" id="holidayTitle">Loading Today's Celebrations...</div>
           <div class="holiday-summary" id="holidaySummary"></div>
         </div>
 
@@ -5269,7 +5262,6 @@
   const topCondDescEl = document.getElementById('topCondText');
   const topCondIconWrapEl = document.getElementById('topCondIconWrap');
   const topLocPinEl = document.querySelector('.loc-pin-icon');
-  const topLocHintEl = document.querySelector('.loc-edit-hint');
 
   let wxMeasureBuffer = null;
   let wxBufTempWrap = null;
@@ -5349,7 +5341,7 @@
     wxBufCond.textContent = condName;
 
     // Both lines occupy the full card width, giving ample space for longer weather descriptions
-    const availCityTxtW = Math.max(70, targetW - 48);
+    const availCityTxtW = Math.max(70, targetW - 32);
     const availCondTxtW = Math.max(70, targetW - 36);
 
     let headLow = 13;
@@ -5376,12 +5368,10 @@
       topLocPinEl.style.width = iconDim + 'px';
       topLocPinEl.style.height = iconDim + 'px';
     }
+    const condIconDim = Math.max(19, Math.min(30, Math.round(iconDim * 1.21)));
     if(topCondIconWrapEl){
-      topCondIconWrapEl.style.width = iconDim + 'px';
-      topCondIconWrapEl.style.height = iconDim + 'px';
-    }
-    if(topLocHintEl){
-      topLocHintEl.style.fontSize = Math.max(11, Math.round(bestHeadS * 0.88)) + 'px';
+      topCondIconWrapEl.style.width = condIconDim + 'px';
+      topCondIconWrapEl.style.height = condIconDim + 'px';
     }
 
     // Header stack height (2 lines + gap)
@@ -5649,12 +5639,12 @@
     return `<polygon points="${cx-2},${cy-2} ${cx+6},${cy-2} ${cx-1},${cy+14} ${cx+3},${cy+14} ${cx-8},${cy+30} ${cx-4},${cy+13} ${cx-8},${cy+13}" fill="${color}"/>`;
   }
   function weatherIconSvg(code, size){
-    const purple = '#cf7dff', blue = '#3aa8ff', amber='#ffb648', teal='#49e6c4', mist='#6b8a93';
+    const goldSun = '#ffd748', blue = '#3aa8ff', amber='#ffb648', teal='#49e6c4', mist='#6b8a93';
     let inner = '';
     if(code === 0){
-      inner = sunSvg(50,50,20,'#e79bff');
+      inner = sunSvg(50,50,20,goldSun);
     } else if(code === 1 || code === 2){
-      inner = sunSvg(38,38,14,'#e79bff') + cloudSvg(58,60,1,blue);
+      inner = sunSvg(38,38,14,goldSun) + cloudSvg(58,60,1,blue);
     } else if(code === 3){
       // Authentic Overcast: dense, layered overcast cloud deck with cool slate/silver atmospheric strata
       inner = `
@@ -5686,7 +5676,7 @@
     } else if([95,96,99].includes(code)){
       inner = cloudSvg(50,40,1.1,'#3a4a58') + boltSvg(52,55,amber);
     } else {
-      inner = sunSvg(50,50,18,purple);
+      inner = sunSvg(50,50,18,goldSun);
     }
     return inner;
   }
@@ -7122,7 +7112,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.091026.2143';
+  const CLIENT_APP_VERSION = 'v1.091026.2223';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -8795,13 +8785,13 @@
   const CHANNEL_CONFIG = {
     holidays: {
       id: 'holidays',
-      label: 'Holidays',
+      label: 'Celebrate',
       glow: 'glow-blue',
       titleColor: 'var(--blue)',
       endpoint: '/api/checkiday?excludeFood=1',
       dataKey: 'holidays',
       tabId: 'tabHolidays',
-      fallbackTitle: "Loading Today's Holidays..."
+      fallbackTitle: "Loading Today's Celebrations..."
     },
     food: {
       id: 'food',
@@ -9036,7 +9026,7 @@
     holidaySummaryEl.style.lineHeight = '1.46';
 
     holidayContentArea.style.gap = finalGapPx + 'px';
-    holidayContentArea.style.justifyContent = 'center';
+    holidayContentArea.style.justifyContent = 'flex-start';
   }
 
   // Setup ResizeObserver for immediate re-screening on panel resize or window adjustments
@@ -9053,11 +9043,10 @@
     const items = channelData[activeHolidayChannel] || [];
     const cfg = CHANNEL_CONFIG[activeHolidayChannel] || CHANNEL_CONFIG.holidays;
 
-    // Update panel header label & glow
+    // Update panel header label (clean, no glow)
     if (detailsTitleEl) {
       detailsTitleEl.textContent = cfg.label;
       detailsTitleEl.classList.remove('glow-blue', 'glow-amber', 'glow-teal');
-      detailsTitleEl.classList.add(cfg.glow);
     }
 
     if(!items || items.length === 0){

@@ -3799,8 +3799,8 @@
   }
   .outlook-friends-grid{
     display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
-    gap:clamp(8px, 1.4vw, 16px);
+    grid-template-columns:repeat(4, 1fr);
+    gap:clamp(6px, 1.1vw, 12px);
     width:100%;
     align-items:stretch;
     justify-content:center;
@@ -3821,9 +3821,9 @@
     align-items:stretch;
     justify-content:space-between;
     height:100%;
-    min-height:160px;
-    gap:clamp(3px, 0.9cqw, 6px);
-    padding:clamp(10px, 2cqw, 14px) clamp(12px, 2.4cqw, 16px);
+    min-height:155px;
+    gap:clamp(2px, 0.8cqw, 5px);
+    padding:clamp(8px, 1.8cqw, 12px) clamp(10px, 2.2cqw, 14px);
     background:rgba(4, 11, 14, 0.78);
     border:1px solid var(--grid-line);
     border-radius:12px;
@@ -3895,6 +3895,8 @@
     letter-spacing:0.02em;
     white-space:nowrap;
     cursor:pointer;
+    user-select:none;
+    -webkit-tap-highlight-color:transparent;
     transition:border-color 0.15s ease, background 0.15s ease;
   }
   .friend-clock-pill:hover{
@@ -3909,26 +3911,6 @@
     color:#ffb648;
     font-weight:400;
     line-height:1;
-  }
-  .friend-edit-btn{
-    background:transparent;
-    border:none;
-    outline:none;
-    color:#9eb0b8;
-    opacity:0.65;
-    cursor:pointer;
-    padding:3px;
-    border-radius:3px;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    transition:opacity 0.15s ease, color 0.15s ease, transform 0.15s ease;
-    -webkit-tap-highlight-color:transparent;
-  }
-  .friend-edit-btn:hover{
-    opacity:1;
-    color:#49e6c4;
-    transform:scale(1.15);
   }
 
   /* Subhead Row: Location & Mini Weather Condition */
@@ -4122,26 +4104,7 @@
     50%{ opacity: 0.85; }
   }
 
-  .friend-badge-choice{
-    background:rgba(255,255,255,0.05);
-    border:1px solid rgba(255,255,255,0.1);
-    border-radius:4px;
-    padding:3px 6px;
-    font-size:1.15rem;
-    cursor:pointer;
-    transition:background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
-    line-height:1;
-  }
-  .friend-badge-choice:hover{
-    background:rgba(73,230,196,0.15);
-    border-color:rgba(73,230,196,0.5);
-    transform:scale(1.15);
-  }
-  .friend-badge-choice.is-selected{
-    background:rgba(73,230,196,0.25);
-    border-color:#49e6c4;
-    box-shadow:0 0 8px rgba(73,230,196,0.4);
-  }
+
 
   /* ---- Responsive & Device Optimization ---- */
   /* Portrait / Mobile Narrow Fallback: allow smooth vertical flow when device is held vertically */
@@ -4284,7 +4247,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.091026.0733</span>
+        <span id="appVersionText">v1.091026.2143</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -4877,83 +4840,46 @@
 
   <!-- Weather Friends Configuration Modal -->
   <div class="loc-search-overlay" id="friendConfigModal" style="display:none;" role="dialog" aria-modal="true" aria-label="Configure Weather Friend">
-    <div class="loc-search-card" style="max-width:490px; width:95%;">
-      <div class="loc-search-head">
-        <div class="loc-search-title">👥 CONFIGURE WEATHER FRIEND</div>
-        <button class="loc-search-close" id="friendConfigCloseBtn" type="button" aria-label="Close">✕</button>
+    <div class="loc-search-card" style="max-width:430px; width:92%; padding:18px 20px; font-family:'Outfit',sans-serif; gap:12px;">
+      <div class="loc-search-head" style="padding-bottom:2px;">
+        <div style="font-family:'Outfit',sans-serif; font-size:1.02rem; font-weight:600; letter-spacing:0.02em; color:var(--teal); display:flex; align-items:center; gap:8px;">
+          <span>👥</span>
+          <span>Configure Weather Friend</span>
+        </div>
+        <button class="loc-search-close" id="friendConfigCloseBtn" type="button" aria-label="Close" style="font-family:'Outfit',sans-serif;">✕</button>
       </div>
 
-      <div style="display:flex; flex-direction:column; gap:12px; margin-top:10px;">
-        <!-- Friend Nickname & Badge Selector -->
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <!-- Friend Nickname / Label -->
         <div>
-          <label style="display:block; font-family:'Orbitron',sans-serif; font-size:0.68rem; letter-spacing:0.1em; color:#7effdb; margin-bottom:4px;">FRIEND NICKNAME / LABEL</label>
-          <div style="display:flex; gap:8px;">
-            <div id="friendSelectedBadge" style="width:42px; height:38px; display:inline-flex; align-items:center; justify-content:center; background:#040e13; border:1px solid rgba(73,230,196,0.4); border-radius:6px; font-size:1.35rem; cursor:pointer; flex-shrink:0;" title="Click quick emoji below to change badge">🇨🇦</div>
-            <input type="text" id="friendNameInput" class="loc-search-input" placeholder="e.g. Mom & Dad, Dave, Sister Emily, Tokyo HQ..." autocomplete="off" style="flex:1 1 auto; margin-bottom:0;">
-          </div>
-        </div>
-
-        <!-- Quick Flag & Badge Selector -->
-        <div>
-          <div style="font-family:'Rajdhani',sans-serif; font-size:0.75rem; color:#9eb0b8; margin-bottom:4px;">Quick Flag & Avatar Selector:</div>
-          <div id="friendEmojiPickerRow" style="display:flex; flex-wrap:wrap; gap:5px;">
-            <button type="button" class="friend-badge-choice" data-badge="🇨🇦" title="Canada">🇨🇦</button>
-            <button type="button" class="friend-badge-choice" data-badge="🇺🇸" title="United States">🇺🇸</button>
-            <button type="button" class="friend-badge-choice" data-badge="🇬🇧" title="United Kingdom">🇬🇧</button>
-            <button type="button" class="friend-badge-choice" data-badge="🇯🇵" title="Japan">🇯🇵</button>
-            <button type="button" class="friend-badge-choice" data-badge="🇦🇺" title="Australia">🇦🇺</button>
-            <button type="button" class="friend-badge-choice" data-badge="🇩🇪" title="Germany">🇩🇪</button>
-            <button type="button" class="friend-badge-choice" data-badge="🇫🇷" title="France">🇫🇷</button>
-            <button type="button" class="friend-badge-choice" data-badge="🇮🇹" title="Italy">🇮🇹</button>
-            <button type="button" class="friend-badge-choice" data-badge="🇲🇽" title="Mexico">🇲🇽</button>
-            <button type="button" class="friend-badge-choice" data-badge="🇪🇸" title="Spain">🇪🇸</button>
-            <button type="button" class="friend-badge-choice" data-badge="🏠" title="Home">🏠</button>
-            <button type="button" class="friend-badge-choice" data-badge="💼" title="Office / Work">💼</button>
-            <button type="button" class="friend-badge-choice" data-badge="❤️" title="Family / Love">❤️</button>
-            <button type="button" class="friend-badge-choice" data-badge="🌟" title="Star">🌟</button>
-            <button type="button" class="friend-badge-choice" data-badge="🌴" title="Vacation">🌴</button>
-          </div>
+          <label for="friendNameInput" style="display:block; font-family:'Outfit',sans-serif; font-size:0.75rem; font-weight:600; letter-spacing:0.04em; text-transform:uppercase; color:#7effdb; margin-bottom:5px;">Friend Nickname / Label</label>
+          <input type="text" id="friendNameInput" class="loc-search-input" placeholder="e.g. Michele, Sarah, Dave, Tokyo HQ..." autocomplete="off" style="width:100%; margin-bottom:0; font-family:'Outfit',sans-serif; font-size:0.92rem;">
         </div>
 
         <!-- Location Search Input -->
         <div>
-          <label style="display:block; font-family:'Orbitron',sans-serif; font-size:0.68rem; letter-spacing:0.1em; color:#7effdb; margin-bottom:4px;">CITY, US ZIP, CANADIAN POSTAL, OR COUNTRY</label>
+          <label for="friendLocSearchInput" style="display:block; font-family:'Outfit',sans-serif; font-size:0.75rem; font-weight:600; letter-spacing:0.04em; text-transform:uppercase; color:#7effdb; margin-bottom:5px;">City, US Zip, Canadian Postal, or Country</label>
           <div style="display:flex; gap:6px;">
-            <input type="text" id="friendLocSearchInput" class="loc-search-input" placeholder="e.g. Toronto, M5V, 90210, London, Tokyo, Paris..." autocomplete="off" style="flex:1 1 auto; margin-bottom:0;">
-            <button type="button" id="friendLocSearchBtn" class="loc-search-btn" style="flex-shrink:0;">SEARCH</button>
+            <input type="text" id="friendLocSearchInput" class="loc-search-input" placeholder="e.g. Toronto, M5V, 90210, London, Tokyo..." autocomplete="off" style="flex:1 1 auto; margin-bottom:0; font-family:'Outfit',sans-serif; font-size:0.92rem;">
+            <button type="button" id="friendLocSearchBtn" class="loc-search-btn" style="flex-shrink:0; font-family:'Outfit',sans-serif; font-weight:600; letter-spacing:0.04em; font-size:0.8rem; padding:0 14px;">SEARCH</button>
           </div>
         </div>
 
         <!-- Search Results List -->
-        <div class="loc-search-results" id="friendSearchResults" style="max-height:140px; display:none;"></div>
+        <div class="loc-search-results" id="friendSearchResults" style="max-height:150px; display:none; font-family:'Outfit',sans-serif;"></div>
 
         <!-- Selected Location Capsule -->
-        <div id="friendSelectedLocPreview" style="padding:8px 10px; background:rgba(73,230,196,0.08); border:1px dashed rgba(73,230,196,0.4); border-radius:6px; font-family:'Outfit',sans-serif; font-size:0.84rem; color:#dce7ea; display:flex; align-items:center; justify-content:space-between; min-height:36px;">
-          <span id="friendSelectedLocText">📍 Current: Toronto, ON, Canada</span>
-          <span id="friendSelectedTzText" style="font-family:'Orbitron',monospace; font-size:0.68rem; color:#49e6c4;">America/Toronto</span>
-        </div>
-
-        <!-- Quick Presets -->
-        <div>
-          <div style="font-family:'Rajdhani',sans-serif; font-size:0.75rem; color:#9eb0b8; margin-bottom:4px;">Popular Presets:</div>
-          <div style="display:flex; flex-wrap:wrap; gap:6px;">
-            <button type="button" class="loc-quick-btn friend-preset-btn" data-name="Toronto, ON" data-city="Toronto, ON, Canada" data-lat="43.6532" data-lon="-79.3832" data-tz="America/Toronto" data-badge="🇨🇦">🇨🇦 Toronto</button>
-            <button type="button" class="loc-quick-btn friend-preset-btn" data-name="London, UK" data-city="London, England, UK" data-lat="51.5074" data-lon="-0.1278" data-tz="Europe/London" data-badge="🇬🇧">🇬🇧 London</button>
-            <button type="button" class="loc-quick-btn friend-preset-btn" data-name="Tokyo, JP" data-city="Tokyo, Japan" data-lat="35.6762" data-lon="139.6503" data-tz="Asia/Tokyo" data-badge="🇯🇵">🇯🇵 Tokyo</button>
-            <button type="button" class="loc-quick-btn friend-preset-btn" data-name="Honolulu, HI" data-city="Honolulu, HI, USA" data-lat="21.3069" data-lon="-157.8583" data-tz="Pacific/Honolulu" data-badge="🇺🇸">🇺🇸 Honolulu</button>
-            <button type="button" class="loc-quick-btn friend-preset-btn" data-name="Vancouver, BC" data-city="Vancouver, BC, Canada" data-lat="49.2827" data-lon="-123.1207" data-tz="America/Vancouver" data-badge="🇨🇦">🇨🇦 Vancouver</button>
-            <button type="button" class="loc-quick-btn friend-preset-btn" data-name="Paris, FR" data-city="Paris, France" data-lat="48.8566" data-lon="2.3522" data-tz="Europe/Paris" data-badge="🇫🇷">🇫🇷 Paris</button>
-            <button type="button" class="loc-quick-btn friend-preset-btn" data-name="New York, NY" data-city="New York, NY, USA" data-lat="40.7128" data-lon="-74.0060" data-tz="America/New_York" data-badge="🇺🇸">🇺🇸 New York</button>
-            <button type="button" class="loc-quick-btn friend-preset-btn" data-name="Sydney, AU" data-city="Sydney, Australia" data-lat="-33.8688" data-lon="151.2093" data-tz="Australia/Sydney" data-badge="🇦🇺">🇦🇺 Sydney</button>
-          </div>
+        <div id="friendSelectedLocPreview" style="padding:9px 12px; background:rgba(73,230,196,0.08); border:1px dashed rgba(73,230,196,0.4); border-radius:8px; font-family:'Outfit',sans-serif; font-size:0.86rem; color:#dce7ea; display:flex; align-items:center; justify-content:space-between; min-height:38px; gap:8px;">
+          <span id="friendSelectedLocText" style="font-weight:500;">📍 Current: Toronto, ON, Canada</span>
+          <span id="friendSelectedTzText" style="font-family:'Outfit',sans-serif; font-size:0.78rem; color:#49e6c4; opacity:0.85; white-space:nowrap;">America/Toronto</span>
         </div>
 
         <!-- Action Footer -->
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; gap:8px;">
-          <button type="button" id="friendResetBtn" class="loc-quick-btn" style="color:#ff8a65; border-color:rgba(255,138,101,0.4);">Reset Default</button>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px; gap:8px;">
+          <button type="button" id="friendResetBtn" class="loc-quick-btn" style="font-family:'Outfit',sans-serif; font-weight:500; font-size:0.84rem; color:#ff8a65; border-color:rgba(255,138,101,0.4); padding:7px 12px;">Reset Default</button>
           <div style="display:flex; gap:8px;">
-            <button type="button" id="friendCancelBtn" class="loc-quick-btn">Cancel</button>
-            <button type="button" id="friendSaveBtn" class="loc-search-btn" style="padding:8px 20px;">SAVE FRIEND</button>
+            <button type="button" id="friendCancelBtn" class="loc-quick-btn" style="font-family:'Outfit',sans-serif; font-weight:500; font-size:0.84rem; padding:7px 12px;">Cancel</button>
+            <button type="button" id="friendSaveBtn" class="loc-search-btn" style="padding:8px 18px; font-family:'Outfit',sans-serif; font-weight:600; font-size:0.84rem; letter-spacing:0.03em;">SAVE FRIEND</button>
           </div>
         </div>
       </div>
@@ -6092,8 +6018,106 @@
       badge: '🇯🇵',
       tempUnit: 'C',
       timeFormat: '24'
+    },
+    {
+      id: 'friend_4',
+      name: 'Sarah',
+      locationName: 'Honolulu, HI, United States',
+      shortCity: 'Honolulu, HI',
+      lat: 21.3069,
+      lon: -157.8583,
+      timezone: 'Pacific/Honolulu',
+      countryCode: 'US',
+      admin1: 'HI',
+      badge: '🇺🇸',
+      tempUnit: 'F',
+      timeFormat: '12'
     }
   ];
+
+  const REGION_CODE_MAP = {
+    // US States & Territories
+    'alabama': 'AL', 'alaska': 'AK', 'arizona': 'AZ', 'arkansas': 'AR', 'california': 'CA',
+    'colorado': 'CO', 'connecticut': 'CT', 'delaware': 'DE', 'florida': 'FL', 'georgia': 'GA',
+    'hawaii': 'HI', 'idaho': 'ID', 'illinois': 'IL', 'indiana': 'IN', 'iowa': 'IA',
+    'kansas': 'KS', 'kentucky': 'KY', 'louisiana': 'LA', 'maine': 'ME', 'maryland': 'MD',
+    'massachusetts': 'MA', 'michigan': 'MI', 'minnesota': 'MN', 'mississippi': 'MS', 'missouri': 'MO',
+    'montana': 'MT', 'nebraska': 'NE', 'nevada': 'NV', 'new hampshire': 'NH', 'new jersey': 'NJ',
+    'new mexico': 'NM', 'new york': 'NY', 'north carolina': 'NC', 'north dakota': 'ND', 'ohio': 'OH',
+    'oklahoma': 'OK', 'oregon': 'OR', 'pennsylvania': 'PA', 'rhode island': 'RI', 'south carolina': 'SC',
+    'south dakota': 'SD', 'tennessee': 'TN', 'texas': 'TX', 'utah': 'UT', 'vermont': 'VT',
+    'virginia': 'VA', 'washington': 'WA', 'west virginia': 'WV', 'wisconsin': 'WI', 'wyoming': 'WY',
+    'district of columbia': 'DC', 'puerto rico': 'PR', 'guam': 'GU', 'virgin islands': 'VI',
+
+    // Canadian Provinces & Territories
+    'alberta': 'AB', 'british columbia': 'BC', 'manitoba': 'MB', 'new brunswick': 'NB',
+    'newfoundland and labrador': 'NL', 'newfoundland': 'NL', 'nova scotia': 'NS',
+    'northwest territories': 'NT', 'nunavut': 'NU', 'ontario': 'ON',
+    'prince edward island': 'PE', 'quebec': 'QC', 'saskatchewan': 'SK', 'yukon': 'YT',
+
+    // Australian States
+    'new south wales': 'NSW', 'queensland': 'QLD', 'south australia': 'SA',
+    'tasmania': 'TAS', 'victoria': 'VIC', 'western australia': 'WA',
+    'northern territory': 'NT', 'australian capital territory': 'ACT',
+
+    // UK Countries
+    'england': 'UK', 'scotland': 'UK', 'wales': 'UK', 'northern ireland': 'UK',
+    'united kingdom': 'UK', 'great britain': 'UK', 'uk': 'UK', 'gb': 'UK'
+  };
+
+  const COUNTRY_NAME_TO_CODE = {
+    'united states': 'US', 'usa': 'US', 'canada': 'CA', 'united kingdom': 'UK',
+    'great britain': 'UK', 'england': 'UK', 'japan': 'JP', 'australia': 'AU',
+    'france': 'FR', 'germany': 'DE', 'italy': 'IT', 'spain': 'ES',
+    'mexico': 'MX', 'brazil': 'BR', 'new zealand': 'NZ', 'netherlands': 'NL',
+    'switzerland': 'CH', 'sweden': 'SE', 'norway': 'NO', 'denmark': 'DK',
+    'finland': 'FI', 'ireland': 'IE', 'singapore': 'SG', 'south korea': 'KR',
+    'korea': 'KR', 'india': 'IN', 'china': 'CN', 'south africa': 'ZA'
+  };
+
+  function formatCompactLocation(shortCity, locationName, admin1, countryCode){
+    const raw = (shortCity || locationName || '').trim();
+    if(!raw) return '';
+
+    // Extract city part (first token before comma)
+    const parts = raw.split(',').map(s => s.trim()).filter(Boolean);
+    const city = parts[0] || raw;
+
+    // Check if admin1 was explicitly passed or in parts[1]
+    const region = (admin1 || (parts.length > 1 ? parts[1] : '')).trim();
+    let cc = (countryCode || (parts.length > 2 ? parts[2] : '')).trim().toUpperCase();
+
+    // Look up normalized 2-letter state/province/region code
+    if(region){
+      const regKey = region.toLowerCase();
+      if(REGION_CODE_MAP[regKey]){
+        return `${city}, ${REGION_CODE_MAP[regKey]}`;
+      }
+      if(/^[A-Z]{2,3}$/.test(region)){
+        return `${city}, ${region}`;
+      }
+      if(COUNTRY_NAME_TO_CODE[regKey]){
+        return `${city}, ${COUNTRY_NAME_TO_CODE[regKey]}`;
+      }
+    }
+
+    // If countryCode is available (e.g. CA, US, GB, JP)
+    if(cc){
+      if(cc === 'GB') cc = 'UK';
+      return `${city}, ${cc}`;
+    }
+
+    // Fallback: Check if parts[1] was state or country
+    if(parts.length > 1){
+      const second = parts[1].trim();
+      const secKey = second.toLowerCase();
+      if(REGION_CODE_MAP[secKey]) return `${city}, ${REGION_CODE_MAP[secKey]}`;
+      if(COUNTRY_NAME_TO_CODE[secKey]) return `${city}, ${COUNTRY_NAME_TO_CODE[secKey]}`;
+      if(/^[A-Z]{2,3}$/.test(second)) return `${city}, ${second}`;
+    }
+
+    return city;
+  }
 
   function countryCodeToFlagEmoji(code){
     if(!code || typeof code !== 'string' || code.length !== 2) return '🌐';
@@ -6110,6 +6134,13 @@
       if(saved){
         const parsed = JSON.parse(saved);
         if(Array.isArray(parsed) && parsed.length >= 2){
+          // Auto-migrate from 3 to 4 friends seamlessly
+          if(parsed.length === 3 && DEFAULT_WEATHER_FRIENDS[3]){
+            parsed.push(JSON.parse(JSON.stringify(DEFAULT_WEATHER_FRIENDS[3])));
+            try {
+              localStorage.setItem('wf_weather_friends_v3', JSON.stringify(parsed));
+            } catch(e){}
+          }
           return parsed;
         }
       }
@@ -6214,7 +6245,7 @@
         swapBtn.setAttribute('aria-label', 'Switch to 5-Day Outlook forecast');
       }
       if(shutterLabel){
-        shutterLabel.innerHTML = 'WEATHER FRIENDS • 3 LOCATIONS <span class="shutter-unroll-hint">(click to pull down)</span>';
+        shutterLabel.innerHTML = `WEATHER FRIENDS • ${weatherFriendsList.length} LOCATIONS <span class="shutter-unroll-hint">(click to pull down)</span>`;
       }
       forecastGrid.style.display = 'none';
       friendsGrid.style.display = 'grid';
@@ -6273,26 +6304,23 @@
       if(cached && cached.data && cached.data.current){
         populateFriendCardMarkup(card, friend, cached.data, timeInfo);
       } else {
+        const skelCity = formatCompactLocation(friend.shortCity, friend.locationName, friend.admin1, friend.countryCode);
         card.innerHTML = `
           <div class="friend-card-header">
             <div class="friend-meta-left">
-              <span class="friend-badge">${friend.badge || '📍'}</span>
               <div class="friend-title-group">
                 <span class="friend-name">${escapeHtml(friend.name)}</span>
               </div>
             </div>
             <div class="friend-meta-right">
-              <div class="friend-clock-pill">
+              <div class="friend-clock-pill" data-friend-id="${friend.id}" role="button" tabindex="0">
                 <span class="friend-live-time" data-tz="${friend.timezone}">${timeInfo.timeStr}</span>
                 ${timeInfo.dayDiff ? `<span class="friend-day-tag">${timeInfo.dayDiff}</span>` : ''}
               </div>
-              <button type="button" class="friend-edit-btn" data-friend-id="${friend.id}" title="Configure ${escapeHtml(friend.name)}">
-                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-              </button>
             </div>
           </div>
           <div class="friend-subhead-row">
-            <span class="friend-city">${escapeHtml(friend.shortCity || friend.locationName)}</span>
+            <span class="friend-city">${escapeHtml(skelCity)}</span>
           </div>
           <div class="friend-weather-body" style="padding:8px 0;">
             <div class="friend-skeleton-bar" style="width:48px; height:32px; border-radius:4px;"></div>
@@ -6311,12 +6339,12 @@
       grid.appendChild(card);
     });
 
-    // Wire up edit buttons
-    grid.querySelectorAll('.friend-edit-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
+    // Wire up clock pills to open configuration
+    grid.querySelectorAll('.friend-clock-pill').forEach(pill => {
+      pill.addEventListener('click', (e) => {
         e.stopPropagation();
         e.preventDefault();
-        openFriendConfigModal(btn.dataset.friendId);
+        openFriendConfigModal(pill.dataset.friendId);
       });
     });
 
@@ -6328,14 +6356,6 @@
         if(card){
           const timeInfo = getFriendTimeInfo(friend.timezone, friend.timeFormat || '12');
           populateFriendCardMarkup(card, friend, data, timeInfo);
-          const editBtn = card.querySelector('.friend-edit-btn');
-          if(editBtn){
-            editBtn.addEventListener('click', (e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              openFriendConfigModal(friend.id);
-            });
-          }
         }
       } catch(err){
         console.warn(`Could not load weather for ${friend.name}:`, err.message);
@@ -6381,27 +6401,25 @@
       pressIn = hpaToInHg(daily.pressure_msl_mean[0]).toFixed(2);
     }
 
+    const displayCity = formatCompactLocation(friend.shortCity, friend.locationName, friend.admin1, friend.countryCode);
+
     card.innerHTML = `
       <div class="friend-card-header">
         <div class="friend-meta-left">
-          <span class="friend-badge" title="${escapeHtml(friend.countryCode || '')}">${friend.badge || '📍'}</span>
           <div class="friend-title-group">
             <span class="friend-name" title="${escapeHtml(friend.name)}">${escapeHtml(friend.name)}</span>
           </div>
         </div>
         <div class="friend-meta-right">
-          <div class="friend-clock-pill" data-friend-id="${friend.id}" role="button" tabindex="0" title="Local Time in ${escapeHtml(friend.shortCity || friend.locationName)} • Tap to toggle 12h / 24h">
+          <div class="friend-clock-pill" data-friend-id="${friend.id}" role="button" tabindex="0">
             <span class="friend-live-time" data-tz="${friend.timezone}" data-tf="${friend.timeFormat || '12'}">${timeInfo.timeStr}</span>
             ${timeInfo.dayDiff ? `<span class="friend-day-tag">${timeInfo.dayDiff}</span>` : ''}
           </div>
-          <button type="button" class="friend-edit-btn" data-friend-id="${friend.id}" title="Configure ${escapeHtml(friend.name)}'s location" aria-label="Configure location">
-            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-          </button>
         </div>
       </div>
 
       <div class="friend-subhead-row">
-        <span class="friend-city" title="${escapeHtml(friend.locationName)}">${escapeHtml(friend.shortCity || friend.locationName)}</span>
+        <span class="friend-city" title="${escapeHtml(friend.locationName || displayCity)}">${escapeHtml(displayCity)}</span>
         <div class="friend-cond-mini" title="${desc}">
           <svg class="friend-cond-icon" viewBox="0 0 100 100">${weatherIconSvg(wxCode)}</svg>
           <span>${desc}</span>
@@ -6468,13 +6486,7 @@
     if(clockPill){
       clockPill.addEventListener('click', (e) => {
         e.stopPropagation();
-        friend.timeFormat = (friend.timeFormat === '24') ? '12' : '24';
-        saveWeatherFriends();
-        const cached = friendWeatherCache.get(friend.id);
-        if(cached && cached.data){
-          const tInfo = getFriendTimeInfo(friend.timezone, friend.timeFormat || '12');
-          populateFriendCardMarkup(card, friend, cached.data, tInfo);
-        }
+        openFriendConfigModal(friend.id);
       });
     }
   }
@@ -6514,7 +6526,6 @@
 
     const modal = document.getElementById('friendConfigModal');
     const nameInput = document.getElementById('friendNameInput');
-    const badgePreview = document.getElementById('friendSelectedBadge');
     const locInput = document.getElementById('friendLocSearchInput');
     const resultsContainer = document.getElementById('friendSearchResults');
     const locText = document.getElementById('friendSelectedLocText');
@@ -6523,13 +6534,13 @@
     if(!modal) return;
 
     if(nameInput) nameInput.value = friend.name || '';
-    if(badgePreview) badgePreview.textContent = friend.badge || '📍';
     if(locInput) locInput.value = '';
     if(resultsContainer) {
       resultsContainer.innerHTML = '';
       resultsContainer.style.display = 'none';
     }
-    if(locText) locText.textContent = `📍 Selected: ${friend.locationName || friend.shortCity}`;
+    const compactLoc = formatCompactLocation(friend.shortCity, friend.locationName, friend.admin1, friend.countryCode);
+    if(locText) locText.textContent = `📍 Current: ${compactLoc || friend.locationName || 'Unknown'}`;
     if(tzText) tzText.textContent = friend.timezone || 'auto';
 
     modal.style.display = 'flex';
@@ -6548,14 +6559,8 @@
     if(!friend) return;
 
     const nameInput = document.getElementById('friendNameInput');
-    const badgePreview = document.getElementById('friendSelectedBadge');
-
     const newName = nameInput ? nameInput.value.trim() : '';
     if(newName) friend.name = newName;
-
-    if(badgePreview && badgePreview.textContent) {
-      friend.badge = badgePreview.textContent.trim();
-    }
 
     if(currentSelectedFriendLoc){
       friend.locationName = currentSelectedFriendLoc.locationName || friend.locationName;
@@ -6565,6 +6570,9 @@
       friend.timezone = currentSelectedFriendLoc.timezone || friend.timezone;
       friend.countryCode = currentSelectedFriendLoc.countryCode || friend.countryCode;
       friend.admin1 = currentSelectedFriendLoc.admin1 || friend.admin1;
+      if(currentSelectedFriendLoc.badge){
+        friend.badge = currentSelectedFriendLoc.badge;
+      }
     }
 
     saveWeatherFriends();
@@ -6581,7 +6589,7 @@
     if(!query) return;
 
     resultsContainer.style.display = 'block';
-    resultsContainer.innerHTML = '<div style="padding:10px; color:#62d9ff; font-family:sans-serif; font-size:0.85rem;">Searching global satellites & postal registries…</div>';
+    resultsContainer.innerHTML = '<div style="padding:10px; color:#62d9ff; font-family:\'Outfit\',sans-serif; font-size:0.85rem;">Searching global satellites & postal registries…</div>';
 
     try {
       const res = await fetch(`/api/search-location?q=${encodeURIComponent(query)}`);
@@ -6590,7 +6598,7 @@
       const results = data.results || [];
 
       if(results.length === 0){
-        resultsContainer.innerHTML = '<div style="padding:10px; color:#ffb648; font-family:sans-serif; font-size:0.85rem;">No locations found. Try a city name, US ZIP, or Canadian postal code.</div>';
+        resultsContainer.innerHTML = '<div style="padding:10px; color:#ffb648; font-family:\'Outfit\',sans-serif; font-size:0.85rem;">No locations found. Try a city name, US ZIP, or Canadian postal code.</div>';
         return;
       }
 
@@ -6598,22 +6606,22 @@
       results.forEach(item => {
         const div = document.createElement('div');
         div.className = 'loc-result-item';
-        div.style.cssText = 'padding:8px 10px; cursor:pointer; border-bottom:1px solid rgba(73,230,196,0.12); display:flex; align-items:center; justify-content:space-between;';
+        div.style.cssText = 'padding:9px 12px; cursor:pointer; border-bottom:1px solid rgba(73,230,196,0.12); display:flex; align-items:center; justify-content:space-between; font-family:\'Outfit\',sans-serif; transition:background 0.15s ease;';
         
         const flag = item.countryCode ? countryCodeToFlagEmoji(item.countryCode) : '📍';
         div.innerHTML = `
-          <div style="display:flex; align-items:center; gap:8px;">
+          <div style="display:flex; align-items:center; gap:9px;">
             <span style="font-size:1.2rem;">${flag}</span>
             <div>
               <div style="font-family:'Outfit',sans-serif; font-weight:600; color:#e0f2fe; font-size:0.88rem;">${escapeHtml(item.name)}</div>
-              <div style="font-family:'Rajdhani',sans-serif; font-size:0.75rem; color:#86a7b3;">${item.country || ''} • ${item.lat.toFixed(2)}, ${item.lon.toFixed(2)}</div>
+              <div style="font-family:'Outfit',sans-serif; font-size:0.75rem; color:#86a7b3;">${item.country || ''} • ${item.lat.toFixed(2)}, ${item.lon.toFixed(2)}</div>
             </div>
           </div>
-          <span style="font-family:'Orbitron',sans-serif; font-size:0.65rem; color:#49e6c4; padding:2px 6px; background:rgba(73,230,196,0.1); border-radius:3px;">SELECT</span>
+          <span style="font-family:'Outfit',sans-serif; font-weight:600; font-size:0.72rem; color:#49e6c4; padding:3px 8px; background:rgba(73,230,196,0.12); border:1px solid rgba(73,230,196,0.3); border-radius:4px;">SELECT</span>
         `;
 
         div.addEventListener('click', () => {
-          const short = item.name.split(',')[0].trim() + (item.admin1 ? ', ' + item.admin1 : '');
+          const short = formatCompactLocation(item.name, item.name, item.admin1, item.countryCode);
           currentSelectedFriendLoc = {
             locationName: item.name,
             shortCity: short,
@@ -6627,10 +6635,8 @@
 
           const locText = document.getElementById('friendSelectedLocText');
           const tzText = document.getElementById('friendSelectedTzText');
-          const badgePreview = document.getElementById('friendSelectedBadge');
-          if(locText) locText.textContent = `📍 Selected: ${item.name}`;
+          if(locText) locText.textContent = `📍 Selected: ${short} (${item.country || item.name})`;
           if(tzText) tzText.textContent = item.timezone || 'auto';
-          if(badgePreview) badgePreview.textContent = flag;
 
           resultsContainer.style.display = 'none';
         });
@@ -6638,7 +6644,7 @@
         resultsContainer.appendChild(div);
       });
     } catch(err){
-      resultsContainer.innerHTML = `<div style="padding:10px; color:#ff8a65; font-size:0.85rem;">Search error: ${escapeHtml(err.message)}</div>`;
+      resultsContainer.innerHTML = `<div style="padding:10px; color:#ff8a65; font-family:'Outfit',sans-serif; font-size:0.85rem;">Search error: ${escapeHtml(err.message)}</div>`;
     }
   }
 
@@ -6661,12 +6667,11 @@
         if(!def) return;
         currentSelectedFriendLoc = JSON.parse(JSON.stringify(def));
         const nameInput = document.getElementById('friendNameInput');
-        const badgePreview = document.getElementById('friendSelectedBadge');
         const locText = document.getElementById('friendSelectedLocText');
         const tzText = document.getElementById('friendSelectedTzText');
         if(nameInput) nameInput.value = def.name;
-        if(badgePreview) badgePreview.textContent = def.badge;
-        if(locText) locText.textContent = `📍 Selected: ${def.locationName}`;
+        const compactLoc = formatCompactLocation(def.shortCity, def.locationName, def.admin1, def.countryCode);
+        if(locText) locText.textContent = `📍 Current: ${compactLoc || def.locationName}`;
         if(tzText) tzText.textContent = def.timezone;
       });
     }
@@ -6680,45 +6685,6 @@
         }
       });
     }
-
-    document.querySelectorAll('.friend-preset-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const city = btn.dataset.city;
-        const name = btn.dataset.name;
-        const lat = parseFloat(btn.dataset.lat);
-        const lon = parseFloat(btn.dataset.lon);
-        const tz = btn.dataset.tz;
-        const badge = btn.dataset.badge;
-
-        currentSelectedFriendLoc = {
-          locationName: city,
-          shortCity: name,
-          lat,
-          lon,
-          timezone: tz,
-          countryCode: badge === '🇨🇦' ? 'CA' : badge === '🇬🇧' ? 'GB' : badge === '🇯🇵' ? 'JP' : badge === '🇫🇷' ? 'FR' : badge === '🇦🇺' ? 'AU' : 'US',
-          admin1: '',
-          badge
-        };
-
-        const locText = document.getElementById('friendSelectedLocText');
-        const tzText = document.getElementById('friendSelectedTzText');
-        const badgePreview = document.getElementById('friendSelectedBadge');
-        if(locText) locText.textContent = `📍 Selected: ${city}`;
-        if(tzText) tzText.textContent = tz;
-        if(badgePreview) badgePreview.textContent = badge;
-      });
-    });
-
-    document.querySelectorAll('.friend-badge-choice').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const badge = btn.dataset.badge;
-        const badgePreview = document.getElementById('friendSelectedBadge');
-        if(badgePreview && badge) {
-          badgePreview.textContent = badge;
-        }
-      });
-    });
 
     const swapBtn = document.getElementById('outlookSwapBtn');
     if(swapBtn && !swapBtn._swapBound){
@@ -7156,7 +7122,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.091026.0733';
+  const CLIENT_APP_VERSION = 'v1.091026.2143';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');

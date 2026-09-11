@@ -408,6 +408,9 @@
     color:#707f88;
     cursor:pointer;
     user-select:none;
+    -webkit-user-select:none;
+    -webkit-touch-callout:none;
+    touch-action:manipulation;
     transition:all 0.2s ease;
     box-shadow:inset 0 1px 2px rgba(0,0,0,0.2);
   }
@@ -435,6 +438,33 @@
   @keyframes pulseWake{
     0%,100%{ opacity:1; }
     50%{ opacity:0.5; }
+  }
+  /* Secret Gesture: Cosmic charging & activation on long-press */
+  .wake-pill.is-secret-charging{
+    border-color:rgba(192, 132, 252, 0.85) !important;
+    background:rgba(28, 12, 45, 0.8) !important;
+    box-shadow:0 0 14px rgba(192, 132, 252, 0.65), inset 0 0 8px rgba(56, 189, 248, 0.4) !important;
+    color:#e9d5ff !important;
+    transform:scale(0.95);
+  }
+  .wake-pill.is-secret-charging .wake-dot{
+    background:#c084fc !important;
+    box-shadow:0 0 10px #c084fc, 0 0 16px #38bdf8 !important;
+    transform:scale(1.4);
+    animation:none !important;
+  }
+  .wake-pill.is-secret-active{
+    border-color:#38bdf8 !important;
+    background:rgba(56, 189, 248, 0.35) !important;
+    color:#ffffff !important;
+    box-shadow:0 0 25px rgba(56, 189, 248, 0.95), 0 0 45px rgba(192, 132, 252, 0.85) !important;
+    transform:scale(1.08) !important;
+  }
+  .wake-pill.is-secret-active .wake-dot{
+    background:#38bdf8 !important;
+    box-shadow:0 0 14px #38bdf8 !important;
+    transform:scale(1.5) !important;
+    animation:none !important;
   }
 
   /* 8-Ball Panel Header - Oracle Mode Segmented Title Bar (Smart TV & Remote Friendly) */
@@ -606,6 +636,11 @@
     background:#060b0e !important;
     animation:none !important;
     box-shadow:none !important;
+  }
+  html[data-dim-level="4"] .wake-pill:hover,
+  html[data-dim-level="4"] .wake-pill.is-secret-charging,
+  html[data-dim-level="4"] .wake-pill.is-secret-active{
+    opacity:1 !important;
   }
   html[data-dim-level="4"] .wake-pill:hover{
     opacity:0.8;
@@ -3272,31 +3307,12 @@
     cursor:crosshair;
   }
   .warp-hyperspace-banner{
-    position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%, -50%) scale(0.92);
-    opacity:0;
-    pointer-events:none;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    gap:10px;
-    background:rgba(2, 9, 15, 0.94);
-    border:1.5px solid #38bdf8;
-    border-radius:20px;
-    padding:22px 36px;
-    box-shadow:0 0 50px rgba(56, 189, 248, 0.55), 0 16px 50px rgba(0, 0, 0, 0.95), inset 0 0 25px rgba(56, 189, 248, 0.2);
-    backdrop-filter:blur(14px);
-    -webkit-backdrop-filter:blur(14px);
-    z-index:20;
-    text-align:center;
-    transition:opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    display:none !important;
+    pointer-events:none !important;
   }
   .warp-hyperspace-banner.is-showing{
-    opacity:1;
-    transform:translate(-50%, -50%) scale(1);
+    display:none !important;
+    pointer-events:none !important;
   }
   .warp-alert-pill{
     font-family:'Orbitron', sans-serif;
@@ -3499,6 +3515,12 @@
     color:#020a10;
     box-shadow:0 0 16px rgba(192, 132, 252, 0.7);
     transform:translateY(-1px);
+  }
+  .star-btn-warp.is-boosting{
+    background:#c084fc !important;
+    color:#020a10 !important;
+    box-shadow:0 0 24px rgba(192, 132, 252, 0.95), 0 0 40px rgba(56, 189, 248, 0.7) !important;
+    transform:scale(1.05);
   }
   .star-btn-unroll{
     background:rgba(255, 182, 72, 0.16);
@@ -4268,7 +4290,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.091026.2237</span>
+        <span id="appVersionText">v1.091126.0551</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -4281,7 +4303,7 @@
         </svg>
         <span id="pwaInstallLabel">INSTALL</span>
       </button>
-      <button class="wake-pill" id="wakeLockBtn" title="Keep tablet screen awake (Active). Tap to toggle." aria-label="Toggle screen keep awake">
+      <button class="wake-pill" id="wakeLockBtn" title="Keep tablet screen awake (Active). Tap to toggle. Long-press to roll up all shades!" aria-label="Toggle screen keep awake or long-press to roll up shades">
         <span class="wake-dot"></span>
         <span class="wake-label" id="wakeLockLabel">AWAKE ON</span>
       </button>
@@ -4724,8 +4746,8 @@
     <div class="starfield-universe" id="starfieldUniverse" aria-hidden="true">
       <canvas id="starfieldCanvas" class="starfield-canvas"></canvas>
       
-      <!-- Warp Hyperspace Entry Announcement -->
-      <div class="warp-hyperspace-banner" id="warpHyperspaceBanner">
+      <!-- Warp Hyperspace Entry Announcement (Hidden to allow pure unobstructed spaceflight) -->
+      <div class="warp-hyperspace-banner" id="warpHyperspaceBanner" style="display:none !important;" aria-hidden="true">
         <div class="warp-alert-pill">✦ HYPERSPACE WARP INITIATED ✦</div>
         <div class="warp-main-title">BEGIN STARFIELD WARP HYPERSPACE!</div>
         <div class="warp-sub-title">ALL SHADES ROLLED • ANCHOR STAR ONLINE (1,000,000 LY) • NEURAL CONSCIOUSNESS ENGAGED</div>
@@ -7116,7 +7138,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.091026.2237';
+  const CLIENT_APP_VERSION = 'v1.091126.0551';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -7261,10 +7283,10 @@
     if(wakeBtn){
       if(active){
         wakeBtn.classList.add('active');
-        wakeBtn.title = 'Screen keep-awake is active (screen will not sleep). Tap to toggle off.';
+        wakeBtn.title = 'Screen keep-awake is active (screen will not sleep). Tap to toggle off. Long-press to roll up shades for Starfield!';
       } else {
         wakeBtn.classList.remove('active');
-        wakeBtn.title = 'Screen keep-awake is turned off. Tap to re-enable.';
+        wakeBtn.title = 'Screen keep-awake is turned off. Tap to re-enable. Long-press to roll up shades for Starfield!';
       }
     }
     if(wakeLabel){
@@ -7366,10 +7388,89 @@
     }
   }
 
+  /* Secret Gesture: Long-press AWAKE ON button to roll up all window shades and reveal the Starfield Show! */
+  let wakeLongPressTimer = null;
+  let wakeLongPressFired = false;
+  let wakePointerStartX = 0;
+  let wakePointerStartY = 0;
+
+  function clearWakeLongPress(){
+    if(wakeLongPressTimer){
+      clearTimeout(wakeLongPressTimer);
+      wakeLongPressTimer = null;
+    }
+    if(wakeBtn){
+      wakeBtn.classList.remove('is-secret-charging');
+    }
+  }
+
+  function handleWakeLongPressTrigger(){
+    wakeLongPressFired = true;
+    clearWakeLongPress();
+    if(wakeBtn){
+      wakeBtn.classList.add('is-secret-active');
+      setTimeout(() => {
+        if(wakeBtn) wakeBtn.classList.remove('is-secret-active');
+      }, 500);
+    }
+    if(navigator.vibrate){
+      try { navigator.vibrate([40, 30, 80]); } catch(e){}
+    }
+    if(typeof toggleAllRowsSecretShow === 'function'){
+      toggleAllRowsSecretShow();
+    } else if(typeof rollUpAllRows === 'function'){
+      rollUpAllRows();
+    }
+  }
+
   if(wakeBtn){
+    wakeBtn.addEventListener('pointerdown', (e) => {
+      // Accept primary click or touch/pen
+      if(e.button !== undefined && e.button !== 0) return;
+      wakeLongPressFired = false;
+      wakePointerStartX = e.clientX;
+      wakePointerStartY = e.clientY;
+      wakeBtn.classList.add('is-secret-charging');
+      if(wakeLongPressTimer) clearTimeout(wakeLongPressTimer);
+      wakeLongPressTimer = setTimeout(() => {
+        handleWakeLongPressTrigger();
+      }, 700);
+    });
+
+    wakeBtn.addEventListener('pointermove', (e) => {
+      if(!wakeLongPressTimer) return;
+      const dx = Math.abs(e.clientX - wakePointerStartX);
+      const dy = Math.abs(e.clientY - wakePointerStartY);
+      if(dx > 14 || dy > 14){
+        clearWakeLongPress();
+      }
+    });
+
+    wakeBtn.addEventListener('pointerup', () => {
+      clearWakeLongPress();
+    });
+    wakeBtn.addEventListener('pointercancel', () => {
+      clearWakeLongPress();
+    });
+    wakeBtn.addEventListener('pointerleave', () => {
+      clearWakeLongPress();
+    });
+
+    wakeBtn.addEventListener('contextmenu', (e) => {
+      if(wakeLongPressFired || wakeLongPressTimer){
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    });
+
     wakeBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       e.preventDefault();
+      if(wakeLongPressFired){
+        // Suppress normal toggle if long press triggered secret show
+        wakeLongPressFired = false;
+        return;
+      }
       toggleScreenWakeLock();
     });
   }
@@ -9994,6 +10095,26 @@
     updateRowCollapseUI(true);
   }
 
+  function rollUpAllRows(){
+    VALID_ROW_IDS.forEach(id => {
+      rowCollapsedState[id] = true;
+    });
+    saveCollapsedState();
+    updateRowCollapseUI(true);
+    if(typeof startStarfieldWarpHyperspace === 'function'){
+      startStarfieldWarpHyperspace();
+    }
+  }
+
+  function toggleAllRowsSecretShow(){
+    const allCollapsed = VALID_ROW_IDS.every(id => !!rowCollapsedState[id]);
+    if(allCollapsed || (typeof isStarfieldActive !== 'undefined' && isStarfieldActive)){
+      unrollAllRows();
+    } else {
+      rollUpAllRows();
+    }
+  }
+
   function updateRowCollapseUI(animate = false){
     const screenEl = document.getElementById('screen');
     if(!screenEl) return;
@@ -10321,6 +10442,7 @@
   let currentWarpSpeed = 0.65;
   let targetWarpSpeed = 0.65;
   let warpBannerTimer = null;
+  let warpBoostTimer = null;
   let gravNoticeTimer = null;
   let anchorDriftT = 0;
   let zenClockInterval = null;
@@ -10490,23 +10612,13 @@
       targetWarpSpeed = 24;
     }
 
-    if(warpHyperspaceBannerEl && warpProgressFillEl){
-      warpHyperspaceBannerEl.classList.add('is-showing');
-      warpProgressFillEl.style.transition = 'none';
-      warpProgressFillEl.style.width = '0%';
-      void warpProgressFillEl.offsetWidth;
-      warpProgressFillEl.style.transition = isNightDim ? 'width 1.2s linear' : 'width 2.2s linear';
-      warpProgressFillEl.style.width = '100%';
+    // Ensure HUD floats smoothly at the bottom, without any banner blocking the spaceflight view
+    if(starfieldHudEl) starfieldHudEl.classList.add('is-visible');
 
-      if(starfieldHudEl) starfieldHudEl.classList.remove('is-visible');
-
-      if(warpBannerTimer) clearTimeout(warpBannerTimer);
-      warpBannerTimer = setTimeout(() => {
-        targetWarpSpeed = isNightDim ? 0.45 : 0.65;
-        if(warpHyperspaceBannerEl) warpHyperspaceBannerEl.classList.remove('is-showing');
-        if(starfieldHudEl) starfieldHudEl.classList.add('is-visible');
-      }, isNightDim ? 1300 : 2300);
-    }
+    if(warpBannerTimer) clearTimeout(warpBannerTimer);
+    warpBannerTimer = setTimeout(() => {
+      targetWarpSpeed = isNightDim ? 0.45 : 0.65;
+    }, isNightDim ? 1300 : 2300);
 
     // Trigger initial gravitational pulse from the Anchor Star
     setTimeout(() => {
@@ -10522,6 +10634,7 @@
     isStarfieldActive = false;
 
     if(warpBannerTimer) clearTimeout(warpBannerTimer);
+    if(warpBoostTimer) clearTimeout(warpBoostTimer);
     if(gravNoticeTimer) clearTimeout(gravNoticeTimer);
     if(zenClockInterval) clearInterval(zenClockInterval);
     if(autoPulseInterval) clearInterval(autoPulseInterval);
@@ -10539,6 +10652,9 @@
     if(starfieldHudEl) starfieldHudEl.classList.remove('is-visible');
     if(gravWaveNoticeEl) gravWaveNoticeEl.classList.remove('is-showing');
 
+    const warpBoostBtn = document.getElementById('starWarpBoostBtn');
+    if(warpBoostBtn) warpBoostBtn.classList.remove('is-boosting');
+
     if(starfieldCtx && starfieldCanvas){
       starfieldCtx.clearRect(0, 0, starfieldCanvas.width, starfieldCanvas.height);
     }
@@ -10546,24 +10662,23 @@
 
   function boostWarpSpeed(){
     if(!isStarfieldActive) return;
-    targetWarpSpeed = 22;
-    if(starfieldHudEl) starfieldHudEl.classList.remove('is-visible');
-    if(warpHyperspaceBannerEl){
-      const titleEl = warpHyperspaceBannerEl.querySelector('.warp-main-title');
-      if(titleEl) titleEl.textContent = 'BEGIN STARFIELD WARP HYPERSPACE!';
-      warpHyperspaceBannerEl.classList.add('is-showing');
-      if(warpProgressFillEl){
-        warpProgressFillEl.style.transition = 'none';
-        warpProgressFillEl.style.width = '0%';
-        void warpProgressFillEl.offsetWidth;
-        warpProgressFillEl.style.transition = 'width 1.6s linear';
-        warpProgressFillEl.style.width = '100%';
-      }
+    const isNightDim = currentDimmerIndex >= 3;
+    targetWarpSpeed = isNightDim ? 8 : 22;
+    currentWarpSpeed = Math.max(currentWarpSpeed, isNightDim ? 5 : 16);
+
+    // Provide immediate tactile HUD feedback on the warp button without covering the spaceflight view
+    const warpBoostBtn = document.getElementById('starWarpBoostBtn');
+    if(warpBoostBtn){
+      warpBoostBtn.classList.add('is-boosting');
     }
-    setTimeout(() => {
-      targetWarpSpeed = 0.65;
-      if(warpHyperspaceBannerEl) warpHyperspaceBannerEl.classList.remove('is-showing');
-      if(starfieldHudEl) starfieldHudEl.classList.add('is-visible');
+
+    // Keep the HUD floating at the bottom; do not hide it and never block the starfield with a banner
+    if(starfieldHudEl) starfieldHudEl.classList.add('is-visible');
+
+    if(warpBoostTimer) clearTimeout(warpBoostTimer);
+    warpBoostTimer = setTimeout(() => {
+      targetWarpSpeed = isNightDim ? 0.45 : 0.65;
+      if(warpBoostBtn) warpBoostBtn.classList.remove('is-boosting');
     }, 1700);
   }
 

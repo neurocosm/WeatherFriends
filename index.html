@@ -1247,7 +1247,8 @@
     padding:clamp(6px, 1.2vh, 14px) clamp(10px, 3cqw, 18px);
     display:flex;
     flex-direction:column;
-    justify-content:space-between;
+    justify-content:space-around;
+    gap:clamp(12px, 3.2vh, 40px);
     height:100%;
     min-height:0;
     min-width:0;
@@ -1265,7 +1266,7 @@
     gap:clamp(1px, 0.3vh, 3px);
     width:100%;
     min-width:0;
-    margin-bottom:clamp(2px, 0.4vh, 6px);
+    margin-bottom:0;
     padding:0;
     text-align:center;
     flex:0 0 auto;
@@ -1352,7 +1353,7 @@
     justify-content:space-between;
     gap:clamp(8px, 2cqw, 16px);
     width:100%;
-    flex:1;
+    flex:0 0 auto;
     min-height:0;
     margin:0;
     padding:0 clamp(2px, 0.8cqw, 6px);
@@ -1363,7 +1364,7 @@
     display:flex;
     align-items:flex-end;
     justify-content:flex-start;
-    height:100%;
+    height:auto;
     min-width:0;
     flex:1 1 auto;
     cursor:pointer;
@@ -1799,7 +1800,7 @@
     flex:1 1 0;
     display:flex;
     flex-direction:column;
-    justify-content:space-between;
+    justify-content:flex-start;
     padding:0;
     position:relative;
     min-height:0;
@@ -1815,8 +1816,10 @@
   .inspire-text-container{
     flex:1 1 0;
     display:flex;
-    align-items:center;
-    justify-content:center;
+    flex-direction:column;
+    align-items:flex-start;
+    justify-content:flex-start;
+    padding:clamp(1px, 0.3vh, 3px) 0 0 0;
     min-height:0;
     overflow:hidden;
     width:100%;
@@ -1827,6 +1830,7 @@
     font-weight:450;
     color:#f2f9fb;
     letter-spacing:0.01em;
+    text-align:left;
     transition:opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
     width:100%;
     word-break:normal;
@@ -4307,7 +4311,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.091126.2013</span>
+        <span id="appVersionText">v1.091126.2053</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -7155,7 +7159,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.091126.2013';
+  const CLIENT_APP_VERSION = 'v1.091126.2053';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');

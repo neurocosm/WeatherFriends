@@ -3924,7 +3924,7 @@
     flex-shrink:0;
   }
   .friend-name{
-    font-family:'Outfit', sans-serif;
+    font-family:'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
     font-weight:400;
     font-size:clamp(1.05rem, 6.2cqw, 1.30rem);
     letter-spacing:0.01em;
@@ -4307,7 +4307,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.091126.0601</span>
+        <span id="appVersionText">v1.091126.2013</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -4647,20 +4647,20 @@
       </div>
 
       <!-- CELEBRATIONS & MULTI-CHANNEL ROTATOR (Right-Center Block) -->
-      <div class="panel details-holiday-panel" id="panelDetails" title="Tap or click to rotate to the next celebration">
+      <div class="panel details-holiday-panel" id="panelDetails" title="Tap or click to rotate to the next item">
         <div class="panel-head holiday-head">
           <div class="ttl">
             <span class="label" id="detailsTitle">Celebrate</span>
           </div>
           <div class="holiday-tabs" id="holidayTabs">
-            <button type="button" class="holiday-tab-btn active" data-channel="holidays" id="tabHolidays" title="General National & Global Celebrations">Today</button>
+            <button type="button" class="holiday-tab-btn active" data-channel="holidays" id="tabHolidays" title="General National & Global Observances">Today</button>
             <button type="button" class="holiday-tab-btn" data-channel="food" id="tabFoodHolidays" title="National Food & Drink Celebrations">Food</button>
             <button type="button" class="holiday-tab-btn" data-channel="tech" id="tabTechHistory" title="This Day in Retro Tech & Space">Retro Tech</button>
           </div>
         </div>
 
         <div class="holiday-content-area" id="holidayContentArea">
-          <div class="holiday-title glow-blue" id="holidayTitle">Loading Today's Celebrations...</div>
+          <div class="holiday-title glow-blue" id="holidayTitle">Loading Today's Observances...</div>
           <div class="holiday-summary" id="holidaySummary"></div>
         </div>
 
@@ -4889,7 +4889,7 @@
         <!-- Friend Nickname / Label -->
         <div>
           <label for="friendNameInput" style="display:block; font-family:'Outfit',sans-serif; font-size:0.75rem; font-weight:600; letter-spacing:0.04em; text-transform:uppercase; color:#7effdb; margin-bottom:5px;">Friend Nickname / Label</label>
-          <input type="text" id="friendNameInput" class="loc-search-input" placeholder="e.g. Michele, Sarah, Dave, Tokyo HQ..." autocomplete="off" style="width:100%; margin-bottom:0; font-family:'Outfit',sans-serif; font-size:0.92rem;">
+          <input type="text" id="friendNameInput" class="loc-search-input" placeholder="e.g. 🏡 Home, ❤️ Mom & Dad, 🏄‍♂️ Dave, 🗼 Tokyo HQ..." autocomplete="off" style="width:100%; margin-bottom:0; font-family:'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif; font-size:0.92rem;">
         </div>
 
         <!-- Location Search Input -->
@@ -7155,7 +7155,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.091126.0601';
+  const CLIENT_APP_VERSION = 'v1.091126.2013';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -8904,16 +8904,57 @@
   --------------------------------------------------------------- */
   const HOLIDAY_ROTATION_MS = 15 * 60 * 1000; // 15 minutes per item
 
+  function isSolemnHoliday(title) {
+    if (!title || typeof title !== 'string') return false;
+    return /\b(patriot day|national day of service and remembrance|remember freedom|libraries remember|pearl harbor|memorial day|remembrance|holocaust|yom hashoah|fallen firefighters|pow\/mia|peace officers memorial|gold star mother|stillbirth remembrance)\b/i.test(title);
+  }
+
+  function getMemorialTribute(title) {
+    const t = (title || '').toLowerCase();
+    if (t.includes('patriot day')) {
+      return 'A national day of prayer and remembrance honoring the memory of the 2,977 innocent lives lost on September 11, 2001, and paying tribute to the selfless first responders, military service members, and everyday heroes who united in courage and sacrifice.';
+    }
+    if (t.includes('service and remembrance')) {
+      return 'A federally recognized national day of service inspiring charitable acts, volunteerism, and community unity in enduring tribute to the victims and heroes of September 11.';
+    }
+    if (t.includes('libraries remember')) {
+      return 'Observed in quiet reflection and community support, honoring the resilience of public spaces, information access, and communities following September 11.';
+    }
+    if (t.includes('emergency responders')) {
+      return 'Honoring the dedication, valor, and steadfast commitment of paramedics, EMTs, police officers, and firefighters who risk their lives to protect our communities.';
+    }
+    if (t.includes('remember freedom')) {
+      return 'Dedicated to reflecting on the enduring value of liberty, unity, and the sacrifices made to protect human freedom and democracy.';
+    }
+    if (t.includes('pearl harbor')) {
+      return 'Honoring the memory of the 2,403 American service members and civilians who lost their lives on December 7, 1941, in defense of freedom.';
+    }
+    if (t.includes('memorial day')) {
+      return 'A national day of solemn remembrance honoring all military personnel who have died in the performance of their duties in service to our nation.';
+    }
+    return 'Observed today in solemn honor, gratitude, and remembrance.';
+  }
+
+  // Purge any stale client cache containing graphic or insensitive raw 9/11 RSS scrapes
+  try {
+    const cachedH = localStorage.getItem('wf_holidays_list') || localStorage.getItem('wf_checkiday_list');
+    if (cachedH && (cachedH.includes('terrorist') || cachedH.includes('hijack') || cachedH.includes('four planes') || cachedH.includes('Celebrating Patriot Day'))) {
+      localStorage.removeItem('wf_holidays_list');
+      localStorage.removeItem('wf_checkiday_list');
+      localStorage.removeItem('wf_holiday_date');
+    }
+  } catch(e){}
+
   const CHANNEL_CONFIG = {
     holidays: {
       id: 'holidays',
-      label: 'Celebrate',
+      label: 'Today',
       glow: 'glow-blue',
       titleColor: 'var(--blue)',
       endpoint: '/api/checkiday?excludeFood=1',
       dataKey: 'holidays',
       tabId: 'tabHolidays',
-      fallbackTitle: "Loading Today's Celebrations..."
+      fallbackTitle: "Loading Today's Observances..."
     },
     food: {
       id: 'food',
@@ -9036,8 +9077,21 @@
     if (!item) return;
 
     const title = (item.title || "Daily Discovery").trim();
-    const rawConcise = (item.primarySummary || item.description || item.origin || "").trim();
-    const rawFull = (item.summary || item.origin || item.description || "").trim();
+    const isMemorial = item && (item.isMemorial || isSolemnHoliday(title));
+
+    let rawConcise = (item.primarySummary || item.description || item.origin || "").trim();
+    let rawFull = (item.summary || item.origin || item.description || "").trim();
+
+    // Dignified override for solemn remembrance days
+    if (isMemorial) {
+      const fullText = `${rawConcise} ${rawFull}`;
+      if (/\b(terrorist|hijack|four planes|murdered)\b/i.test(fullText) || /^celebrating\b/i.test(rawConcise) || /^today is\b/i.test(rawConcise)) {
+        const respectfulTribute = getMemorialTribute(title);
+        rawConcise = respectfulTribute;
+        rawFull = respectfulTribute;
+      }
+    }
+
     const cleanLeadingPunct = (s) => (s || '').replace(/^[\s,;:\-–—\.]+(?=[a-zA-Z0-9"“'‘])/, '').trim();
     const conciseText = cleanLeadingPunct(rawConcise);
     const fullSummary = cleanLeadingPunct(rawFull);
@@ -9134,15 +9188,17 @@
 
     holidayTitleEl.textContent = title;
     holidayTitleEl.style.fontWeight = '600';
-    holidayTitleEl.style.color = cfg.titleColor;
+    holidayTitleEl.style.color = isMemorial ? '#93c5fd' : cfg.titleColor;
     holidayTitleEl.style.fontSize = finalTitlePx + 'px';
     holidayTitleEl.style.lineHeight = '1.16';
     holidayTitleEl.style.textWrap = 'balance';
     holidayTitleEl.style.whiteSpace = 'normal';
 
-    // Sync glow classes
+    // Sync glow classes (suppress celebratory glow on solemn days)
     holidayTitleEl.classList.remove('glow-blue', 'glow-amber', 'glow-teal');
-    holidayTitleEl.classList.add(cfg.glow);
+    if (!isMemorial) {
+      holidayTitleEl.classList.add(cfg.glow);
+    }
 
     holidaySummaryEl.textContent = chosenText;
     holidaySummaryEl.style.fontWeight = '400';
@@ -9168,13 +9224,11 @@
     const items = channelData[activeHolidayChannel] || [];
     const cfg = CHANNEL_CONFIG[activeHolidayChannel] || CHANNEL_CONFIG.holidays;
 
-    // Keep panel header label always as CELEBRATE (clean, no glow)
-    if (detailsTitleEl) {
-      detailsTitleEl.textContent = 'Celebrate';
-      detailsTitleEl.classList.remove('glow-blue', 'glow-amber', 'glow-teal');
-    }
-
     if(!items || items.length === 0){
+      if(detailsTitleEl) {
+        detailsTitleEl.textContent = cfg.label || 'Today';
+        detailsTitleEl.classList.remove('glow-blue', 'glow-amber', 'glow-teal');
+      }
       if(holidayTitleEl) {
         holidayTitleEl.textContent = cfg.fallbackTitle;
         holidayTitleEl.style.color = cfg.titleColor;
@@ -9191,15 +9245,28 @@
     }
 
     const item = items[curIdx];
+    const isMemorial = item && (item.isMemorial || isSolemnHoliday(item.title));
+
+    // Dynamic panel header label: Dignified "Reflect" for memorial observances, "Celebrate" for joyful holidays, "Food Days", "Retro Tech"
+    if (detailsTitleEl) {
+      if (activeHolidayChannel === 'holidays') {
+        detailsTitleEl.textContent = isMemorial ? 'Reflect' : 'Celebrate';
+      } else if (activeHolidayChannel === 'food') {
+        detailsTitleEl.textContent = 'Food Days';
+      } else if (activeHolidayChannel === 'tech') {
+        detailsTitleEl.textContent = 'Retro Tech';
+      }
+      detailsTitleEl.classList.remove('glow-blue', 'glow-amber', 'glow-teal');
+    }
 
     // Update counter badge: e.g. "2 / 11"
     if(holidayCounterBadge){
       holidayCounterBadge.textContent = `${curIdx + 1} / ${items.length}`;
-      holidayCounterBadge.title = `${cfg.label} item ${curIdx + 1} of ${items.length} today`;
+      holidayCounterBadge.title = `${isMemorial ? 'Reflect' : cfg.label} item ${curIdx + 1} of ${items.length} today`;
     }
 
     const applyContent = () => {
-      if(holidayTitleEl) holidayTitleEl.textContent = item.title || "Daily Celebration";
+      if(holidayTitleEl) holidayTitleEl.textContent = item.title || (isMemorial ? "Day of Reflection" : "Daily Discovery");
       screenAndFitHolidayText();
       if(holidayTitleEl) holidayTitleEl.classList.remove('fading');
       if(holidaySummaryEl) holidaySummaryEl.classList.remove('fading');
@@ -9278,12 +9345,23 @@
       } else if(!forceRefresh && savedListRaw){
         const parsed = JSON.parse(savedListRaw);
         if(Array.isArray(parsed) && parsed.length > 0){
-          // Sanitize any previously cached items with leading punctuation
+          // Sanitize any previously cached items with leading punctuation and respect solemn holidays
           const cleanPunct = (s) => (s || '').replace(/^[\s,;:\-–—\.]+(?=[a-zA-Z0-9"“'‘])/, '').trim();
           parsed.forEach(it => {
             if(it.primarySummary) it.primarySummary = cleanPunct(it.primarySummary);
             if(it.summary) it.summary = cleanPunct(it.summary);
             if(it.origin) it.origin = cleanPunct(it.origin);
+            if(isSolemnHoliday(it.title)){
+              it.isMemorial = true;
+              const text = `${it.primarySummary || ''} ${it.summary || ''} ${it.origin || ''} ${it.description || ''}`;
+              if(/\b(terrorist|hijack|four planes|murdered)\b/i.test(text) || /^celebrating\b/i.test(text)){
+                const respectful = getMemorialTribute(it.title);
+                it.primarySummary = respectful;
+                it.summary = respectful;
+                it.origin = respectful;
+                it.description = respectful;
+              }
+            }
           });
           channelData[channelId] = parsed;
           const savedIdx = parseInt(localStorage.getItem(`wf_${channelId}_index`) || '0', 10);
@@ -9329,6 +9407,20 @@
         const data = await res.json();
         const rawItems = data[cfg.dataKey] || data.holidays || data.items || [];
         if(Array.isArray(rawItems) && rawItems.length > 0){
+          rawItems.forEach(it => {
+            if(isSolemnHoliday(it.title)){
+              it.isMemorial = true;
+              const text = `${it.primarySummary || ''} ${it.summary || ''} ${it.origin || ''} ${it.description || ''}`;
+              if(/\b(terrorist|hijack|four planes|murdered)\b/i.test(text) || /^celebrating\b/i.test(text)){
+                const respectful = getMemorialTribute(it.title);
+                it.primarySummary = respectful;
+                it.summary = respectful;
+                it.origin = respectful;
+                it.description = respectful;
+              }
+            }
+          });
+
           const effectiveDate = data.date || todayKey;
           holidayActiveDateKey = effectiveDate;
 

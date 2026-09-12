@@ -644,8 +644,34 @@ const CURATED_ORIGINS = {
   'world beard day': 'Observed on the first Saturday in September as a global celebration of facial hair, grooming traditions, and camaraderie.',
   'world samosa day': 'Dedicated to the crispy, savory spiced pastry originating in Central Asia and celebrated across global street food cultures.',
   'r u ok? day (australia)': 'Founded in 2009 by Gavin Larkin to remind people to regularly check in with family, friends, and colleagues to start meaningful life-saving conversations.',
-  'r u ok? day': 'Founded in 2009 by Gavin Larkin to remind people to regularly check in with family, friends, and colleagues to start meaningful life-saving conversations.'
+  'r u ok? day': 'Founded in 2009 by Gavin Larkin to remind people to regularly check in with family, friends, and colleagues to start meaningful life-saving conversations.',
+  // September 11 - Solemn Remembrance & Tribute Observances
+  'patriot day': 'A national day of prayer and remembrance honoring the memory of the 2,977 innocent lives lost on September 11, 2001, and paying tribute to the selfless first responders, military service members, and everyday heroes who united in courage and sacrifice.',
+  'national day of service and remembrance': 'A federally recognized national day of service inspiring charitable acts, volunteerism, and community unity in enduring tribute to the victims and heroes of September 11.',
+  'national emergency responders day': 'Honoring the dedication, valor, and steadfast commitment of paramedics, EMTs, police officers, and firefighters who risk their lives to protect our communities.',
+  'libraries remember day': 'Observed in quiet reflection and community support, honoring the resilience of public spaces, information access, and communities following September 11.',
+  'remember freedom day': 'Dedicated to reflecting on the enduring value of liberty, unity, and the sacrifices made to protect human freedom and democracy.',
+  // Other National Memorial / Solemn Observances
+  'pearl harbor remembrance day': 'Honoring the memory of the 2,403 American service members and civilians who lost their lives on December 7, 1941, in defense of freedom.',
+  'national pearl harbor remembrance day': 'Honoring the memory of the 2,403 American service members and civilians who lost their lives on December 7, 1941, in defense of freedom.',
+  'memorial day': 'A national day of solemn remembrance honoring all military personnel who have died in the performance of their duties in service to our nation.',
+  'peace officers memorial day': 'Honoring local, state, and federal law enforcement officers who have made the ultimate sacrifice in the line of duty.',
+  'pow/mia recognition day': 'Honoring the courage and sacrifices of prisoners of war and those missing in action, reaffirming our commitment to bring them home.',
+  'gold star mother\'s day': 'Recognizing and honoring mothers and families who have lost sons and daughters in the service of the armed forces.',
+  'world aids day': 'Dedicated to raising awareness, remembering those who have died, and standing in global solidarity with people affected by HIV/AIDS.'
 };
+
+function isSolemnObservance(title) {
+  if (!title || typeof title !== 'string') return false;
+  return /\b(patriot day|national day of service and remembrance|remember freedom|libraries remember|pearl harbor|memorial day|remembrance|holocaust|yom hashoah|fallen firefighters|pow\/mia|peace officers memorial|gold star mother|veterans day|stillbirth remembrance)\b/i.test(title);
+}
+
+function getRespectfulDescription(title) {
+  if (isSolemnObservance(title)) {
+    return `Observed today in solemn honor, gratitude, and remembrance.`;
+  }
+  return `Celebrating ${title} today!`;
+}
 
 const CHECKIDAY_BACKUP_HOLIDAYS = [
   { title: "National Read a Book Day", description: "Encouraging people to pause and spend the day reading a book of their choosing.", origin: CURATED_ORIGINS['national read a book day'], summary: "National Read a Book Day encourages people to pause from their busy lives to spend the day reading a book of their choosing.", link: "https://www.checkiday.com" },
@@ -661,8 +687,14 @@ async function enrichHolidaySummaries(items) {
 
   await Promise.allSettled(items.map(async (item) => {
     const key = (item.title || '').toLowerCase().trim();
+    item.isMemorial = isSolemnObservance(item.title);
+
     if (CURATED_ORIGINS[key]) {
       item.origin = CURATED_ORIGINS[key];
+      item.primarySummary = CURATED_ORIGINS[key];
+      item.summary = CURATED_ORIGINS[key];
+      item.description = CURATED_ORIGINS[key];
+      return;
     }
 
     if (!item.link || !item.link.startsWith('http') || item.link === 'https://www.checkiday.com') {
@@ -717,6 +749,16 @@ async function enrichHolidaySummaries(items) {
             .replace(/\s+/g, ' ')
             .trim();
 
+          // Guard against graphic or sensationalized crime/attack RSS excerpts on solemn days
+          if (item.isMemorial || /\b(terrorist|hijacked|hijackers|plane crash|murdered|killed in attack)\b/i.test(clean)) {
+            const safeText = CURATED_ORIGINS[key] || `A national day of prayer, reflection, and solemn remembrance honoring the lives lost and the courage of all who served.`;
+            item.origin = safeText;
+            item.primarySummary = safeText;
+            item.summary = safeText;
+            item.description = safeText;
+            return;
+          }
+
           // Extract first 1-2 complete sentences
           // Split on sentence terminals: (. ! ?) followed by whitespace and capital letter, or end of string,
           // while avoiding naive cuts on mid-sentence names (e.g. "R U OK?,")
@@ -757,7 +799,7 @@ async function enrichHolidaySummaries(items) {
     }
 
     if (!item.origin) {
-      item.origin = item.primarySummary || item.description || `Today we celebrate ${item.title}!`;
+      item.origin = item.primarySummary || item.description || getRespectfulDescription(item.title);
     }
     if (!item.primarySummary) {
       item.primarySummary = item.origin;
@@ -864,7 +906,7 @@ app.get('/api/checkiday', async (req, res) => {
         const link = cleanStr(linkMatch ? linkMatch[1] : '');
         let description = cleanStr(descMatch ? descMatch[1] : '');
         if (!description || description.toLowerCase() === `today is ${title.toLowerCase()}!`) {
-          description = `Celebrating ${title} today!`;
+          description = getRespectfulDescription(title);
         }
 
         if (title) {
@@ -872,7 +914,8 @@ app.get('/api/checkiday', async (req, res) => {
             title,
             description,
             link: link || 'https://www.checkiday.com',
-            pubDate: cleanStr(pubDateMatch ? pubDateMatch[1] : '')
+            pubDate: cleanStr(pubDateMatch ? pubDateMatch[1] : ''),
+            isMemorial: isSolemnObservance(title)
           });
         }
       }
@@ -890,7 +933,15 @@ app.get('/api/checkiday', async (req, res) => {
 
         // Fill in any missing origin or summary
         items.forEach(it => {
-          if (!it.origin) it.origin = it.primarySummary || it.description || `Celebrating ${it.title} today!`;
+          it.isMemorial = isSolemnObservance(it.title);
+          const key = (it.title || '').toLowerCase().trim();
+          if (CURATED_ORIGINS[key]) {
+            it.origin = CURATED_ORIGINS[key];
+            it.primarySummary = CURATED_ORIGINS[key];
+            it.summary = CURATED_ORIGINS[key];
+            it.description = CURATED_ORIGINS[key];
+          }
+          if (!it.origin) it.origin = it.primarySummary || it.description || getRespectfulDescription(it.title);
           if (!it.primarySummary) it.primarySummary = it.origin;
           if (!it.summary) it.summary = it.primarySummary;
         });

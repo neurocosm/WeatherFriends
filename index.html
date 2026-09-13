@@ -3314,12 +3314,25 @@
     align-items:center;
     justify-content:center;
     overflow:hidden;
-    transition:opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+    transition:opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), background 0.8s ease;
     background:radial-gradient(140% 120% at 50% 50%, rgba(5, 14, 24, 0.95), rgba(1, 4, 8, 0.98) 70%, #000204 100%);
+  }
+  .starfield-universe[data-theater-mode="aquarium"]{
+    background:radial-gradient(130% 110% at 50% 8%, #0d4268 0%, #082946 32%, #04172a 68%, #020b16 100%);
   }
   .starfield-universe.is-active{
     opacity:1;
     pointer-events:auto;
+    z-index:12;
+  }
+  /* Clean Full-Screen Theater View: hide shade slats, labels, and dot toggles during ambient theater mode */
+  body.theater-active .is-row-collapsed,
+  body.theater-active .row-shutter-bar,
+  body.theater-active .row-order-ctrl,
+  .screen.theater-active .is-row-collapsed,
+  .screen.theater-active .row-shutter-bar,
+  .screen.theater-active .row-order-ctrl{
+    display:none !important;
   }
   .starfield-canvas{
     position:absolute;
@@ -3328,6 +3341,14 @@
     height:100%;
     display:block;
     cursor:crosshair;
+  }
+  .aquarium-canvas{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    display:block;
+    cursor:pointer;
   }
   .warp-hyperspace-banner{
     display:none !important;
@@ -3387,127 +3408,185 @@
     box-shadow:0 0 10px #49e6c4;
     transition:width 2.4s linear;
   }
+  /* ---- STANDARDIZED THEATER HUD & BOTTOM TELEMETRY BAR ---- */
   .starfield-hud{
     position:absolute;
-    bottom:clamp(14px, 2.5vh, 26px);
+    bottom:clamp(12px, 2.2vh, 24px);
     left:50%;
     transform:translateX(-50%);
-    width:calc(100% - clamp(24px, 4vw, 64px));
-    max-width:1080px;
-    background:rgba(3, 11, 18, 0.85);
+    width:calc(100% - clamp(20px, 3.5vw, 56px));
+    max-width:1140px;
+    background:rgba(3, 12, 20, 0.88);
     border:1.5px solid rgba(56, 189, 248, 0.35);
-    border-radius:18px;
-    padding:8px 20px;
+    border-radius:20px;
+    padding:clamp(9px, 1.6vh, 13px) clamp(16px, 2vw, 24px);
     display:flex;
     align-items:center;
     justify-content:space-between;
     gap:16px;
-    backdrop-filter:blur(14px);
-    -webkit-backdrop-filter:blur(14px);
-    box-shadow:0 12px 36px rgba(0, 0, 0, 0.9), 0 0 24px rgba(56, 189, 248, 0.22);
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+    box-shadow:0 14px 38px rgba(0, 0, 0, 0.92), 0 0 24px rgba(56, 189, 248, 0.22);
     z-index:15;
     opacity:0;
     pointer-events:none;
-    transition:opacity 0.5s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition:opacity 0.5s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
+  }
+  .starfield-universe[data-theater-mode="aquarium"] .starfield-hud{
+    background:rgba(2, 16, 28, 0.90);
+    border-color:rgba(73, 230, 196, 0.42);
+    box-shadow:0 14px 38px rgba(0, 0, 0, 0.92), 0 0 26px rgba(73, 230, 196, 0.25);
   }
   .starfield-hud.is-visible{
     opacity:1;
     pointer-events:auto;
   }
-  .starfield-hud-left{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    flex:1 1 0;
-    min-width:0;
-  }
-  .star-core-dot{
-    width:10px;
-    height:10px;
-    border-radius:50%;
-    background:#38bdf8;
-    box-shadow:0 0 10px #38bdf8, 0 0 20px #38bdf8;
-    flex-shrink:0;
-    animation:anchorDotPulse 2s infinite alternate ease-in-out;
-  }
-  @keyframes anchorDotPulse{
-    0%{ transform:scale(0.85); opacity:0.75; box-shadow:0 0 6px #38bdf8; }
-    100%{ transform:scale(1.3); opacity:1; box-shadow:0 0 16px #49e6c4, 0 0 28px #38bdf8; }
-  }
-  .star-core-info{
+  .theater-hud-telemetry{
     display:flex;
     flex-direction:column;
+    align-items:flex-start;
+    justify-content:center;
+    gap:clamp(1px, 0.35vh, 4px);
+    flex:1 1 auto;
     min-width:0;
+    text-align:left;
   }
-  .star-core-title{
-    font-family:'Orbitron', sans-serif;
-    font-size:clamp(0.72rem, 1.2vh, 0.85rem);
-    font-weight:700;
-    letter-spacing:0.14em;
-    color:#e0f2fe;
+  .theater-date-row{
+    font-family:'Outfit', sans-serif;
+    font-size:clamp(0.98rem, 1.85vh, 1.30rem);
+    font-weight:600;
+    color:rgba(230, 244, 254, 0.95);
+    letter-spacing:0.01em;
     white-space:nowrap;
+    line-height:1.2;
+    text-align:left;
   }
-  .star-core-meta{
-    font-family:'Share Tech Mono', monospace;
-    font-size:clamp(0.62rem, 1.1vh, 0.72rem);
-    color:rgba(180, 215, 230, 0.75);
+  .theater-weather-row{
+    font-family:'Outfit', sans-serif;
+    font-size:clamp(0.98rem, 1.85vh, 1.30rem);
+    font-weight:600;
+    color:rgba(215, 238, 248, 0.92);
+    letter-spacing:0.01em;
+    white-space:nowrap;
+    line-height:1.2;
+    display:flex;
+    align-items:center;
+    gap:0;
+    text-align:left;
+  }
+  .theater-time-text{
+    font-family:'Outfit', sans-serif;
+    font-size:inherit;
+    font-weight:700;
+    color:#ffffff;
+    letter-spacing:0.02em;
+    white-space:nowrap;
+    font-variant-numeric:tabular-nums;
+    font-feature-settings:'tnum' 1, 'lnum' 1;
+  }
+  .theater-telemetry-sep{
+    font-family:'Outfit', sans-serif;
+    font-size:inherit;
+    font-weight:500;
+    color:rgba(56, 189, 248, 0.70);
+    margin:0 clamp(7px, 1.1vw, 11px);
+    user-select:none;
+  }
+  .starfield-universe[data-theater-mode="aquarium"] .theater-telemetry-sep{
+    color:rgba(73, 230, 196, 0.75);
+  }
+  .theater-temp-text{
+    font-family:'Outfit', sans-serif;
+    font-size:inherit;
+    font-weight:700;
+    color:var(--amber, #fbbf24);
+    letter-spacing:0.01em;
+    font-variant-numeric:tabular-nums;
+    font-feature-settings:'tnum' 1, 'lnum' 1;
+  }
+  .theater-temp-comma{
+    font-family:'Outfit', sans-serif;
+    font-size:inherit;
+    font-weight:600;
+    color:rgba(215, 238, 248, 0.92);
+    margin-right:clamp(5px, 0.8vw, 8px);
+  }
+  .theater-cond-text{
+    font-family:'Outfit', sans-serif;
+    font-size:inherit;
+    font-weight:600;
+    color:rgba(215, 238, 248, 0.92);
+    letter-spacing:0.01em;
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
   }
-  .starfield-hud-center{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    flex:0 0 auto;
-    text-align:center;
-  }
-  .star-zen-clock{
+  .theater-hud-modes{
     display:inline-flex;
-    align-items:baseline;
+    align-items:center;
+    background:rgba(8, 22, 34, 0.88);
+    border:1px solid rgba(56, 189, 248, 0.28);
+    border-radius:12px;
+    padding:3px;
     gap:4px;
-    font-family:'Share Tech Mono', monospace;
-    line-height:1;
+    flex-shrink:0;
   }
-  .star-zen-digits{
-    font-size:clamp(1.3rem, 2.8vh, 1.9rem);
-    font-weight:700;
-    color:#ffffff;
-    letter-spacing:0.04em;
+  .starfield-universe[data-theater-mode="aquarium"] .theater-hud-modes{
+    background:rgba(5, 24, 38, 0.90);
+    border-color:rgba(73, 230, 196, 0.35);
   }
-  .star-zen-sec{
-    font-size:clamp(0.75rem, 1.5vh, 0.95rem);
-    color:#38bdf8;
-    opacity:0.9;
-  }
-  .star-zen-ampm{
-    font-size:clamp(0.68rem, 1.3vh, 0.82rem);
-    color:var(--amber);
-    font-weight:700;
-    margin-left:2px;
-  }
-  .star-zen-sub{
+  .theater-mode-btn{
     font-family:'Orbitron', sans-serif;
-    font-size:clamp(0.55rem, 1.0vh, 0.65rem);
-    letter-spacing:0.18em;
-    color:rgba(148, 197, 216, 0.7);
-    margin-top:2px;
-    text-transform:uppercase;
+    font-size:clamp(0.62rem, 1.1vh, 0.74rem);
+    font-weight:700;
+    letter-spacing:0.08em;
+    padding:6px 12px;
+    border-radius:8px;
+    border:1px solid transparent;
+    background:transparent;
+    color:rgba(180, 215, 230, 0.75);
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    transition:all 0.18s ease;
+    white-space:nowrap;
+    user-select:none;
   }
-  .starfield-hud-right{
+  .theater-mode-btn:hover{
+    color:#ffffff;
+    background:rgba(255, 255, 255, 0.08);
+  }
+  .theater-mode-btn.is-active{
+    background:rgba(56, 189, 248, 0.22);
+    border-color:rgba(56, 189, 248, 0.65);
+    color:#38bdf8;
+    box-shadow:0 0 14px rgba(56, 189, 248, 0.35);
+  }
+  .starfield-universe[data-theater-mode="aquarium"] .theater-mode-btn.is-active{
+    background:rgba(73, 230, 196, 0.22);
+    border-color:rgba(73, 230, 196, 0.65);
+    color:#49e6c4;
+    box-shadow:0 0 14px rgba(73, 230, 196, 0.35);
+  }
+  .theater-hud-actions{
     display:flex;
     align-items:center;
     gap:8px;
-    flex:1 1 0;
+    flex-shrink:0;
     justify-content:flex-end;
+  }
+  .theater-scene-actions{
+    display:flex;
+    align-items:center;
+    gap:8px;
   }
   .star-btn{
     font-family:'Orbitron', sans-serif;
-    font-size:clamp(0.65rem, 1.1vh, 0.75rem);
+    font-size:clamp(0.64rem, 1.1vh, 0.74rem);
     font-weight:700;
     letter-spacing:0.08em;
-    padding:6px 14px;
+    padding:6px 13px;
     border-radius:10px;
     cursor:pointer;
     display:inline-flex;
@@ -3551,6 +3630,44 @@
     box-shadow:0 0 24px rgba(192, 132, 252, 0.95), 0 0 40px rgba(56, 189, 248, 0.7) !important;
     transform:scale(1.05);
   }
+  .star-btn-feed{
+    background:rgba(255, 122, 69, 0.18);
+    border:1.5px solid #ff7a45;
+    color:#ffaa80;
+  }
+  .star-btn-feed:hover{
+    background:#ff7a45;
+    color:#020a10;
+    box-shadow:0 0 18px rgba(255, 122, 69, 0.75);
+    transform:translateY(-1px);
+  }
+  .star-btn-feed.is-feeding{
+    background:#ff7a45 !important;
+    color:#020a10 !important;
+    box-shadow:0 0 24px rgba(255, 122, 69, 0.95), 0 0 36px rgba(255, 180, 60, 0.8) !important;
+    animation:feedPulse 1s infinite alternate ease-in-out;
+  }
+  @keyframes feedPulse{
+    0%{ transform:scale(1); }
+    100%{ transform:scale(1.04); }
+  }
+  .star-btn-scuba{
+    background:rgba(56, 189, 248, 0.16);
+    border:1.5px solid #38bdf8;
+    color:#7dd3fc;
+  }
+  .star-btn-scuba:hover{
+    background:#38bdf8;
+    color:#020a10;
+    box-shadow:0 0 18px rgba(56, 189, 248, 0.75);
+    transform:translateY(-1px);
+  }
+  .star-btn-scuba.is-diving{
+    background:#38bdf8 !important;
+    color:#020a10 !important;
+    box-shadow:0 0 24px rgba(56, 189, 248, 0.95), 0 0 36px rgba(73, 230, 196, 0.8) !important;
+    transform:scale(1.05);
+  }
   .star-btn-unroll{
     background:rgba(255, 182, 72, 0.16);
     border:1px solid #ffb648;
@@ -3562,32 +3679,11 @@
     box-shadow:0 0 16px rgba(255, 182, 72, 0.7);
     transform:translateY(-1px);
   }
+  .aquarium-feeding-banner,
+  .feeding-pill-dot,
+  .feeding-pill-timer,
   .grav-wave-notice{
-    position:absolute;
-    top:59%;
-    left:50%;
-    transform:translateX(-50%) translateY(4px);
-    font-family:'Orbitron', sans-serif;
-    font-size:clamp(0.56rem, 0.95vh, 0.68rem);
-    font-weight:600;
-    letter-spacing:0.22em;
-    text-align:center;
-    color:rgba(73, 230, 196, 0.72);
-    text-shadow:0 0 8px rgba(73, 230, 196, 0.35);
-    background:transparent !important;
-    border:none !important;
-    border-radius:0 !important;
-    padding:0 !important;
-    box-shadow:none !important;
-    opacity:0;
-    pointer-events:none;
-    transition:opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    z-index:25;
-    white-space:nowrap;
-  }
-  .grav-wave-notice.is-showing{
-    opacity:0.85;
-    transform:translateX(-50%) translateY(0);
+    display:none !important;
   }
 
   /* ---- Bottom 5-day strip / Weather Friends Station Container ---- */
@@ -4322,7 +4418,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.091226.1918</span>
+        <span id="appVersionText">v1.091226.2118</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -4774,9 +4870,10 @@
       </div>
     </div>
 
-    <!-- STARFIELD OF CONSCIOUSNESS (WARP HYPERSPACE AMBIENT UNIVERSE) -->
-    <div class="starfield-universe" id="starfieldUniverse" aria-hidden="true">
+    <!-- AMBIENT THEATER UNIVERSE (STARFIELD & DEEP SEA FISH BOWL) -->
+    <div class="starfield-universe" id="starfieldUniverse" aria-hidden="true" data-theater-mode="starfield">
       <canvas id="starfieldCanvas" class="starfield-canvas"></canvas>
+      <canvas id="aquariumCanvas" class="aquarium-canvas" style="display:none;"></canvas>
       
       <!-- Warp Hyperspace Entry Announcement (Hidden to allow pure unobstructed spaceflight) -->
       <div class="warp-hyperspace-banner" id="warpHyperspaceBanner" style="display:none !important;" aria-hidden="true">
@@ -4786,41 +4883,62 @@
         <div class="warp-progress-bar"><span class="warp-progress-fill" id="warpProgressFill"></span></div>
       </div>
 
-      <!-- Floating Minimal Ambient HUD (Bottom / Floating) -->
+      <!-- Standardized Ambient Bottom Telemetry Bar -->
       <div class="starfield-hud" id="starfieldHud">
-        <div class="starfield-hud-left">
-          <span class="star-core-dot"></span>
-          <div class="star-core-info">
-            <span class="star-core-title">✦ ANCHOR STAR CORE</span>
-            <span class="star-core-meta">1,000,000 LIGHT-YEARS • RA 05h 35m • CONSCIOUSNESS APEX</span>
+        <!-- Left: Two-Line Left-Justified Telemetry (Date on Line 1; Time, Temp & Condition on Line 2) -->
+        <div class="theater-hud-telemetry" id="theaterHudTelemetry">
+          <div class="theater-date-row" id="theaterClockDate">Saturday, Sept 12, 2026</div>
+          <div class="theater-weather-row" id="theaterWeatherRow">
+            <span class="theater-time-text" id="theaterClockTime">8:37PM</span>
+            <span class="theater-telemetry-sep">-</span>
+            <span class="theater-temp-text" id="theaterTempNow">72F</span><span class="theater-temp-comma">,</span>
+            <span class="theater-cond-text" id="theaterCondBadge">Clear Sky</span>
           </div>
         </div>
 
-        <div class="starfield-hud-center">
-          <div class="star-zen-clock" id="starZenClock">
-            <span class="star-zen-digits" id="starZenDigits">--:--</span>
-            <span class="star-zen-sec" id="starZenSec">00</span>
-            <span class="star-zen-ampm" id="starZenAmpm">--</span>
-          </div>
-          <div class="star-zen-sub" id="starZenSub">CIVIL TWILIGHT • DEEP COSMOS</div>
+        <!-- Center: Mode Selector (Starfield vs Deep Sea Fish Bowl) -->
+        <div class="theater-hud-modes" id="theaterHudModes" role="tablist" aria-label="Theater scene mode selector">
+          <button type="button" class="theater-mode-btn is-active" id="theaterBtnStarfield" data-theater-mode="starfield" role="tab" aria-selected="true" title="Switch to Consciousness Starfield">
+            <span>🌌</span>
+            <span>STARFIELD</span>
+          </button>
+          <button type="button" class="theater-mode-btn" id="theaterBtnAquarium" data-theater-mode="aquarium" role="tab" aria-selected="false" title="Switch to Deep Sea">
+            <span>🐠</span>
+            <span>DEEP SEA</span>
+          </button>
         </div>
 
-        <div class="starfield-hud-right">
-          <button type="button" class="star-btn star-btn-pulse" id="starPulseBtn" title="Send Gravitational Wave Pulse (Remote: OK / Enter / Space)">
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="3" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="21"/></svg>
-            PULSE (OK)
-          </button>
-          <button type="button" class="star-btn star-btn-warp" id="starWarpBoostBtn" title="Boost Warp Speed (Key: W)">
-            ⚡ WARP BOOST
-          </button>
+        <!-- Right: Mode Action Controls & Unroll Button -->
+        <div class="theater-hud-actions" id="theaterHudActions">
+          <div class="theater-scene-actions" id="starfieldActionGroup">
+            <button type="button" class="star-btn star-btn-pulse" id="starPulseBtn" title="Send Gravitational Wave Pulse (Remote: OK / Enter / Space)">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="3" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="21"/></svg>
+              PULSE
+            </button>
+            <button type="button" class="star-btn star-btn-warp" id="starWarpBoostBtn" title="Boost Warp Speed (Key: W)">
+              ⚡ WARP
+            </button>
+          </div>
+
+          <div class="theater-scene-actions" id="aquariumActionGroup" style="display:none;">
+            <button type="button" class="star-btn star-btn-feed" id="aquariumFeedBtn" title="Feed all sealife! Drops nutrient food pellets (Key: F)">
+              <span>🦐</span>
+              <span id="aquariumFeedLabel">FEED</span>
+            </button>
+            <button type="button" class="star-btn star-btn-scuba" id="aquariumScubaBtn" title="Send Scuba Diver swimming past all the fish! (Key: S)">
+              <span>🤿</span>
+              <span>SCUBA</span>
+            </button>
+          </div>
+
           <button type="button" class="star-btn star-btn-unroll" id="starUnrollDashBtn" title="Unroll Dashboard (Remote: 0 / Back / Esc)">
-            ⤓ UNROLL ALL
+            ⤓ UNROLL
           </button>
         </div>
       </div>
 
-      <!-- Gravitational Wave HUD Pulse Notice -->
-      <div class="grav-wave-notice" id="gravWaveNotice">GRAVITATIONAL PULSE: CONSCIOUSNESS SYNAPSE ENERGIZED</div>
+      <!-- Gravitational Wave HUD Pulse Notice (Suppressed per design preference) -->
+      <div class="grav-wave-notice" id="gravWaveNotice" style="display:none !important;" aria-hidden="true"></div>
     </div>
 
   </div>
@@ -5169,6 +5287,13 @@
     try {
       if(typeof updateFriendLiveClocks === 'function'){
         updateFriendLiveClocks();
+      }
+    } catch(e){}
+
+    // Keep theater telemetry synchronized in real-time
+    try {
+      if(typeof updateTheaterTelemetry === 'function'){
+        updateTheaterTelemetry();
       }
     } catch(e){}
   }
@@ -5557,6 +5682,9 @@
     if(lastWeatherData){
       updateWeatherUI(lastWeatherData);
     }
+    if(typeof updateTheaterTelemetry === 'function'){
+      updateTheaterTelemetry();
+    }
   }
 
   const topClockCard = document.getElementById('topClockBlock');
@@ -5582,6 +5710,9 @@
 
     if(typeof renderWeatherFriends === 'function'){
       renderWeatherFriends();
+    }
+    if(typeof updateTheaterTelemetry === 'function'){
+      updateTheaterTelemetry();
     }
   }
 
@@ -6912,6 +7043,9 @@
     if(typeof tickClock === 'function'){
       tickClock();
     }
+    if(typeof updateTheaterTelemetry === 'function'){
+      updateTheaterTelemetry();
+    }
   }
 
   async function loadWeatherFor(lat, lon, label, accuracyMeters){
@@ -7170,7 +7304,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.091226.1918';
+  const CLIENT_APP_VERSION = 'v1.091226.2118';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -10979,23 +11113,42 @@
   }
 
   /* ---------------------------------------------------------------
-     STARFIELD OF CONSCIOUSNESS (WARP HYPERSPACE AMBIENT MODE)
+     AMBIENT THEATER MODES (STARFIELD & DEEP SEA FISH BOWL)
   --------------------------------------------------------------- */
-  let isStarfieldActive = false;
+  let isTheaterActive = false;
+  let isStarfieldActive = false; // alias for dashboard compatibility
+  let currentTheaterMode = localStorage.getItem('wf_theater_mode') || 'starfield';
+
   let starfieldAnimId = null;
   let starfieldCanvas = null;
   let starfieldCtx = null;
+  let aquariumCanvas = null;
+  let aquariumCtx = null;
+  let aquariumAnimId = null;
+
   let starfieldUniverseEl = null;
   let warpHyperspaceBannerEl = null;
   let warpProgressFillEl = null;
   let starfieldHudEl = null;
   let gravWaveNoticeEl = null;
 
-  let starZenDigitsEl = null;
-  let starZenSecEl = null;
-  let starZenAmpmEl = null;
-  let starZenSubEl = null;
+  // Standardized Telemetry HUD Elements
+  let theaterClockDateEl = null;
+  let theaterClockTimeEl = null;
+  let theaterTempNowEl = null;
+  let theaterCondBadgeEl = null;
+  let theaterBtnStarfieldEl = null;
+  let theaterBtnAquariumEl = null;
+  let starfieldActionGroupEl = null;
+  let aquariumActionGroupEl = null;
+  let aquariumFeedBtnEl = null;
+  let aquariumFeedLabelEl = null;
+  let aquariumFeedTimerEl = null;
+  let aquariumFeedingBannerEl = null;
+  let feedingPillTimerEl = null;
+  let theaterTelemetryInterval = null;
 
+  // Starfield Specific State
   let starfieldWidth = 0;
   let starfieldHeight = 0;
   let starfieldDpr = 1;
@@ -11012,8 +11165,8 @@
   let warpBoostTimer = null;
   let gravNoticeTimer = null;
   let anchorDriftT = 0;
-  let zenClockInterval = null;
   let autoPulseInterval = null;
+  let autoFeedInterval = null;
 
   // Celestial Moons revolving around the Anchor Star Centerpiece
   const ANCHOR_MOONS = [
@@ -11040,18 +11193,149 @@
     return SPECTRAL_COLORS[0];
   }
 
+  function formatTheaterDate(d = new Date()){
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+    const dayName = days[d.getDay()];
+    const monthName = months[d.getMonth()];
+    const dateNum = d.getDate();
+    const year = d.getFullYear();
+    return `${dayName}, ${monthName} ${dateNum}, ${year}`;
+  }
+
+  function formatTheaterTime(d = new Date()){
+    const rawHours = d.getHours();
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    if(typeof is24Hour !== 'undefined' && is24Hour){
+      const hourStr = String(rawHours).padStart(2, '0');
+      return `${hourStr}:${minutes} 24H`;
+    } else {
+      let h = rawHours % 12;
+      if(h === 0) h = 12;
+      const ampm = rawHours >= 12 ? 'PM' : 'AM';
+      return `${h}:${minutes}${ampm}`;
+    }
+  }
+
+  function formatTheaterTemp(){
+    let tempNum = null;
+    const topTempEl = document.getElementById('topTempNow');
+    if(topTempEl && topTempEl.textContent.trim() && topTempEl.textContent.trim() !== '--'){
+      tempNum = topTempEl.textContent.trim();
+    } else if(typeof lastWeatherData !== 'undefined' && lastWeatherData && lastWeatherData.current && typeof toDisplayTemp === 'function'){
+      tempNum = toDisplayTemp(lastWeatherData.current.temperature_2m);
+    }
+    if(tempNum === null || tempNum === undefined || tempNum === '--'){
+      tempNum = (typeof currentTempUnit !== 'undefined' && currentTempUnit === 'C') ? '22' : '72';
+    }
+    const unit = (typeof currentTempUnit !== 'undefined' && currentTempUnit === 'C') ? 'C' : 'F';
+    return `${tempNum}${unit}`;
+  }
+
+  function formatTheaterCond(){
+    let condStr = '';
+    const topCondEl = document.getElementById('topCondText');
+    if(topCondEl && topCondEl.textContent.trim()){
+      condStr = topCondEl.textContent.trim();
+    } else if(typeof lastWeatherData !== 'undefined' && lastWeatherData && lastWeatherData.current && typeof weatherDescription === 'function'){
+      condStr = weatherDescription(lastWeatherData.current.weather_code);
+    }
+    if(!condStr) condStr = 'Clear Sky';
+    return condStr.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+  }
+
+  function updateTheaterTelemetry(){
+    const now = new Date();
+    if(theaterClockDateEl) theaterClockDateEl.textContent = formatTheaterDate(now);
+    if(theaterClockTimeEl) theaterClockTimeEl.textContent = formatTheaterTime(now);
+    if(theaterTempNowEl) theaterTempNowEl.textContent = formatTheaterTemp();
+    if(theaterCondBadgeEl) theaterCondBadgeEl.textContent = formatTheaterCond();
+  }
+
+  function switchTheaterMode(mode){
+    if(mode !== 'starfield' && mode !== 'aquarium') mode = 'starfield';
+    currentTheaterMode = mode;
+    localStorage.setItem('wf_theater_mode', mode);
+
+    if(starfieldUniverseEl){
+      starfieldUniverseEl.setAttribute('data-theater-mode', mode);
+    }
+
+    if(theaterBtnStarfieldEl){
+      const isActive = mode === 'starfield';
+      theaterBtnStarfieldEl.classList.toggle('is-active', isActive);
+      theaterBtnStarfieldEl.setAttribute('aria-selected', String(isActive));
+    }
+    if(theaterBtnAquariumEl){
+      const isActive = mode === 'aquarium';
+      theaterBtnAquariumEl.classList.toggle('is-active', isActive);
+      theaterBtnAquariumEl.setAttribute('aria-selected', String(isActive));
+    }
+
+    if(starfieldActionGroupEl){
+      starfieldActionGroupEl.style.display = mode === 'starfield' ? 'flex' : 'none';
+    }
+    if(aquariumActionGroupEl){
+      aquariumActionGroupEl.style.display = mode === 'aquarium' ? 'flex' : 'none';
+    }
+
+    if(starfieldCanvas){
+      starfieldCanvas.style.display = mode === 'starfield' ? 'block' : 'none';
+    }
+    if(aquariumCanvas){
+      aquariumCanvas.style.display = mode === 'aquarium' ? 'block' : 'none';
+    }
+
+    if(isTheaterActive){
+      if(mode === 'starfield'){
+        if(aquariumAnimId){
+          cancelAnimationFrame(aquariumAnimId);
+          aquariumAnimId = null;
+        }
+        resizeStarfieldCanvas();
+        if(!starfieldAnimId){
+          starfieldAnimId = requestAnimationFrame(renderStarfieldLoop);
+        }
+        pulseGravitationalWave(true);
+      } else {
+        if(starfieldAnimId){
+          cancelAnimationFrame(starfieldAnimId);
+          starfieldAnimId = null;
+        }
+        resizeAquariumCanvas();
+        if(!aquariumAnimId){
+          aquariumAnimId = requestAnimationFrame(renderAquariumLoop);
+        }
+      }
+      if(typeof startTheaterAutomations === 'function'){
+        startTheaterAutomations();
+      }
+    }
+  }
+
   function initStarfieldUniverse(){
     starfieldUniverseEl = document.getElementById('starfieldUniverse');
     starfieldCanvas = document.getElementById('starfieldCanvas');
+    aquariumCanvas = document.getElementById('aquariumCanvas');
     warpHyperspaceBannerEl = document.getElementById('warpHyperspaceBanner');
     warpProgressFillEl = document.getElementById('warpProgressFill');
     starfieldHudEl = document.getElementById('starfieldHud');
     gravWaveNoticeEl = document.getElementById('gravWaveNotice');
 
-    starZenDigitsEl = document.getElementById('starZenDigits');
-    starZenSecEl = document.getElementById('starZenSec');
-    starZenAmpmEl = document.getElementById('starZenAmpm');
-    starZenSubEl = document.getElementById('starZenSub');
+    theaterClockDateEl = document.getElementById('theaterClockDate');
+    theaterClockTimeEl = document.getElementById('theaterClockTime');
+    theaterTempNowEl = document.getElementById('theaterTempNow');
+    theaterCondBadgeEl = document.getElementById('theaterCondBadge');
+
+    theaterBtnStarfieldEl = document.getElementById('theaterBtnStarfield');
+    theaterBtnAquariumEl = document.getElementById('theaterBtnAquarium');
+    starfieldActionGroupEl = document.getElementById('starfieldActionGroup');
+    aquariumActionGroupEl = document.getElementById('aquariumActionGroup');
+    aquariumFeedBtnEl = document.getElementById('aquariumFeedBtn');
+    aquariumFeedLabelEl = document.getElementById('aquariumFeedLabel');
+    aquariumFeedTimerEl = document.getElementById('aquariumFeedTimer');
+    aquariumFeedingBannerEl = document.getElementById('aquariumFeedingBanner');
+    feedingPillTimerEl = document.getElementById('feedingPillTimer');
 
     const pulseBtn = document.getElementById('starPulseBtn');
     const warpBoostBtn = document.getElementById('starWarpBoostBtn');
@@ -11061,23 +11345,69 @@
     if(warpBoostBtn) warpBoostBtn.addEventListener('click', () => boostWarpSpeed());
     if(unrollBtn) unrollBtn.addEventListener('click', () => unrollAllRows());
 
+    if(theaterBtnStarfieldEl){
+      theaterBtnStarfieldEl.addEventListener('click', () => switchTheaterMode('starfield'));
+    }
+    if(theaterBtnAquariumEl){
+      theaterBtnAquariumEl.addEventListener('click', () => switchTheaterMode('aquarium'));
+    }
+    if(aquariumFeedBtnEl){
+      aquariumFeedBtnEl.addEventListener('click', () => feedSealife());
+    }
+    const aquariumScubaBtnEl = document.getElementById('aquariumScubaBtn');
+    if(aquariumScubaBtnEl){
+      aquariumScubaBtnEl.addEventListener('click', () => launchScubaDiver());
+    }
+
     if(starfieldCanvas){
       starfieldCanvas.addEventListener('click', () => pulseGravitationalWave());
     }
+    if(aquariumCanvas){
+      aquariumCanvas.addEventListener('click', (e) => {
+        const rect = aquariumCanvas.getBoundingClientRect();
+        const clickX = (e.clientX - rect.left);
+        const clickY = (e.clientY - rect.top);
+        feedSealife(clickX, clickY);
+      });
+    }
 
     window.addEventListener('resize', () => {
-      if(isStarfieldActive) resizeStarfieldCanvas();
+      if(isTheaterActive){
+        if(currentTheaterMode === 'starfield') resizeStarfieldCanvas();
+        else if(currentTheaterMode === 'aquarium') resizeAquariumCanvas();
+      }
     });
 
     window.addEventListener('keydown', (e) => {
-      if(!isStarfieldActive) return;
+      if(!isTheaterActive) return;
       const k = e.key || '';
       if(k === 'Enter' || k === ' ' || k === 'Select' || k === 'Accept'){
         e.preventDefault();
-        pulseGravitationalWave();
+        if(currentTheaterMode === 'starfield'){
+          pulseGravitationalWave();
+        } else if(currentTheaterMode === 'aquarium'){
+          feedSealife();
+        }
       } else if(k === 'w' || k === 'W'){
+        if(currentTheaterMode === 'starfield'){
+          e.preventDefault();
+          boostWarpSpeed();
+        }
+      } else if(k === 'f' || k === 'F'){
+        if(currentTheaterMode === 'aquarium'){
+          e.preventDefault();
+          feedSealife();
+        }
+      } else if(k === 's' || k === 'S'){
         e.preventDefault();
-        boostWarpSpeed();
+        if(currentTheaterMode === 'aquarium'){
+          launchScubaDiver();
+        } else {
+          switchTheaterMode('starfield');
+        }
+      } else if(k === 'a' || k === 'A' || k === 'd' || k === 'D'){
+        e.preventDefault();
+        switchTheaterMode('aquarium');
       } else if(k === '0' || k === 'Escape' || k === 'Back' || k === 'BrowserBack'){
         e.preventDefault();
         unrollAllRows();
@@ -11085,6 +11415,11 @@
     });
 
     initStarsPool();
+    if(typeof initAquariumEngine === 'function'){
+      initAquariumEngine();
+    }
+
+    switchTheaterMode(currentTheaterMode);
   }
 
   function initStarsPool(){
@@ -11126,108 +11461,141 @@
     starfieldCtx = starfieldCanvas.getContext('2d');
   }
 
-  function updateStarZenClock(){
-    if(!starZenDigitsEl) return;
-    const now = new Date();
-    let hours = now.getHours();
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12;
-    if(hours === 0) hours = 12;
-
-    starZenDigitsEl.textContent = `${hours}:${minutes}`;
-    if(starZenSecEl) starZenSecEl.textContent = seconds;
-    if(starZenAmpmEl) starZenAmpmEl.textContent = ampm;
-
-    if(starZenSubEl){
-      const periodNameEl = document.getElementById('dayPeriodName');
-      const period = periodNameEl ? periodNameEl.textContent.trim() : 'DEEP COSMOS';
-      starZenSubEl.textContent = `${period} • CONSCIOUSNESS STARFIELD`;
-    }
-  }
-
-  function startStarfieldWarpHyperspace(){
-    if(isStarfieldActive) return;
+  function startTheaterMode(){
+    if(isTheaterActive) return;
+    isTheaterActive = true;
     isStarfieldActive = true;
+
+    document.body.classList.add('theater-active');
+    const screenEl = document.getElementById('screen');
+    if(screenEl) screenEl.classList.add('theater-active');
 
     if(starfieldUniverseEl){
       starfieldUniverseEl.classList.add('is-active');
       starfieldUniverseEl.setAttribute('aria-hidden', 'false');
+      starfieldUniverseEl.setAttribute('data-theater-mode', currentTheaterMode);
     }
 
-    resizeStarfieldCanvas();
-    updateStarZenClock();
-    if(zenClockInterval) clearInterval(zenClockInterval);
-    zenClockInterval = setInterval(updateStarZenClock, 1000);
+    updateTheaterTelemetry();
+    if(theaterTelemetryInterval) clearInterval(theaterTelemetryInterval);
+    theaterTelemetryInterval = setInterval(updateTheaterTelemetry, 1000);
 
-    // Periodic Gravitational Pulse every 60 seconds
-    if(autoPulseInterval) clearInterval(autoPulseInterval);
-    autoPulseInterval = setInterval(() => {
-      if(isStarfieldActive && currentWarpSpeed < 4){
-        pulseGravitationalWave(false);
-      }
-    }, 60000);
-
-    // Initial Hyperspace Warp Surge (Muted for low-dimmer / deep night bedroom mode)
-    const isNightDim = currentDimmerIndex >= 3;
-    if(isNightDim){
-      currentWarpSpeed = 3.5;
-      targetWarpSpeed = 0.45;
-    } else {
-      currentWarpSpeed = 24;
-      targetWarpSpeed = 24;
-    }
-
-    // Ensure HUD floats smoothly at the bottom, without any banner blocking the spaceflight view
     if(starfieldHudEl) starfieldHudEl.classList.add('is-visible');
 
-    if(warpBannerTimer) clearTimeout(warpBannerTimer);
-    warpBannerTimer = setTimeout(() => {
-      targetWarpSpeed = isNightDim ? 0.45 : 0.65;
-    }, isNightDim ? 1300 : 2300);
+    if(currentTheaterMode === 'starfield'){
+      resizeStarfieldCanvas();
+      const isNightDim = currentDimmerIndex >= 3;
+      if(isNightDim){
+        currentWarpSpeed = 3.5;
+        targetWarpSpeed = 0.45;
+      } else {
+        currentWarpSpeed = 24;
+        targetWarpSpeed = 24;
+      }
 
-    // Trigger initial gravitational pulse from the Anchor Star
-    setTimeout(() => {
-      pulseGravitationalWave(true);
-    }, 350);
+      if(warpBannerTimer) clearTimeout(warpBannerTimer);
+      warpBannerTimer = setTimeout(() => {
+        targetWarpSpeed = isNightDim ? 0.45 : 0.65;
+      }, isNightDim ? 1300 : 2300);
 
-    if(starfieldAnimId) cancelAnimationFrame(starfieldAnimId);
-    starfieldAnimId = requestAnimationFrame(renderStarfieldLoop);
+      setTimeout(() => {
+        pulseGravitationalWave(true);
+      }, 350);
+
+      if(starfieldAnimId) cancelAnimationFrame(starfieldAnimId);
+      starfieldAnimId = requestAnimationFrame(renderStarfieldLoop);
+    } else {
+      resizeAquariumCanvas();
+      if(aquariumAnimId) cancelAnimationFrame(aquariumAnimId);
+      aquariumAnimId = requestAnimationFrame(renderAquariumLoop);
+    }
+
+    // Start automated 4-minute cadence for Starfield pulse and Aquarium feeding
+    startTheaterAutomations();
   }
 
-  function stopStarfieldWarpHyperspace(){
-    if(!isStarfieldActive) return;
+  function startTheaterAutomations(){
+    // Periodic Gravitational Pulse every 4 minutes (240,000 ms) in Starfield mode
+    if(autoPulseInterval) clearInterval(autoPulseInterval);
+    autoPulseInterval = setInterval(() => {
+      if(isTheaterActive && currentTheaterMode === 'starfield' && currentWarpSpeed < 4){
+        pulseGravitationalWave(true);
+      }
+    }, 240000);
+
+    // Periodic Sealife Feeding every 4 minutes (240,000 ms) in Deep Sea Aquarium mode
+    if(autoFeedInterval) clearInterval(autoFeedInterval);
+    autoFeedInterval = setInterval(() => {
+      if(isTheaterActive && currentTheaterMode === 'aquarium'){
+        feedSealife();
+      }
+    }, 240000);
+  }
+
+  function stopTheaterMode(){
+    if(!isTheaterActive) return;
+    isTheaterActive = false;
     isStarfieldActive = false;
 
     if(warpBannerTimer) clearTimeout(warpBannerTimer);
     if(warpBoostTimer) clearTimeout(warpBoostTimer);
     if(gravNoticeTimer) clearTimeout(gravNoticeTimer);
-    if(zenClockInterval) clearInterval(zenClockInterval);
-    if(autoPulseInterval) clearInterval(autoPulseInterval);
+    if(theaterTelemetryInterval) clearInterval(theaterTelemetryInterval);
+    if(autoPulseInterval){
+      clearInterval(autoPulseInterval);
+      autoPulseInterval = null;
+    }
+    if(autoFeedInterval){
+      clearInterval(autoFeedInterval);
+      autoFeedInterval = null;
+    }
+    if(typeof feedingCountdownTimer !== 'undefined' && feedingCountdownTimer) clearInterval(feedingCountdownTimer);
 
     if(starfieldAnimId){
       cancelAnimationFrame(starfieldAnimId);
       starfieldAnimId = null;
+    }
+    if(aquariumAnimId){
+      cancelAnimationFrame(aquariumAnimId);
+      aquariumAnimId = null;
     }
 
     if(starfieldUniverseEl){
       starfieldUniverseEl.classList.remove('is-active');
       starfieldUniverseEl.setAttribute('aria-hidden', 'true');
     }
+    document.body.classList.remove('theater-active');
+    const screenEl = document.getElementById('screen');
+    if(screenEl) screenEl.classList.remove('theater-active');
     if(warpHyperspaceBannerEl) warpHyperspaceBannerEl.classList.remove('is-showing');
     if(starfieldHudEl) starfieldHudEl.classList.remove('is-visible');
     if(gravWaveNoticeEl) gravWaveNoticeEl.classList.remove('is-showing');
+    if(aquariumFeedingBannerEl) aquariumFeedingBannerEl.style.display = 'none';
 
     const warpBoostBtn = document.getElementById('starWarpBoostBtn');
     if(warpBoostBtn) warpBoostBtn.classList.remove('is-boosting');
     const pulseBtn = document.getElementById('starPulseBtn');
     if(pulseBtn) pulseBtn.classList.remove('is-pulsing');
+    if(aquariumFeedBtnEl){
+      aquariumFeedBtnEl.classList.remove('is-feeding');
+      if(aquariumFeedLabelEl) aquariumFeedLabelEl.textContent = 'FEED';
+      if(aquariumFeedTimerEl) aquariumFeedTimerEl.style.display = 'none';
+    }
+    const aquariumScubaBtnEl = document.getElementById('aquariumScubaBtn');
+    if(aquariumScubaBtnEl) aquariumScubaBtnEl.classList.remove('is-diving');
+    aquariumDiverList = [];
 
     if(starfieldCtx && starfieldCanvas){
       starfieldCtx.clearRect(0, 0, starfieldCanvas.width, starfieldCanvas.height);
     }
+    if(aquariumCtx && aquariumCanvas){
+      aquariumCtx.clearRect(0, 0, aquariumCanvas.width, aquariumCanvas.height);
+    }
   }
+
+  // Dashboard caller aliases
+  const startStarfieldWarpHyperspace = startTheaterMode;
+  const stopStarfieldWarpHyperspace = stopTheaterMode;
 
   function boostWarpSpeed(){
     if(!isStarfieldActive) return;
@@ -11276,14 +11644,7 @@
         if(pulseBtn) pulseBtn.classList.remove('is-pulsing');
       }, 350);
     }
-
-    if(!isSilent && gravWaveNoticeEl){
-      gravWaveNoticeEl.classList.add('is-showing');
-      if(gravNoticeTimer) clearTimeout(gravNoticeTimer);
-      gravNoticeTimer = setTimeout(() => {
-        gravWaveNoticeEl.classList.remove('is-showing');
-      }, 1900);
-    }
+    // No accompanying text notice displayed during gravitational pulse per user preference
   }
 
   function renderStarfieldLoop(timestamp){
@@ -11637,6 +11998,1394 @@
 
     ctx.restore();
     starfieldAnimId = requestAnimationFrame(renderStarfieldLoop);
+  }
+
+  /* ===============================================================
+     DEEP SEA AQUARIUM ENGINE (FISH BOWL AMBIENT THEATER MODE)
+  =============================================================== */
+  let aquariumWidth = 0;
+  let aquariumHeight = 0;
+  let aquariumDpr = 1;
+  let aquariumT = 0;
+
+  let isAquariumFeeding = false;
+  let feedingSecondsRemaining = 0;
+  let feedingCountdownTimer = null;
+
+  let aquariumFishList = [];
+  let aquariumJellyfishList = [];
+  let aquariumTurtleList = [];
+  let aquariumSeahorseList = [];
+  let aquariumRayList = [];
+  let aquariumEelList = [];
+  let aquariumFoodPellets = [];
+  let aquariumBubbleBurstList = [];
+  let aquariumAmbientBubbles = [];
+  let aquariumKelpForest = [];
+  let aquariumDiverList = [];
+
+  function resizeAquariumCanvas(){
+    if(!aquariumCanvas || !starfieldUniverseEl) return;
+    const rect = starfieldUniverseEl.getBoundingClientRect();
+    aquariumWidth = rect.width || window.innerWidth;
+    aquariumHeight = rect.height || window.innerHeight;
+    aquariumDpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    aquariumCanvas.width = aquariumWidth * aquariumDpr;
+    aquariumCanvas.height = aquariumHeight * aquariumDpr;
+    aquariumCanvas.style.width = `${aquariumWidth}px`;
+    aquariumCanvas.style.height = `${aquariumHeight}px`;
+
+    aquariumCtx = aquariumCanvas.getContext('2d');
+  }
+
+  function initAquariumEngine(){
+    resizeAquariumCanvas();
+    const w = aquariumWidth || window.innerWidth || 1200;
+    const h = aquariumHeight || window.innerHeight || 800;
+
+    // 1. Ambient Bubbles
+    aquariumAmbientBubbles = [];
+    for(let i = 0; i < 35; i++){
+      aquariumAmbientBubbles.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: Math.random() * 3.5 + 1.5,
+        speed: Math.random() * 0.75 + 0.45,
+        wobblePhase: Math.random() * Math.PI * 2,
+        wobbleSpeed: Math.random() * 0.04 + 0.015,
+        alpha: Math.random() * 0.4 + 0.2
+      });
+    }
+
+    // 2. Kelp Forest along the seafloor
+    aquariumKelpForest = [];
+    const kelpPositions = [
+      { x: 35, h: 260, color: '#065f46' },
+      { x: 75, h: 320, color: '#047857' },
+      { x: 120, h: 220, color: '#059669' },
+      { x: 165, h: 280, color: '#10b981' },
+      { x: 215, h: 190, color: '#047857' },
+      { x: w - 220, h: 200, color: '#047857' },
+      { x: w - 170, h: 300, color: '#059669' },
+      { x: w - 125, h: 240, color: '#065f46' },
+      { x: w - 80, h: 340, color: '#10b981' },
+      { x: w - 35, h: 270, color: '#047857' }
+    ];
+    kelpPositions.forEach(kp => {
+      aquariumKelpForest.push({
+        x: kp.x,
+        h: kp.h,
+        color: kp.color,
+        phase: Math.random() * Math.PI * 2,
+        speed: Math.random() * 0.015 + 0.01
+      });
+    });
+
+    // 3. Fish (10 fish: Clownfish, Blue Tangs, Yellow Tangs, Royal Grammas)
+    aquariumFishList = [
+      // Clownfish (4)
+      { species: 'clownfish', x: w * 0.2, y: h * 0.45, vx: 1.4, vy: 0, scale: 0.95, facing: 1, facingScale: 1, tailPhase: 0, tailSpeed: 0.18, bobPhase: 0.5 },
+      { species: 'clownfish', x: w * 0.26, y: h * 0.48, vx: 1.25, vy: 0, scale: 0.8, facing: 1, facingScale: 1, tailPhase: 1.2, tailSpeed: 0.17, bobPhase: 1.8 },
+      { species: 'clownfish', x: w * 0.72, y: h * 0.35, vx: -1.3, vy: 0, scale: 0.9, facing: -1, facingScale: -1, tailPhase: 2.1, tailSpeed: 0.19, bobPhase: 3.1 },
+      { species: 'clownfish', x: w * 0.78, y: h * 0.38, vx: -1.15, vy: 0, scale: 0.75, facing: -1, facingScale: -1, tailPhase: 3.4, tailSpeed: 0.16, bobPhase: 4.2 },
+      // Blue Tangs (2)
+      { species: 'bluetang', x: w * 0.45, y: h * 0.55, vx: 1.6, vy: 0, scale: 1.05, facing: 1, facingScale: 1, tailPhase: 0.8, tailSpeed: 0.15, bobPhase: 2.4 },
+      { species: 'bluetang', x: w * 0.52, y: h * 0.58, vx: 1.45, vy: 0, scale: 0.88, facing: 1, facingScale: 1, tailPhase: 2.5, tailSpeed: 0.14, bobPhase: 0.9 },
+      // Yellow Tangs (2)
+      { species: 'yellowtang', x: w * 0.65, y: h * 0.68, vx: -1.5, vy: 0, scale: 1.0, facing: -1, facingScale: -1, tailPhase: 1.5, tailSpeed: 0.15, bobPhase: 4.8 },
+      { species: 'yellowtang', x: w * 0.15, y: h * 0.72, vx: 1.35, vy: 0, scale: 0.85, facing: 1, facingScale: 1, tailPhase: 3.0, tailSpeed: 0.16, bobPhase: 1.1 },
+      // Royal Grammas (2)
+      { species: 'royalgramma', x: w * 0.35, y: h * 0.28, vx: -1.4, vy: 0, scale: 0.9, facing: -1, facingScale: -1, tailPhase: 0.3, tailSpeed: 0.2, bobPhase: 5.2 },
+      { species: 'royalgramma', x: w * 0.82, y: h * 0.62, vx: -1.55, vy: 0, scale: 0.85, facing: -1, facingScale: -1, tailPhase: 2.7, tailSpeed: 0.21, bobPhase: 2.7 }
+    ];
+
+    // 4. Jellyfish (4 jellyfish: Move primarily UP AND DOWN as requested!)
+    aquariumJellyfishList = [
+      { x: w * 0.18, y: h * 0.65, vy: -0.9, scale: 1.0, color: '#38bdf8', glow: 'rgba(56, 189, 248, 0.8)', pulsePhase: 0, pulseSpeed: 0.045, minY: 80, maxY: h - 140 },
+      { x: w * 0.42, y: h * 0.35, vy: 0.8, scale: 0.85, color: '#c084fc', glow: 'rgba(192, 132, 252, 0.8)', pulsePhase: 1.6, pulseSpeed: 0.04, minY: 70, maxY: h - 130 },
+      { x: w * 0.68, y: h * 0.75, vy: -1.0, scale: 1.15, color: '#49e6c4', glow: 'rgba(73, 230, 196, 0.85)', pulsePhase: 3.2, pulseSpeed: 0.042, minY: 90, maxY: h - 150 },
+      { x: w * 0.88, y: h * 0.42, vy: 0.75, scale: 0.8, color: '#fb923c', glow: 'rgba(251, 146, 60, 0.8)', pulsePhase: 4.8, pulseSpeed: 0.048, minY: 75, maxY: h - 120 }
+    ];
+
+    // 5. Sea Turtles (2: graceful cruisers swimming diagonally and horizontally)
+    aquariumTurtleList = [
+      { x: w * 0.05, y: h * 0.32, vx: 1.25, vy: 0.15, scale: 1.15, facing: 1, facingScale: 1, flipperPhase: 0, flipperSpeed: 0.045, bobPhase: 0 },
+      { x: w * 0.85, y: h * 0.58, vx: -1.1, vy: -0.12, scale: 0.82, facing: -1, facingScale: -1, flipperPhase: 2.4, flipperSpeed: 0.05, bobPhase: 2.1 }
+    ];
+
+    // 6. Seahorses (3: delicate vertical upright posture, fluttering dorsal fin)
+    aquariumSeahorseList = [
+      { x: 140, y: h * 0.55, vx: 0.25, vy: 0, scale: 0.95, facing: 1, color: '#f59e0b', glow: 'rgba(245, 158, 11, 0.7)', flutterPhase: 0, bobPhase: 0 },
+      { x: 190, y: h * 0.68, vx: -0.2, vy: 0, scale: 0.8, facing: -1, color: '#f43f5e', glow: 'rgba(244, 63, 94, 0.7)', flutterPhase: 1.5, bobPhase: 1.8 },
+      { x: w - 160, y: h * 0.62, vx: 0.22, vy: 0, scale: 0.88, facing: 1, color: '#10b981', glow: 'rgba(16, 185, 129, 0.7)', flutterPhase: 3.1, bobPhase: 3.4 }
+    ];
+
+    // 7. Stingrays (2: undulating wings gliding across the deep water)
+    aquariumRayList = [
+      { x: w * 0.12, y: h * 0.22, vx: 1.7, vy: 0.08, scale: 1.1, facing: 1, facingScale: 1, wingPhase: 0, wingSpeed: 0.065, tailNodes: [] },
+      { x: w * 0.75, y: h * 0.72, vx: -1.5, vy: -0.06, scale: 0.78, facing: -1, facingScale: -1, wingPhase: 2.8, wingSpeed: 0.075, tailNodes: [] }
+    ];
+
+    // 8. Eels (2: Moray Eel and Electric Ribbon Eel undulating through water)
+    aquariumEelList = [
+      {
+        type: 'moray',
+        x: w * 0.3,
+        y: h * 0.82,
+        vx: 1.3,
+        vy: -0.15,
+        scale: 1.0,
+        facing: 1,
+        facingScale: 1,
+        wavePhase: 0,
+        waveSpeed: 0.08,
+        color: '#65a30d',
+        accentColor: '#365314',
+        segments: []
+      },
+      {
+        type: 'ribbon',
+        x: w * 0.7,
+        y: h * 0.26,
+        vx: -1.45,
+        vy: 0.12,
+        scale: 0.9,
+        facing: -1,
+        facingScale: -1,
+        wavePhase: 1.8,
+        waveSpeed: 0.09,
+        color: '#0284c7',
+        accentColor: '#facc15',
+        segments: []
+      }
+    ];
+
+    // Initialize tail and spine nodes
+    aquariumRayList.forEach(ray => {
+      ray.tailNodes = [];
+      for(let i = 0; i < 14; i++){
+        ray.tailNodes.push({ x: ray.x - i * 5 * ray.facing, y: ray.y });
+      }
+    });
+
+    aquariumEelList.forEach(eel => {
+      eel.segments = [];
+      for(let i = 0; i < 18; i++){
+        eel.segments.push({ x: eel.x - i * 8 * eel.facing, y: eel.y });
+      }
+    });
+  }
+
+  function feedSealife(originX, originY){
+    const w = aquariumWidth || window.innerWidth || 1200;
+    isAquariumFeeding = true;
+    feedingSecondsRemaining = 10;
+
+    if(aquariumFeedBtnEl){
+      aquariumFeedBtnEl.classList.add('is-feeding');
+      if(aquariumFeedLabelEl) aquariumFeedLabelEl.textContent = 'FEEDING...';
+    }
+
+    // Drop 28 nutritious flakes / pellets into the water
+    const count = 28;
+    for(let i = 0; i < count; i++){
+      const dropX = originX !== undefined
+        ? originX + (Math.random() - 0.5) * 160
+        : Math.random() * (w - 140) + 70;
+      const dropY = originY !== undefined
+        ? Math.max(10, originY + (Math.random() - 0.5) * 40)
+        : Math.random() * 40 + 5;
+
+      const colors = ['#fde047', '#f59e0b', '#fb7185', '#34d399', '#f97316'];
+      aquariumFoodPellets.push({
+        x: Math.max(20, Math.min(w - 20, dropX)),
+        y: dropY,
+        vx: (Math.random() - 0.5) * 0.8,
+        vy: Math.random() * 0.75 + 0.65,
+        r: Math.random() * 2.2 + 2.0,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        swayPhase: Math.random() * Math.PI * 2,
+        swaySpeed: Math.random() * 0.04 + 0.02,
+        eaten: false
+      });
+    }
+
+    // Gentle 10-second active feeding cycle without on-screen countdown timers
+    if(feedingCountdownTimer) clearInterval(feedingCountdownTimer);
+    feedingCountdownTimer = setInterval(() => {
+      feedingSecondsRemaining--;
+
+      if(feedingSecondsRemaining <= 0){
+        clearInterval(feedingCountdownTimer);
+        feedingCountdownTimer = null;
+        isAquariumFeeding = false;
+
+        if(aquariumFeedBtnEl){
+          aquariumFeedBtnEl.classList.remove('is-feeding');
+          if(aquariumFeedLabelEl) aquariumFeedLabelEl.textContent = 'FEED';
+        }
+      }
+    }, 1000);
+  }
+
+  function spawnBubbleBurst(bx, by, count = 5){
+    for(let i = 0; i < count; i++){
+      aquariumBubbleBurstList.push({
+        x: bx + (Math.random() - 0.5) * 12,
+        y: by + (Math.random() - 0.5) * 12,
+        r: Math.random() * 2.5 + 1.5,
+        vx: (Math.random() - 0.5) * 1.5,
+        vy: -(Math.random() * 1.6 + 1.0),
+        alpha: 0.85
+      });
+    }
+  }
+
+  function launchScubaDiver(){
+    const w = aquariumWidth || window.innerWidth || 1200;
+    const h = aquariumHeight || window.innerHeight || 800;
+    const scubaBtn = document.getElementById('aquariumScubaBtn');
+    if(scubaBtn){
+      scubaBtn.classList.add('is-diving');
+      setTimeout(() => {
+        if(scubaBtn) scubaBtn.classList.remove('is-diving');
+      }, 900);
+    }
+
+    // Alternate swim direction if another diver is active, or alternate based on count
+    const facing = (aquariumDiverList.length % 2 === 0) ? 1 : -1;
+    const startX = facing === 1 ? -160 : w + 160;
+    // Cruise smoothly across mid-water where all the fish, turtles, and rays swim
+    const swimY = Math.random() * (h * 0.44) + (h * 0.22);
+
+    aquariumDiverList.push({
+      x: startX,
+      y: swimY,
+      baseY: swimY,
+      vx: facing * (Math.random() * 0.4 + 2.4),
+      vy: 0,
+      facing: facing,
+      facingScale: facing,
+      kickPhase: Math.random() * Math.PI,
+      kickSpeed: 0.13,
+      breatheCounter: 0,
+      scale: 1.15,
+      suitColor: '#0f172a',
+      accentColor: '#38bdf8',
+      tankColor: '#facc15'
+    });
+  }
+
+  function renderAquariumLoop(){
+    if(!isTheaterActive || currentTheaterMode !== 'aquarium'){
+      aquariumAnimId = null;
+      return;
+    }
+
+    if(!aquariumCtx || !aquariumCanvas){
+      resizeAquariumCanvas();
+      if(!aquariumCtx){
+        aquariumAnimId = requestAnimationFrame(renderAquariumLoop);
+        return;
+      }
+    }
+
+    const ctx = aquariumCtx;
+    const w = aquariumWidth;
+    const h = aquariumHeight;
+    const dpr = aquariumDpr;
+    aquariumT += 16.6;
+
+    ctx.save();
+    ctx.scale(dpr, dpr);
+    ctx.clearRect(0, 0, w, h);
+
+    // 1. Shimmering Caustic Sunbeams from ocean surface
+    for(let i = 0; i < 5; i++){
+      const beamX = (w * 0.15 * (i + 1)) + Math.sin(aquariumT * 0.0008 + i) * 60;
+      const beamW = 120 + Math.cos(aquariumT * 0.001 + i) * 35;
+      const beamGrad = ctx.createLinearGradient(beamX, 0, beamX + 160, h);
+      beamGrad.addColorStop(0, 'rgba(56, 189, 248, 0.12)');
+      beamGrad.addColorStop(0.5, 'rgba(73, 230, 196, 0.05)');
+      beamGrad.addColorStop(1, 'rgba(14, 165, 233, 0)');
+
+      ctx.fillStyle = beamGrad;
+      ctx.beginPath();
+      ctx.moveTo(beamX - 30, 0);
+      ctx.lineTo(beamX + beamW + 30, 0);
+      ctx.lineTo(beamX + beamW + 180, h);
+      ctx.lineTo(beamX + 10, h);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    // 2. Swaying Kelp Forest anchored to bottom
+    aquariumKelpForest.forEach(kelp => {
+      kelp.phase += kelp.speed;
+      const segments = 10;
+      const segLen = kelp.h / segments;
+      let curX = kelp.x;
+      let curY = h;
+
+      ctx.beginPath();
+      ctx.moveTo(curX, curY);
+      for(let s = 1; s <= segments; s++){
+        const sway = Math.sin(kelp.phase + s * 0.32) * (s * 4.2);
+        curX = kelp.x + sway;
+        curY = h - s * segLen;
+        ctx.lineTo(curX, curY);
+      }
+      ctx.strokeStyle = kelp.color;
+      ctx.lineWidth = 14;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+
+      // Kelp Leaf fronds
+      for(let s = 2; s < segments; s += 2){
+        const leafY = h - s * segLen;
+        const leafX = kelp.x + Math.sin(kelp.phase + s * 0.32) * (s * 4.2);
+        const leafSide = (s % 4 === 0) ? 1 : -1;
+        const leafSway = Math.cos(kelp.phase + s * 0.35) * 8;
+
+        ctx.beginPath();
+        ctx.ellipse(leafX + leafSide * 20, leafY + leafSway, 22, 7, (leafSide * 0.35), 0, Math.PI * 2);
+        ctx.fillStyle = kelp.color;
+        ctx.fill();
+      }
+    });
+
+    // 3. Ambient Rising Bubbles
+    aquariumAmbientBubbles.forEach(b => {
+      b.y -= b.speed;
+      b.wobblePhase += b.wobbleSpeed;
+      const bx = b.x + Math.sin(b.wobblePhase) * 12;
+
+      if(b.y < -10){
+        b.y = h + 10;
+        b.x = Math.random() * w;
+      }
+
+      ctx.beginPath();
+      ctx.arc(bx, b.y, b.r, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(186, 230, 253, ${b.alpha})`;
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+
+      // Bubble highlight shine
+      ctx.beginPath();
+      ctx.arc(bx - b.r * 0.3, b.y - b.r * 0.3, b.r * 0.3, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255, 255, 255, ${b.alpha * 0.8})`;
+      ctx.fill();
+    });
+
+    // 4. Food Pellets
+    for(let p = aquariumFoodPellets.length - 1; p >= 0; p--){
+      const pel = aquariumFoodPellets[p];
+      if(pel.eaten || pel.y > h + 20){
+        aquariumFoodPellets.splice(p, 1);
+        continue;
+      }
+      pel.swayPhase += pel.swaySpeed;
+      pel.x += Math.sin(pel.swayPhase) * 0.6 + pel.vx;
+      pel.y += pel.vy;
+
+      // Draw pellet flake
+      ctx.beginPath();
+      ctx.arc(pel.x, pel.y, pel.r, 0, Math.PI * 2);
+      ctx.fillStyle = pel.color;
+      ctx.shadowColor = pel.color;
+      ctx.shadowBlur = 6;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+
+    // Helper: Find nearest food pellet
+    function getNearestPellet(cx, cy, maxDist = 450){
+      let nearest = null;
+      let minDist = maxDist;
+      for(const pel of aquariumFoodPellets){
+        if(pel.eaten) continue;
+        const d = Math.hypot(pel.x - cx, pel.y - cy);
+        if(d < minDist){
+          minDist = d;
+          nearest = pel;
+        }
+      }
+      return nearest;
+    }
+
+    // 5. EELS (Moray Eel and Electric Ribbon Eel undulating)
+    aquariumEelList.forEach(eel => {
+      eel.wavePhase += eel.waveSpeed;
+      let targetFood = isAquariumFeeding ? getNearestPellet(eel.x, eel.y, 450) : null;
+
+      if(targetFood){
+        const angle = Math.atan2(targetFood.y - eel.y, targetFood.x - eel.x);
+        eel.vx = Math.cos(angle) * 2.8;
+        eel.vy = Math.sin(angle) * 2.2;
+        eel.facing = eel.vx >= 0 ? 1 : -1;
+
+        if(Math.hypot(targetFood.x - eel.x, targetFood.y - eel.y) < 18){
+          targetFood.eaten = true;
+          spawnBubbleBurst(eel.x, eel.y, 5);
+        }
+      } else {
+        if(eel.x < 100) { eel.vx = Math.abs(eel.vx); eel.facing = 1; }
+        if(eel.x > w - 100) { eel.vx = -Math.abs(eel.vx); eel.facing = -1; }
+        if(eel.y < 90) eel.vy = Math.abs(eel.vy);
+        if(eel.y > h - 110) eel.vy = -Math.abs(eel.vy);
+      }
+
+      eel.x += eel.vx;
+      eel.y += eel.vy;
+      eel.facingScale += (eel.facing - eel.facingScale) * 0.1;
+
+      // Update connected serpentine segments
+      if(eel.segments.length === 0){
+        for(let s = 0; s < 18; s++) eel.segments.push({ x: eel.x, y: eel.y });
+      }
+      eel.segments[0] = { x: eel.x, y: eel.y };
+      for(let s = 1; s < eel.segments.length; s++){
+        const prev = eel.segments[s - 1];
+        const cur = eel.segments[s];
+        const segDist = 10 * eel.scale;
+        const angle = Math.atan2(cur.y - prev.y, cur.x - prev.x);
+        const undulation = Math.sin(eel.wavePhase + s * 0.38) * (2.8 * (s / eel.segments.length));
+        cur.x = prev.x + Math.cos(angle) * segDist;
+        cur.y = prev.y + Math.sin(angle) * segDist + undulation;
+      }
+
+      ctx.save();
+      // Continuous Dorsal Ribbon Fin
+      ctx.beginPath();
+      ctx.moveTo(eel.segments[0].x, eel.segments[0].y - 4 * eel.scale);
+      for(let s = 1; s < eel.segments.length; s++){
+        ctx.lineTo(eel.segments[s].x, eel.segments[s].y - 8 * eel.scale);
+      }
+      ctx.strokeStyle = eel.accentColor;
+      ctx.globalAlpha = 0.7;
+      ctx.lineWidth = 5 * eel.scale;
+      ctx.stroke();
+      ctx.globalAlpha = 1.0;
+
+      // Serpentine Body Segments
+      for(let s = eel.segments.length - 1; s >= 0; s--){
+        const seg = eel.segments[s];
+        const segR = Math.max(3, (12 - s * 0.5)) * eel.scale;
+        ctx.beginPath();
+        ctx.arc(seg.x, seg.y, segR, 0, Math.PI * 2);
+        ctx.fillStyle = eel.color;
+        ctx.fill();
+
+        // Spots on Moray Eel
+        if(eel.type === 'moray' && s % 2 === 0){
+          ctx.beginPath();
+          ctx.arc(seg.x, seg.y - 2, segR * 0.45, 0, Math.PI * 2);
+          ctx.fillStyle = eel.accentColor;
+          ctx.fill();
+        }
+      }
+
+      // Eel Head & Open Mouth
+      const head = eel.segments[0];
+      ctx.save();
+      ctx.translate(head.x, head.y);
+      ctx.scale(eel.facingScale * eel.scale, eel.scale);
+
+      ctx.beginPath();
+      ctx.ellipse(4, 0, 14, 8, 0, 0, Math.PI * 2);
+      ctx.fillStyle = eel.color;
+      ctx.fill();
+
+      // Mouth jaw
+      ctx.beginPath();
+      ctx.moveTo(8, 0);
+      ctx.lineTo(16, 2);
+      ctx.lineTo(12, 5);
+      ctx.closePath();
+      ctx.fillStyle = '#1e293b';
+      ctx.fill();
+
+      // Bright Eye
+      ctx.beginPath();
+      ctx.arc(5, -3, 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = '#fde047';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(5.5, -3, 1.2, 0, Math.PI * 2);
+      ctx.fillStyle = '#020617';
+      ctx.fill();
+
+      ctx.restore();
+      ctx.restore();
+    });
+
+    // 6. STINGRAYS / MANTA RAYS (Undulating wings gliding across the deep)
+    aquariumRayList.forEach(ray => {
+      ray.wingPhase += ray.wingSpeed;
+      let targetFood = isAquariumFeeding ? getNearestPellet(ray.x, ray.y, 450) : null;
+
+      if(targetFood){
+        const angle = Math.atan2(targetFood.y - ray.y, targetFood.x - ray.x);
+        ray.vx = Math.cos(angle) * 3.0;
+        ray.vy = Math.sin(angle) * 2.0;
+        ray.facing = ray.vx >= 0 ? 1 : -1;
+
+        if(Math.hypot(targetFood.x - ray.x, targetFood.y - ray.y) < 22){
+          targetFood.eaten = true;
+          spawnBubbleBurst(ray.x, ray.y, 6);
+        }
+      } else {
+        if(ray.x < 120) { ray.vx = Math.abs(ray.vx); ray.facing = 1; }
+        if(ray.x > w - 120) { ray.vx = -Math.abs(ray.vx); ray.facing = -1; }
+        if(ray.y < 80) ray.vy = Math.abs(ray.vy);
+        if(ray.y > h - 120) ray.vy = -Math.abs(ray.vy);
+      }
+
+      ray.x += ray.vx;
+      ray.y += ray.vy;
+      ray.facingScale += (ray.facing - ray.facingScale) * 0.08;
+
+      // Trailing whip tail seamlessly anchored inside the manta ray's rear pelvic area
+      if(ray.tailNodes.length === 0){
+        for(let i = 0; i < 14; i++) ray.tailNodes.push({ x: ray.x, y: ray.y });
+      }
+      // Anchor tail node 0 inside the rear disc (local -22 vs rear tip -26) to prevent any detachment gap
+      ray.tailNodes[0] = { x: ray.x - 22 * ray.facingScale * ray.scale, y: ray.y };
+      for(let i = 1; i < ray.tailNodes.length; i++){
+        const prev = ray.tailNodes[i - 1];
+        const cur = ray.tailNodes[i];
+        const angle = Math.atan2(cur.y - prev.y, cur.x - prev.x);
+        cur.x = prev.x + Math.cos(angle) * (5.2 * ray.scale);
+        cur.y = prev.y + Math.sin(angle) * (5.2 * ray.scale);
+      }
+
+      ctx.save();
+      // Draw organic tapering whip tail
+      for(let i = 0; i < ray.tailNodes.length - 1; i++){
+        const p1 = ray.tailNodes[i];
+        const p2 = ray.tailNodes[i + 1];
+        const progress = i / (ray.tailNodes.length - 1);
+        const taperWidth = (3.2 * (1 - progress * 0.72)) * ray.scale;
+
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.strokeStyle = '#09101d';
+        ctx.lineWidth = Math.max(taperWidth, 0.8);
+        ctx.lineCap = 'round';
+        ctx.stroke();
+      }
+
+      // Draw Diamond Ray Body & Undulating Wingtips
+      ctx.translate(ray.x, ray.y);
+      ctx.scale(ray.facingScale * ray.scale, ray.scale);
+
+      const wingFlap = Math.sin(ray.wingPhase) * 14;
+
+      // Small anatomical pelvic fins flanking the base of the tail
+      ctx.fillStyle = '#09101d';
+      ctx.beginPath();
+      ctx.moveTo(-18, -4);
+      ctx.lineTo(-27, -8);
+      ctx.lineTo(-23, -1);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.moveTo(-18, 4);
+      ctx.lineTo(-27, 8);
+      ctx.lineTo(-23, 1);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.beginPath();
+      // Snout & Cephalic horns
+      ctx.moveTo(28, 0);
+      ctx.lineTo(26, -5);
+      ctx.lineTo(32, -8); // right cephalic horn
+      ctx.lineTo(24, -10);
+      // Wing 1 (Top wing)
+      ctx.quadraticCurveTo(5, -38 - wingFlap, -8, -46 - wingFlap);
+      ctx.quadraticCurveTo(-14, -28, -26, 0);
+      // Wing 2 (Bottom wing)
+      ctx.quadraticCurveTo(-14, 28, -8, 46 + wingFlap);
+      ctx.quadraticCurveTo(5, 38 + wingFlap, 24, 10);
+      ctx.lineTo(32, 8); // left cephalic horn
+      ctx.lineTo(26, 5);
+      ctx.closePath();
+
+      // Gradient back with bioluminescent spots
+      const rayGrad = ctx.createLinearGradient(-26, 0, 28, 0);
+      rayGrad.addColorStop(0, '#0f172a');
+      rayGrad.addColorStop(0.5, '#1e293b');
+      rayGrad.addColorStop(1, '#334155');
+      ctx.fillStyle = rayGrad;
+      ctx.fill();
+
+      // Bioluminescent spots on dorsal wings
+      const spots = [
+        { x: -5, y: -20, r: 2.2 },
+        { x: 5, y: -16, r: 1.8 },
+        { x: -12, y: -14, r: 1.6 },
+        { x: -5, y: 20, r: 2.2 },
+        { x: 5, y: 16, r: 1.8 },
+        { x: -12, y: 14, r: 1.6 }
+      ];
+      ctx.fillStyle = '#38bdf8';
+      ctx.shadowColor = '#38bdf8';
+      ctx.shadowBlur = 8;
+      spots.forEach(sp => {
+        ctx.beginPath();
+        ctx.arc(sp.x, sp.y, sp.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.shadowBlur = 0;
+
+      ctx.restore();
+    });
+
+    // 7. SEA TURTLES (Graceful flipper strokes cruising diagonally)
+    aquariumTurtleList.forEach(turtle => {
+      turtle.flipperPhase += turtle.flipperSpeed;
+      turtle.bobPhase += 0.02;
+
+      let targetFood = isAquariumFeeding ? getNearestPellet(turtle.x, turtle.y, 480) : null;
+
+      if(targetFood){
+        const angle = Math.atan2(targetFood.y - turtle.y, targetFood.x - turtle.x);
+        turtle.vx = Math.cos(angle) * 2.2;
+        turtle.vy = Math.sin(angle) * 1.5;
+        turtle.facing = turtle.vx >= 0 ? 1 : -1;
+
+        if(Math.hypot(targetFood.x - turtle.x, targetFood.y - turtle.y) < 24){
+          targetFood.eaten = true;
+          spawnBubbleBurst(turtle.x, turtle.y, 6);
+        }
+      } else {
+        if(turtle.x < 80) { turtle.vx = Math.abs(turtle.vx); turtle.facing = 1; }
+        if(turtle.x > w - 80) { turtle.vx = -Math.abs(turtle.vx); turtle.facing = -1; }
+        if(turtle.y < 80) turtle.vy = Math.abs(turtle.vy);
+        if(turtle.y > h - 130) turtle.vy = -Math.abs(turtle.vy);
+      }
+
+      turtle.x += turtle.vx;
+      turtle.y += turtle.vy + Math.sin(turtle.bobPhase) * 0.35;
+      turtle.facingScale += (turtle.facing - turtle.facingScale) * 0.08;
+
+      ctx.save();
+      ctx.translate(turtle.x, turtle.y);
+      ctx.scale(turtle.facingScale * turtle.scale, turtle.scale);
+
+      const flipperAngle = Math.sin(turtle.flipperPhase) * 0.42;
+
+      // Rear Flippers
+      ctx.beginPath();
+      ctx.ellipse(-26, -12, 10, 5, -0.4, 0, Math.PI * 2);
+      ctx.ellipse(-26, 12, 10, 5, 0.4, 0, Math.PI * 2);
+      ctx.fillStyle = '#1e3a29';
+      ctx.fill();
+
+      // Front Flippers (Power stroke rotation)
+      ctx.save();
+      ctx.translate(8, -18);
+      ctx.rotate(-0.6 + flipperAngle);
+      ctx.beginPath();
+      ctx.ellipse(14, -4, 20, 7, -0.2, 0, Math.PI * 2);
+      ctx.fillStyle = '#2d6a4f';
+      ctx.fill();
+      ctx.restore();
+
+      ctx.save();
+      ctx.translate(8, 18);
+      ctx.rotate(0.6 - flipperAngle);
+      ctx.beginPath();
+      ctx.ellipse(14, 4, 20, 7, 0.2, 0, Math.PI * 2);
+      ctx.fillStyle = '#2d6a4f';
+      ctx.fill();
+      ctx.restore();
+
+      // Carapace (Turtle Shell)
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 30, 21, 0, 0, Math.PI * 2);
+      ctx.fillStyle = '#1c442c';
+      ctx.fill();
+
+      // Scute Plates on Shell
+      const scutes = [
+        { x: -14, y: 0, rx: 7, ry: 9 },
+        { x: 0, y: 0, rx: 8, ry: 10 },
+        { x: 14, y: 0, rx: 7, ry: 9 },
+        { x: -5, y: -9, rx: 6, ry: 6 },
+        { x: 7, y: -9, rx: 6, ry: 6 },
+        { x: -5, y: 9, rx: 6, ry: 6 },
+        { x: 7, y: 9, rx: 6, ry: 6 }
+      ];
+      scutes.forEach(sc => {
+        ctx.beginPath();
+        ctx.ellipse(sc.x, sc.y, sc.rx, sc.ry, 0, 0, Math.PI * 2);
+        ctx.fillStyle = '#2d6a4f';
+        ctx.strokeStyle = '#d97706';
+        ctx.lineWidth = 1.2;
+        ctx.fill();
+        ctx.stroke();
+      });
+
+      // Turtle Head & Neck
+      ctx.beginPath();
+      ctx.ellipse(35, 0, 10, 7, 0, 0, Math.PI * 2);
+      ctx.fillStyle = '#2d6a4f';
+      ctx.fill();
+
+      // Eye
+      ctx.beginPath();
+      ctx.arc(38, -2.5, 2.0, 0, Math.PI * 2);
+      ctx.fillStyle = '#fde047';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(38.6, -2.5, 1.0, 0, Math.PI * 2);
+      ctx.fillStyle = '#020617';
+      ctx.fill();
+
+      ctx.restore();
+    });
+
+    // 8. SEAHORSES (Delicate upright posture, fluttering dorsal fin)
+    aquariumSeahorseList.forEach(sh => {
+      sh.flutterPhase += 0.45;
+      sh.bobPhase += 0.035;
+
+      if(sh.x < 90) { sh.vx = Math.abs(sh.vx); sh.facing = 1; }
+      if(sh.x > w - 90) { sh.vx = -Math.abs(sh.vx); sh.facing = -1; }
+      sh.x += sh.vx;
+      sh.y += Math.sin(sh.bobPhase) * 0.65;
+
+      ctx.save();
+      ctx.translate(sh.x, sh.y);
+      ctx.scale(sh.facing * sh.scale, sh.scale);
+      // Tilted upright posture (~12 degrees)
+      ctx.rotate(0.2);
+
+      // Rapidly Fluttering Dorsal Fin on Back
+      const flutterOffset = Math.sin(sh.flutterPhase) * 3;
+      ctx.beginPath();
+      ctx.moveTo(-7, 2);
+      ctx.quadraticCurveTo(-15 + flutterOffset, -2, -8, -10);
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+      ctx.fill();
+
+      // Curved Neck and Body Spine
+      ctx.beginPath();
+      ctx.moveTo(4, -22); // Snout
+      ctx.lineTo(-2, -20);
+      ctx.quadraticCurveTo(-8, -14, -2, -6); // Crown / neck
+      ctx.quadraticCurveTo(7, 2, 4, 12); // Puffed chest
+      ctx.quadraticCurveTo(-2, 18, -4, 26); // Lower belly
+      ctx.quadraticCurveTo(-8, 32, -4, 38); // Tail spiral start
+      ctx.quadraticCurveTo(4, 40, 0, 34); // Curled prehensile tail tip
+      ctx.lineWidth = 6.5;
+      ctx.strokeStyle = sh.color;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+
+      // Coronet crown on head
+      ctx.beginPath();
+      ctx.moveTo(-4, -18);
+      ctx.lineTo(-7, -23);
+      ctx.lineTo(-3, -20);
+      ctx.lineTo(0, -24);
+      ctx.lineTo(1, -19);
+      ctx.fillStyle = sh.color;
+      ctx.fill();
+
+      // Eye
+      ctx.beginPath();
+      ctx.arc(0, -17, 2.2, 0, Math.PI * 2);
+      ctx.fillStyle = '#fde047';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(0.4, -17, 1.1, 0, Math.PI * 2);
+      ctx.fillStyle = '#0f172a';
+      ctx.fill();
+
+      // Ring armor ridges
+      for(let r = -2; r <= 14; r += 4){
+        ctx.beginPath();
+        ctx.ellipse(1, r, 5, 1.5, 0, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.lineWidth = 1.0;
+        ctx.stroke();
+      }
+
+      ctx.restore();
+    });
+
+    // 9. JELLYFISH (Moves UP AND DOWN with rhythmic pulsing bell contractions)
+    aquariumJellyfishList.forEach(jf => {
+      jf.pulsePhase += jf.pulseSpeed;
+      const isContracting = Math.sin(jf.pulsePhase) > 0;
+
+      // Up and down movement cycle
+      if(isContracting){
+        // Upward surge thrust during bell contraction
+        jf.vy = -1.6 * jf.scale;
+      } else {
+        // Slow peaceful downward drift during relaxation
+        jf.vy = 0.55 * jf.scale;
+      }
+
+      // Reaching boundaries
+      if(jf.y <= jf.minY){
+        jf.y = jf.minY;
+      }
+      if(jf.y >= jf.maxY){
+        jf.y = jf.maxY;
+      }
+
+      jf.y += jf.vy;
+      jf.x += Math.sin(jf.pulsePhase * 0.5) * 0.4;
+
+      // Bell shape deformations based on contraction cycle
+      const bellWidth = (isContracting ? 28 : 36) * jf.scale;
+      const bellHeight = (isContracting ? 26 : 18) * jf.scale;
+
+      ctx.save();
+      ctx.translate(jf.x, jf.y);
+
+      // Trailing flowing tentacles
+      for(let t = 0; t < 5; t++){
+        const tOffsetX = (t - 2) * (bellWidth * 0.22);
+        ctx.beginPath();
+        ctx.moveTo(tOffsetX, 0);
+        const tLen = (48 + t * 4) * jf.scale;
+        for(let seg = 1; seg <= 6; seg++){
+          const segY = (tLen / 6) * seg;
+          const wave = Math.sin(jf.pulsePhase * 1.2 - seg * 0.5 + t) * (6 * jf.scale);
+          ctx.lineTo(tOffsetX + wave, segY);
+        }
+        ctx.strokeStyle = jf.glow;
+        ctx.lineWidth = 1.4;
+        ctx.stroke();
+      }
+
+      // Glowing Umbrella Bell
+      ctx.beginPath();
+      ctx.moveTo(-bellWidth, 0);
+      ctx.bezierCurveTo(-bellWidth, -bellHeight * 1.5, bellWidth, -bellHeight * 1.5, bellWidth, 0);
+      ctx.quadraticCurveTo(bellWidth * 0.5, 4, 0, 0);
+      ctx.quadraticCurveTo(-bellWidth * 0.5, 4, -bellWidth, 0);
+      ctx.closePath();
+
+      const bellGrad = ctx.createRadialGradient(0, -bellHeight * 0.5, 2, 0, -bellHeight * 0.5, bellWidth);
+      bellGrad.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
+      bellGrad.addColorStop(0.3, jf.color);
+      bellGrad.addColorStop(0.8, jf.glow);
+      bellGrad.addColorStop(1, 'rgba(255, 255, 255, 0.1)');
+
+      ctx.fillStyle = bellGrad;
+      ctx.shadowColor = jf.color;
+      ctx.shadowBlur = 14;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      // Scalloped margin frill
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      ctx.restore();
+    });
+
+    // 10. FISHIES (Clownfish, Blue Tangs, Yellow Tangs, Royal Grammas)
+    aquariumFishList.forEach(fish => {
+      fish.tailPhase += fish.tailSpeed;
+      fish.bobPhase += 0.03;
+
+      let targetFood = isAquariumFeeding ? getNearestPellet(fish.x, fish.y, 450) : null;
+
+      if(targetFood){
+        // Accelerated excited chase towards food
+        const angle = Math.atan2(targetFood.y - fish.y, targetFood.x - fish.x);
+        fish.vx = Math.cos(angle) * 3.4;
+        fish.vy = Math.sin(angle) * 2.8;
+        fish.facing = fish.vx >= 0 ? 1 : -1;
+        fish.tailSpeed = 0.35;
+
+        // Eating contact
+        if(Math.hypot(targetFood.x - fish.x, targetFood.y - fish.y) < 14){
+          targetFood.eaten = true;
+          spawnBubbleBurst(fish.x, fish.y, 5);
+        }
+      } else {
+        fish.tailSpeed = 0.18;
+        if(fish.x < 70) { fish.vx = Math.abs(fish.vx); fish.facing = 1; }
+        if(fish.x > w - 70) { fish.vx = -Math.abs(fish.vx); fish.facing = -1; }
+        if(fish.y < 80) fish.vy = Math.abs(fish.vy);
+        if(fish.y > h - 120) fish.vy = -Math.abs(fish.vy);
+      }
+
+      fish.x += fish.vx;
+      fish.y += fish.vy + Math.sin(fish.bobPhase) * 0.45;
+      // Smooth 3D-like flip transition
+      fish.facingScale += (fish.facing - fish.facingScale) * 0.12;
+
+      ctx.save();
+      ctx.translate(fish.x, fish.y);
+      ctx.scale(fish.facingScale * fish.scale, fish.scale);
+
+      const tailWag = Math.sin(fish.tailPhase) * 0.35;
+
+      // Draw species-specific anatomy
+      if(fish.species === 'clownfish'){
+        // Tail Fin
+        ctx.save();
+        ctx.translate(-18, 0);
+        ctx.rotate(tailWag);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(-12, -8);
+        ctx.quadraticCurveTo(-16, 0, -12, 8);
+        ctx.closePath();
+        ctx.fillStyle = '#ff7828';
+        ctx.strokeStyle = '#020617';
+        ctx.lineWidth = 1;
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+
+        // Body
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 20, 12, 0, 0, Math.PI * 2);
+        ctx.fillStyle = '#ff7828';
+        ctx.fill();
+
+        // 3 White Vertical Bands with black outline
+        const bands = [-12, -1, 10];
+        bands.forEach(bx => {
+          ctx.beginPath();
+          ctx.ellipse(bx, 0, 3.2, 11, 0, 0, Math.PI * 2);
+          ctx.fillStyle = '#ffffff';
+          ctx.strokeStyle = '#0f172a';
+          ctx.lineWidth = 1.0;
+          ctx.fill();
+          ctx.stroke();
+        });
+
+        // Eye
+        ctx.beginPath();
+        ctx.arc(12, -3, 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(12.6, -3, 1.2, 0, Math.PI * 2);
+        ctx.fillStyle = '#020617';
+        ctx.fill();
+
+      } else if(fish.species === 'bluetang'){
+        // Yellow Tail Wedge
+        ctx.save();
+        ctx.translate(-18, 0);
+        ctx.rotate(tailWag);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(-14, -10);
+        ctx.lineTo(-11, 0);
+        ctx.lineTo(-14, 10);
+        ctx.closePath();
+        ctx.fillStyle = '#facc15';
+        ctx.fill();
+        ctx.restore();
+
+        // Royal Blue Body
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 21, 13, 0, 0, Math.PI * 2);
+        ctx.fillStyle = '#1d4ed8';
+        ctx.fill();
+
+        // Black curved streak on flank
+        ctx.beginPath();
+        ctx.moveTo(-10, -4);
+        ctx.bezierCurveTo(4, -12, 12, 0, 2, 8);
+        ctx.strokeStyle = '#020617';
+        ctx.lineWidth = 3.5;
+        ctx.stroke();
+
+        // Eye
+        ctx.beginPath();
+        ctx.arc(13, -3, 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = '#fde047';
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(13.6, -3, 1.2, 0, Math.PI * 2);
+        ctx.fillStyle = '#020617';
+        ctx.fill();
+
+      } else if(fish.species === 'yellowtang'){
+        // Disc Shape with Pointed Snout
+        ctx.save();
+        ctx.translate(-17, 0);
+        ctx.rotate(tailWag);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(-12, -9);
+        ctx.lineTo(-12, 9);
+        ctx.closePath();
+        ctx.fillStyle = '#facc15';
+        ctx.fill();
+        ctx.restore();
+
+        // High Oval Body
+        ctx.beginPath();
+        ctx.ellipse(-2, 0, 19, 15, 0, 0, Math.PI * 2);
+        ctx.fillStyle = '#eab308';
+        ctx.fill();
+
+        // Elongated snout
+        ctx.beginPath();
+        ctx.moveTo(14, -4);
+        ctx.lineTo(24, 0);
+        ctx.lineTo(14, 4);
+        ctx.closePath();
+        ctx.fillStyle = '#facc15';
+        ctx.fill();
+
+        // White scalpel spine near tail
+        ctx.beginPath();
+        ctx.moveTo(-14, 0);
+        ctx.lineTo(-9, 0);
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 1.8;
+        ctx.stroke();
+
+        // Eye
+        ctx.beginPath();
+        ctx.arc(12, -4, 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(12.6, -4, 1.2, 0, Math.PI * 2);
+        ctx.fillStyle = '#020617';
+        ctx.fill();
+
+      } else if(fish.species === 'royalgramma'){
+        // Tail
+        ctx.save();
+        ctx.translate(-17, 0);
+        ctx.rotate(tailWag);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(-12, -7);
+        ctx.lineTo(-12, 7);
+        ctx.closePath();
+        ctx.fillStyle = '#f59e0b';
+        ctx.fill();
+        ctx.restore();
+
+        // Two-Tone Body: Magenta Anterior, Golden Amber Posterior
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 19, 10, 0, 0, Math.PI * 2);
+        const rgGrad = ctx.createLinearGradient(-19, 0, 19, 0);
+        rgGrad.addColorStop(0, '#f59e0b');
+        rgGrad.addColorStop(0.48, '#f59e0b');
+        rgGrad.addColorStop(0.52, '#d946ef');
+        rgGrad.addColorStop(1, '#c026d3');
+        ctx.fillStyle = rgGrad;
+        ctx.fill();
+
+        // Black streak across eye
+        ctx.beginPath();
+        ctx.moveTo(7, -3);
+        ctx.lineTo(17, -1);
+        ctx.strokeStyle = '#020617';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // Eye
+        ctx.beginPath();
+        ctx.arc(12, -2, 2.2, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(12.5, -2, 1.1, 0, Math.PI * 2);
+        ctx.fillStyle = '#020617';
+        ctx.fill();
+      }
+
+      ctx.restore();
+    });
+
+    // 11. SCUBA DIVERS (Swimming past all the fish with dive torch & regulator bubbles)
+    for(let d = aquariumDiverList.length - 1; d >= 0; d--){
+      const diver = aquariumDiverList[d];
+      diver.kickPhase += diver.kickSpeed;
+      diver.x += diver.vx;
+      diver.y = diver.baseY + Math.sin(diver.kickPhase * 0.45) * 10;
+
+      // Periodic breathing bubble release from scuba regulator
+      diver.breatheCounter = (diver.breatheCounter || 0) + 1;
+      if(diver.breatheCounter % 40 === 0){
+        const mouthX = diver.x + (diver.facing * 28 * diver.scale);
+        const mouthY = diver.y - (5 * diver.scale);
+        spawnBubbleBurst(mouthX, mouthY, 4);
+      }
+
+      // Curious fish gently scatter and swim around the friendly diver
+      aquariumFishList.forEach(fish => {
+        const distToDiver = Math.hypot(fish.x - diver.x, fish.y - diver.y);
+        if(distToDiver < 110){
+          const pushAngle = Math.atan2(fish.y - diver.y, fish.x - diver.x);
+          fish.vx += Math.cos(pushAngle) * 0.45;
+          fish.vy += Math.sin(pushAngle) * 0.35;
+          fish.facing = fish.vx >= 0 ? 1 : -1;
+        }
+      });
+
+      // Remove diver once fully exited across the tank
+      if((diver.facing === 1 && diver.x > w + 200) || (diver.facing === -1 && diver.x < -200)){
+        aquariumDiverList.splice(d, 1);
+        continue;
+      }
+
+      ctx.save();
+      ctx.translate(diver.x, diver.y);
+      ctx.scale(diver.facingScale * diver.scale, diver.scale);
+
+      // Subtle forward dive torch beam
+      const torchGrad = ctx.createLinearGradient(28, 6, 210, 10);
+      torchGrad.addColorStop(0, 'rgba(224, 242, 254, 0.45)');
+      torchGrad.addColorStop(0.3, 'rgba(56, 189, 248, 0.20)');
+      torchGrad.addColorStop(1, 'rgba(14, 165, 233, 0)');
+      ctx.fillStyle = torchGrad;
+      ctx.beginPath();
+      ctx.moveTo(28, 4);
+      ctx.lineTo(200, -36);
+      ctx.lineTo(220, 60);
+      ctx.closePath();
+      ctx.fill();
+
+      // Alternating scissor flutter-kicking legs
+      const kick1 = Math.sin(diver.kickPhase) * 0.38;
+      const kick2 = Math.sin(diver.kickPhase + Math.PI) * 0.38;
+
+      // Far Leg & Fin (behind torso)
+      ctx.save();
+      ctx.translate(-14, 1);
+      ctx.rotate(kick2);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(-18, 2);
+      ctx.lineTo(-34, 4);
+      ctx.strokeStyle = '#09101d';
+      ctx.lineWidth = 5.5;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+      // Far Fin
+      ctx.save();
+      ctx.translate(-34, 4);
+      ctx.rotate(kick2 * 0.5);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(-20, -5);
+      ctx.lineTo(-24, 6);
+      ctx.closePath();
+      ctx.fillStyle = '#0284c7';
+      ctx.fill();
+      ctx.restore();
+      ctx.restore();
+
+      // Oxygen Tank (Bright yellow diving cylinder with harness straps)
+      ctx.save();
+      ctx.translate(-2, -9);
+      ctx.rotate(-0.05);
+      ctx.beginPath();
+      if(ctx.roundRect){
+        ctx.roundRect(-22, -6, 28, 11, 4);
+      } else {
+        ctx.rect(-22, -6, 28, 11);
+      }
+      ctx.fillStyle = diver.tankColor;
+      ctx.strokeStyle = '#ca8a04';
+      ctx.lineWidth = 1.0;
+      ctx.fill();
+      ctx.stroke();
+      // Tank boot & valve
+      ctx.beginPath();
+      ctx.arc(-22, -0.5, 3.5, 0, Math.PI * 2);
+      ctx.fillStyle = '#020617';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.rect(5, -3.5, 4, 6);
+      ctx.fillStyle = '#cbd5e1';
+      ctx.fill();
+      // Black harness straps
+      ctx.strokeStyle = '#020617';
+      ctx.lineWidth = 2.2;
+      ctx.beginPath();
+      ctx.moveTo(-14, -6);
+      ctx.lineTo(-14, 5);
+      ctx.moveTo(-2, -6);
+      ctx.lineTo(-2, 5);
+      ctx.stroke();
+      ctx.restore();
+
+      // Regulator Hose from tank valve to mouthpiece
+      ctx.beginPath();
+      ctx.moveTo(4, -12);
+      ctx.quadraticCurveTo(14, -18, 22, -3);
+      ctx.strokeStyle = '#020617';
+      ctx.lineWidth = 2.0;
+      ctx.stroke();
+
+      // Diver Torso (Wetsuit)
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 20, 8.5, -0.06, 0, Math.PI * 2);
+      ctx.fillStyle = diver.suitColor;
+      ctx.fill();
+
+      // Cyan accent stripe along wetsuit spine
+      ctx.beginPath();
+      ctx.moveTo(-16, -2);
+      ctx.lineTo(12, -4);
+      ctx.strokeStyle = diver.accentColor;
+      ctx.lineWidth = 2.0;
+      ctx.stroke();
+
+      // Near Leg & Fin
+      ctx.save();
+      ctx.translate(-14, 2);
+      ctx.rotate(kick1);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(-18, 3);
+      ctx.lineTo(-35, 5);
+      ctx.strokeStyle = diver.suitColor;
+      ctx.lineWidth = 6.0;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+      // Cyan side stripe on leg
+      ctx.beginPath();
+      ctx.moveTo(-2, 0);
+      ctx.lineTo(-33, 4);
+      ctx.strokeStyle = diver.accentColor;
+      ctx.lineWidth = 1.4;
+      ctx.stroke();
+      // Near Scuba Fin
+      ctx.save();
+      ctx.translate(-35, 5);
+      ctx.rotate(kick1 * 0.55);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(-22, -6);
+      ctx.lineTo(-26, 7);
+      ctx.closePath();
+      ctx.fillStyle = '#38bdf8';
+      ctx.strokeStyle = '#0284c7';
+      ctx.lineWidth = 1.2;
+      ctx.fill();
+      ctx.stroke();
+      // Fin blade ribs
+      ctx.beginPath();
+      ctx.moveTo(-6, -1);
+      ctx.lineTo(-20, -3);
+      ctx.moveTo(-6, 2);
+      ctx.lineTo(-21, 3);
+      ctx.strokeStyle = '#0284c7';
+      ctx.lineWidth = 1.0;
+      ctx.stroke();
+      ctx.restore();
+      ctx.restore();
+
+      // Diver Head & Neoprene Hood
+      ctx.beginPath();
+      ctx.ellipse(19, -3.5, 7.5, 7.5, 0, 0, Math.PI * 2);
+      ctx.fillStyle = '#1e293b';
+      ctx.fill();
+
+      // Scuba Mask Oval Faceplate with reflective glass
+      ctx.beginPath();
+      ctx.ellipse(22, -3.5, 4.5, 6, 0.15, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(186, 230, 253, 0.9)';
+      ctx.strokeStyle = '#020617';
+      ctx.lineWidth = 1.5;
+      ctx.fill();
+      ctx.stroke();
+
+      // Mask glass reflection highlight
+      ctx.beginPath();
+      ctx.ellipse(23, -5, 2, 3, 0.2, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+      ctx.fill();
+
+      // Diver Eye
+      ctx.beginPath();
+      ctx.arc(22, -3, 1.3, 0, Math.PI * 2);
+      ctx.fillStyle = '#0f172a';
+      ctx.fill();
+
+      // Regulator mouthpiece & purge button
+      ctx.beginPath();
+      ctx.rect(23, 0, 3.5, 4);
+      ctx.fillStyle = '#0f172a';
+      ctx.fill();
+
+      // Arm & Handheld Dive Torch
+      ctx.beginPath();
+      ctx.moveTo(7, 3);
+      ctx.lineTo(16, 7);
+      ctx.lineTo(26, 6);
+      ctx.strokeStyle = diver.suitColor;
+      ctx.lineWidth = 4.2;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+
+      // Torch housing
+      ctx.save();
+      ctx.translate(26, 6);
+      ctx.beginPath();
+      if(ctx.roundRect){
+        ctx.roundRect(-2, -3, 9, 6, 2);
+      } else {
+        ctx.rect(-2, -3, 9, 6);
+      }
+      ctx.fillStyle = '#eab308';
+      ctx.fill();
+      // Torch lens with radiant glow
+      ctx.beginPath();
+      ctx.arc(7, 0, 3, 0, Math.PI * 2);
+      ctx.fillStyle = '#ffffff';
+      ctx.shadowColor = '#38bdf8';
+      ctx.shadowBlur = 10;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.restore();
+
+      ctx.restore();
+    }
+
+    // 12. Pop Bubble Bursts (when food is eaten or diver exhales)
+    for(let b = aquariumBubbleBurstList.length - 1; b >= 0; b--){
+      const bb = aquariumBubbleBurstList[b];
+      bb.x += bb.vx;
+      bb.y += bb.vy;
+      bb.r += 0.08;
+      bb.alpha -= 0.03;
+
+      if(bb.alpha <= 0){
+        aquariumBubbleBurstList.splice(b, 1);
+        continue;
+      }
+
+      ctx.beginPath();
+      ctx.arc(bb.x, bb.y, bb.r, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(224, 242, 254, ${bb.alpha})`;
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+    }
+
+    ctx.restore();
+    aquariumAnimId = requestAnimationFrame(renderAquariumLoop);
   }
 
   initRowSplitters();

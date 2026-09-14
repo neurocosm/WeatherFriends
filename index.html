@@ -18,7 +18,7 @@
 <meta property="og:description" content="Weather Friends app by BostonyFX - Smart display weather console with live forecasts, precision local station data, barometric tracking, and environmental monitoring.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Outfit:wght@400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Special+Elite&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Outfit:wght@300;400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Special+Elite&display=swap" rel="stylesheet">
 <style>
   @property --bezel-hi {
     syntax: '<color>';
@@ -465,6 +465,47 @@
     box-shadow:0 0 14px #38bdf8 !important;
     transform:scale(1.5) !important;
     animation:none !important;
+  }
+
+  /* Direct Ambient Theater Launch Pill */
+  .theater-launch-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:4.5px;
+    background:rgba(0, 0, 0, 0.28);
+    border:1px solid rgba(255, 255, 255, 0.14);
+    border-radius:10px;
+    padding:2px 8px;
+    font-family:'Rajdhani', sans-serif;
+    font-weight:700;
+    font-size:0.60rem;
+    letter-spacing:0.06em;
+    color:#8fa1ab;
+    cursor:pointer;
+    user-select:none;
+    -webkit-user-select:none;
+    touch-action:manipulation;
+    transition:all 0.2s ease;
+    box-shadow:inset 0 1px 2px rgba(0, 0, 0, 0.25);
+  }
+  .theater-launch-pill:hover{
+    border-color:rgba(255, 175, 60, 0.55);
+    color:#ffb347;
+    background:rgba(32, 16, 6, 0.7);
+    box-shadow:0 0 10px rgba(255, 150, 30, 0.35);
+  }
+  .theater-launch-pill .theater-dot{
+    width:5px;
+    height:5px;
+    border-radius:50%;
+    background:#ffb347;
+    box-shadow:0 0 4px #ff8800;
+    display:inline-block;
+    transition:all 0.2s ease;
+  }
+  .theater-launch-pill:hover .theater-dot{
+    transform:scale(1.25);
+    box-shadow:0 0 8px #ffaa22;
   }
 
   /* 8-Ball Panel Header - Oracle Mode Segmented Title Bar (Smart TV & Remote Friendly) */
@@ -1779,7 +1820,8 @@
   }
   .inspire-tabs{
     display:inline-flex;
-    align-items:center;
+    align-items:stretch;
+    height:clamp(18px, 2.4vh, 22px);
     gap:clamp(3px, 0.8cqw, 6px);
     flex:1;
     margin:0;
@@ -1791,15 +1833,16 @@
     box-sizing:border-box;
   }
   .inspire-tab-btn{
+    height:100%;
     background:rgba(4, 14, 20, 0.55);
     border:1px solid rgba(179, 136, 255, 0.22);
     color:var(--ink-dim);
     font-family:'Outfit',sans-serif;
-    font-size:clamp(0.56rem, min(2.6cqw, 1.15vh), 0.70rem);
-    font-weight:700;
+    font-size:clamp(0.54rem, min(2.5cqw, 1.1vh), 0.68rem);
+    font-weight:500;
     letter-spacing:0.04em;
     text-transform:uppercase;
-    padding:clamp(2px, 0.35vh, 4px) clamp(3px, 0.8cqw, 8px);
+    padding:0 clamp(3px, 0.8cqw, 8px);
     border-radius:6px;
     cursor:pointer;
     transition:all 0.18s ease;
@@ -1812,6 +1855,7 @@
     flex:1;
     user-select:none;
     outline:none;
+    box-sizing:border-box;
     -webkit-tap-highlight-color:transparent;
   }
   .inspire-tab-btn:hover{
@@ -1820,10 +1864,11 @@
     background:rgba(179, 136, 255, 0.15);
   }
   .inspire-tab-btn.active{
-    background:rgba(179, 136, 255, 0.22);
-    border-color:var(--purple);
-    color:#ffffff;
-    box-shadow:0 0 8px rgba(179, 136, 255, 0.4);
+    background:rgba(179, 136, 255, 0.12);
+    border-color:#c084fc;
+    color:#c084fc;
+    box-shadow:none;
+    font-weight:500;
   }
   .inspire-body-wrap{
     flex:1 1 0;
@@ -2218,6 +2263,7 @@
     overflow:hidden;
     padding:4px;
     box-sizing:border-box;
+    container-type:size;
   }
   .eightball-sphere{
     width:var(--eightball-size, auto);
@@ -3051,31 +3097,88 @@
     width:100%;
     height:100%;
     position:relative;
-    flex-direction:column;
-    align-items:center;
-    justify-content:space-between;
-    padding:clamp(4px, 1.0vh, 10px) 8px clamp(6px, 1.2vh, 12px);
+    flex-direction:row;
+    align-items:flex-end; /* Ground ensemble towards the bottom of the channel space */
+    justify-content:center;
+    padding-top:var(--candle-pad-t, clamp(22px, 4.5vh, 44px));
+    padding-bottom:var(--candle-pad-b, clamp(8px, 1.8vh, 16px));
+    padding-left:var(--candle-pad-h, clamp(10px, 2.5vw, 24px));
+    padding-right:var(--candle-pad-h, clamp(10px, 2.5vw, 24px));
     box-sizing:border-box;
     overflow:hidden;
     user-select:none;
+    cursor:pointer;
     -webkit-tap-highlight-color:transparent;
   }
   .oracle-mode-candle .candle-container{
     display:flex;
   }
 
-  /* Candle Aura Background Light */
+  /* Unbolded title when in Candle mode */
+  .oracle-mode-candle #eightballTitle{
+    font-weight:500 !important;
+    letter-spacing:0.06em;
+  }
+  .oracle-mode-candle .eightball-sub-hint{
+    font-weight:400 !important;
+    color:rgba(255, 180, 50, 0.85);
+  }
+
+  /* Centered Ensemble: Centers candle + text as a unified whole with intelligent height */
+  .candle-ensemble{
+    display:flex;
+    flex-direction:row;
+    align-items:flex-start; /* Aligns top of candle stage with ensemble */
+    justify-content:center;
+    height:var(--candle-ensemble-h, auto);
+    max-height:100%;
+    width:auto;
+    max-width:100%;
+    gap:var(--candle-gap, clamp(12px, 2.6vw, 24px));
+    margin:0 auto;
+    position:relative;
+    box-sizing:border-box;
+  }
+
+  /* Candle Visual SVG Stage - Intelligent height scaling */
+  .candle-visual-stage{
+    flex:0 0 auto;
+    height:var(--candle-height, 100%);
+    max-height:100%;
+    aspect-ratio:150 / 250;
+    width:auto;
+    max-width:44%;
+    min-width:55px;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    position:relative;
+    z-index:3;
+    cursor:pointer;
+  }
+  .candle-svg{
+    position:relative;
+    z-index:2;
+    height:100%;
+    max-height:100%;
+    width:auto;
+    display:block;
+    overflow:visible;
+    filter:drop-shadow(0 4px 14px rgba(0,0,0,0.75));
+  }
+
+  /* Candle Aura Background Light - Subtler, soft glow anchored to flame */
   .candle-aura-glow{
     position:absolute;
-    width:160px;
-    height:160px;
-    top:40%;
+    width:var(--candle-aura-size, 110px);
+    height:var(--candle-aura-size, 110px);
+    top:14%;
     left:50%;
     transform:translate(-50%, -50%);
     border-radius:50%;
-    background:radial-gradient(circle, rgba(255, 185, 55, 0.35) 0%, rgba(255, 130, 20, 0.15) 38%, rgba(200, 70, 0, 0.05) 62%, transparent 75%);
+    background:radial-gradient(circle, rgba(255, 185, 60, 0.18) 0%, rgba(255, 135, 25, 0.07) 38%, rgba(200, 70, 0, 0.015) 62%, transparent 75%);
     pointer-events:none;
-    filter:blur(10px);
+    filter:blur(12px);
     transition:opacity 0.7s ease, transform 0.7s ease;
     animation:auraFlicker 2.4s ease-in-out infinite alternate;
     z-index:1;
@@ -3085,90 +3188,100 @@
     transform:translate(-50%, -50%) scale(0.3);
   }
   @keyframes auraFlicker{
-    0%{ transform:translate(-50%, -50%) scale(0.97); opacity:0.85; }
-    50%{ transform:translate(-50.5%, -49.5%) scale(1.04); opacity:1; }
-    100%{ transform:translate(-49.5%, -50.5%) scale(0.99); opacity:0.9; }
+    0%{ transform:translate(-50%, -50%) scale(0.97); opacity:0.8; }
+    50%{ transform:translate(-50.5%, -49.5%) scale(1.03); opacity:0.95; }
+    100%{ transform:translate(-49.5%, -50.5%) scale(0.99); opacity:0.85; }
   }
 
-  /* Header Prompt & Countdown Area */
-  .candle-header-area{
-    width:100%;
-    min-height:28px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    z-index:5;
-    text-align:center;
-    padding:0 4px;
-    box-sizing:border-box;
-  }
-  .candle-prompt-text{
+  /* Subtle Countdown inside Candle Wax Shaft with intelligent font scaling */
+  .candle-shaft-count{
     font-family:'Outfit', sans-serif;
-    font-size:clamp(0.72rem, 1.4vw, 0.86rem);
-    font-weight:600;
-    color:rgba(255, 235, 200, 0.9);
+    font-size:var(--candle-shaft-font, 26px);
+    font-weight:300; /* Clean, strictly unbolded */
+    fill:rgba(125, 95, 58, 0.72);
     letter-spacing:0.02em;
-    line-height:1.2;
-    transition:opacity 0.3s ease;
-    text-shadow:0 0 10px rgba(255, 180, 50, 0.4);
-  }
-  .candle-countdown-wrap{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    gap:2px;
-  }
-  .candle-countdown-num{
-    font-family:'Orbitron', sans-serif;
-    font-size:clamp(1.3rem, 3.0vw, 1.85rem);
-    font-weight:900;
-    line-height:1;
-    color:#ffca38;
-    text-shadow:0 0 16px rgba(255, 180, 50, 0.9), 0 0 28px rgba(255, 130, 0, 0.6);
-    display:inline-block;
-  }
-  .candle-countdown-num.tick-pulse{
-    animation:countPunch 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  }
-  @keyframes countPunch{
-    0%{ transform:scale(1.4); filter:brightness(1.5); }
-    100%{ transform:scale(1); filter:brightness(1); }
-  }
-  .candle-countdown-sub{
-    font-family:'Outfit', sans-serif;
-    font-size:clamp(0.66rem, 1.2vw, 0.76rem);
-    font-weight:600;
-    color:#fff2d1;
-    letter-spacing:0.03em;
-    text-shadow:0 1px 3px rgba(0,0,0,0.8);
+    pointer-events:none;
+    user-select:none;
+    transition:opacity 0.25s ease;
   }
 
-  /* Candle Visual SVG Stage */
-  .candle-visual-stage{
-    flex:1 1 auto;
-    width:100%;
-    min-height:85px;
-    max-height:155px;
+  /* Invisible Text Frame - Top aligned with where wick meets candle top, Center-justified within frame */
+  .candle-bottom-hint{
+    flex:0 1 auto;
+    width:max-content;
+    max-width:var(--candle-text-max-w, min(340px, 62%));
+    min-width:0;
+    text-align:center; /* Justified center within invisible box */
+    align-self:flex-start;
+    margin-top:var(--candle-text-top, 35px); /* Exactly where the wick meets top of candle */
+    margin-bottom:0;
+    margin-left:0;
+    margin-right:0;
+    padding:0;
     display:flex;
-    align-items:center;
-    justify-content:center;
-    position:relative;
-    z-index:3;
+    flex-direction:column;
+    align-items:center; /* Centers each line inside the frame */
+    justify-content:flex-start;
+    font-family:'Outfit', sans-serif;
+    font-size:var(--candle-font-size, clamp(0.75rem, min(1.5vw, 2.1vh), 0.95rem));
+    font-weight:300 !important; /* Strictly unbolded */
+    -webkit-font-smoothing:antialiased;
+    line-height:var(--candle-line-height, 1.35);
+    letter-spacing:0.025em;
+    color:rgba(255, 235, 205, 0.92);
+    cursor:pointer;
+    text-decoration:none !important;
+    z-index:5;
+  }
+  .candle-container:hover .candle-bottom-hint{
+    color:rgba(255, 215, 130, 0.98);
+  }
+  .candle-text-line{
+    display:block;
+    width:100%;
+    text-align:center;
+    white-space:nowrap;
+  }
+  .candle-heart-symbol{
+    display:inline-block;
+    color:#ff8d70;
+    margin-left:4px;
+    font-size:0.95em;
+    vertical-align:-1px;
+    text-shadow:0 0 8px rgba(255, 140, 100, 0.45);
+    transition:transform 0.25s ease, color 0.25s ease;
+  }
+  .candle-container:hover .candle-heart-symbol{
+    transform:scale(1.15);
+    color:#ffa588;
+  }
+  .candle-press-hint{
+    display:inline-block;
+    font-size:0.90em;
+    font-weight:300 !important; /* Strictly unbolded */
+    color:#ffbe3b;
+    letter-spacing:0.03em;
+    margin-top:4px;
+    text-decoration:none !important; /* Strictly NO underline */
+    opacity:0.95;
+    white-space:nowrap;
     cursor:pointer;
   }
-  .candle-svg{
-    height:100%;
-    max-height:150px;
-    width:auto;
-    overflow:visible;
-    filter:drop-shadow(0 6px 16px rgba(0,0,0,0.7));
+  .candle-press-hint.candle-press-action{
+    font-size:0.92em;
+    font-weight:300 !important; /* Strictly unbolded */
+    color:#ffbe3b;
+    letter-spacing:0.03em;
+    margin-top:4px;
+    text-decoration:none !important; /* Strictly NO underline */
+    cursor:pointer;
+    opacity:1;
+    white-space:nowrap;
   }
 
   /* Flame Animations */
   .candle-flame-group{
-    transform-origin:78px 86px;
+    transform-origin:73px 36px;
     animation:flameSway 2.2s ease-in-out infinite alternate, flameJitter 0.22s steps(2, end) infinite;
     transition:opacity 0.25s ease;
   }
@@ -3185,7 +3298,7 @@
     50%{ filter:url(#flameGlowFilter) brightness(1.08); }
   }
   .flame-inner{
-    transform-origin:78px 85px;
+    transform-origin:73px 35px;
     animation:flameInnerPulse 0.4s ease-in-out infinite alternate;
   }
   @keyframes flameInnerPulse{
@@ -3230,7 +3343,7 @@
     filter:none !important;
   }
 
-  /* Smoke Wisps Simulation */
+  /* Smoke Wisps Simulation - Subtly Forms a Vague Heart Before Dissipating */
   .candle-smoke-group{
     pointer-events:none;
     display:none;
@@ -3239,37 +3352,94 @@
     display:block;
   }
   .smoke-wisp{
-    stroke-dasharray:140;
-    stroke-dashoffset:140;
+    stroke-dasharray:120;
+    stroke-dashoffset:120;
     opacity:0;
-    transform-origin:78px 85px;
+    transform-origin:73px 20px;
+    filter:drop-shadow(0 0 2px rgba(255, 255, 255, 0.35));
   }
-  .candle-smoke-group.is-smoking .wisp-1{
-    animation:smokeRiseCurl1 2.8s cubic-bezier(0.1, 0.5, 0.3, 1) forwards;
+  .candle-smoke-group.is-smoking .wisp-heart-left{
+    animation:smokeHeartLeft 3.0s cubic-bezier(0.2, 0.6, 0.35, 1) forwards;
   }
-  .candle-smoke-group.is-smoking .wisp-2{
-    animation:smokeRiseCurl2 3.0s cubic-bezier(0.1, 0.5, 0.3, 1) 0.18s forwards;
+  .candle-smoke-group.is-smoking .wisp-heart-right{
+    animation:smokeHeartRight 3.0s cubic-bezier(0.2, 0.6, 0.35, 1) forwards;
   }
-  .candle-smoke-group.is-smoking .wisp-3{
-    animation:smokeRiseCurl3 2.6s cubic-bezier(0.1, 0.5, 0.3, 1) 0.35s forwards;
+  .candle-smoke-group.is-smoking .wisp-heart-trail{
+    animation:smokeHeartTrail 2.8s cubic-bezier(0.15, 0.5, 0.3, 1) 0.2s forwards;
   }
-  @keyframes smokeRiseCurl1{
-    0%{ stroke-dashoffset:140; opacity:0; transform:translate(0, 0) scale(1); }
-    15%{ opacity:0.75; }
-    50%{ opacity:0.55; }
-    100%{ stroke-dashoffset:0; opacity:0; transform:translate(-16px, -65px) scale(1.6); }
+
+  /* Left lobe of the smoke heart */
+  @keyframes smokeHeartLeft{
+    0%{
+      stroke-dashoffset:120;
+      opacity:0;
+      transform:translate(0, 0) scale(0.95);
+    }
+    18%{
+      opacity:0.80;
+    }
+    45%{
+      stroke-dashoffset:0;
+      opacity:0.70;
+      transform:translate(-0.5px, -3px) scale(1.02);
+    }
+    72%{
+      opacity:0.35;
+      transform:translate(-2px, -9px) scale(1.14);
+    }
+    100%{
+      stroke-dashoffset:0;
+      opacity:0;
+      transform:translate(-4px, -15px) scale(1.25);
+    }
   }
-  @keyframes smokeRiseCurl2{
-    0%{ stroke-dashoffset:140; opacity:0; transform:translate(0, 0) scale(1); }
-    18%{ opacity:0.8; }
-    55%{ opacity:0.5; }
-    100%{ stroke-dashoffset:0; opacity:0; transform:translate(14px, -75px) scale(1.8); }
+
+  /* Right lobe of the smoke heart */
+  @keyframes smokeHeartRight{
+    0%{
+      stroke-dashoffset:120;
+      opacity:0;
+      transform:translate(0, 0) scale(0.95);
+    }
+    20%{
+      opacity:0.78;
+    }
+    48%{
+      stroke-dashoffset:0;
+      opacity:0.68;
+      transform:translate(0.5px, -3px) scale(1.02);
+    }
+    74%{
+      opacity:0.32;
+      transform:translate(2px, -9px) scale(1.14);
+    }
+    100%{
+      stroke-dashoffset:0;
+      opacity:0;
+      transform:translate(4px, -15px) scale(1.25);
+    }
   }
-  @keyframes smokeRiseCurl3{
-    0%{ stroke-dashoffset:140; opacity:0; transform:translate(0, 0) scale(1); }
-    20%{ opacity:0.65; }
-    60%{ opacity:0.4; }
-    100%{ stroke-dashoffset:0; opacity:0; transform:translate(-8px, -55px) scale(1.4); }
+
+  /* Delicate rising plume drifting upward from the heart cleft */
+  @keyframes smokeHeartTrail{
+    0%{
+      stroke-dashoffset:60;
+      opacity:0;
+      transform:translate(0, 0);
+    }
+    25%{
+      opacity:0.50;
+    }
+    55%{
+      stroke-dashoffset:0;
+      opacity:0.35;
+      transform:translate(1px, -5px) scale(1.08);
+    }
+    100%{
+      stroke-dashoffset:0;
+      opacity:0;
+      transform:translate(3px, -14px) scale(1.2);
+    }
   }
 
   /* Reignite Flash Spark */
@@ -3282,62 +3452,9 @@
     100%{ transform:translate(0, 0) scale(1, 1); opacity:1; }
   }
 
-  /* Action Buttons */
+  /* Action Buttons Wrap */
   .candle-actions-wrap{
-    width:100%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    z-index:5;
-    margin-top:auto;
-  }
-  .candle-wish-btn{
-    background:linear-gradient(135deg, rgba(255, 180, 50, 0.22) 0%, rgba(230, 90, 20, 0.28) 100%);
-    border:1px solid rgba(255, 180, 50, 0.6);
-    color:#fff1c7;
-    font-family:'Outfit', sans-serif;
-    font-weight:700;
-    font-size:clamp(0.72rem, 1.3vw, 0.82rem);
-    letter-spacing:0.04em;
-    padding:clamp(5px, 0.8vh, 7px) clamp(14px, 2.2vw, 22px);
-    border-radius:20px;
-    cursor:pointer;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    gap:7px;
-    user-select:none;
-    outline:none;
-    transition:all 0.22s ease;
-    box-shadow:0 3px 12px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.25);
-    -webkit-tap-highlight-color:transparent;
-  }
-  .candle-wish-btn:hover:not(:disabled){
-    background:linear-gradient(135deg, rgba(255, 195, 75, 0.38) 0%, rgba(245, 110, 30, 0.42) 100%);
-    border-color:#ffca38;
-    color:#ffffff;
-    transform:translateY(-1px);
-    box-shadow:0 5px 18px rgba(255, 170, 40, 0.4), inset 0 1px 0 rgba(255,255,255,0.4);
-  }
-  .candle-wish-btn:active:not(:disabled){
-    transform:translateY(1px);
-    box-shadow:0 2px 6px rgba(0,0,0,0.6);
-  }
-  .candle-wish-btn:disabled{
-    opacity:0.65;
-    cursor:not-allowed;
-    transform:none;
-  }
-  .candle-wish-btn.is-relight-mode{
-    background:linear-gradient(135deg, rgba(73, 230, 196, 0.22) 0%, rgba(30, 140, 180, 0.3) 100%);
-    border-color:rgba(73, 230, 196, 0.65);
-    color:#d8fff6;
-  }
-  .candle-wish-btn.is-relight-mode:hover:not(:disabled){
-    background:linear-gradient(135deg, rgba(73, 230, 196, 0.38) 0%, rgba(30, 160, 210, 0.45) 100%);
-    border-color:#49e6c4;
-    color:#ffffff;
-    box-shadow:0 5px 18px rgba(73, 230, 196, 0.4), inset 0 1px 0 rgba(255,255,255,0.4);
+    display:none !important;
   }
 
 
@@ -3653,6 +3770,9 @@
   .starfield-universe[data-theater-mode="aquarium"]{
     background:radial-gradient(130% 110% at 50% 8%, #0d4268 0%, #082946 32%, #04172a 68%, #020b16 100%);
   }
+  .starfield-universe[data-theater-mode="candles"]{
+    background:radial-gradient(135% 115% at 50% 68%, #221206 0%, #150a03 38%, #0a0401 72%, #020100 100%);
+  }
   .starfield-universe.is-active{
     opacity:1;
     pointer-events:auto;
@@ -3770,6 +3890,11 @@
     border-color:rgba(73, 230, 196, 0.42);
     box-shadow:0 14px 38px rgba(0, 0, 0, 0.92), 0 0 26px rgba(73, 230, 196, 0.25);
   }
+  .starfield-universe[data-theater-mode="candles"] .starfield-hud{
+    background:rgba(22, 12, 5, 0.92);
+    border-color:rgba(255, 175, 60, 0.42);
+    box-shadow:0 14px 38px rgba(0, 0, 0, 0.92), 0 0 26px rgba(255, 140, 30, 0.25);
+  }
   .starfield-hud.is-visible{
     opacity:1;
     pointer-events:auto;
@@ -3780,13 +3905,13 @@
     align-items:flex-start;
     justify-content:center;
     gap:clamp(1px, 0.35vh, 4px);
-    flex:1 1 auto;
-    min-width:0;
+    flex:0 0 auto;
+    min-width:max-content;
     text-align:left;
   }
   .theater-date-row{
     font-family:'Outfit', sans-serif;
-    font-size:clamp(0.98rem, 1.85vh, 1.30rem);
+    font-size:clamp(0.86rem, 1.5vh, 1.15rem);
     font-weight:600;
     color:rgba(230, 244, 254, 0.95);
     letter-spacing:0.01em;
@@ -3796,7 +3921,7 @@
   }
   .theater-weather-row{
     font-family:'Outfit', sans-serif;
-    font-size:clamp(0.98rem, 1.85vh, 1.30rem);
+    font-size:clamp(0.86rem, 1.5vh, 1.15rem);
     font-weight:600;
     color:rgba(215, 238, 248, 0.92);
     letter-spacing:0.01em;
@@ -3861,19 +3986,23 @@
     border:1px solid rgba(56, 189, 248, 0.28);
     border-radius:12px;
     padding:3px;
-    gap:4px;
+    gap:3px;
     flex-shrink:0;
   }
   .starfield-universe[data-theater-mode="aquarium"] .theater-hud-modes{
     background:rgba(5, 24, 38, 0.90);
     border-color:rgba(73, 230, 196, 0.35);
   }
+  .starfield-universe[data-theater-mode="candles"] .theater-hud-modes{
+    background:rgba(26, 14, 6, 0.92);
+    border-color:rgba(255, 175, 60, 0.38);
+  }
   .theater-mode-btn{
     font-family:'Orbitron', sans-serif;
-    font-size:clamp(0.62rem, 1.1vh, 0.74rem);
+    font-size:clamp(0.58rem, 1.0vh, 0.70rem);
     font-weight:700;
-    letter-spacing:0.08em;
-    padding:6px 12px;
+    letter-spacing:0.06em;
+    padding:5px 10px;
     border-radius:8px;
     border:1px solid transparent;
     background:transparent;
@@ -3881,7 +4010,7 @@
     cursor:pointer;
     display:inline-flex;
     align-items:center;
-    gap:6px;
+    gap:5px;
     transition:all 0.18s ease;
     white-space:nowrap;
     user-select:none;
@@ -3902,29 +4031,35 @@
     color:#49e6c4;
     box-shadow:0 0 14px rgba(73, 230, 196, 0.35);
   }
+  .starfield-universe[data-theater-mode="candles"] .theater-mode-btn.is-active{
+    background:rgba(255, 160, 40, 0.24);
+    border-color:rgba(255, 175, 60, 0.75);
+    color:#ffb347;
+    box-shadow:0 0 14px rgba(255, 150, 30, 0.45);
+  }
   .theater-hud-actions{
     display:flex;
     align-items:center;
-    gap:8px;
+    gap:6px;
     flex-shrink:0;
     justify-content:flex-end;
   }
   .theater-scene-actions{
     display:flex;
     align-items:center;
-    gap:8px;
+    gap:6px;
   }
   .star-btn{
     font-family:'Orbitron', sans-serif;
-    font-size:clamp(0.64rem, 1.1vh, 0.74rem);
+    font-size:clamp(0.58rem, 1.0vh, 0.70rem);
     font-weight:700;
-    letter-spacing:0.08em;
-    padding:6px 13px;
-    border-radius:10px;
+    letter-spacing:0.06em;
+    padding:5px 10px;
+    border-radius:9px;
     cursor:pointer;
     display:inline-flex;
     align-items:center;
-    gap:6px;
+    gap:5px;
     transition:all 0.16s ease;
     white-space:nowrap;
     user-select:none;
@@ -4012,6 +4147,194 @@
     box-shadow:0 0 16px rgba(255, 182, 72, 0.7);
     transform:translateY(-1px);
   }
+
+  /* ---- THEATER CANDLELIGHT SANCTUARY CONTROLS & STAGE ---- */
+  .star-btn-candle-qty{
+    background:rgba(255, 170, 50, 0.16);
+    border:1.5px solid rgba(255, 170, 50, 0.55);
+    color:#ffc575;
+    min-width:46px;
+    justify-content:center;
+    padding:6px 11px;
+    cursor:pointer;
+  }
+  .star-btn-candle-qty:hover{
+    background:rgba(255, 170, 50, 0.30);
+    border-color:rgba(255, 185, 80, 0.85);
+    color:#ffffff;
+    box-shadow:0 0 16px rgba(255, 160, 40, 0.65);
+    transform:translateY(-1px);
+  }
+  .star-btn-candle-qty:active{
+    transform:scale(0.96);
+  }
+
+  .star-btn-timer{
+    background:rgba(255, 170, 50, 0.16);
+    border:1.5px solid rgba(255, 170, 50, 0.55);
+    color:#ffc575;
+    min-width:50px;
+    justify-content:center;
+    text-align:center;
+  }
+  .star-btn-timer:hover{
+    background:rgba(255, 170, 50, 0.32);
+    color:#ffffff;
+    box-shadow:0 0 18px rgba(255, 160, 40, 0.65);
+    transform:translateY(-1px);
+  }
+  .star-btn-timer.is-running{
+    background:rgba(255, 140, 20, 0.28) !important;
+    border-color:#ff9800 !important;
+    color:#ffe082 !important;
+    box-shadow:0 0 20px rgba(255, 140, 20, 0.6) !important;
+    animation:timerPulseGlow 2.4s infinite alternate ease-in-out;
+  }
+  @keyframes timerPulseGlow{
+    0%{ box-shadow:0 0 10px rgba(255, 140, 20, 0.45); }
+    100%{ box-shadow:0 0 24px rgba(255, 190, 60, 0.85); }
+  }
+
+  .star-btn-relight{
+    background:rgba(255, 80, 20, 0.16);
+    border:1.5px solid rgba(255, 100, 30, 0.55);
+    color:#ff8a65;
+  }
+  .star-btn-relight:hover{
+    background:rgba(255, 80, 20, 0.32);
+    color:#ffffff;
+    box-shadow:0 0 18px rgba(255, 80, 20, 0.7);
+    transform:translateY(-1px);
+  }
+
+  /* Full Screen Theater Candle Sanctuary Canvas / Stage */
+  .theater-candles-stage{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    pointer-events:auto;
+    user-select:none;
+    z-index:10;
+    background:radial-gradient(ellipse 75% 35% at 50% 72%, rgba(255, 140, 30, 0.08), transparent 70%);
+  }
+
+  .theater-candles-svg{
+    width:min(94vw, 920px);
+    height:min(70vh, 520px);
+    max-height:86%;
+    display:block;
+    overflow:visible;
+    cursor:pointer;
+  }
+
+  /* Ambient Pulsing Aura around flames */
+  .theater-candle-aura{
+    opacity:0.65;
+    animation:theaterAuraPulse 3.5s infinite alternate ease-in-out;
+    transform-origin:center;
+  }
+  @keyframes theaterAuraPulse{
+    0%{ opacity:0.55; transform:scale(0.96); }
+    50%{ opacity:0.75; transform:scale(1.04); }
+    100%{ opacity:0.55; transform:scale(0.96); }
+  }
+
+  /* Organic flame flicker variations across candle array */
+  .theater-flame-group{
+    transform-origin:center bottom;
+    transition:opacity 0.5s ease, transform 0.5s ease;
+  }
+  .theater-flame-group.candle-flicker-1{
+    animation:theaterFlameFlicker1 2.3s infinite alternate ease-in-out;
+  }
+  .theater-flame-group.candle-flicker-2{
+    animation:theaterFlameFlicker2 2.8s infinite alternate ease-in-out;
+  }
+  .theater-flame-group.candle-flicker-3{
+    animation:theaterFlameFlicker3 2.5s infinite alternate ease-in-out;
+  }
+
+  @keyframes theaterFlameFlicker1{
+    0%{ transform:rotate(-0.8deg) scaleY(0.98) scaleX(1.01); }
+    22%{ transform:rotate(1.2deg) scaleY(1.03) scaleX(0.98); }
+    48%{ transform:rotate(-1.5deg) scaleY(0.96) scaleX(1.02); }
+    74%{ transform:rotate(1.8deg) scaleY(1.04) scaleX(0.97); }
+    100%{ transform:rotate(-0.8deg) scaleY(0.98) scaleX(1.01); }
+  }
+  @keyframes theaterFlameFlicker2{
+    0%{ transform:rotate(1.4deg) scaleY(1.04) scaleX(0.97); }
+    28%{ transform:rotate(-1.6deg) scaleY(0.97) scaleX(1.02); }
+    56%{ transform:rotate(0.9deg) scaleY(1.02) scaleX(0.99); }
+    82%{ transform:rotate(-1.1deg) scaleY(0.95) scaleX(1.03); }
+    100%{ transform:rotate(1.4deg) scaleY(1.04) scaleX(0.97); }
+  }
+  @keyframes theaterFlameFlicker3{
+    0%{ transform:rotate(-1.2deg) scaleY(0.96) scaleX(1.02); }
+    30%{ transform:rotate(1.5deg) scaleY(1.03) scaleX(0.98); }
+    60%{ transform:rotate(-0.7deg) scaleY(0.99) scaleX(1.01); }
+    85%{ transform:rotate(1.1deg) scaleY(1.02) scaleX(0.98); }
+    100%{ transform:rotate(-1.2deg) scaleY(0.96) scaleX(1.02); }
+  }
+
+  /* Flame Blow Out & Extinction in Theater */
+  .theater-flame-group.is-blowing-out{
+    animation:none !important;
+    transform:rotate(36deg) scale(0.2) translateY(-10px) !important;
+    opacity:0 !important;
+    transition:transform 0.4s cubic-bezier(0.2, 0.8, 0.3, 1), opacity 0.35s ease !important;
+  }
+  .theater-flame-group.is-extinguished{
+    display:none !important;
+  }
+  .theater-candles-stage.is-extinguished .theater-candle-aura{
+    opacity:0.08 !important;
+    transition:opacity 1.8s ease;
+  }
+  .theater-candles-stage .smoke-wisp{
+    transform-origin:center bottom;
+  }
+
+  @media (max-width: 990px){
+    .starfield-hud{
+      gap:8px;
+      padding:7px 12px;
+      border-radius:16px;
+    }
+    .theater-date-row,
+    .theater-weather-row{
+      font-size:clamp(0.78rem, 1.4vh, 0.92rem);
+    }
+    .theater-mode-btn{
+      padding:5px 7px;
+      font-size:0.56rem;
+    }
+    .star-btn{
+      padding:5px 8px;
+      font-size:0.56rem;
+    }
+  }
+  @media (max-width: 768px){
+    .starfield-hud{
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:8px;
+    }
+    .theater-hud-telemetry{
+      width:100%;
+      align-items:center;
+      text-align:center;
+    }
+    .theater-date-row,
+    .theater-weather-row{
+      text-align:center;
+    }
+  }
+
   .aquarium-feeding-banner,
   .feeding-pill-dot,
   .feeding-pill-timer,
@@ -4751,7 +5074,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.091326.1906</span>
+        <span id="appVersionText">v1.091326.2056</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -4764,7 +5087,7 @@
         </svg>
         <span id="pwaInstallLabel">INSTALL</span>
       </button>
-      <button class="wake-pill" id="wakeLockBtn" title="Keep tablet screen awake (Active). Tap to toggle. Long-press to roll up all shades!" aria-label="Toggle screen keep awake or long-press to roll up shades">
+      <button class="wake-pill" id="wakeLockBtn" title="Keep tablet screen awake (Active). Tap to toggle. Long-press to launch Theater Mode!" aria-label="Toggle screen keep awake or long-press to launch Theater Mode">
         <span class="wake-dot"></span>
         <span class="wake-label" id="wakeLockLabel">AWAKE ON</span>
       </button>
@@ -5042,134 +5365,132 @@
           </div>
 
           <!-- 4. MAKE A WISH CANDLE -->
-          <div class="candle-container" id="candleContainer">
-            <div class="candle-aura-glow" id="candleAuraGlow"></div>
+          <div class="candle-container" id="candleContainer" role="button" tabindex="0" title="Make a Wish • Press anywhere" aria-label="Make a Wish on the candle">
+            <div class="candle-ensemble" id="candleEnsemble">
+              <!-- Visual SVG Candle Stage (Taller stately candle) -->
+              <div class="candle-visual-stage" id="candleVisualStage" title="Candle • Press to make a wish">
+                <div class="candle-aura-glow" id="candleAuraGlow"></div>
+                <svg class="candle-svg" id="candleSvg" viewBox="0 0 150 250" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg" aria-label="A burning candle with a realistic flickering flame">
+                  <defs>
+                    <!-- Flame Outer Gradient -->
+                    <radialGradient id="flameOuterGrad" cx="50%" cy="85%" r="75%">
+                      <stop offset="0%" stop-color="#fff8d6" stop-opacity="1" />
+                      <stop offset="25%" stop-color="#ffd242" stop-opacity="1" />
+                      <stop offset="65%" stop-color="#ff7b08" stop-opacity="0.95" />
+                      <stop offset="90%" stop-color="#e83800" stop-opacity="0.8" />
+                      <stop offset="100%" stop-color="#b01000" stop-opacity="0" />
+                    </radialGradient>
 
-            <!-- Top Header & Countdown Status Area -->
-            <div class="candle-header-area">
-              <div class="candle-prompt-text" id="candlePromptText">Hold a quiet wish in your heart…</div>
-              <div class="candle-countdown-wrap" id="candleCountdownWrap" style="display:none;">
-                <div class="candle-countdown-num" id="candleCountdownNum">5</div>
-                <div class="candle-countdown-sub" id="candleCountdownSub">Get ready to blow out the candle… Make your wish! ✨</div>
-              </div>
-            </div>
+                    <!-- Flame Inner Core Gradient -->
+                    <radialGradient id="flameInnerGrad" cx="50%" cy="80%" r="65%">
+                      <stop offset="0%" stop-color="#ffffff" stop-opacity="1" />
+                      <stop offset="45%" stop-color="#fff2b3" stop-opacity="0.95" />
+                      <stop offset="85%" stop-color="#ffbe33" stop-opacity="0.8" />
+                      <stop offset="100%" stop-color="#ff8400" stop-opacity="0" />
+                    </radialGradient>
 
-            <!-- Visual SVG Candle Stage -->
-            <div class="candle-visual-stage" id="candleVisualStage" title="Candle • Tap to make a wish">
-              <svg class="candle-svg" id="candleSvg" viewBox="0 0 160 220" xmlns="http://www.w3.org/2000/svg" aria-label="A burning candle with a realistic flickering flame">
-                <defs>
-                  <!-- Flame Outer Gradient -->
-                  <radialGradient id="flameOuterGrad" cx="50%" cy="85%" r="75%">
-                    <stop offset="0%" stop-color="#fff8d6" stop-opacity="1" />
-                    <stop offset="25%" stop-color="#ffd242" stop-opacity="1" />
-                    <stop offset="65%" stop-color="#ff7b08" stop-opacity="0.95" />
-                    <stop offset="90%" stop-color="#e83800" stop-opacity="0.8" />
-                    <stop offset="100%" stop-color="#b01000" stop-opacity="0" />
-                  </radialGradient>
+                    <!-- Flame Combustion Base Gradient -->
+                    <radialGradient id="combustionGrad" cx="50%" cy="50%" r="50%">
+                      <stop offset="0%" stop-color="#287aff" stop-opacity="0.9" />
+                      <stop offset="70%" stop-color="#1442d6" stop-opacity="0.6" />
+                      <stop offset="100%" stop-color="#0a1f78" stop-opacity="0" />
+                    </radialGradient>
 
-                  <!-- Flame Inner Core Gradient -->
-                  <radialGradient id="flameInnerGrad" cx="50%" cy="80%" r="65%">
-                    <stop offset="0%" stop-color="#ffffff" stop-opacity="1" />
-                    <stop offset="45%" stop-color="#fff2b3" stop-opacity="0.95" />
-                    <stop offset="85%" stop-color="#ffbe33" stop-opacity="0.8" />
-                    <stop offset="100%" stop-color="#ff8400" stop-opacity="0" />
-                  </radialGradient>
+                    <!-- Candle Body Gradient -->
+                    <linearGradient id="candleBodyGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#d6c6af" />
+                      <stop offset="18%" stop-color="#f5ede0" />
+                      <stop offset="55%" stop-color="#fffcf5" />
+                      <stop offset="82%" stop-color="#ede3d2" />
+                      <stop offset="100%" stop-color="#baa78f" />
+                    </linearGradient>
 
-                  <!-- Flame Combustion Base Gradient -->
-                  <radialGradient id="combustionGrad" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stop-color="#287aff" stop-opacity="0.9" />
-                    <stop offset="70%" stop-color="#1442d6" stop-opacity="0.6" />
-                    <stop offset="100%" stop-color="#0a1f78" stop-opacity="0" />
-                  </radialGradient>
+                    <!-- Melted Wax Pool Gradient -->
+                    <radialGradient id="waxPoolGrad" cx="50%" cy="50%" r="50%">
+                      <stop offset="0%" stop-color="#fff5dc" />
+                      <stop offset="65%" stop-color="#ede0c8" />
+                      <stop offset="100%" stop-color="#c9b79c" />
+                    </radialGradient>
 
-                  <!-- Candle Body Gradient -->
-                  <linearGradient id="candleBodyGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stop-color="#d6c6af" />
-                    <stop offset="18%" stop-color="#f5ede0" />
-                    <stop offset="55%" stop-color="#fffcf5" />
-                    <stop offset="82%" stop-color="#ede3d2" />
-                    <stop offset="100%" stop-color="#baa78f" />
-                  </linearGradient>
+                    <!-- Brass / Pewter Pedestal Dish -->
+                    <linearGradient id="pedestalGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#4a3f35" />
+                      <stop offset="25%" stop-color="#8c785d" />
+                      <stop offset="50%" stop-color="#d8c5a4" />
+                      <stop offset="75%" stop-color="#7c6950" />
+                      <stop offset="100%" stop-color="#3b3229" />
+                    </linearGradient>
 
-                  <!-- Melted Wax Pool Gradient -->
-                  <radialGradient id="waxPoolGrad" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stop-color="#fff5dc" />
-                    <stop offset="65%" stop-color="#ede0c8" />
-                    <stop offset="100%" stop-color="#c9b79c" />
-                  </radialGradient>
+                    <!-- Flame Soft Filter -->
+                    <filter id="flameGlowFilter" x="-40%" y="-40%" width="180%" height="180%">
+                      <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur" />
+                      <feMerge>
+                        <feMergeNode in="blur" />
+                        <feMergeNode in="SourceGraphic" />
+                      </feMerge>
+                    </filter>
+                  </defs>
 
-                  <!-- Brass / Pewter Pedestal Dish -->
-                  <linearGradient id="pedestalGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stop-color="#4a3f35" />
-                    <stop offset="25%" stop-color="#8c785d" />
-                    <stop offset="50%" stop-color="#d8c5a4" />
-                    <stop offset="75%" stop-color="#7c6950" />
-                    <stop offset="100%" stop-color="#3b3229" />
-                  </linearGradient>
+                  <!-- Base Pedestal Dish & Shadow -->
+                  <ellipse cx="75" cy="246" rx="54" ry="4" fill="rgba(0,0,0,0.45)" />
+                  <ellipse cx="75" cy="242" rx="50" ry="6.5" fill="url(#pedestalGrad)" stroke="#2b231c" stroke-width="1" />
+                  <ellipse cx="75" cy="240.5" rx="42" ry="5" fill="#5e4f3f" />
 
-                  <!-- Flame Soft Filter -->
-                  <filter id="flameGlowFilter" x="-40%" y="-40%" width="180%" height="180%">
-                    <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur" />
-                    <feMerge>
-                      <feMergeNode in="blur" />
-                      <feMergeNode in="SourceGraphic" />
-                    </feMerge>
-                  </filter>
-                </defs>
-
-                <!-- Base Pedestal Dish & Shadow -->
-                <ellipse cx="80" cy="208" rx="60" ry="7" fill="rgba(0,0,0,0.4)" />
-                <ellipse cx="80" cy="204" rx="54" ry="7" fill="url(#pedestalGrad)" stroke="#2b231c" stroke-width="1" />
-                <ellipse cx="80" cy="202" rx="46" ry="5.5" fill="#5e4f3f" />
-
-                <!-- Candle Pillar Body -->
-                <path d="M 52,106 L 52,198 C 52,202 108,202 108,198 L 108,106 Z" fill="url(#candleBodyGrad)" stroke="#a8957c" stroke-width="1" />
-                
-                <!-- Realistic Organic Wax Drips running down the side -->
-                <path d="M 52,112 C 55,124 57,136 56,146 C 55,152 59,152 59,144 C 59,132 58,122 60,110 Z" fill="#fff9ed" opacity="0.85" />
-                <path d="M 103,110 C 101,126 102,140 100,158 C 99,164 104,164 104,156 C 105,142 106,128 108,114 Z" fill="#fff9ed" opacity="0.85" />
-                <path d="M 72,110 C 72,118 73,126 73,132 C 73,136 76,136 76,130 C 75,124 75,116 76,110 Z" fill="#ffffff" opacity="0.55" />
-
-                <!-- Top Melted Concave Wax Pool -->
-                <ellipse cx="80" cy="106" rx="28" ry="7" fill="url(#waxPoolGrad)" stroke="#c2b097" stroke-width="1" />
-                <ellipse cx="80" cy="106.5" rx="23" ry="5" fill="#f4ebd8" opacity="0.75" />
-
-                <!-- Candle Wick (Curved string) -->
-                <path d="M 80,105 C 79,98 77,93 78,86" stroke="#2c221a" stroke-width="2.6" stroke-linecap="round" fill="none" />
-
-                <!-- Glowing Incandescent Ember on Wick Tip -->
-                <circle id="candleWickEmber" class="candle-wick-ember" cx="78" cy="86" r="2.2" fill="#ff4d12" filter="drop-shadow(0 0 4px #ff8800)" />
-
-                <!-- Smoke Wisps (Activated when flame is blown out) -->
-                <g class="candle-smoke-group" id="candleSmokeGroup">
-                  <path class="smoke-wisp wisp-1" d="M 78,85 Q 66,66 76,48 Q 86,28 70,10" stroke="rgba(225, 235, 248, 0.75)" stroke-width="2.2" fill="none" stroke-linecap="round" />
-                  <path class="smoke-wisp wisp-2" d="M 78,85 Q 89,63 79,42 Q 68,22 84,6" stroke="rgba(235, 242, 255, 0.65)" stroke-width="2.6" fill="none" stroke-linecap="round" />
-                  <path class="smoke-wisp wisp-3" d="M 78,85 Q 74,68 84,52 Q 92,36 78,18" stroke="rgba(210, 225, 242, 0.5)" stroke-width="1.8" fill="none" stroke-linecap="round" />
-                </g>
-
-                <!-- Living SVG Flame Group -->
-                <g class="candle-flame-group" id="candleFlameGroup">
-                  <!-- Base Blue Combustion Layer -->
-                  <path d="M 71,86 C 70,82 74,78 78,78 C 82,78 86,82 85,86 C 82,88 74,88 71,86 Z" fill="url(#combustionGrad)" />
+                  <!-- Candle Pillar Body (Taller wax column) -->
+                  <path d="M 49,56 L 49,237 C 49,241 101,241 101,237 L 101,56 Z" fill="url(#candleBodyGrad)" stroke="#a8957c" stroke-width="1" />
                   
-                  <!-- Outer Warm Dancing Flame -->
-                  <path class="flame-outer" d="M 78,86 C 65,82 56,67 72,46 C 75,41 78,28 78,20 C 78,28 81,41 84,46 C 100,67 91,82 78,86 Z" fill="url(#flameOuterGrad)" filter="url(#flameGlowFilter)" />
+                  <!-- Realistic Organic Wax Drips running down the side -->
+                  <path d="M 49,60 C 52,85 54,110 53,132 C 52,140 56,140 56,130 C 55,105 54,82 56,60 Z" fill="#fff9ed" opacity="0.85" />
+                  <path d="M 96,58 C 94,92 95,124 93,158 C 92,166 97,166 97,154 C 98,122 99,90 101,62 Z" fill="#fff9ed" opacity="0.85" />
+                  <path d="M 68,58 C 68,80 69,102 69,118 C 69,125 72,125 72,113 C 71,100 71,78 72,58 Z" fill="#ffffff" opacity="0.55" />
 
-                  <!-- Inner Brilliant White-Hot Flame Core -->
-                  <path class="flame-inner" d="M 78,85 C 69,82 65,69 74,53 C 76,49 78,40 78,34 C 78,40 80,49 82,53 C 91,69 87,82 78,85 Z" fill="url(#flameInnerGrad)" />
+                  <!-- Subtle Countdown Text Inside Wax Shaft -->
+                  <text id="candleShaftCountdown" x="75" y="140" text-anchor="middle" dominant-baseline="central" class="candle-shaft-count"></text>
 
-                  <!-- Micro dancing sparks -->
-                  <circle cx="78" cy="18" r="0.8" fill="#fffbcf" opacity="0.8" />
-                </g>
-              </svg>
-            </div>
+                  <!-- Top Melted Concave Wax Pool -->
+                  <ellipse cx="75" cy="56" rx="26" ry="6" fill="url(#waxPoolGrad)" stroke="#c2b097" stroke-width="1" />
+                  <ellipse cx="75" cy="56.5" rx="21" ry="4.2" fill="#f4ebd8" opacity="0.75" />
 
-            <!-- Bottom Wish / Relight Action Wrap -->
-            <div class="candle-actions-wrap">
-              <button type="button" class="candle-wish-btn" id="candleWishBtn" title="Make a Wish on the candle">
-                <span id="candleBtnIcon">✨</span>
-                <span id="candleBtnLabel">Make a Wish</span>
-              </button>
+                  <!-- Candle Wick (Curved string) -->
+                  <path d="M 75,55 C 74,48 72,43 73,36" stroke="#2c221a" stroke-width="2.6" stroke-linecap="round" fill="none" />
+
+                  <!-- Glowing Incandescent Ember on Wick Tip -->
+                  <circle id="candleWickEmber" class="candle-wick-ember" cx="73" cy="36" r="2.2" fill="#ff4d12" filter="drop-shadow(0 0 4px #ff8800)" />
+
+                  <!-- Smoke Wisps (Subtly forming a heart before dissipating gently) -->
+                  <g class="candle-smoke-group" id="candleSmokeGroup">
+                    <!-- Left lobe of heart -->
+                    <path class="smoke-wisp wisp-heart-left" d="M 73,35 C 58,26 46,16 53,4 C 57,-4 68,1 73,10" stroke="rgba(235, 242, 255, 0.72)" stroke-width="2.2" fill="none" stroke-linecap="round" />
+                    <!-- Right lobe of heart -->
+                    <path class="smoke-wisp wisp-heart-right" d="M 73,35 C 88,26 100,16 93,4 C 89,-4 78,1 73,10" stroke="rgba(240, 246, 255, 0.68)" stroke-width="2.2" fill="none" stroke-linecap="round" />
+                    <!-- Delicate rising center plume drifting from cleft -->
+                    <path class="smoke-wisp wisp-heart-trail" d="M 73,10 C 73,4 71,-2 74,-12" stroke="rgba(215, 230, 248, 0.42)" stroke-width="1.6" fill="none" stroke-linecap="round" />
+                  </g>
+
+                  <!-- Living SVG Flame Group -->
+                  <g class="candle-flame-group" id="candleFlameGroup">
+                    <!-- Base Blue Combustion Layer -->
+                    <path d="M 66,36 C 65,32 69,28 73,28 C 77,28 81,32 80,36 C 77,38 69,38 66,36 Z" fill="url(#combustionGrad)" />
+                    
+                    <!-- Outer Warm Dancing Flame -->
+                    <path class="flame-outer" d="M 73,36 C 61,32 53,19 68,5 C 71,2 73,0 73,0 C 73,0 75,2 78,5 C 93,19 85,32 73,36 Z" fill="url(#flameOuterGrad)" filter="url(#flameGlowFilter)" />
+
+                    <!-- Inner Brilliant White-Hot Flame Core -->
+                    <path class="flame-inner" d="M 73,35 C 65,32 61,21 69,9 C 71,6 73,3 73,3 C 73,3 75,6 77,9 C 85,21 81,32 73,35 Z" fill="url(#flameInnerGrad)" />
+
+                    <!-- Micro dancing sparks -->
+                    <circle cx="73" cy="1" r="0.8" fill="#fffbcf" opacity="0.8" />
+                  </g>
+                </svg>
+              </div>
+
+              <!-- Centered invisible text box aligned to top of candle where wick meets wax -->
+              <div class="candle-bottom-hint" id="candleBottomHint">
+                <span class="candle-text-line">Hold a quiet</span>
+                <span class="candle-text-line">wish in your</span>
+                <span class="candle-text-line">heart <span class="candle-heart-symbol">&#10084;</span></span>
+                <span class="candle-text-line"><span class="candle-press-hint">[press]</span></span>
+              </div>
             </div>
           </div>
         </div>
@@ -5345,10 +5666,11 @@
       </div>
     </div>
 
-    <!-- AMBIENT THEATER UNIVERSE (STARFIELD & DEEP SEA FISH BOWL) -->
+    <!-- AMBIENT THEATER UNIVERSE (STARFIELD, DEEP SEA FISH BOWL & CANDLELIGHT SANCTUARY) -->
     <div class="starfield-universe" id="starfieldUniverse" aria-hidden="true" data-theater-mode="starfield">
       <canvas id="starfieldCanvas" class="starfield-canvas"></canvas>
       <canvas id="aquariumCanvas" class="aquarium-canvas" style="display:none;"></canvas>
+      <div id="theaterCandlesStage" class="theater-candles-stage" style="display:none;" aria-label="Candlelight Sanctuary stage"></div>
       
       <!-- Warp Hyperspace Entry Announcement (Hidden to allow pure unobstructed spaceflight) -->
       <div class="warp-hyperspace-banner" id="warpHyperspaceBanner" style="display:none !important;" aria-hidden="true">
@@ -5371,7 +5693,7 @@
           </div>
         </div>
 
-        <!-- Center: Mode Selector (Starfield vs Deep Sea Fish Bowl) -->
+        <!-- Center: Mode Selector (Starfield vs Deep Sea vs Candlelight Sanctuary) -->
         <div class="theater-hud-modes" id="theaterHudModes" role="tablist" aria-label="Theater scene mode selector">
           <button type="button" class="theater-mode-btn is-active" id="theaterBtnStarfield" data-theater-mode="starfield" role="tab" aria-selected="true" title="Switch to Consciousness Starfield">
             <span>🌌</span>
@@ -5380,6 +5702,10 @@
           <button type="button" class="theater-mode-btn" id="theaterBtnAquarium" data-theater-mode="aquarium" role="tab" aria-selected="false" title="Switch to Deep Sea">
             <span>🐠</span>
             <span>DEEP SEA</span>
+          </button>
+          <button type="button" class="theater-mode-btn" id="theaterBtnCandles" data-theater-mode="candles" role="tab" aria-selected="false" title="Switch to Candlelight Sanctuary">
+            <span>🕯️</span>
+            <span>CANDLES</span>
           </button>
         </div>
 
@@ -5400,9 +5726,22 @@
               <span>🦐</span>
               <span id="aquariumFeedLabel">FEED</span>
             </button>
-            <button type="button" class="star-btn star-btn-scuba" id="aquariumScubaBtn" title="Send Scuba Diver swimming past all the fish! (Key: S)">
+            <button type="button" class="star-btn star-btn-scuba" id="aquariumScubaBtn" title="Send Scuba Diver swimming through! Watch sea life scatter out of his path and take new trajectories! (Key: S)">
               <span>🤿</span>
               <span>SCUBA</span>
+            </button>
+          </div>
+
+          <div class="theater-scene-actions" id="candlesActionGroup" style="display:none;">
+            <button type="button" class="star-btn star-btn-candle-qty" id="theaterCandleQtyCycleBtn" title="Candles: 3 (Click to cycle 1 → 2 → 3)">
+              <span id="theaterCandleQtyLabel">3 🕯️</span>
+            </button>
+            <button type="button" class="star-btn star-btn-timer" id="theaterCandleTimerBtn" title="Night light timer (Click to cycle: TIMER • 15 • 30 • 45 • 60)">
+              <span id="theaterCandleTimerLabel">TIMER</span>
+            </button>
+            <button type="button" class="star-btn star-btn-relight" id="theaterCandleRelightBtn" title="Relight and restore candles">
+              <span>🔥</span>
+              <span>RELIGHT</span>
             </button>
           </div>
 
@@ -7779,7 +8118,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.091326.1906';
+  const CLIENT_APP_VERSION = 'v1.091326.2056';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -7924,10 +8263,10 @@
     if(wakeBtn){
       if(active){
         wakeBtn.classList.add('active');
-        wakeBtn.title = 'Screen keep-awake is active (screen will not sleep). Tap to toggle off. Long-press to roll up shades for Starfield!';
+        wakeBtn.title = 'Screen keep-awake is active (screen will not sleep). Tap to toggle off. Long-press to launch Theater Mode!';
       } else {
         wakeBtn.classList.remove('active');
-        wakeBtn.title = 'Screen keep-awake is turned off. Tap to re-enable. Long-press to roll up shades for Starfield!';
+        wakeBtn.title = 'Screen keep-awake is turned off. Tap to re-enable. Long-press to launch Theater Mode!';
       }
     }
     if(wakeLabel){
@@ -8057,10 +8396,20 @@
     if(navigator.vibrate){
       try { navigator.vibrate([40, 30, 80]); } catch(e){}
     }
-    if(typeof toggleAllRowsSecretShow === 'function'){
-      toggleAllRowsSecretShow();
-    } else if(typeof rollUpAllRows === 'function'){
-      rollUpAllRows();
+    if(typeof isTheaterActive !== 'undefined' && isTheaterActive){
+      if(typeof stopTheaterMode === 'function'){
+        stopTheaterMode();
+      } else if(typeof unrollAllRows === 'function'){
+        unrollAllRows();
+      }
+    } else {
+      if(typeof startTheaterMode === 'function'){
+        startTheaterMode();
+      } else if(typeof toggleAllRowsSecretShow === 'function'){
+        toggleAllRowsSecretShow();
+      } else if(typeof rollUpAllRows === 'function'){
+        rollUpAllRows();
+      }
     }
   }
 
@@ -9220,6 +9569,9 @@
       atticBox.style.setProperty('--attic-box-height', boxHeight + 'px');
     }
 
+    // Dynamic responsive layout for Make a Wish Candle (left candle + right text in short blocks)
+    if(typeof updateCandleLayout === 'function') updateCandleLayout();
+
     const currentResp = last8BallIndex >= 0 ? EIGHTBALL_RESPONSES[last8BallIndex] : EIGHTBALL_READY_RESP;
     fitEightballAnswer(targetDiameter, currentResp);
   }
@@ -9382,7 +9734,7 @@
       } else if(currentOracleMode === 'box'){
         eightballTitleEl.innerHTML = `Attic Box <span class="eightball-sub-hint">(open)</span>`;
       } else if(currentOracleMode === 'candle'){
-        eightballTitleEl.innerHTML = `Make a Wish <span class="eightball-sub-hint">(wish)</span>`;
+        eightballTitleEl.innerHTML = `Make a Wish <span class="eightball-sub-hint">(press)</span>`;
       }
     }
 
@@ -9425,15 +9777,25 @@
       const ballSize = eightballSphere ? (eightballSphere.clientWidth || 160) : 160;
       fitEightballAnswer(ballSize, EIGHTBALL_READY_RESP);
     }
-    if(currentOracleMode === 'candle' && typeof resetCandleToLit === 'function'){
-      if(candleState === 'lit'){
+    if(currentOracleMode === 'candle'){
+      // Always ensure the candle is set up fresh (lit) when returning to candle mode
+      if(typeof resetCandleToLit === 'function'){
         resetCandleToLit(true);
+      }
+      if(typeof updateCandleLayout === 'function'){
+        updateCandleLayout();
       }
     }
   }
 
   function setOracleMode(newMode){
     if(!['eightball', 'notebook', 'box', 'candle'].includes(newMode)) return;
+    // If switching away from candle, ensure any countdown or timers are cleanly cleared
+    if(currentOracleMode === 'candle' && newMode !== 'candle'){
+      if(typeof resetCandleToLit === 'function'){
+        resetCandleToLit(true);
+      }
+    }
     currentOracleMode = newMode;
     try {
       localStorage.setItem('wf_oracle_mode', newMode);
@@ -9601,26 +9963,104 @@
   =============================================================== */
   const candleContainer = document.getElementById('candleContainer');
   const candleAuraGlow = document.getElementById('candleAuraGlow');
-  const candlePromptText = document.getElementById('candlePromptText');
-  const candleCountdownWrap = document.getElementById('candleCountdownWrap');
-  const candleCountdownNum = document.getElementById('candleCountdownNum');
-  const candleCountdownSub = document.getElementById('candleCountdownSub');
+  const candleBottomHint = document.getElementById('candleBottomHint');
+  const candleShaftCountdown = document.getElementById('candleShaftCountdown');
   const candleVisualStage = document.getElementById('candleVisualStage');
   const candleFlameGroup = document.getElementById('candleFlameGroup');
   const candleSmokeGroup = document.getElementById('candleSmokeGroup');
   const candleWickEmber = document.getElementById('candleWickEmber');
-  const candleWishBtn = document.getElementById('candleWishBtn');
-  const candleBtnIcon = document.getElementById('candleBtnIcon');
-  const candleBtnLabel = document.getElementById('candleBtnLabel');
 
   let candleState = 'lit'; // 'lit' | 'counting' | 'blowing' | 'blown'
   let candleCountdownTimer = null;
+  let candleBlowTimeout1 = null;
+  let candleBlowTimeout2 = null;
   let candleCountdownVal = 5;
+
+  /**
+   * Intelligent Height & Typography Engine for Make a Wish Candle.
+   * - Max height capped at 80% of available channel height to ensure flame & subtle aura glow never clip against the top pill bar.
+   * - Calculates exact vertical line where the wick meets the top melted wax rim of the candle (y = 56 in 250h viewBox).
+   * - Sets --candle-text-top so the text frame begins at this exact horizontal line.
+   * - Dynamically calculates proportional text sizing, aura radius, and countdown numerals.
+   */
+  function updateCandleLayout(){
+    const container = candleContainer || document.getElementById('candleContainer');
+    const stage = eightballStage || document.querySelector('.eightball-stage');
+    if(!container || !stage) return;
+
+    const rect = stage.getBoundingClientRect();
+    const w = Math.floor(rect.width || stage.clientWidth || 0);
+    const h = Math.floor(rect.height || stage.clientHeight || 0);
+    if(w <= 20 || h <= 20) return;
+
+    // Grounded placement math:
+    // Generous top padding (18-24% of card height) creates open negative space below the pill row,
+    // matching the user's layout where candle & text sit comfortably in the lower portion.
+    const padT = Math.max(22, Math.min(52, Math.round(h * 0.19)));
+    const padB = Math.max(6, Math.min(18, Math.round(h * 0.04)));
+    const padH = Math.max(10, Math.min(28, Math.round(w * 0.04)));
+    const availH = Math.max(60, h - padT - padB);
+    const availW = Math.max(120, w - (padH * 2));
+
+    // Grounded Candle Height:
+    // Sits in lower portion with plenty of breathing room below the pill row
+    const targetCandleHeight = Math.max(64, Math.min(availH, Math.round(h * 0.68), 220));
+    const targetCandleWidth = Math.round(targetCandleHeight * (150 / 250));
+
+    // Calculate exact pixel offset where the wick meets the top part of the candle (y = 56 in 250h viewBox)
+    const candleWaxTopPx = Math.round(targetCandleHeight * (56 / 250));
+
+    // Dynamic gap between candle and text scales gracefully
+    const gapPx = Math.max(10, Math.min(24, Math.round(w * 0.04)));
+    const remainingW = Math.max(90, availW - targetCandleWidth - gapPx);
+
+    // Intelligent Typography Scaling (proportional to available height & width):
+    let fontSizePx;
+    let lineHeight;
+    if(availH >= 220){
+      fontSizePx = Math.min(19, Math.round(availH * 0.068));
+      lineHeight = 1.34;
+    } else if(availH >= 155){
+      fontSizePx = Math.min(15.5, Math.max(13, Math.round(availH * 0.075)));
+      lineHeight = 1.30;
+    } else {
+      fontSizePx = Math.max(11, Math.min(12.5, Math.round(availH * 0.082)));
+      lineHeight = 1.25;
+    }
+
+    // Subtler aura glow size (scaled to ~42% of candle height so it stays soft and tight around the flame)
+    const auraSize = Math.max(45, Math.min(110, Math.round(targetCandleHeight * 0.42)));
+
+    // Countdown inside wax shaft scales with candle height
+    const shaftFont = Math.max(15, Math.min(28, Math.round(targetCandleHeight * 0.11)));
+
+    // Apply calculated intelligent values to CSS custom properties
+    container.style.setProperty('--candle-pad-t', padT + 'px');
+    container.style.setProperty('--candle-pad-b', padB + 'px');
+    container.style.setProperty('--candle-pad-h', padH + 'px');
+    container.style.setProperty('--candle-height', targetCandleHeight + 'px');
+    container.style.setProperty('--candle-ensemble-h', targetCandleHeight + 'px');
+    container.style.setProperty('--candle-text-top', candleWaxTopPx + 'px');
+    container.style.setProperty('--candle-font-size', fontSizePx + 'px');
+    container.style.setProperty('--candle-line-height', String(lineHeight));
+    container.style.setProperty('--candle-aura-size', auraSize + 'px');
+    container.style.setProperty('--candle-shaft-font', shaftFont + 'px');
+    container.style.setProperty('--candle-gap', gapPx + 'px');
+    container.style.setProperty('--candle-text-max-w', Math.min(340, remainingW) + 'px');
+  }
 
   function resetCandleToLit(instant = false){
     if(candleCountdownTimer){
       clearInterval(candleCountdownTimer);
       candleCountdownTimer = null;
+    }
+    if(candleBlowTimeout1){
+      clearTimeout(candleBlowTimeout1);
+      candleBlowTimeout1 = null;
+    }
+    if(candleBlowTimeout2){
+      clearTimeout(candleBlowTimeout2);
+      candleBlowTimeout2 = null;
     }
     candleState = 'lit';
     candleCountdownVal = 5;
@@ -9642,18 +10082,11 @@
     if(candleSmokeGroup){
       candleSmokeGroup.classList.remove('is-smoking');
     }
-    if(candlePromptText){
-      candlePromptText.textContent = 'Hold a quiet wish in your heart…';
-      candlePromptText.style.display = 'block';
+    if(candleShaftCountdown){
+      candleShaftCountdown.textContent = '';
     }
-    if(candleCountdownWrap){
-      candleCountdownWrap.style.display = 'none';
-    }
-    if(candleWishBtn){
-      candleWishBtn.disabled = false;
-      candleWishBtn.classList.remove('is-relight-mode');
-      if(candleBtnIcon) candleBtnIcon.textContent = '✨';
-      if(candleBtnLabel) candleBtnLabel.textContent = 'Make a Wish';
+    if(candleBottomHint){
+      candleBottomHint.innerHTML = '<span class="candle-text-line">Hold a quiet</span><span class="candle-text-line">wish in your</span><span class="candle-text-line">heart <span class="candle-heart-symbol">&#10084;</span></span><span class="candle-text-line"><span class="candle-press-hint">[press]</span></span>';
     }
   }
 
@@ -9662,35 +10095,19 @@
     candleState = 'counting';
     candleCountdownVal = 5;
 
-    if(candlePromptText) candlePromptText.style.display = 'none';
-    if(candleCountdownWrap) candleCountdownWrap.style.display = 'flex';
-    if(candleCountdownNum){
-      candleCountdownNum.textContent = '5';
-      candleCountdownNum.classList.add('tick-pulse');
-      setTimeout(() => {
-        if(candleCountdownNum) candleCountdownNum.classList.remove('tick-pulse');
-      }, 350);
+    if(candleShaftCountdown){
+      candleShaftCountdown.textContent = '5';
     }
-    if(candleCountdownSub){
-      candleCountdownSub.textContent = 'Get ready to blow out the candle… Make your wish! ✨';
-    }
-    if(candleWishBtn){
-      candleWishBtn.disabled = true;
-      if(candleBtnLabel) candleBtnLabel.textContent = 'Make your wish…';
+    if(candleBottomHint){
+      candleBottomHint.innerHTML = '<span class="candle-text-line">Get ready to blow</span><span class="candle-text-line">out the candle…</span><span class="candle-text-line" style="opacity:0.85;">make your wish</span>';
     }
 
     if(candleCountdownTimer) clearInterval(candleCountdownTimer);
     candleCountdownTimer = setInterval(() => {
       candleCountdownVal--;
       if(candleCountdownVal > 0){
-        if(candleCountdownNum){
-          candleCountdownNum.textContent = candleCountdownVal;
-          candleCountdownNum.classList.remove('tick-pulse');
-          void candleCountdownNum.offsetWidth;
-          candleCountdownNum.classList.add('tick-pulse');
-          setTimeout(() => {
-            if(candleCountdownNum) candleCountdownNum.classList.remove('tick-pulse');
-          }, 350);
+        if(candleShaftCountdown){
+          candleShaftCountdown.textContent = candleCountdownVal;
         }
       } else {
         clearInterval(candleCountdownTimer);
@@ -9702,14 +10119,11 @@
 
   function blowOutCandle(){
     candleState = 'blowing';
-    if(candleCountdownNum){
-      candleCountdownNum.textContent = '💨 PUFF!';
-      candleCountdownNum.classList.remove('tick-pulse');
-      void candleCountdownNum.offsetWidth;
-      candleCountdownNum.classList.add('tick-pulse');
+    if(candleShaftCountdown){
+      candleShaftCountdown.textContent = '';
     }
-    if(candleCountdownSub){
-      candleCountdownSub.textContent = 'Your wish is cast into the universe! 🌟';
+    if(candleBottomHint){
+      candleBottomHint.innerHTML = '<span class="candle-text-line">Blowing out…</span>';
     }
 
     // Flame tilts sideways and vanishes
@@ -9718,7 +10132,7 @@
       candleFlameGroup.classList.add('is-blowing-out');
     }
 
-    setTimeout(() => {
+    candleBlowTimeout1 = setTimeout(() => {
       // Extinguish candle body & aura
       if(candleContainer) candleContainer.classList.add('is-extinguished');
       // Trigger rising smoke wisps
@@ -9729,19 +10143,11 @@
       }
     }, 400);
 
-    // After smoke dissipates (~3.2s total), transition to blown state with relight button
-    setTimeout(() => {
+    // After smoke dissipates (~3.2s total), transition to blown state
+    candleBlowTimeout2 = setTimeout(() => {
       candleState = 'blown';
-      if(candleCountdownWrap) candleCountdownWrap.style.display = 'none';
-      if(candlePromptText){
-        candlePromptText.textContent = 'May your wish come true. 🌟';
-        candlePromptText.style.display = 'block';
-      }
-      if(candleWishBtn){
-        candleWishBtn.disabled = false;
-        candleWishBtn.classList.add('is-relight-mode');
-        if(candleBtnIcon) candleBtnIcon.textContent = '🔥';
-        if(candleBtnLabel) candleBtnLabel.textContent = 'Relight Candle';
+      if(candleBottomHint){
+        candleBottomHint.innerHTML = '<span class="candle-text-line">May your wish</span><span class="candle-text-line">come true.</span><span class="candle-text-line"><span class="candle-press-hint candle-press-action">[relight]</span></span>';
       }
       if(candleSmokeGroup) candleSmokeGroup.classList.remove('is-smoking');
     }, 3200);
@@ -9756,20 +10162,23 @@
   }
 
   // Bind direct user actions to Candle
-  if(candleWishBtn){
-    candleWishBtn.addEventListener('click', (e) => {
+  if(candleContainer){
+    candleContainer.addEventListener('click', (e) => {
       e.stopPropagation();
       e.preventDefault();
       handleCandleClick();
     });
-  }
-  if(candleVisualStage){
-    candleVisualStage.addEventListener('click', (e) => {
-      e.stopPropagation();
-      e.preventDefault();
-      handleCandleClick();
+    candleContainer.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter' || e.key === ' '){
+        e.stopPropagation();
+        e.preventDefault();
+        handleCandleClick();
+      }
     });
   }
+
+  // Initialize responsive candle layout immediately
+  updateCandleLayout();
 
   function shakeEightBall(){
     if(currentOracleMode === 'notebook'){
@@ -11918,10 +12327,19 @@
     if(theaterCondBadgeEl) theaterCondBadgeEl.textContent = formatTheaterCond();
   }
 
+  let theaterCandlesStageEl = null;
+  let theaterBtnCandlesEl = null;
+  let candlesActionGroupEl = null;
+  let theaterCandleTimerBtnEl = null;
+  let theaterCandleTimerLabelEl = null;
+  let theaterCandleRelightBtnEl = null;
+
   function switchTheaterMode(mode){
-    if(mode !== 'starfield' && mode !== 'aquarium') mode = 'starfield';
+    if(mode !== 'starfield' && mode !== 'aquarium' && mode !== 'candles') mode = 'starfield';
     currentTheaterMode = mode;
-    localStorage.setItem('wf_theater_mode', mode);
+    try {
+      localStorage.setItem('wf_theater_mode', mode);
+    } catch(e){}
 
     if(starfieldUniverseEl){
       starfieldUniverseEl.setAttribute('data-theater-mode', mode);
@@ -11937,6 +12355,11 @@
       theaterBtnAquariumEl.classList.toggle('is-active', isActive);
       theaterBtnAquariumEl.setAttribute('aria-selected', String(isActive));
     }
+    if(theaterBtnCandlesEl){
+      const isActive = mode === 'candles';
+      theaterBtnCandlesEl.classList.toggle('is-active', isActive);
+      theaterBtnCandlesEl.setAttribute('aria-selected', String(isActive));
+    }
 
     if(starfieldActionGroupEl){
       starfieldActionGroupEl.style.display = mode === 'starfield' ? 'flex' : 'none';
@@ -11944,12 +12367,18 @@
     if(aquariumActionGroupEl){
       aquariumActionGroupEl.style.display = mode === 'aquarium' ? 'flex' : 'none';
     }
+    if(candlesActionGroupEl){
+      candlesActionGroupEl.style.display = mode === 'candles' ? 'flex' : 'none';
+    }
 
     if(starfieldCanvas){
       starfieldCanvas.style.display = mode === 'starfield' ? 'block' : 'none';
     }
     if(aquariumCanvas){
       aquariumCanvas.style.display = mode === 'aquarium' ? 'block' : 'none';
+    }
+    if(theaterCandlesStageEl){
+      theaterCandlesStageEl.style.display = mode === 'candles' ? 'flex' : 'none';
     }
 
     if(isTheaterActive){
@@ -11963,7 +12392,7 @@
           starfieldAnimId = requestAnimationFrame(renderStarfieldLoop);
         }
         pulseGravitationalWave(true);
-      } else {
+      } else if(mode === 'aquarium'){
         if(starfieldAnimId){
           cancelAnimationFrame(starfieldAnimId);
           starfieldAnimId = null;
@@ -11972,11 +12401,448 @@
         if(!aquariumAnimId){
           aquariumAnimId = requestAnimationFrame(renderAquariumLoop);
         }
+      } else if(mode === 'candles'){
+        if(starfieldAnimId){
+          cancelAnimationFrame(starfieldAnimId);
+          starfieldAnimId = null;
+        }
+        if(aquariumAnimId){
+          cancelAnimationFrame(aquariumAnimId);
+          aquariumAnimId = null;
+        }
+        if(typeof ensureTheaterCandlesReady === 'function'){
+          ensureTheaterCandlesReady();
+        }
       }
       if(typeof startTheaterAutomations === 'function'){
         startTheaterAutomations();
       }
     }
+  }
+
+  // ---- AMBIENT THEATER CANDLELIGHT SANCTUARY ENGINE ----
+  let theaterCandleQty = 3;
+  let theaterCandleTimerDuration = 0; // seconds
+  let theaterCandleTimerRemaining = 0;
+  let theaterCandleTimerInterval = null;
+  let theaterCandleMeltFraction = 0.0;
+  let theaterCandlesExtinguished = false;
+  let theaterCandlesExtinguishTimeout = null;
+  let theaterCandlesReady = false;
+
+  const THEATER_CANDLE_CONFIGS = {
+    1: [
+      { id: 0, cx: 450, baseY: 420, maxH: 260, topY0: 160, minStubH: 60 }
+    ],
+    2: [
+      { id: 0, cx: 360, baseY: 420, maxH: 270, topY0: 150, minStubH: 60 },
+      { id: 1, cx: 540, baseY: 420, maxH: 240, topY0: 180, minStubH: 60 }
+    ],
+    3: [
+      { id: 0, cx: 270, baseY: 420, maxH: 240, topY0: 180, minStubH: 60 },
+      { id: 1, cx: 450, baseY: 420, maxH: 280, topY0: 140, minStubH: 60 },
+      { id: 2, cx: 630, baseY: 420, maxH: 220, topY0: 200, minStubH: 60 }
+    ]
+  };
+
+  const THEATER_CANDLE_TIMER_PRESETS = [
+    { label: 'TIMER', seconds: 0 },
+    { label: '15', seconds: 15 * 60 },
+    { label: '30', seconds: 30 * 60 },
+    { label: '45', seconds: 45 * 60 },
+    { label: '60', seconds: 60 * 60 },
+    { label: '1m', seconds: 60 }
+  ];
+  let theaterCandlePresetIndex = 0;
+
+  function renderTheaterCandles(){
+    if(!theaterCandlesStageEl) return;
+    const candles = THEATER_CANDLE_CONFIGS[theaterCandleQty] || THEATER_CANDLE_CONFIGS[3];
+
+    let defsHtml = `
+      <defs>
+        <radialGradient id="theaterAuraRadialGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#ff9922" stop-opacity="0.45" />
+          <stop offset="35%" stop-color="#ff7700" stop-opacity="0.22" />
+          <stop offset="70%" stop-color="#ff5500" stop-opacity="0.08" />
+          <stop offset="100%" stop-color="#ff3300" stop-opacity="0" />
+        </radialGradient>
+        <linearGradient id="theaterPedestalGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#3d2a1a" />
+          <stop offset="25%" stop-color="#694a30" />
+          <stop offset="50%" stop-color="#936842" />
+          <stop offset="75%" stop-color="#694a30" />
+          <stop offset="100%" stop-color="#3d2a1a" />
+        </linearGradient>
+        <linearGradient id="theaterWaxPoolGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#d6c3aa" />
+          <stop offset="35%" stop-color="#fff8ed" />
+          <stop offset="70%" stop-color="#edd9bf" />
+          <stop offset="100%" stop-color="#cbb599" />
+        </linearGradient>
+        <linearGradient id="theaterFlameOuterGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+          <stop offset="0%" stop-color="#ff4500" stop-opacity="0.9" />
+          <stop offset="40%" stop-color="#ff8c00" stop-opacity="0.95" />
+          <stop offset="75%" stop-color="#ffd700" stop-opacity="1" />
+          <stop offset="100%" stop-color="#ffffcc" stop-opacity="0.9" />
+        </linearGradient>
+        <linearGradient id="theaterFlameInnerGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+          <stop offset="0%" stop-color="#ffaa00" />
+          <stop offset="50%" stop-color="#ffff88" />
+          <stop offset="100%" stop-color="#ffffff" />
+        </linearGradient>
+        <linearGradient id="theaterFlameBlueGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+          <stop offset="0%" stop-color="#1e40af" stop-opacity="0.95" />
+          <stop offset="55%" stop-color="#3b82f6" stop-opacity="0.8" />
+          <stop offset="100%" stop-color="#93c5fd" stop-opacity="0" />
+        </linearGradient>
+        <filter id="theaterFlameBlur" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="1.2" />
+        </filter>
+        <filter id="theaterDishBlur" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="3.5" />
+        </filter>
+    `;
+
+    candles.forEach((c, idx) => {
+      defsHtml += `
+        <linearGradient id="theaterCandleBodyGrad_${idx}" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#bda78e" />
+          <stop offset="18%" stop-color="#e2d4c0" />
+          <stop offset="45%" stop-color="#fdf9f2" />
+          <stop offset="75%" stop-color="#eae0cf" />
+          <stop offset="100%" stop-color="#bba48a" />
+        </linearGradient>
+      `;
+    });
+    defsHtml += `</defs>`;
+
+    let candlesSvgBody = '';
+    candles.forEach((c, idx) => {
+      const { cx, baseY, maxH, topY0, minStubH } = c;
+      const maxMeltOffset = maxH - minStubH;
+      const meltOffsetY = maxMeltOffset * theaterCandleMeltFraction;
+      const curTopY = topY0 + meltOffsetY;
+      const flickerIdx = (idx % 3) + 1;
+      const isExt = theaterCandlesExtinguished;
+
+      candlesSvgBody += `
+        <g id="theaterCandleUnit_${idx}" class="theater-candle-unit">
+          <!-- Soft Ground Shadow under Saucer Dish -->
+          <ellipse cx="${cx}" cy="${baseY + 12}" rx="78" ry="10" fill="rgba(0, 0, 0, 0.72)" filter="url(#theaterDishBlur)" />
+          
+          <!-- Antique Bronze/Brass Pedestal Saucer Dish -->
+          <ellipse cx="${cx}" cy="${baseY + 6}" rx="68" ry="11" fill="url(#theaterPedestalGrad)" stroke="#221509" stroke-width="1.2" />
+          <ellipse cx="${cx}" cy="${baseY + 4}" rx="56" ry="8" fill="#382210" stroke="#1d1107" stroke-width="0.8" />
+          <ellipse cx="${cx}" cy="${baseY + 3}" rx="50" ry="6" fill="#221306" />
+
+          <!-- Dynamic Melting Wax Pillar Shaft -->
+          <path id="theaterWaxShaft_${idx}" 
+                d="M ${cx - 26},${curTopY} L ${cx - 26},${baseY} C ${cx - 26},${baseY + 6} ${cx + 26},${baseY + 6} ${cx + 26},${baseY} L ${cx + 26},${curTopY} Z" 
+                fill="url(#theaterCandleBodyGrad_${idx})" 
+                stroke="#a8947b" 
+                stroke-width="1" />
+
+          <!-- Wax drip accent ripples -->
+          <path id="theaterWaxDrip_${idx}"
+                d="M ${cx - 26},${curTopY + 2} C ${cx - 27},${curTopY + 24} ${cx - 20},${curTopY + 34} ${cx - 22},${curTopY + 46} C ${cx - 24},${curTopY + 32} ${cx - 22},${curTopY + 12} ${cx - 22},${curTopY + 2}"
+                fill="#f5ecdf"
+                opacity="0.55" />
+
+          <!-- Melting Assembly (Glides down in unison as candle burns) -->
+          <g id="theaterMeltAssembly_${idx}" transform="translate(0, ${meltOffsetY})">
+            <!-- Top Concave Wax Pool -->
+            <ellipse cx="${cx}" cy="${topY0}" rx="26" ry="7" fill="url(#theaterWaxPoolGrad)" stroke="#c2b097" stroke-width="0.9" />
+            <ellipse cx="${cx}" cy="${topY0 + 0.8}" rx="21" ry="5.2" fill="#fff9f0" opacity="0.65" />
+            <ellipse cx="${cx}" cy="${topY0 + 1.2}" rx="14" ry="3.2" fill="#ebd2b0" opacity="0.85" />
+
+            <!-- Curved String Wick -->
+            <path d="M ${cx},${topY0 - 1} C ${cx - 1},${topY0 - 8} ${cx - 3.5},${topY0 - 14} ${cx - 2},${topY0 - 22}" stroke="#2a1f16" stroke-width="2.6" stroke-linecap="round" fill="none" />
+
+            <!-- Incandescent Glowing Wick Tip Ember -->
+            <circle id="theaterWickEmber_${idx}" class="candle-wick-ember" cx="${cx - 2}" cy="${topY0 - 22}" r="${isExt ? 1.4 : 2.4}" fill="${isExt ? '#8a2c0d' : '#ff4d12'}" filter="${isExt ? 'none' : 'drop-shadow(0 0 5px #ff8800)'}" />
+
+            <!-- Atmospheric Golden Aura Glow -->
+            <circle id="theaterAura_${idx}" class="theater-candle-aura" cx="${cx - 2}" cy="${topY0 - 40}" r="94" fill="url(#theaterAuraRadialGrad)" style="${isExt ? 'opacity:0.04;' : ''}" pointer-events="none" />
+
+            <!-- Heart-Shaped Smoke Wisps (Emitted when blown out or expired) -->
+            <g class="candle-smoke-group ${isExt ? 'is-smoking' : ''}" id="theaterSmoke_${idx}">
+              <path class="smoke-wisp wisp-heart-left" d="M ${cx - 2},${topY0 - 22} C ${cx - 17},${topY0 - 32} ${cx - 29},${topY0 - 43} ${cx - 21},${topY0 - 58} C ${cx - 18},${topY0 - 66} ${cx - 6},${topY0 - 61} ${cx - 2},${topY0 - 51}" stroke="rgba(238, 245, 255, 0.78)" stroke-width="2.4" fill="none" stroke-linecap="round" />
+              <path class="smoke-wisp wisp-heart-right" d="M ${cx - 2},${topY0 - 22} C ${cx + 13},${topY0 - 32} ${cx + 25},${topY0 - 43} ${cx + 18},${topY0 - 58} C ${cx + 14},${topY0 - 66} ${cx + 2},${topY0 - 61} ${cx - 2},${topY0 - 51}" stroke="rgba(242, 248, 255, 0.74)" stroke-width="2.4" fill="none" stroke-linecap="round" />
+              <path class="smoke-wisp wisp-heart-trail" d="M ${cx - 2},${topY0 - 51} C ${cx - 2},${topY0 - 58} ${cx - 4},${topY0 - 68} ${cx - 1},${topY0 - 82}" stroke="rgba(215, 230, 248, 0.48)" stroke-width="1.8" fill="none" stroke-linecap="round" />
+            </g>
+
+            <!-- Living Flame Group -->
+            <g class="candle-flame-group theater-flame-group candle-flicker-${flickerIdx} ${isExt ? 'is-extinguished' : ''}" id="theaterFlame_${idx}" style="transform-origin:${cx - 2}px ${topY0 - 22}px;">
+              <!-- Combustion Blue Base -->
+              <path d="M ${cx - 6},${topY0 - 22} C ${cx - 7},${topY0 - 26} ${cx + 3},${topY0 - 26} ${cx + 2},${topY0 - 22} C ${cx - 1},${topY0 - 21} ${cx - 4},${topY0 - 21} ${cx - 6},${topY0 - 22} Z" fill="url(#theaterFlameBlueGrad)" opacity="0.88" />
+              <!-- Outer Dancing Amber Flame -->
+              <path d="M ${cx - 2},${topY0 - 58} C ${cx - 16},${topY0 - 41} ${cx - 12},${topY0 - 26} ${cx - 2},${topY0 - 22} C ${cx + 8},${topY0 - 26} ${cx + 12},${topY0 - 41} ${cx - 2},${topY0 - 58} Z" fill="url(#theaterFlameOuterGrad)" filter="url(#theaterFlameBlur)" />
+              <!-- Inner White-Hot Core -->
+              <path d="M ${cx - 2},${topY0 - 50} C ${cx - 9},${topY0 - 39} ${cx - 7},${topY0 - 27} ${cx - 2},${topY0 - 24} C ${cx + 3},${topY0 - 27} ${cx + 5},${topY0 - 39} ${cx - 2},${topY0 - 50} Z" fill="url(#theaterFlameInnerGrad)" />
+              <!-- Micro Sparkle Core -->
+              <circle cx="${cx - 1.5}" cy="${topY0 - 35}" r="1.4" fill="#ffffff" opacity="0.9" />
+            </g>
+          </g>
+        </g>
+      `;
+    });
+
+    theaterCandlesStageEl.innerHTML = `
+      <svg class="theater-candles-svg" id="theaterCandlesSvg" viewBox="0 0 900 480" preserveAspectRatio="xMidYMid meet" aria-label="Candlelight Sanctuary">
+        ${defsHtml}
+        ${candlesSvgBody}
+      </svg>
+    `;
+
+    theaterCandlesStageEl.classList.toggle('is-extinguished', theaterCandlesExtinguished);
+
+    // Interactive Tap on Candle Stage
+    const svgEl = document.getElementById('theaterCandlesSvg');
+    if(svgEl){
+      svgEl.addEventListener('click', () => {
+        if(theaterCandlesExtinguished){
+          relightTheaterCandles();
+        } else {
+          extinguishTheaterCandles();
+        }
+      });
+    }
+  }
+
+  function applyTheaterCandlesMelt(){
+    const candles = THEATER_CANDLE_CONFIGS[theaterCandleQty] || THEATER_CANDLE_CONFIGS[3];
+    candles.forEach((c, idx) => {
+      const { cx, baseY, maxH, topY0, minStubH } = c;
+      const maxMeltOffset = maxH - minStubH;
+      const meltOffsetY = maxMeltOffset * theaterCandleMeltFraction;
+      const curTopY = topY0 + meltOffsetY;
+
+      const shaftEl = document.getElementById(`theaterWaxShaft_${idx}`);
+      if(shaftEl){
+        shaftEl.setAttribute('d', `M ${cx - 26},${curTopY} L ${cx - 26},${baseY} C ${cx - 26},${baseY + 6} ${cx + 26},${baseY + 6} ${cx + 26},${baseY} L ${cx + 26},${curTopY} Z`);
+      }
+      const dripEl = document.getElementById(`theaterWaxDrip_${idx}`);
+      if(dripEl){
+        dripEl.setAttribute('d', `M ${cx - 26},${curTopY + 2} C ${cx - 27},${curTopY + 24} ${cx - 20},${curTopY + 34} ${cx - 22},${curTopY + 46} C ${cx - 24},${curTopY + 32} ${cx - 22},${curTopY + 12} ${cx - 22},${curTopY + 2}`);
+      }
+      const assemblyEl = document.getElementById(`theaterMeltAssembly_${idx}`);
+      if(assemblyEl){
+        assemblyEl.setAttribute('transform', `translate(0, ${meltOffsetY})`);
+      }
+    });
+  }
+
+  function extinguishTheaterCandles(){
+    if(theaterCandlesExtinguished) return;
+    theaterCandlesExtinguished = true;
+    const candles = THEATER_CANDLE_CONFIGS[theaterCandleQty] || THEATER_CANDLE_CONFIGS[3];
+
+    candles.forEach((c, idx) => {
+      const flameEl = document.getElementById(`theaterFlame_${idx}`);
+      if(flameEl){
+        flameEl.classList.add('is-blowing-out');
+      }
+      const emberEl = document.getElementById(`theaterWickEmber_${idx}`);
+      if(emberEl){
+        emberEl.setAttribute('fill', '#8a2c0d');
+        emberEl.setAttribute('filter', 'none');
+      }
+      const auraEl = document.getElementById(`theaterAura_${idx}`);
+      if(auraEl){
+        auraEl.style.opacity = '0.04';
+      }
+    });
+
+    if(theaterCandlesStageEl){
+      theaterCandlesStageEl.classList.add('is-extinguished');
+    }
+
+    if(theaterCandlesExtinguishTimeout) clearTimeout(theaterCandlesExtinguishTimeout);
+    theaterCandlesExtinguishTimeout = setTimeout(() => {
+      candles.forEach((c, idx) => {
+        const flameEl = document.getElementById(`theaterFlame_${idx}`);
+        if(flameEl){
+          flameEl.classList.remove('is-blowing-out');
+          flameEl.classList.add('is-extinguished');
+        }
+        const smokeEl = document.getElementById(`theaterSmoke_${idx}`);
+        if(smokeEl){
+          smokeEl.classList.add('is-smoking');
+        }
+      });
+    }, 400);
+
+    if(theaterCandleTimerLabelEl){
+      theaterCandleTimerLabelEl.textContent = 'TIMER';
+    }
+    theaterCandlePresetIndex = 0;
+    theaterCandleTimerDuration = 0;
+    theaterCandleTimerRemaining = 0;
+    if(theaterCandleTimerBtnEl){
+      theaterCandleTimerBtnEl.classList.remove('is-running');
+      theaterCandleTimerBtnEl.setAttribute('title', 'Night light timer: OFF (Click to set 15 • 30 • 45 • 60)');
+    }
+    if(theaterCandleTimerInterval){
+      clearInterval(theaterCandleTimerInterval);
+      theaterCandleTimerInterval = null;
+    }
+  }
+
+  function relightTheaterCandles(){
+    theaterCandlesExtinguished = false;
+    theaterCandleMeltFraction = 0.0;
+    if(theaterCandlesExtinguishTimeout){
+      clearTimeout(theaterCandlesExtinguishTimeout);
+      theaterCandlesExtinguishTimeout = null;
+    }
+
+    // Reset timer to OFF on relight
+    if(theaterCandleTimerInterval){
+      clearInterval(theaterCandleTimerInterval);
+      theaterCandleTimerInterval = null;
+    }
+    theaterCandleTimerDuration = 0;
+    theaterCandleTimerRemaining = 0;
+    theaterCandlePresetIndex = 0;
+    if(theaterCandleTimerLabelEl){
+      theaterCandleTimerLabelEl.textContent = 'TIMER';
+    }
+    if(theaterCandleTimerBtnEl){
+      theaterCandleTimerBtnEl.classList.remove('is-running');
+      theaterCandleTimerBtnEl.setAttribute('title', 'Night light timer: OFF (Click to set 15 • 30 • 45 • 60)');
+    }
+
+    renderTheaterCandles();
+  }
+
+  function updateTheaterCandleQtyButton(){
+    const labelEl = document.getElementById('theaterCandleQtyLabel');
+    if(labelEl){
+      labelEl.textContent = `${theaterCandleQty} 🕯️`;
+    }
+    const cycleBtn = document.getElementById('theaterCandleQtyCycleBtn');
+    if(cycleBtn){
+      cycleBtn.setAttribute('title', `Candles: ${theaterCandleQty} (Click to cycle 1 → 2 → 3)`);
+      cycleBtn.setAttribute('aria-label', `${theaterCandleQty} Candles. Click to cycle quantity.`);
+    }
+  }
+
+  function setTheaterCandleQty(qty){
+    if(qty < 1 || qty > 3) qty = 3;
+    theaterCandleQty = qty;
+    try {
+      localStorage.setItem('wf_theater_candles_qty', String(qty));
+    } catch(e){}
+
+    updateTheaterCandleQtyButton();
+    renderTheaterCandles();
+  }
+
+  function cycleTheaterCandleQty(){
+    const nextQty = (theaterCandleQty % 3) + 1;
+    setTheaterCandleQty(nextQty);
+  }
+
+  function cycleTheaterCandleTimer(){
+    theaterCandlePresetIndex = (theaterCandlePresetIndex + 1) % THEATER_CANDLE_TIMER_PRESETS.length;
+    const preset = THEATER_CANDLE_TIMER_PRESETS[theaterCandlePresetIndex];
+
+    if(theaterCandleTimerInterval){
+      clearInterval(theaterCandleTimerInterval);
+      theaterCandleTimerInterval = null;
+    }
+
+    theaterCandleTimerDuration = preset.seconds;
+    theaterCandleTimerRemaining = preset.seconds;
+
+    if(theaterCandleTimerDuration <= 0){
+      // OFF mode
+      if(theaterCandleTimerLabelEl){
+        theaterCandleTimerLabelEl.textContent = 'TIMER';
+      }
+      if(theaterCandleTimerBtnEl){
+        theaterCandleTimerBtnEl.classList.remove('is-running');
+        theaterCandleTimerBtnEl.setAttribute('title', 'Night light timer: OFF (Click to set 15 • 30 • 45 • 60)');
+      }
+    } else {
+      // Start active countdown with static compact preset label (15, 30, 45, 60)
+      if(theaterCandlesExtinguished){
+        theaterCandlesExtinguished = false;
+        theaterCandleMeltFraction = 0.0;
+        renderTheaterCandles();
+      }
+      if(theaterCandleTimerLabelEl){
+        theaterCandleTimerLabelEl.textContent = preset.label;
+      }
+      if(theaterCandleTimerBtnEl){
+        theaterCandleTimerBtnEl.classList.add('is-running');
+        theaterCandleTimerBtnEl.setAttribute('title', `Night light timer: ${preset.label} min active (Click to cycle)`);
+      }
+
+      theaterCandleTimerInterval = setInterval(() => {
+        theaterCandleTimerRemaining--;
+        if(theaterCandleTimerRemaining <= 0){
+          theaterCandleTimerRemaining = 0;
+          theaterCandleMeltFraction = 1.0;
+          applyTheaterCandlesMelt();
+          extinguishTheaterCandles();
+        } else {
+          theaterCandleMeltFraction = Math.min(1.0, Math.max(0.0, 1.0 - (theaterCandleTimerRemaining / theaterCandleTimerDuration)));
+          applyTheaterCandlesMelt();
+          if(theaterCandleTimerBtnEl){
+            const mm = Math.floor(theaterCandleTimerRemaining / 60);
+            const ss = theaterCandleTimerRemaining % 60;
+            theaterCandleTimerBtnEl.setAttribute('title', `Night light timer: ${preset.label} min (${String(mm).padStart(2, '0')}:${String(ss).padStart(2, '0')} remaining)`);
+          }
+        }
+      }, 1000);
+    }
+  }
+
+  function updateTimerDisplay(){
+    if(!theaterCandleTimerLabelEl) return;
+    const preset = THEATER_CANDLE_TIMER_PRESETS[theaterCandlePresetIndex];
+    theaterCandleTimerLabelEl.textContent = preset ? preset.label : 'TIMER';
+  }
+
+  function ensureTheaterCandlesReady(){
+    if(!theaterCandlesReady){
+      try {
+        const savedQty = parseInt(localStorage.getItem('wf_theater_candles_qty'), 10);
+        if(savedQty >= 1 && savedQty <= 3) theaterCandleQty = savedQty;
+      } catch(e){}
+      theaterCandlesReady = true;
+    }
+    updateTheaterCandleQtyButton();
+    renderTheaterCandles();
+  }
+
+  function initTheaterCandlesEngine(){
+    theaterCandlesStageEl = document.getElementById('theaterCandlesStage');
+    theaterBtnCandlesEl = document.getElementById('theaterBtnCandles');
+    candlesActionGroupEl = document.getElementById('candlesActionGroup');
+    theaterCandleTimerBtnEl = document.getElementById('theaterCandleTimerBtn');
+    theaterCandleTimerLabelEl = document.getElementById('theaterCandleTimerLabel');
+    theaterCandleRelightBtnEl = document.getElementById('theaterCandleRelightBtn');
+
+    if(theaterBtnCandlesEl){
+      theaterBtnCandlesEl.addEventListener('click', () => switchTheaterMode('candles'));
+    }
+
+    const cycleBtn = document.getElementById('theaterCandleQtyCycleBtn');
+    if(cycleBtn){
+      cycleBtn.addEventListener('click', () => cycleTheaterCandleQty());
+    }
+
+    if(theaterCandleTimerBtnEl){
+      theaterCandleTimerBtnEl.addEventListener('click', () => cycleTheaterCandleTimer());
+    }
+    if(theaterCandleRelightBtnEl){
+      theaterCandleRelightBtnEl.addEventListener('click', () => relightTheaterCandles());
+    }
+
+    ensureTheaterCandlesReady();
   }
 
   function initStarfieldUniverse(){
@@ -12006,10 +12872,20 @@
     const pulseBtn = document.getElementById('starPulseBtn');
     const warpBoostBtn = document.getElementById('starWarpBoostBtn');
     const unrollBtn = document.getElementById('starUnrollDashBtn');
+    const theaterLaunchBtnEl = document.getElementById('theaterLaunchBtn');
 
     if(pulseBtn) pulseBtn.addEventListener('click', () => pulseGravitationalWave());
     if(warpBoostBtn) warpBoostBtn.addEventListener('click', () => boostWarpSpeed());
     if(unrollBtn) unrollBtn.addEventListener('click', () => unrollAllRows());
+    if(theaterLaunchBtnEl){
+      theaterLaunchBtnEl.addEventListener('click', () => {
+        if(isTheaterActive){
+          stopTheaterMode();
+        } else {
+          startTheaterMode();
+        }
+      });
+    }
 
     if(theaterBtnStarfieldEl){
       theaterBtnStarfieldEl.addEventListener('click', () => switchTheaterMode('starfield'));
@@ -12033,7 +12909,25 @@
         const rect = aquariumCanvas.getBoundingClientRect();
         const clickX = (e.clientX - rect.left);
         const clickY = (e.clientY - rect.top);
-        feedSealife(clickX, clickY);
+
+        // Check if user tapped near any curious clam!
+        let tappedClam = false;
+        if(aquariumClamsList && aquariumClamsList.length){
+          aquariumClamsList.forEach(clam => {
+            const dist = Math.hypot(clickX - clam.x, clickY - clam.y);
+            if(dist < 55){
+              tappedClam = true;
+              if(clam.state === 'resting' || clam.state === 'sinking'){
+                clam.state = 'rising';
+              } else if(clam.state === 'bubbling'){
+                spawnBubbleBurst(clam.x, clam.y - 12, 8);
+              }
+            }
+          });
+        }
+        if(!tappedClam){
+          feedSealife(clickX, clickY);
+        }
       });
     }
 
@@ -12071,9 +12965,25 @@
         } else {
           switchTheaterMode('starfield');
         }
-      } else if(k === 'a' || k === 'A' || k === 'd' || k === 'D'){
+      } else if(k === 'a' || k === 'A'){
         e.preventDefault();
         switchTheaterMode('aquarium');
+      } else if(k === 'c' || k === 'C'){
+        e.preventDefault();
+        if(currentTheaterMode === 'candles'){
+          cycleTheaterCandleQty();
+        } else {
+          switchTheaterMode('candles');
+        }
+      } else if(currentTheaterMode === 'candles' && (k === '1' || k === '2' || k === '3')){
+        e.preventDefault();
+        setTheaterCandleQty(parseInt(k, 10));
+      } else if(currentTheaterMode === 'candles' && (k === 't' || k === 'T')){
+        e.preventDefault();
+        cycleTheaterCandleTimer();
+      } else if(currentTheaterMode === 'candles' && (k === 'r' || k === 'R')){
+        e.preventDefault();
+        relightTheaterCandles();
       } else if(k === '0' || k === 'Escape' || k === 'Back' || k === 'BrowserBack'){
         e.preventDefault();
         unrollAllRows();
@@ -12083,6 +12993,9 @@
     initStarsPool();
     if(typeof initAquariumEngine === 'function'){
       initAquariumEngine();
+    }
+    if(typeof initTheaterCandlesEngine === 'function'){
+      initTheaterCandlesEngine();
     }
 
     switchTheaterMode(currentTheaterMode);
@@ -12170,10 +13083,14 @@
 
       if(starfieldAnimId) cancelAnimationFrame(starfieldAnimId);
       starfieldAnimId = requestAnimationFrame(renderStarfieldLoop);
-    } else {
+    } else if(currentTheaterMode === 'aquarium'){
       resizeAquariumCanvas();
       if(aquariumAnimId) cancelAnimationFrame(aquariumAnimId);
       aquariumAnimId = requestAnimationFrame(renderAquariumLoop);
+    } else if(currentTheaterMode === 'candles'){
+      if(typeof ensureTheaterCandlesReady === 'function'){
+        ensureTheaterCandlesReady();
+      }
     }
 
     // Start automated 4-minute cadence for Starfield pulse and Aquarium feeding
@@ -12250,6 +13167,7 @@
     const aquariumScubaBtnEl = document.getElementById('aquariumScubaBtn');
     if(aquariumScubaBtnEl) aquariumScubaBtnEl.classList.remove('is-diving');
     aquariumDiverList = [];
+    aquariumClamsList = [];
 
     if(starfieldCtx && starfieldCanvas){
       starfieldCtx.clearRect(0, 0, starfieldCanvas.width, starfieldCanvas.height);
@@ -12689,6 +13607,7 @@
   let aquariumAmbientBubbles = [];
   let aquariumKelpForest = [];
   let aquariumDiverList = [];
+  let aquariumClamsList = [];
 
   function resizeAquariumCanvas(){
     if(!aquariumCanvas || !starfieldUniverseEl) return;
@@ -12703,6 +13622,17 @@
     aquariumCanvas.style.height = `${aquariumHeight}px`;
 
     aquariumCtx = aquariumCanvas.getContext('2d');
+
+    if(aquariumClamsList && aquariumClamsList.length){
+      aquariumClamsList.forEach(c => {
+        c.x = aquariumWidth * c.xRatio;
+        c.baseY = aquariumHeight - 14;
+        c.riseTargetY = aquariumHeight - (c.id === 1 ? 145 : 130);
+        if(c.state === 'resting'){
+          c.y = c.baseY;
+        }
+      });
+    }
   }
 
   function initAquariumEngine(){
@@ -12841,6 +13771,91 @@
         eel.segments.push({ x: eel.x - i * 8 * eel.facing, y: eel.y });
       }
     });
+
+    // 9. Curious Clams (3 clams in their shells along the seafloor that occasionally rise up above the lower HUD, open up, bubble, and settle down)
+    aquariumClamsList = [
+      {
+        id: 0,
+        xRatio: 0.22,
+        x: w * 0.22,
+        baseY: h - 14,
+        y: h - 14,
+        riseTargetY: h - 130,
+        scale: 0.96,
+        openAngle: 0,
+        maxOpenAngle: 0.62,
+        state: 'resting',
+        phase: 0.5,
+        rockAngle: 0,
+        wakeTimer: Math.floor(Math.random() * 200 + 120),
+        bubbleDuration: 0,
+        bubbleCooldown: 0,
+        gazeAngle: 0,
+        colorMain: '#7c3aed',
+        colorLight: '#a78bfa',
+        colorDark: '#5b21b6',
+        colorEdge: '#4c1d95',
+        colorRidge: '#c4b5fd',
+        colorInterior: '#fae8ff',
+        colorMantle: '#f472b6',
+        pearlColor: '#ffffff',
+        pearlGlow: 'rgba(192, 132, 252, 0.65)'
+      },
+      {
+        id: 1,
+        xRatio: 0.50,
+        x: w * 0.50,
+        baseY: h - 14,
+        y: h - 14,
+        riseTargetY: h - 145,
+        scale: 1.05,
+        openAngle: 0,
+        maxOpenAngle: 0.65,
+        state: 'resting',
+        phase: 2.1,
+        rockAngle: 0,
+        wakeTimer: Math.floor(Math.random() * 320 + 380),
+        bubbleDuration: 0,
+        bubbleCooldown: 0,
+        gazeAngle: 0,
+        colorMain: '#d97706',
+        colorLight: '#fcd34d',
+        colorDark: '#92400e',
+        colorEdge: '#78350f',
+        colorRidge: '#fef08a',
+        colorInterior: '#fef3c7',
+        colorMantle: '#fb7185',
+        pearlColor: '#fef08a',
+        pearlGlow: 'rgba(251, 191, 36, 0.70)'
+      },
+      {
+        id: 2,
+        xRatio: 0.78,
+        x: w * 0.78,
+        baseY: h - 14,
+        y: h - 14,
+        riseTargetY: h - 130,
+        scale: 0.96,
+        openAngle: 0,
+        maxOpenAngle: 0.60,
+        state: 'resting',
+        phase: 4.2,
+        rockAngle: 0,
+        wakeTimer: Math.floor(Math.random() * 350 + 600),
+        bubbleDuration: 0,
+        bubbleCooldown: 0,
+        gazeAngle: 0,
+        colorMain: '#0d9488',
+        colorLight: '#2dd4bf',
+        colorDark: '#115e59',
+        colorEdge: '#042f2e',
+        colorRidge: '#99f6e4',
+        colorInterior: '#ccfbf1',
+        colorMantle: '#f43f5e',
+        pearlColor: '#fbcfe8',
+        pearlGlow: 'rgba(244, 114, 182, 0.70)'
+      }
+    ];
   }
 
   function feedSealife(originX, originY){
@@ -12943,6 +13958,274 @@
     });
   }
 
+  function updateAquariumClams(w, h){
+    if(!aquariumClamsList || !aquariumClamsList.length) return;
+    aquariumClamsList.forEach(clam => {
+      clam.phase += 0.032;
+      clam.gazeAngle = Math.sin(clam.phase * 0.85) * 1.3;
+
+      switch(clam.state){
+        case 'resting':
+          clam.y = clam.baseY;
+          clam.openAngle = 0;
+          clam.rockAngle = Math.sin(clam.phase * 0.6) * 0.02;
+          clam.wakeTimer--;
+          if(clam.wakeTimer <= 0){
+            clam.state = 'rising';
+          }
+          break;
+
+        case 'rising':
+          clam.y -= 1.35;
+          clam.rockAngle = Math.sin(clam.phase * 4.2) * 0.08;
+          if(clam.y <= clam.riseTargetY){
+            clam.y = clam.riseTargetY;
+            clam.state = 'opening';
+          }
+          break;
+
+        case 'opening':
+          clam.rockAngle = Math.sin(clam.phase * 2) * 0.03;
+          clam.openAngle += 0.038;
+          if(clam.openAngle >= clam.maxOpenAngle){
+            clam.openAngle = clam.maxOpenAngle;
+            clam.state = 'bubbling';
+            clam.bubbleDuration = 200; // ~3.3 seconds
+            clam.bubbleCooldown = 8;
+            spawnBubbleBurst(clam.x, clam.y - 10, 3);
+          }
+          break;
+
+        case 'bubbling':
+          clam.y = clam.riseTargetY + Math.sin(clam.phase * 2.5) * 3.5;
+          clam.rockAngle = Math.sin(clam.phase * 2) * 0.04;
+          clam.bubbleDuration--;
+          clam.bubbleCooldown--;
+          if(clam.bubbleCooldown <= 0){
+            clam.bubbleCooldown = Math.floor(Math.random() * 16 + 12);
+            // Emit buoyant bubbles drifting upward
+            const bCount = Math.floor(Math.random() * 2) + 1;
+            for(let i = 0; i < bCount; i++){
+              aquariumBubbleBurstList.push({
+                x: clam.x + (Math.random() - 0.5) * 16,
+                y: clam.y - 8,
+                vx: (Math.random() - 0.5) * 0.6,
+                vy: -(Math.random() * 1.6 + 1.2),
+                r: Math.random() * 2.4 + 1.8,
+                alpha: 0.92
+              });
+            }
+          }
+          if(clam.bubbleDuration <= 0){
+            clam.state = 'closing';
+          }
+          break;
+
+        case 'closing':
+          clam.openAngle -= 0.052;
+          clam.rockAngle = Math.sin(clam.phase * 3) * 0.03;
+          if(clam.openAngle <= 0){
+            clam.openAngle = 0;
+            clam.state = 'sinking';
+          }
+          break;
+
+        case 'sinking':
+          clam.y += 1.25;
+          clam.rockAngle = Math.sin(clam.phase * 3.2) * 0.05;
+          if(clam.y >= clam.baseY){
+            clam.y = clam.baseY;
+            clam.state = 'resting';
+            clam.wakeTimer = Math.floor(Math.random() * 600 + 400); // 7 to 17 seconds
+            spawnBubbleBurst(clam.x, clam.baseY - 4, 3);
+          }
+          break;
+      }
+    });
+  }
+
+  function drawAquariumClam(ctx, clam){
+    ctx.save();
+    ctx.translate(clam.x, clam.y);
+    ctx.rotate(clam.rockAngle || 0);
+    ctx.scale(clam.scale, clam.scale);
+
+    const w = 25; // half width
+    const h = 21; // shell height
+    const hingeY = 9; // bottom hinge pivot
+
+    // 1. Lower Shell Half
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(0, hingeY);
+    ctx.bezierCurveTo(-w * 0.7, hingeY, -w, 0, -w, -4);
+    ctx.bezierCurveTo(-w * 0.85, -h, -w * 0.3, -h * 1.15, 0, -h * 1.1);
+    ctx.bezierCurveTo(w * 0.3, -h * 1.15, w * 0.85, -h, w, -4);
+    ctx.bezierCurveTo(w, 0, w * 0.7, hingeY, 0, hingeY);
+    ctx.closePath();
+
+    const lowerGrad = ctx.createLinearGradient(0, -h, 0, hingeY);
+    lowerGrad.addColorStop(0, clam.colorDark);
+    lowerGrad.addColorStop(0.7, clam.colorMain);
+    lowerGrad.addColorStop(1, clam.colorDark);
+    ctx.fillStyle = lowerGrad;
+    ctx.fill();
+    ctx.strokeStyle = clam.colorEdge;
+    ctx.lineWidth = 1.6;
+    ctx.stroke();
+
+    // Radial ridges on lower shell
+    for(let r = -3; r <= 3; r++){
+      const tx = (r / 3.5) * (w * 0.82);
+      const ty = -h * (1.08 - Math.abs(r) * 0.08);
+      ctx.beginPath();
+      ctx.moveTo(0, hingeY);
+      ctx.quadraticCurveTo(tx * 0.55, (hingeY + ty) * 0.5, tx, ty);
+      ctx.strokeStyle = clam.colorRidge;
+      ctx.lineWidth = 1.1;
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    // 2. Interior & Pearl (Revealed when open)
+    if(clam.openAngle > 0.04){
+      ctx.save();
+      // Iridescent mantle bed
+      ctx.beginPath();
+      ctx.ellipse(0, 0, w * 0.72, h * 0.52, 0, 0, Math.PI * 2);
+      ctx.fillStyle = clam.colorInterior;
+      ctx.fill();
+      ctx.strokeStyle = clam.colorMantle;
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+
+      // Rosy fleshy mantle cushion
+      ctx.beginPath();
+      ctx.ellipse(0, 2, w * 0.52, h * 0.36, 0, 0, Math.PI * 2);
+      ctx.fillStyle = clam.colorMantle;
+      ctx.fill();
+
+      // Pearl Aura Glow
+      const pearlR = 6.2;
+      const pearlY = 1.5;
+      ctx.beginPath();
+      ctx.arc(0, pearlY, pearlR + 3.5, 0, Math.PI * 2);
+      ctx.fillStyle = clam.pearlGlow;
+      ctx.fill();
+
+      // Pearl Sphere with lustrous specular gradient
+      const pearlGrad = ctx.createRadialGradient(-2, pearlY - 2, 1, 0, pearlY, pearlR);
+      pearlGrad.addColorStop(0, '#ffffff');
+      pearlGrad.addColorStop(0.35, clam.pearlColor);
+      pearlGrad.addColorStop(1, clam.colorInterior);
+      ctx.beginPath();
+      ctx.arc(0, pearlY, pearlR, 0, Math.PI * 2);
+      ctx.fillStyle = pearlGrad;
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
+      ctx.lineWidth = 0.8;
+      ctx.stroke();
+
+      // Pearl specular shine gleam
+      ctx.beginPath();
+      ctx.arc(-1.8, pearlY - 2.2, 1.7, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+      ctx.fill();
+
+      // Two cute curious little eyes peeking out
+      const eyeOffsetX = 8.5;
+      const eyeY = -4;
+      const lookX = Math.cos(clam.gazeAngle || 0) * 1.1;
+      const lookY = Math.sin(clam.gazeAngle || 0) * 0.8;
+
+      [-1, 1].forEach(side => {
+        const ex = side * eyeOffsetX;
+        ctx.beginPath();
+        ctx.arc(ex, eyeY, 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+        ctx.strokeStyle = '#1e1b4b';
+        ctx.lineWidth = 0.6;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(ex + lookX, eyeY + lookY, 1.3, 0, Math.PI * 2);
+        ctx.fillStyle = '#0f172a';
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(ex + lookX - 0.4, eyeY + lookY - 0.4, 0.5, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+      });
+
+      // Cute blush spots
+      ctx.beginPath();
+      ctx.ellipse(-12.5, 1.5, 2.5, 1.4, 0, 0, Math.PI * 2);
+      ctx.ellipse(12.5, 1.5, 2.5, 1.4, 0, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(244, 63, 94, 0.5)';
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    // 3. Upper Shell Half (Hinged at bottom and rotates open)
+    ctx.save();
+    ctx.translate(0, hingeY);
+    ctx.rotate(-clam.openAngle);
+    ctx.translate(0, -hingeY);
+
+    ctx.beginPath();
+    ctx.moveTo(0, hingeY);
+    ctx.bezierCurveTo(-w * 0.7, hingeY, -w, 0, -w, -4);
+    ctx.bezierCurveTo(-w * 0.85, -h, -w * 0.3, -h * 1.15, 0, -h * 1.1);
+    ctx.bezierCurveTo(w * 0.3, -h * 1.15, w * 0.85, -h, w, -4);
+    ctx.bezierCurveTo(w, 0, w * 0.7, hingeY, 0, hingeY);
+    ctx.closePath();
+
+    const upperGrad = ctx.createLinearGradient(0, -h, 0, hingeY);
+    upperGrad.addColorStop(0, clam.colorLight);
+    upperGrad.addColorStop(0.5, clam.colorMain);
+    upperGrad.addColorStop(1, clam.colorDark);
+    ctx.fillStyle = upperGrad;
+    ctx.fill();
+    ctx.strokeStyle = clam.colorEdge;
+    ctx.lineWidth = 1.6;
+    ctx.stroke();
+
+    // Ribbed ridges on upper shell
+    for(let r = -3; r <= 3; r++){
+      const tx = (r / 3.5) * (w * 0.82);
+      const ty = -h * (1.08 - Math.abs(r) * 0.08);
+      ctx.beginPath();
+      ctx.moveTo(0, hingeY);
+      ctx.quadraticCurveTo(tx * 0.55, (hingeY + ty) * 0.5, tx, ty);
+      ctx.strokeStyle = clam.colorRidge;
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+    }
+
+    // Scallop rim fluting along top border
+    for(let r = -3; r < 3; r++){
+      const x1 = (r / 3.5) * (w * 0.82);
+      const y1 = -h * (1.08 - Math.abs(r) * 0.08);
+      const x2 = ((r + 1) / 3.5) * (w * 0.82);
+      const y2 = -h * (1.08 - Math.abs(r + 1) * 0.08);
+      const midX = (x1 + x2) * 0.5;
+      const midY = (y1 + y2) * 0.5 - 2.5;
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.quadraticCurveTo(midX, midY, x2, y2);
+      ctx.strokeStyle = clam.colorLight;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+
+    ctx.restore();
+
+    ctx.restore();
+  }
+
   function renderAquariumLoop(){
     if(!isTheaterActive || currentTheaterMode !== 'aquarium'){
       aquariumAnimId = null;
@@ -13020,6 +14303,14 @@
         ctx.fill();
       }
     });
+
+    // 2.5. Curious Clams on Seafloor & Rising (Occasionally rise up above the lower control panel, open up, bubble, and settle back down)
+    updateAquariumClams(w, h);
+    if(aquariumClamsList && aquariumClamsList.length){
+      aquariumClamsList.forEach(clam => {
+        drawAquariumClam(ctx, clam);
+      });
+    }
 
     // 3. Ambient Rising Bubbles
     aquariumAmbientBubbles.forEach(b => {
@@ -13101,6 +14392,13 @@
         if(eel.x > w - 100) { eel.vx = -Math.abs(eel.vx); eel.facing = -1; }
         if(eel.y < 90) eel.vy = Math.abs(eel.vy);
         if(eel.y > h - 110) eel.vy = -Math.abs(eel.vy);
+        eel.waveSpeed += (0.085 - eel.waveSpeed) * 0.05;
+      }
+
+      const eelSpd = Math.hypot(eel.vx, eel.vy);
+      if(eelSpd > 2.8){
+        eel.vx = (eel.vx / eelSpd) * 2.8;
+        eel.vy = (eel.vy / eelSpd) * 2.8;
       }
 
       eel.x += eel.vx;
@@ -13207,6 +14505,13 @@
         if(ray.x > w - 120) { ray.vx = -Math.abs(ray.vx); ray.facing = -1; }
         if(ray.y < 80) ray.vy = Math.abs(ray.vy);
         if(ray.y > h - 120) ray.vy = -Math.abs(ray.vy);
+        ray.wingSpeed += (0.07 - ray.wingSpeed) * 0.04;
+      }
+
+      const raySpd = Math.hypot(ray.vx, ray.vy);
+      if(raySpd > 2.8){
+        ray.vx = (ray.vx / raySpd) * 2.8;
+        ray.vy = (ray.vy / raySpd) * 2.8;
       }
 
       ray.x += ray.vx;
@@ -13246,6 +14551,8 @@
 
       // Draw Diamond Ray Body & Undulating Wingtips
       ctx.translate(ray.x, ray.y);
+      const rayPitch = Math.atan2(ray.vy, Math.abs(ray.vx) || 1) * 0.28 * (ray.facing >= 0 ? 1 : -1);
+      ctx.rotate(rayPitch);
       ctx.scale(ray.facingScale * ray.scale, ray.scale);
 
       const wingFlap = Math.sin(ray.wingPhase) * 14;
@@ -13334,6 +14641,13 @@
         if(turtle.x > w - 80) { turtle.vx = -Math.abs(turtle.vx); turtle.facing = -1; }
         if(turtle.y < 80) turtle.vy = Math.abs(turtle.vy);
         if(turtle.y > h - 130) turtle.vy = -Math.abs(turtle.vy);
+        turtle.flipperSpeed += (0.048 - turtle.flipperSpeed) * 0.04;
+      }
+
+      const turtleSpd = Math.hypot(turtle.vx, turtle.vy);
+      if(turtleSpd > 2.6){
+        turtle.vx = (turtle.vx / turtleSpd) * 2.6;
+        turtle.vy = (turtle.vy / turtleSpd) * 2.6;
       }
 
       turtle.x += turtle.vx;
@@ -13342,6 +14656,8 @@
 
       ctx.save();
       ctx.translate(turtle.x, turtle.y);
+      const turtlePitch = Math.atan2(turtle.vy, Math.abs(turtle.vx) || 1) * 0.35 * (turtle.facing >= 0 ? 1 : -1);
+      ctx.rotate(turtlePitch);
       ctx.scale(turtle.facingScale * turtle.scale, turtle.scale);
 
       const flipperAngle = Math.sin(turtle.flipperPhase) * 0.42;
@@ -13585,11 +14901,26 @@
           spawnBubbleBurst(fish.x, fish.y, 5);
         }
       } else {
-        fish.tailSpeed = 0.18;
+        if(fish.scubaStartled && fish.scubaStartled > 0){
+          fish.scubaStartled--;
+          fish.tailSpeed = 0.32;
+        } else {
+          fish.tailSpeed = 0.18;
+        }
         if(fish.x < 70) { fish.vx = Math.abs(fish.vx); fish.facing = 1; }
         if(fish.x > w - 70) { fish.vx = -Math.abs(fish.vx); fish.facing = -1; }
         if(fish.y < 80) fish.vy = Math.abs(fish.vy);
         if(fish.y > h - 120) fish.vy = -Math.abs(fish.vy);
+      }
+
+      // Preserve newly altered swimming trajectories with very subtle damping
+      fish.vy *= 0.998;
+      const fishSpd = Math.hypot(fish.vx, fish.vy);
+      if(fishSpd > 3.4){
+        fish.vx = (fish.vx / fishSpd) * 3.4;
+        fish.vy = (fish.vy / fishSpd) * 3.4;
+      } else if(fishSpd < 1.1){
+        fish.vx = (fish.facing || 1) * 1.35;
       }
 
       fish.x += fish.vx;
@@ -13599,6 +14930,8 @@
 
       ctx.save();
       ctx.translate(fish.x, fish.y);
+      const pitchAngle = Math.atan2(fish.vy, Math.abs(fish.vx) || 1) * 0.35 * (fish.facing >= 0 ? 1 : -1);
+      ctx.rotate(pitchAngle);
       ctx.scale(fish.facingScale * fish.scale, fish.scale);
 
       const tailWag = Math.sin(fish.tailPhase) * 0.35;
@@ -13797,16 +15130,185 @@
         spawnBubbleBurst(mouthX, mouthY, 4);
       }
 
-      // Curious fish gently scatter and swim around the friendly diver
-      aquariumFishList.forEach(fish => {
-        const distToDiver = Math.hypot(fish.x - diver.x, fish.y - diver.y);
-        if(distToDiver < 110){
-          const pushAngle = Math.atan2(fish.y - diver.y, fish.x - diver.x);
-          fish.vx += Math.cos(pushAngle) * 0.45;
-          fish.vy += Math.sin(pushAngle) * 0.35;
+      // Sea life scatter out of the scuba diver's path, altering their trajectories across the tank!
+      const diverHeadX = diver.x + (diver.facing * 45 * diver.scale);
+      const diverHeadY = diver.y;
+
+      // 1. Tropical Fish (Clownfish, Tangs, Grammas scatter and veer away on new courses)
+      aquariumFishList.forEach((fish, fIdx) => {
+        const dx = fish.x - diverHeadX;
+        const dy = fish.y - diverHeadY;
+        const dist = Math.hypot(dx, dy);
+        const inFront = (fish.x - diver.x) * diver.facing > -40;
+        const triggerDist = inFront ? 180 : 120;
+
+        if(dist < triggerDist){
+          fish.scubaStartled = 45;
+          fish.tailSpeed = 0.36;
+
+          // Strongly push up or down out of the diver's horizontal swim path
+          let pushY = dy;
+          if(Math.abs(pushY) < 30){
+            pushY = (fIdx % 2 === 0 ? -1 : 1) * 45;
+          }
+          let pushX = dx;
+          if(inFront){
+            pushX += diver.facing * 35;
+          }
+
+          const pushLen = Math.hypot(pushX, pushY) || 1;
+          const force = (1 - dist / triggerDist) * 2.0;
+
+          fish.vx += (pushX / pushLen) * force * 1.5;
+          fish.vy += (pushY / pushLen) * force * 1.7;
+
+          const spd = Math.hypot(fish.vx, fish.vy);
+          if(spd > 3.6){
+            fish.vx = (fish.vx / spd) * 3.6;
+            fish.vy = (fish.vy / spd) * 3.6;
+          }
           fish.facing = fish.vx >= 0 ? 1 : -1;
+
+          if(Math.random() < 0.22){
+            spawnBubbleBurst(fish.x, fish.y, 2);
+          }
         }
       });
+
+      // 2. Sea Turtles (Bank smoothly away on a new cruising diagonal)
+      aquariumTurtleList.forEach(turtle => {
+        const dx = turtle.x - diverHeadX;
+        const dy = turtle.y - diverHeadY;
+        const dist = Math.hypot(dx, dy);
+        const inFront = (turtle.x - diver.x) * diver.facing > -50;
+        const triggerDist = inFront ? 210 : 140;
+
+        if(dist < triggerDist){
+          turtle.flipperSpeed = 0.085;
+          let pushY = dy;
+          if(Math.abs(pushY) < 35){
+            pushY = (turtle.y > h * 0.5 ? 1 : -1) * 45;
+          }
+          const pushLen = Math.hypot(dx, pushY) || 1;
+          const force = (1 - dist / triggerDist) * 1.3;
+
+          turtle.vy += (pushY / pushLen) * force * 1.2;
+          turtle.vx += (dx / pushLen) * force * 0.9;
+
+          const spd = Math.hypot(turtle.vx, turtle.vy);
+          if(spd > 2.6){
+            turtle.vx = (turtle.vx / spd) * 2.6;
+            turtle.vy = (turtle.vy / spd) * 2.6;
+          }
+          turtle.facing = turtle.vx >= 0 ? 1 : -1;
+
+          if(Math.random() < 0.15){
+            spawnBubbleBurst(turtle.x, turtle.y, 3);
+          }
+        }
+      });
+
+      // 3. Stingrays / Manta Rays (Wing flap surge and veer to a new depth)
+      aquariumRayList.forEach(ray => {
+        const dx = ray.x - diverHeadX;
+        const dy = ray.y - diverHeadY;
+        const dist = Math.hypot(dx, dy);
+        const inFront = (ray.x - diver.x) * diver.facing > -60;
+        const triggerDist = inFront ? 230 : 150;
+
+        if(dist < triggerDist){
+          ray.wingSpeed = 0.11;
+          let pushY = dy;
+          if(Math.abs(pushY) < 40){
+            pushY = (ray.y > h * 0.5 ? 1 : -1) * 55;
+          }
+          const pushLen = Math.hypot(dx, pushY) || 1;
+          const force = (1 - dist / triggerDist) * 1.4;
+
+          ray.vy += (pushY / pushLen) * force * 1.3;
+          ray.vx += (dx / pushLen) * force * 1.0;
+
+          const spd = Math.hypot(ray.vx, ray.vy);
+          if(spd > 2.8){
+            ray.vx = (ray.vx / spd) * 2.8;
+            ray.vy = (ray.vy / spd) * 2.8;
+          }
+          ray.facing = ray.vx >= 0 ? 1 : -1;
+        }
+      });
+
+      // 4. Eels (Serpentine burst away from diver)
+      aquariumEelList.forEach(eel => {
+        const dx = eel.x - diverHeadX;
+        const dy = eel.y - diverHeadY;
+        const dist = Math.hypot(dx, dy);
+        if(dist < 180){
+          eel.waveSpeed = 0.14;
+          let pushY = dy;
+          if(Math.abs(pushY) < 35){
+            pushY = (eel.y > h * 0.5 ? 1 : -1) * 45;
+          }
+          const pushLen = Math.hypot(dx, pushY) || 1;
+          const force = (1 - dist / 180) * 1.4;
+
+          eel.vy += (pushY / pushLen) * force * 1.2;
+          eel.vx += (dx / pushLen) * force * 1.0;
+
+          const spd = Math.hypot(eel.vx, eel.vy);
+          if(spd > 3.0){
+            eel.vx = (eel.vx / spd) * 3.0;
+            eel.vy = (eel.vy / spd) * 3.0;
+          }
+          eel.facing = eel.vx >= 0 ? 1 : -1;
+          if(Math.random() < 0.16){
+            spawnBubbleBurst(eel.x, eel.y, 2);
+          }
+        }
+      });
+
+      // 5. Jellyfish (Displaced outward by diver's bow wake)
+      aquariumJellyfishList.forEach(jf => {
+        const dx = jf.x - diverHeadX;
+        const dy = jf.y - diverHeadY;
+        const dist = Math.hypot(dx, dy);
+        if(dist < 160){
+          jf.pulseSpeed = 0.07;
+          const pushLen = Math.hypot(dx, dy) || 1;
+          jf.x += (dx / pushLen) * 2.2;
+          jf.y += (dy / pushLen) * 1.8;
+          jf.x = Math.max(60, Math.min(w - 60, jf.x));
+          jf.y = Math.max(jf.minY, Math.min(jf.maxY, jf.y));
+        }
+      });
+
+      // 6. Seahorses (Flutter away into kelp shelter)
+      aquariumSeahorseList.forEach(sh => {
+        const dx = sh.x - diverHeadX;
+        const dist = Math.hypot(dx, sh.y - diverHeadY);
+        if(dist < 150){
+          sh.flutterPhase += 0.8;
+          sh.vx += (dx > 0 ? 0.4 : -0.4);
+          sh.vx = Math.max(-1.1, Math.min(1.1, sh.vx));
+          sh.facing = sh.vx >= 0 ? 1 : -1;
+        }
+      });
+
+      // 7. Curious Clams (Snap shut and bubble if diver swims past)
+      if(aquariumClamsList && aquariumClamsList.length){
+        aquariumClamsList.forEach(clam => {
+          const dist = Math.hypot(clam.x - diver.x, clam.y - diver.y);
+          if(dist < 150){
+            if(clam.state === 'rising' || clam.state === 'opening' || clam.state === 'bubbling'){
+              clam.state = 'closing';
+              clam.openAngle = 0;
+              clam.state = 'sinking';
+              spawnBubbleBurst(clam.x, clam.y - 12, 5);
+            } else if(clam.state === 'resting'){
+              clam.rockAngle = Math.sin(diver.kickPhase) * 0.12;
+            }
+          }
+        });
+      }
 
       // Remove diver once fully exited across the tank
       if((diver.facing === 1 && diver.x > w + 200) || (diver.facing === -1 && diver.x < -200)){

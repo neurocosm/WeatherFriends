@@ -760,8 +760,12 @@
   }
 
   /* Hyperspace Low-Light Tuning (Levels 3 and 4) */
-  html[data-dim-level="3"] .starfield-universe,
-  html[data-dim-level="4"] .starfield-universe{
+  html[data-dim-level="3"] .starfield-universe[data-theater-mode="starfield"],
+  html[data-dim-level="4"] .starfield-universe[data-theater-mode="starfield"]{
+    background:transparent !important;
+  }
+  html[data-dim-level="3"] .starfield-backdrop-veil,
+  html[data-dim-level="4"] .starfield-backdrop-veil{
     background:#000000 !important;
   }
   html[data-dim-level="3"] .warp-hyperspace-banner,
@@ -3765,7 +3769,10 @@
     justify-content:center;
     overflow:hidden;
     transition:opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), background 0.8s ease;
-    background:radial-gradient(140% 120% at 50% 50%, rgba(5, 14, 24, 0.95), rgba(1, 4, 8, 0.98) 70%, #000204 100%);
+    background:transparent;
+  }
+  .starfield-universe[data-theater-mode="starfield"]{
+    background:transparent;
   }
   .starfield-universe[data-theater-mode="aquarium"]{
     background:radial-gradient(130% 110% at 50% 8%, #0d4268 0%, #082946 32%, #04172a 68%, #020b16 100%);
@@ -3777,6 +3784,35 @@
     opacity:1;
     pointer-events:auto;
     z-index:12;
+  }
+
+  /* Pure 100% Black Void Veil with Gravitational Wave Dashboard Sonar Reveal */
+  .starfield-backdrop-veil{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    background:#000000;
+    opacity:1;
+    z-index:1;
+    pointer-events:none;
+    display:block;
+    transition:opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change:opacity;
+  }
+  /* Pulse activates gradual reveal of dashboard at ~80% opacity */
+  .starfield-backdrop-veil.is-revealing{
+    opacity:0.20;
+    transition:opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  /* Smoothly dissolves back into 100% pure pitch black */
+  .starfield-backdrop-veil.is-fading-back{
+    opacity:1;
+    transition:opacity 2.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+  .starfield-universe[data-theater-mode="aquarium"] .starfield-backdrop-veil,
+  .starfield-universe[data-theater-mode="candles"] .starfield-backdrop-veil{
+    display:none;
   }
   /* Clean Full-Screen Theater View: hide shade slats, labels, and dot toggles during ambient theater mode */
   body.theater-active .is-row-collapsed,
@@ -3794,6 +3830,7 @@
     height:100%;
     display:block;
     cursor:crosshair;
+    z-index:2;
   }
   .aquarium-canvas{
     position:absolute;
@@ -3898,6 +3935,20 @@
   .starfield-hud.is-visible{
     opacity:1;
     pointer-events:auto;
+  }
+  /* Pulse Dissolve: Smoothly dissolve docked control bar during gravitational wave dashboard reveal */
+  .starfield-hud.is-pulse-dissolving{
+    opacity:0 !important;
+    pointer-events:none !important;
+    transform:translateX(-50%) translateY(10px) scale(0.98) !important;
+    transition:opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+  /* Pulse Returning: Slowly comes back into view as the dashboard dissolves back to pure black */
+  .starfield-hud.is-pulse-returning{
+    opacity:1 !important;
+    pointer-events:auto !important;
+    transform:translateX(-50%) translateY(0) scale(1) !important;
+    transition:opacity 2.0s cubic-bezier(0.25, 0.1, 0.25, 1), transform 2.0s cubic-bezier(0.25, 0.1, 0.25, 1) !important;
   }
   .theater-hud-telemetry{
     display:flex;
@@ -5074,7 +5125,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.091326.2056</span>
+        <span id="appVersionText">v1.091526.2017</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -5668,6 +5719,7 @@
 
     <!-- AMBIENT THEATER UNIVERSE (STARFIELD, DEEP SEA FISH BOWL & CANDLELIGHT SANCTUARY) -->
     <div class="starfield-universe" id="starfieldUniverse" aria-hidden="true" data-theater-mode="starfield">
+      <div class="starfield-backdrop-veil" id="starfieldBackdropVeil" aria-hidden="true"></div>
       <canvas id="starfieldCanvas" class="starfield-canvas"></canvas>
       <canvas id="aquariumCanvas" class="aquarium-canvas" style="display:none;"></canvas>
       <div id="theaterCandlesStage" class="theater-candles-stage" style="display:none;" aria-label="Candlelight Sanctuary stage"></div>
@@ -5712,7 +5764,7 @@
         <!-- Right: Mode Action Controls & Unroll Button -->
         <div class="theater-hud-actions" id="theaterHudActions">
           <div class="theater-scene-actions" id="starfieldActionGroup">
-            <button type="button" class="star-btn star-btn-pulse" id="starPulseBtn" title="Send Gravitational Wave Pulse (Remote: OK / Enter / Space)">
+            <button type="button" class="star-btn star-btn-pulse" id="starPulseBtn" title="Send Gravitational Wave Pulse — reveals dashboard sonar ping! (Remote: OK / Enter / Space / Click)">
               <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="3" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="21"/></svg>
               PULSE
             </button>
@@ -5726,7 +5778,7 @@
               <span>🦐</span>
               <span id="aquariumFeedLabel">FEED</span>
             </button>
-            <button type="button" class="star-btn star-btn-scuba" id="aquariumScubaBtn" title="Send Scuba Diver swimming through! Watch sea life scatter out of his path and take new trajectories! (Key: S)">
+            <button type="button" class="star-btn star-btn-scuba" id="aquariumScubaBtn" title="Send 3 Scuba Divers swimming through at once! Watch sea life scatter out of their path and take new trajectories! (Key: S)">
               <span>🤿</span>
               <span>SCUBA</span>
             </button>
@@ -8118,7 +8170,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.091326.2056';
+  const CLIENT_APP_VERSION = 'v1.091526.2017';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -12341,6 +12393,25 @@
       localStorage.setItem('wf_theater_mode', mode);
     } catch(e){}
 
+    if(mode !== 'starfield'){
+      if(typeof starfieldPulseRevealTimer !== 'undefined' && starfieldPulseRevealTimer){
+        clearTimeout(starfieldPulseRevealTimer);
+        starfieldPulseRevealTimer = null;
+      }
+      if(typeof starfieldPulseFadeTimer !== 'undefined' && starfieldPulseFadeTimer){
+        clearTimeout(starfieldPulseFadeTimer);
+        starfieldPulseFadeTimer = null;
+      }
+      const starfieldVeilEl = document.getElementById('starfieldBackdropVeil');
+      if(starfieldVeilEl){
+        starfieldVeilEl.classList.remove('is-revealing', 'is-fading-back');
+      }
+      const hudEl = document.getElementById('starfieldHud');
+      if(hudEl){
+        hudEl.classList.remove('is-pulse-dissolving', 'is-pulse-returning');
+      }
+    }
+
     if(starfieldUniverseEl){
       starfieldUniverseEl.setAttribute('data-theater-mode', mode);
     }
@@ -13167,6 +13238,7 @@
     const aquariumScubaBtnEl = document.getElementById('aquariumScubaBtn');
     if(aquariumScubaBtnEl) aquariumScubaBtnEl.classList.remove('is-diving');
     aquariumDiverList = [];
+    scubaLaunchCount = 0;
     aquariumClamsList = [];
 
     if(starfieldCtx && starfieldCanvas){
@@ -13174,6 +13246,23 @@
     }
     if(aquariumCtx && aquariumCanvas){
       aquariumCtx.clearRect(0, 0, aquariumCanvas.width, aquariumCanvas.height);
+    }
+
+    if(starfieldPulseRevealTimer){
+      clearTimeout(starfieldPulseRevealTimer);
+      starfieldPulseRevealTimer = null;
+    }
+    if(starfieldPulseFadeTimer){
+      clearTimeout(starfieldPulseFadeTimer);
+      starfieldPulseFadeTimer = null;
+    }
+    const starfieldVeilEl = document.getElementById('starfieldBackdropVeil');
+    if(starfieldVeilEl){
+      starfieldVeilEl.classList.remove('is-revealing', 'is-fading-back');
+    }
+    const hudEl = document.getElementById('starfieldHud');
+    if(hudEl){
+      hudEl.classList.remove('is-pulse-dissolving', 'is-pulse-returning');
     }
   }
 
@@ -13203,6 +13292,54 @@
     }, 1700);
   }
 
+  let starfieldPulseRevealTimer = null;
+  let starfieldPulseFadeTimer = null;
+
+  function triggerStarfieldDashboardReveal(){
+    const veil = document.getElementById('starfieldBackdropVeil');
+    if(!veil || currentTheaterMode !== 'starfield') return;
+    const hud = document.getElementById('starfieldHud');
+
+    if(starfieldPulseRevealTimer){
+      clearTimeout(starfieldPulseRevealTimer);
+      starfieldPulseRevealTimer = null;
+    }
+    if(starfieldPulseFadeTimer){
+      clearTimeout(starfieldPulseFadeTimer);
+      starfieldPulseFadeTimer = null;
+    }
+
+    veil.classList.remove('is-fading-back');
+    void veil.offsetWidth; // trigger reflow for seamless re-trigger
+    veil.classList.add('is-revealing');
+
+    if(hud){
+      hud.classList.remove('is-pulse-returning');
+      void hud.offsetWidth;
+      hud.classList.add('is-pulse-dissolving');
+    }
+
+    // Hold dashboard at ~80% visibility for 2.4 seconds, then smoothly dissolve back into 100% pure black
+    starfieldPulseRevealTimer = setTimeout(() => {
+      veil.classList.remove('is-revealing');
+      veil.classList.add('is-fading-back');
+
+      if(hud){
+        hud.classList.remove('is-pulse-dissolving');
+        hud.classList.add('is-pulse-returning');
+      }
+
+      starfieldPulseFadeTimer = setTimeout(() => {
+        veil.classList.remove('is-fading-back');
+        if(hud){
+          hud.classList.remove('is-pulse-returning');
+        }
+        starfieldPulseFadeTimer = null;
+      }, 2300);
+      starfieldPulseRevealTimer = null;
+    }, 2400);
+  }
+
   function pulseGravitationalWave(isSilent = false){
     if(!isStarfieldActive || !starfieldWidth) return;
     const ax = starfieldWidth * 0.5 + Math.sin(anchorDriftT * 0.0004) * 36;
@@ -13228,7 +13365,9 @@
         if(pulseBtn) pulseBtn.classList.remove('is-pulsing');
       }, 350);
     }
-    // No accompanying text notice displayed during gravitational pulse per user preference
+
+    // Trigger gradual reveal of the underlying dashboard at ~80% opacity, then smoothly fade back into pure black
+    triggerStarfieldDashboardReveal();
   }
 
   function renderStarfieldLoop(timestamp){
@@ -13255,24 +13394,22 @@
     const isNightDim = currentDimmerIndex >= 3;
     const nightScale = currentDimmerIndex === 4 ? 0.28 : (currentDimmerIndex === 3 ? 0.60 : 1.0);
 
-    // 1. Background / Canvas clearing
+    // 1. Background / Canvas clearing (Pure black provided by veil behind canvas; canvas stays transparent)
     if(currentWarpSpeed > 5 && !isNightDim){
-      ctx.fillStyle = 'rgba(1, 4, 8, 0.42)';
-      ctx.fillRect(0, 0, w, h);
-    } else if(isNightDim){
-      ctx.clearRect(0, 0, w, h);
-      ctx.fillStyle = '#000000';
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.38)';
       ctx.fillRect(0, 0, w, h);
     } else {
       ctx.clearRect(0, 0, w, h);
-      const cx = w * 0.5;
-      const cy = h * 0.5;
-      const nebGrad = ctx.createRadialGradient(cx, cy, 30, cx, cy, Math.max(w, h) * 0.85);
-      nebGrad.addColorStop(0, 'rgba(10, 24, 42, 0.45)');
-      nebGrad.addColorStop(0.4, 'rgba(4, 14, 26, 0.25)');
-      nebGrad.addColorStop(1, 'rgba(1, 4, 8, 0.05)');
-      ctx.fillStyle = nebGrad;
-      ctx.fillRect(0, 0, w, h);
+      if(!isNightDim){
+        const cx = w * 0.5;
+        const cy = h * 0.5;
+        const nebGrad = ctx.createRadialGradient(cx, cy, 30, cx, cy, Math.max(w, h) * 0.85);
+        nebGrad.addColorStop(0, 'rgba(10, 24, 42, 0.32)');
+        nebGrad.addColorStop(0.4, 'rgba(4, 14, 26, 0.16)');
+        nebGrad.addColorStop(1, 'rgba(1, 4, 8, 0.0)');
+        ctx.fillStyle = nebGrad;
+        ctx.fillRect(0, 0, w, h);
+      }
     }
 
     const cx = w * 0.5;
@@ -13607,6 +13744,7 @@
   let aquariumAmbientBubbles = [];
   let aquariumKelpForest = [];
   let aquariumDiverList = [];
+  let scubaLaunchCount = 0;
   let aquariumClamsList = [];
 
   function resizeAquariumCanvas(){
@@ -13931,30 +14069,89 @@
       scubaBtn.classList.add('is-diving');
       setTimeout(() => {
         if(scubaBtn) scubaBtn.classList.remove('is-diving');
-      }, 900);
+      }, 1100);
     }
 
-    // Alternate swim direction if another diver is active, or alternate based on count
-    const facing = (aquariumDiverList.length % 2 === 0) ? 1 : -1;
+    scubaLaunchCount++;
+    // Alternate swim direction on consecutive launches (left-to-right vs right-to-left)
+    const facing = (scubaLaunchCount % 2 === 1) ? 1 : -1;
     const startX = facing === 1 ? -160 : w + 160;
-    // Cruise smoothly across mid-water where all the fish, turtles, and rays swim
-    const swimY = Math.random() * (h * 0.44) + (h * 0.22);
 
-    aquariumDiverList.push({
-      x: startX,
-      y: swimY,
-      baseY: swimY,
-      vx: facing * (Math.random() * 0.4 + 2.4),
-      vy: 0,
-      facing: facing,
-      facingScale: facing,
-      kickPhase: Math.random() * Math.PI,
-      kickSpeed: 0.13,
-      breatheCounter: 0,
-      scale: 1.15,
-      suitColor: '#0f172a',
-      accentColor: '#38bdf8',
-      tankColor: '#facc15'
+    // Anchor mid-depth safely in the water column
+    const anchorY = Math.max(170, Math.min(h - 220, Math.random() * (h * 0.32) + (h * 0.28)));
+
+    // 3 Scuba Divers at once: Lead Diver, Upper Scout Buddy, and Deep Explorer Buddy!
+    const trioData = [
+      // 1. Lead Diver (Center Lane, Oceanic Cyan & Carbon wetsuit, Yellow tank)
+      {
+        offsetX: 0,
+        offsetY: 0,
+        speed: 2.5,
+        scale: 1.15,
+        kickSpeed: 0.13,
+        suitColor: '#0f172a',
+        accentColor: '#38bdf8',
+        finColor: '#0284c7',
+        tankColor: '#facc15',
+        beamColor: 'rgba(56, 189, 248, 0.22)',
+        beamCoreColor: 'rgba(224, 242, 254, 0.45)',
+        torchHousing: '#eab308'
+      },
+      // 2. Upper Scout Diver (Higher Lane, Sunset Orange & Indigo wetsuit, Lime tank)
+      {
+        offsetX: -120 * facing,
+        offsetY: -72,
+        speed: 2.38,
+        scale: 1.05,
+        kickSpeed: 0.14,
+        suitColor: '#1e1b4b',
+        accentColor: '#fb923c',
+        finColor: '#ea580c',
+        tankColor: '#4ade80',
+        beamColor: 'rgba(251, 146, 60, 0.22)',
+        beamCoreColor: 'rgba(254, 215, 170, 0.45)',
+        torchHousing: '#ea580c'
+      },
+      // 3. Deep Explorer Diver (Deeper Lane, Neon Purple & Emerald wetsuit, Cyan tank)
+      {
+        offsetX: -225 * facing,
+        offsetY: 82,
+        speed: 2.68,
+        scale: 1.12,
+        kickSpeed: 0.125,
+        suitColor: '#064e3b',
+        accentColor: '#c084fc',
+        finColor: '#9333ea',
+        tankColor: '#06b6d4',
+        beamColor: 'rgba(192, 132, 252, 0.24)',
+        beamCoreColor: 'rgba(243, 232, 255, 0.45)',
+        torchHousing: '#06b6d4'
+      }
+    ];
+
+    trioData.forEach((dData, idx) => {
+      const diverY = Math.max(85, Math.min(h - 125, anchorY + dData.offsetY));
+      aquariumDiverList.push({
+        id: Date.now() + idx,
+        x: startX + dData.offsetX,
+        y: diverY,
+        baseY: diverY,
+        vx: facing * (dData.speed + (Math.random() - 0.5) * 0.15),
+        vy: 0,
+        facing: facing,
+        facingScale: facing,
+        kickPhase: Math.random() * Math.PI * 2,
+        kickSpeed: dData.kickSpeed,
+        breatheCounter: Math.floor(Math.random() * 50),
+        scale: dData.scale,
+        suitColor: dData.suitColor,
+        accentColor: dData.accentColor,
+        finColor: dData.finColor,
+        tankColor: dData.tankColor,
+        beamColor: dData.beamColor,
+        beamCoreColor: dData.beamCoreColor,
+        torchHousing: dData.torchHousing
+      });
     });
   }
 
@@ -15311,7 +15508,7 @@
       }
 
       // Remove diver once fully exited across the tank
-      if((diver.facing === 1 && diver.x > w + 200) || (diver.facing === -1 && diver.x < -200)){
+      if((diver.facing === 1 && diver.x > w + 280) || (diver.facing === -1 && diver.x < -280)){
         aquariumDiverList.splice(d, 1);
         continue;
       }
@@ -15322,8 +15519,8 @@
 
       // Subtle forward dive torch beam
       const torchGrad = ctx.createLinearGradient(28, 6, 210, 10);
-      torchGrad.addColorStop(0, 'rgba(224, 242, 254, 0.45)');
-      torchGrad.addColorStop(0.3, 'rgba(56, 189, 248, 0.20)');
+      torchGrad.addColorStop(0, diver.beamCoreColor || 'rgba(224, 242, 254, 0.45)');
+      torchGrad.addColorStop(0.3, diver.beamColor || 'rgba(56, 189, 248, 0.20)');
       torchGrad.addColorStop(1, 'rgba(14, 165, 233, 0)');
       ctx.fillStyle = torchGrad;
       ctx.beginPath();
@@ -15358,12 +15555,12 @@
       ctx.lineTo(-20, -5);
       ctx.lineTo(-24, 6);
       ctx.closePath();
-      ctx.fillStyle = '#0284c7';
+      ctx.fillStyle = diver.finColor || '#0284c7';
       ctx.fill();
       ctx.restore();
       ctx.restore();
 
-      // Oxygen Tank (Bright yellow diving cylinder with harness straps)
+      // Oxygen Tank (Diving cylinder with harness straps)
       ctx.save();
       ctx.translate(-2, -9);
       ctx.rotate(-0.05);
@@ -15448,8 +15645,8 @@
       ctx.lineTo(-22, -6);
       ctx.lineTo(-26, 7);
       ctx.closePath();
-      ctx.fillStyle = '#38bdf8';
-      ctx.strokeStyle = '#0284c7';
+      ctx.fillStyle = diver.accentColor || '#38bdf8';
+      ctx.strokeStyle = diver.finColor || '#0284c7';
       ctx.lineWidth = 1.2;
       ctx.fill();
       ctx.stroke();
@@ -15459,7 +15656,7 @@
       ctx.lineTo(-20, -3);
       ctx.moveTo(-6, 2);
       ctx.lineTo(-21, 3);
-      ctx.strokeStyle = '#0284c7';
+      ctx.strokeStyle = diver.finColor || '#0284c7';
       ctx.lineWidth = 1.0;
       ctx.stroke();
       ctx.restore();
@@ -15517,13 +15714,13 @@
       } else {
         ctx.rect(-2, -3, 9, 6);
       }
-      ctx.fillStyle = '#eab308';
+      ctx.fillStyle = diver.torchHousing || '#eab308';
       ctx.fill();
       // Torch lens with radiant glow
       ctx.beginPath();
       ctx.arc(7, 0, 3, 0, Math.PI * 2);
       ctx.fillStyle = '#ffffff';
-      ctx.shadowColor = '#38bdf8';
+      ctx.shadowColor = diver.accentColor || '#38bdf8';
       ctx.shadowBlur = 10;
       ctx.fill();
       ctx.shadowBlur = 0;

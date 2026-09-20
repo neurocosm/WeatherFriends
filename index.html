@@ -679,29 +679,30 @@
     transition: opacity 0.25s ease, background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
   }
 
-  /* Reveal all dimmed top-bar controls on hover or keyboard/remote focus */
-  .device-top:hover .brand,
-  .device-top:hover .version-pill,
-  .device-top:hover .wake-pill,
-  .device-top:hover .pwa-install-btn,
-  .device-top .brand:hover,
+  /* Individual hover & focus reveals: Only brighten the specific control you are interacting with,
+     so clicking or hovering the dimmer on the left does NOT inadvertently re-illuminate AWAKE ON or the brand! */
+  .device-top .brand:hover{
+    opacity:0.95 !important;
+  }
   .device-top .version-pill:hover,
-  .device-top .version-pill:focus-visible,
+  .device-top .version-pill:focus-visible{
+    opacity:0.95 !important;
+  }
   .pwa-install-btn:hover,
-  .pwa-install-btn:focus-visible,
+  .pwa-install-btn:focus-visible{
+    opacity:0.95 !important;
+  }
   .wake-pill:hover,
   .wake-pill:focus-visible,
   .wake-pill.is-secret-charging,
   .wake-pill.is-secret-active{
-    opacity:0.95 !important;
-  }
-  .device-top:hover .wake-pill{
-    opacity:0.85 !important;
+    opacity:0.90 !important;
     background:rgba(12,32,28,0.7) !important;
     border-color:rgba(73,230,196,0.3) !important;
     color:#49e6c4 !important;
   }
-  .device-top:hover .wake-pill .wake-dot{
+  .wake-pill:hover .wake-dot,
+  .wake-pill:focus-visible .wake-dot{
     background:#49e6c4 !important;
   }
   .device-dimmer:hover,
@@ -5219,7 +5220,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.092026.0751</span>
+        <span id="appVersionText">v1.092026.0802</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -8275,7 +8276,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.092026.0751';
+  const CLIENT_APP_VERSION = 'v1.092026.0802';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');

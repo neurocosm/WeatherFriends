@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#070e12">
+<meta name="color-scheme" content="dark">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -23,27 +24,29 @@
   @property --bezel-hi {
     syntax: '<color>';
     inherits: true;
-    initial-value: #f5f7f8;
+    initial-value: #252d34;
   }
   @property --bezel {
     syntax: '<color>';
     inherits: true;
-    initial-value: #dfe3e6;
+    initial-value: #171c21;
   }
   @property --bezel-lo {
     syntax: '<color>';
     inherits: true;
-    initial-value: #aab0b6;
+    initial-value: #0e1215;
   }
 
   :root{
-    --bezel:#dfe3e6;
-    --bezel-hi:#f5f7f8;
-    --bezel-lo:#aab0b6;
-    --bezel-inset-hi:rgba(255,255,255,0.60);
-    --bezel-inset-lo:rgba(0,0,0,0.15);
-    --brand-color:#5a6369;
-    --brand-b-color:#3d4449;
+    color-scheme: dark;
+    --bezel:#171c21;
+    --bezel-hi:#252d34;
+    --bezel-lo:#0e1215;
+    --bezel-inset-hi:rgba(255,255,255,0.08);
+    --bezel-inset-lo:rgba(0,0,0,0.75);
+    --brand-color:#7a8893;
+    --brand-b-color:#a6b5c0;
+    --top-dim-opacity:1.0;
     --dimmer-active-dot:#ffe600;
     --dimmer-active-dot-border:#fff275;
     --dimmer-active-dot-shadow:0 0 6px rgba(255,230,0,0.75);
@@ -154,16 +157,22 @@
     outline-offset:2px;
   }
   .dimmer-icon{
-    width:10px;
-    height:10px;
-    stroke:var(--teal);
-    opacity:0.85;
+    width:11px;
+    height:11px;
+    stroke:#10b981;
+    color:#10b981;
+    opacity:0.92;
     flex:none;
-    transition:transform 0.25s ease, opacity 0.2s ease;
+    filter:drop-shadow(0 0 2.5px rgba(16,185,129,0.6));
+    transition:transform 0.25s ease, opacity 0.2s ease, filter 0.2s ease;
+    cursor:pointer;
   }
-  .device-dimmer:hover .dimmer-icon{
+  .device-dimmer:hover .dimmer-icon,
+  .dimmer-icon:hover{
     opacity:1;
-    transform:rotate(20deg);
+    stroke:#34d399;
+    filter:drop-shadow(0 0 4px rgba(52,211,153,0.85));
+    transform:rotate(20deg) scale(1.1);
   }
   .dimmer-slider-wrap{
     display:inline-flex;
@@ -651,52 +660,157 @@
   }
 
   /* -------------------------------------------------------------
-     DEEP NIGHT BEACON & MINIMALIST BEDROOM DIMMER (LEVEL 4 & 3)
-     - Minimizes ambient light in a dark room
-     - Active dimmer dot shines softly as the sole emerald beacon
-     - Awake button, brand text, and inactive dots fade into chassis
+     DEEP NIGHT BEACON & MINIMALIST BEDROOM DIMMER
+     - The GREEN sun icon (.dimmer-icon) shines softly as the sole emerald guide
+       so you can always find the dimmer in a pitch-black room
+     - Title (brand), version pill, Awake pill, and dimmer buttons/slider
+       proportionately dim with each step to eliminate dark-room glare
+     - Hovering or focusing the controls smoothly reveals them
   ------------------------------------------------------------- */
-  /* Level 4: Deep Night Beacon Mode (8%) */
+
+  /* Global transitions for smooth dimming on top bar */
+  .device-top .brand,
+  .device-top .version-pill,
+  .wake-pill,
+  .pwa-install-btn,
+  .dimmer-slider-wrap,
+  .dimmer-dots-cluster,
+  .dimmer-pct-label{
+    transition: opacity 0.25s ease, background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+  }
+
+  /* Reveal all dimmed top-bar controls on hover or keyboard/remote focus */
+  .device-top:hover .brand,
+  .device-top:hover .version-pill,
+  .device-top:hover .wake-pill,
+  .device-top:hover .pwa-install-btn,
+  .device-top .brand:hover,
+  .device-top .version-pill:hover,
+  .device-top .version-pill:focus-visible,
+  .pwa-install-btn:hover,
+  .pwa-install-btn:focus-visible,
+  .wake-pill:hover,
+  .wake-pill:focus-visible,
+  .wake-pill.is-secret-charging,
+  .wake-pill.is-secret-active{
+    opacity:0.95 !important;
+  }
+  .device-top:hover .wake-pill{
+    opacity:0.85 !important;
+    background:rgba(12,32,28,0.7) !important;
+    border-color:rgba(73,230,196,0.3) !important;
+    color:#49e6c4 !important;
+  }
+  .device-top:hover .wake-pill .wake-dot{
+    background:#49e6c4 !important;
+  }
+  .device-dimmer:hover,
+  .device-dimmer:focus-within{
+    opacity:1 !important;
+  }
+  .device-dimmer:hover .dimmer-slider-wrap,
+  .device-dimmer:hover .dimmer-dots-cluster,
+  .device-dimmer:hover .dimmer-pct-label,
+  .device-dimmer:hover .dimmer-dot-btn,
+  .device-dimmer:focus-within .dimmer-slider-wrap,
+  .device-dimmer:focus-within .dimmer-dots-cluster,
+  .device-dimmer:focus-within .dimmer-pct-label,
+  .device-dimmer:focus-within .dimmer-dot-btn{
+    opacity:1 !important;
+  }
+
+  /* The Green Finder Icon: ALWAYS visible with emerald beacon glow */
+  html[data-dim-level="0"] .dimmer-icon,
+  html[data-dim-level="1"] .dimmer-icon,
+  html[data-dim-level="2"] .dimmer-icon,
+  html[data-dim-level="3"] .dimmer-icon,
+  html[data-dim-level="4"] .dimmer-icon{
+    opacity:0.92 !important;
+    stroke:#10b981 !important;
+    filter:drop-shadow(0 0 3px rgba(16,185,129,0.7)) !important;
+  }
+
+  /* Level 1: Soft Day (75%) */
+  html[data-dim-level="1"] .device-top .brand{ opacity:0.65; }
+  html[data-dim-level="1"] .device-top .version-pill{ opacity:0.60; }
+  html[data-dim-level="1"] .wake-pill{ opacity:0.65; }
+  html[data-dim-level="1"] .pwa-install-btn{ opacity:0.65; }
+  html[data-dim-level="1"] .dimmer-slider-wrap{ opacity:0.65; }
+  html[data-dim-level="1"] .dimmer-dots-cluster{ opacity:0.65; }
+  html[data-dim-level="1"] .dimmer-pct-label{ opacity:0.65; }
+
+  /* Level 2: Ambient Evening (50%) */
+  html[data-dim-level="2"] .device-top .brand{ opacity:0.38; }
+  html[data-dim-level="2"] .device-top .version-pill{ opacity:0.32; }
+  html[data-dim-level="2"] .wake-pill{ opacity:0.38; }
+  html[data-dim-level="2"] .pwa-install-btn{ opacity:0.38; }
+  html[data-dim-level="2"] .wake-pill.active .wake-dot{ animation-duration:5s; opacity:0.7; }
+  html[data-dim-level="2"] .dimmer-slider-wrap{ opacity:0.38; }
+  html[data-dim-level="2"] .dimmer-dots-cluster{ opacity:0.38; }
+  html[data-dim-level="2"] .dimmer-pct-label{ opacity:0.38; }
+  html[data-dim-level="2"] .dimmer-dot-btn:not(.active){ opacity:0.18; }
+
+  /* Level 3: Twilight Dim (25%) */
+  html[data-dim-level="3"] .device-top .brand{ opacity:0.16; }
+  html[data-dim-level="3"] .device-top .version-pill{ opacity:0.14; }
+  html[data-dim-level="3"] .wake-pill{
+    opacity:0.16;
+    box-shadow:none !important;
+  }
+  html[data-dim-level="3"] .pwa-install-btn{
+    opacity:0.16;
+  }
+  html[data-dim-level="3"] .wake-pill.active{
+    background:rgba(8, 20, 18, 0.4);
+    border-color:rgba(73,230,196,0.22);
+    color:rgba(73,230,196,0.55);
+  }
+  html[data-dim-level="3"] .wake-pill.active .wake-dot{
+    animation:none !important;
+    opacity:0.5;
+  }
+  html[data-dim-level="3"] .dimmer-slider-wrap{ opacity:0.16; }
+  html[data-dim-level="3"] .dimmer-dots-cluster{ opacity:0.16; }
+  html[data-dim-level="3"] .dimmer-pct-label{ opacity:0.16; }
+  html[data-dim-level="3"] .dimmer-dot-btn:not(.active){ opacity:0.08; }
+  html[data-dim-level="3"] .dimmer-dot-btn.active{
+    box-shadow:none !important;
+    opacity:0.45;
+  }
+
+  /* Level 4: Deep Night Mode (12%) */
   html[data-dim-level="4"] .device{
     box-shadow:0 10px 30px rgba(0,0,0,0.95);
   }
   html[data-dim-level="4"] .device-dimmer{
-    background:rgba(0,0,0,0.60);
-    border-color:rgba(16,185,129,0.22);
+    background:rgba(0,0,0,0.40);
+    border-color:rgba(16,185,129,0.18);
     box-shadow:none;
   }
-  html[data-dim-level="4"] .dimmer-icon{
+  html[data-dim-level="4"] .dimmer-slider-wrap{
     opacity:0.04;
-    stroke:#10b981;
+  }
+  html[data-dim-level="4"] .dimmer-dots-cluster{
+    opacity:0.05;
   }
   html[data-dim-level="4"] .dimmer-pct-label{
     opacity:0.05;
   }
   html[data-dim-level="4"] .dimmer-dot-btn:not(.active){
-    opacity:0.03;
+    opacity:0.02;
     background:rgba(255,255,255,0.02);
     border-color:transparent;
   }
-  /* The Emerald Beacon: Sole illuminated dot */
   html[data-dim-level="4"] .dimmer-dot-btn.active{
     background:#10b981 !important;
     border-color:#34d399 !important;
-    box-shadow:0 0 8px rgba(16,185,129,0.85), 0 0 2px #34d399 !important;
-    transform:scale(1.22);
+    box-shadow:none !important;
+    opacity:0.25;
+    transform:none !important;
   }
-  /* Gentle reveal on dimmer hover for tactile control */
-  html[data-dim-level="4"] .device-dimmer:hover .dimmer-icon,
-  html[data-dim-level="4"] .device-dimmer:hover .dimmer-pct-label{
-    opacity:0.7;
-  }
-  html[data-dim-level="4"] .device-dimmer:hover .dimmer-dot-btn:not(.active){
-    opacity:0.35;
-    border-color:rgba(255,255,255,0.18);
-  }
-
-  /* Extinguish Awake button light while keeping wake-lock 100% active */
-  html[data-dim-level="4"] .wake-pill{
-    opacity:0.03;
+  html[data-dim-level="4"] .wake-pill,
+  html[data-dim-level="4"] .pwa-install-btn{
+    opacity:0.04;
     background:transparent !important;
     border-color:transparent !important;
     box-shadow:none !important;
@@ -707,56 +821,16 @@
     animation:none !important;
     box-shadow:none !important;
   }
-  html[data-dim-level="4"] .wake-pill:hover,
-  html[data-dim-level="4"] .wake-pill.is-secret-charging,
-  html[data-dim-level="4"] .wake-pill.is-secret-active{
-    opacity:1 !important;
-  }
-  html[data-dim-level="4"] .wake-pill:hover{
-    opacity:0.8;
-    background:rgba(12,32,28,0.7) !important;
-    border-color:rgba(73,230,196,0.3) !important;
-    color:#49e6c4 !important;
-  }
-  html[data-dim-level="4"] .wake-pill:hover .wake-dot{
-    background:#49e6c4 !important;
-  }
-
-  /* Dim brand logo and version pill on top bar */
   html[data-dim-level="4"] .device-top .brand,
   html[data-dim-level="4"] .device-top .version-pill{
-    opacity:0.03;
-    transition:opacity 0.25s ease;
+    opacity:0.04;
   }
-  html[data-dim-level="4"] .device-top:hover .brand,
-  html[data-dim-level="4"] .device-top:hover .version-pill{
-    opacity:0.6;
-  }
-
-  /* Minimalist Screen Night Mode (Level 4): pure dark void & softened scanlines */
   html[data-dim-level="4"] .screen{
     background:#000102;
     box-shadow:inset 0 0 70px #000;
   }
   html[data-dim-level="4"] .screen::after{
     opacity:0.08;
-  }
-
-  /* Level 3 (Twilight Dim - 25%): Subdued awake pill and dimmer */
-  html[data-dim-level="3"] .wake-pill.active{
-    background:rgba(8, 20, 18, 0.4);
-    border-color:rgba(73,230,196,0.22);
-    color:rgba(73,230,196,0.55);
-  }
-  html[data-dim-level="3"] .wake-pill.active .wake-dot{
-    animation:none;
-    opacity:0.5;
-  }
-  html[data-dim-level="3"] .dimmer-icon{
-    opacity:0.35;
-  }
-  html[data-dim-level="3"] .dimmer-pct-label{
-    opacity:0.4;
   }
 
   /* Hyperspace Low-Light Tuning (Levels 3 and 4) */
@@ -2324,9 +2398,13 @@
     display:flex;
     align-items:center;
     justify-content:center;
+    isolation:isolate;
+    transform-style:preserve-3d;
     transition:opacity 0.75s ease, transform 0.85s cubic-bezier(0.2, 0.8, 0.25, 1);
     opacity:1;
     transform:scale(1) rotate(0deg);
+    forced-color-adjust:none !important;
+    color-scheme:only dark !important;
   }
   .eightball-die.sinking{
     opacity:0.08;
@@ -2340,16 +2418,29 @@
     width:100%;
     height:100%;
     position:absolute;
-    top:0;
-    left:0;
-    filter:drop-shadow(0 0 7px rgba(22, 102, 140, 0.75));
+    inset:0;
+    z-index:1;
+    pointer-events:none;
+    transform:translateZ(0);
+    forced-color-adjust:none !important;
+    color-scheme:only dark !important;
+  }
+  .eightball-triangle-svg polygon{
+    forced-color-adjust:none !important;
+  }
+  .eightball-triangle-face{
+    fill:#0c2331 !important;
+    stroke:#257599 !important;
+  }
+  .eightball-triangle-shade{
+    fill:#091b26 !important;
   }
   .eightball-answer-text{
     position:absolute;
     left:50%;
-    top:52%;
-    transform:translate(-50%, -50%);
-    z-index:2;
+    top:50%;
+    transform:translate(-50%, -50%) translateZ(20px);
+    z-index:10;
     display:flex;
     flex-direction:column;
     align-items:center;
@@ -2361,6 +2452,9 @@
     user-select:none;
     pointer-events:none;
     transition:opacity 0.2s ease;
+    forced-color-adjust:none !important;
+    color-scheme:only dark !important;
+    will-change:transform, opacity;
   }
   .eightball-line{
     display:block;
@@ -5101,7 +5195,7 @@
   <div class="device-top">
     <!-- 5-Dot Board Dimmer & Continuous Hardware Slider (Far Left) -->
     <div class="device-dimmer" id="boardDimmer" role="group" aria-label="Board Brightness Dimmer" title="Adjust display brightness (100%, 75%, 50%, 25%, 12%) • Drag continuous slider or tap presets • Key: D">
-      <svg class="dimmer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
+      <svg class="dimmer-icon" id="dimmerIconBtn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" role="button" tabindex="0" aria-label="Cycle display brightness" title="Display Dimmer • Tap green icon to cycle brightness presets">
         <circle cx="12" cy="12" r="4.5"/>
         <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.93 4.93l1.77 1.77M17.3 17.3l1.77 1.77M4.93 19.07l1.77-1.77M17.3 6.7l1.77-1.77"/>
       </svg>
@@ -5125,7 +5219,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.091526.2017</span>
+        <span id="appVersionText">v1.092026.0751</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -5329,9 +5423,20 @@
             <div class="eightball-window">
               <div class="eightball-die" id="eightballDie">
                 <!-- Isometric icosahedron floating triangle SVG cleanly inscribed in view window -->
-                <svg class="eightball-triangle-svg" viewBox="0 0 100 100">
-                  <polygon points="50,7 87.2,71.5 12.8,71.5" fill="#0c2331" stroke="#257599" stroke-width="2.5" stroke-linejoin="round"/>
-                  <polygon points="50,7 50,71.5 12.8,71.5" fill="#091b26" opacity="0.45"/>
+                <svg class="eightball-triangle-svg" viewBox="0 0 100 100" aria-hidden="true" style="forced-color-adjust:none;color-scheme:only dark;">
+                  <defs>
+                    <filter id="eightballGlow" x="-20%" y="-20%" width="140%" height="140%">
+                      <feGaussianBlur in="SourceAlpha" stdDeviation="2.5" result="blur"/>
+                      <feFlood flood-color="#16668c" flood-opacity="0.85" result="color"/>
+                      <feComposite in="color" in2="blur" operator="in" result="shadow"/>
+                      <feMerge>
+                        <feMergeNode in="shadow"/>
+                        <feMergeNode in="SourceGraphic"/>
+                      </feMerge>
+                    </filter>
+                  </defs>
+                  <polygon class="eightball-triangle-face" points="50,7 87.2,71.5 12.8,71.5" fill="#0c2331" stroke="#257599" stroke-width="2.5" stroke-linejoin="round" filter="url(#eightballGlow)"/>
+                  <polygon class="eightball-triangle-shade" points="50,7 50,71.5 12.8,71.5" fill="#091b26" opacity="0.45"/>
                 </svg>
                 <div class="eightball-answer-text" id="eightballAnswer">
                   <span class="eightball-line">TAP ME</span>
@@ -8170,7 +8275,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.091526.2017';
+  const CLIENT_APP_VERSION = 'v1.092026.0751';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -8556,13 +8661,13 @@
       label: '100%',
       val: 1.00,
       desc: 'Full Brightness',
-      bezelHi: '#f5f7f8',
-      bezel: '#dfe3e6',
-      bezelLo: '#aab0b6',
-      insetHi: 'rgba(255,255,255,0.60)',
-      insetLo: 'rgba(0,0,0,0.15)',
-      brandColor: '#5a6369',
-      brandBColor: '#3d4449',
+      bezelHi: '#252d34',
+      bezel: '#171c21',
+      bezelLo: '#0e1215',
+      insetHi: 'rgba(255,255,255,0.08)',
+      insetLo: 'rgba(0,0,0,0.75)',
+      brandColor: '#7a8893',
+      brandBColor: '#a6b5c0',
       activeDot: '#ffe600',
       activeDotBorder: '#fff275',
       activeDotShadow: '0 0 6px rgba(255,230,0,0.75)'
@@ -8572,64 +8677,64 @@
       label: '75%',
       val: 0.75,
       desc: 'Soft Day',
-      bezelHi: '#b8bfc5',
-      bezel: '#9ea7af',
-      bezelLo: '#78828b',
-      insetHi: 'rgba(255,255,255,0.32)',
-      insetLo: 'rgba(0,0,0,0.22)',
-      brandColor: '#4f575e',
-      brandBColor: '#32393f',
+      bezelHi: '#1e242a',
+      bezel: '#13181d',
+      bezelLo: '#0b0e11',
+      insetHi: 'rgba(255,255,255,0.05)',
+      insetLo: 'rgba(0,0,0,0.80)',
+      brandColor: '#626f7a',
+      brandBColor: '#8a97a2',
       activeDot: '#f0d900',
       activeDotBorder: '#fff275',
-      activeDotShadow: '0 0 5px rgba(240,217,0,0.60)'
+      activeDotShadow: '0 0 3px rgba(240,217,0,0.40)'
     },
     {
       pct: 50,
       label: '50%',
       val: 0.50,
       desc: 'Ambient Evening',
-      bezelHi: '#707981',
-      bezel: '#59626a',
-      bezelLo: '#3f474e',
-      insetHi: 'rgba(255,255,255,0.15)',
-      insetLo: 'rgba(0,0,0,0.35)',
-      brandColor: '#8a949d',
-      brandBColor: '#abb6bf',
+      bezelHi: '#171c21',
+      bezel: '#0f1317',
+      bezelLo: '#080a0d',
+      insetHi: 'rgba(255,255,255,0.03)',
+      insetLo: 'rgba(0,0,0,0.85)',
+      brandColor: '#4a555e',
+      brandBColor: '#68747e',
       activeDot: '#d6c200',
       activeDotBorder: '#e6d333',
-      activeDotShadow: '0 0 4px rgba(214,194,0,0.40)'
+      activeDotShadow: 'none'
     },
     {
       pct: 25,
       label: '25%',
       val: 0.25,
       desc: 'Twilight Dim',
-      bezelHi: '#252b30',
-      bezel: '#1a1f24',
-      bezelLo: '#101418',
-      insetHi: 'rgba(255,255,255,0.03)',
-      insetLo: 'rgba(0,0,0,0.60)',
-      brandColor: '#454e56',
-      brandBColor: '#5c6770',
+      bezelHi: '#101418',
+      bezel: '#0a0d10',
+      bezelLo: '#050709',
+      insetHi: 'rgba(255,255,255,0.02)',
+      insetLo: 'rgba(0,0,0,0.90)',
+      brandColor: '#303940',
+      brandBColor: '#455059',
       activeDot: '#059669',
       activeDotBorder: '#10b981',
-      activeDotShadow: '0 0 5px rgba(16,185,129,0.50)'
+      activeDotShadow: 'none'
     },
     {
       pct: 12,
       label: '12%',
       val: 0.12,
       desc: 'Deep Night Beacon',
-      bezelHi: '#06080a',
-      bezel: '#030406',
+      bezelHi: '#07090b',
+      bezel: '#040507',
       bezelLo: '#010203',
       insetHi: 'transparent',
       insetLo: 'rgba(0,0,0,0.95)',
-      brandColor: '#12161a',
-      brandBColor: '#1a2026',
+      brandColor: '#1a2026',
+      brandBColor: '#242c33',
       activeDot: '#10b981',
       activeDotBorder: '#34d399',
-      activeDotShadow: '0 0 8px rgba(16,185,129,0.85), 0 0 2px #34d399'
+      activeDotShadow: 'none'
     }
   ];
 
@@ -8651,6 +8756,10 @@
     // Update screen brightness and contrast via CSS custom property
     const rootStyle = document.documentElement.style;
     rootStyle.setProperty('--board-brightness', String(config.val));
+
+    // Set top-bar dimming factor
+    const topDim = [1.0, 0.65, 0.38, 0.16, 0.04][safeIdx] ?? 1.0;
+    rootStyle.setProperty('--top-dim-opacity', String(topDim));
 
     // Sync slider element
     if(dimmerSlider){
@@ -8702,6 +8811,10 @@
     const rootStyle = document.documentElement.style;
     rootStyle.setProperty('--board-brightness', String(val));
 
+    // Continuous top-bar dimming
+    const topDim = Math.max(0.04, Math.min(1.0, (val - 0.10) / 0.90 * 0.96 + 0.04));
+    rootStyle.setProperty('--top-dim-opacity', String(topDim.toFixed(3)));
+
     if(dimmerSlider) dimmerSlider.value = String(clampedPct);
     if(dimmerPctLabel) dimmerPctLabel.textContent = `${clampedPct}%`;
 
@@ -8738,6 +8851,9 @@
     if(config.insetLo) rootStyle.setProperty('--bezel-inset-lo', config.insetLo);
     if(config.brandColor) rootStyle.setProperty('--brand-color', config.brandColor);
     if(config.brandBColor) rootStyle.setProperty('--brand-b-color', config.brandBColor);
+    if(config.activeDot) rootStyle.setProperty('--dimmer-active-dot', config.activeDot);
+    if(config.activeDotBorder) rootStyle.setProperty('--dimmer-active-dot-border', config.activeDotBorder);
+    if(config.activeDotShadow) rootStyle.setProperty('--dimmer-active-dot-shadow', config.activeDotShadow);
 
     if(boardDimmerEl){
       boardDimmerEl.title = `Display Brightness: ${clampedPct}% • Drag slider or tap dots/press 'D' to step`;
@@ -8788,6 +8904,17 @@
     boardDimmerEl.addEventListener('click', (e) => {
       if(e.target.closest('.dimmer-dot-btn') || e.target.closest('.dimmer-slider-wrap')) return;
       cycleBoardDimmer(true);
+    });
+  }
+
+  // Keyboard accessibility on green dimmer icon button
+  const dimmerIconBtn = document.getElementById('dimmerIconBtn');
+  if(dimmerIconBtn){
+    dimmerIconBtn.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        cycleBoardDimmer(true);
+      }
     });
   }
 

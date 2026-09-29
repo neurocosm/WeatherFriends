@@ -891,8 +891,8 @@
     min-height:0;
     display:flex;
     flex-direction:column;
-    justify-content:flex-start;
-    gap:clamp(4px, 0.8vh, 8px);
+    justify-content:stretch;
+    gap:0;
     background:radial-gradient(120% 140% at 50% 0%, var(--screen-bg-2), var(--screen-bg) 70%);
     border-radius:10px;
     border:1px solid #000;
@@ -902,6 +902,21 @@
     box-sizing:border-box;
     filter: brightness(var(--board-brightness, 1.0)) contrast(calc(1 + (1 - var(--board-brightness, 1.0)) * 0.15));
     transition: filter 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  #topTier:not(.is-row-collapsed){
+    flex: var(--rh-topTier, 1.0) 1 0px !important;
+    min-height: 48px;
+    height: auto;
+  }
+  #panelsRow:not(.is-row-collapsed){
+    flex: var(--rh-panelsRow, 1.25) 1 0px !important;
+    min-height: 48px;
+    height: auto;
+  }
+  #outlook:not(.is-row-collapsed){
+    flex: var(--rh-outlook, 0.95) 1 0px !important;
+    min-height: 48px;
+    height: auto;
   }
   .screen::after{
     content:'';
@@ -935,12 +950,12 @@
   /* ---- Top Tier: 3 Distinct Certified Blocks ---- */
   .topbar{
     display:grid;
-    grid-template-columns: var(--tw1, 1.25fr) 6px var(--tw2, 0.85fr) 6px var(--tw3, 1.25fr);
+    grid-template-columns: minmax(0, var(--tw1, 1.25fr)) 6px minmax(0, var(--tw2, 0.85fr)) 6px minmax(0, var(--tw3, 1.25fr));
     gap:0;
     margin-bottom:0;
     align-items:stretch;
-    flex:1.02 1 auto;
-    min-height:clamp(100px, 18vh, 180px);
+    height:100%;
+    min-height:0;
     position:relative;
     z-index:10;
   }
@@ -1268,24 +1283,65 @@
     transition:font-size 0.08s ease;
   }
 
-  /* Block 2: Stacked High-Density 2-Column Clock */
+  /* Block 2: 2-Mode Interactive Clock (Digital • Analog) */
   #topClockBlock{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
     justify-content:center;
     cursor:pointer;
     user-select:none;
     touch-action:manipulation;
     -webkit-tap-highlight-color:rgba(73, 230, 196, 0.25);
     outline:none;
+    overflow:hidden !important;
+    min-width:0 !important;
+    min-height:0 !important;
+    height:100% !important;
+    max-height:100% !important;
+    contain:layout paint;
+    box-sizing:border-box !important;
     transition:filter 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
   }
   #topClockBlock:hover{
-    filter:brightness(1.10);
+    filter:brightness(1.08);
   }
   #topClockBlock:active{
     transform:scale(0.985);
   }
   #topClockBlock:focus-visible{
     box-shadow:0 0 0 2px #49e6c4, inset 0 0 12px rgba(73, 230, 196, 0.2);
+  }
+
+  .clock-mode-view{
+    width:100%;
+    height:100%;
+    min-height:0;
+    min-width:0;
+    max-width:100%;
+    max-height:100%;
+    position:relative;
+    box-sizing:border-box;
+    overflow:hidden;
+  }
+  .clock-mode-view[style*="display: none"],
+  .clock-mode-view[style*="display:none"]{
+    display:none !important;
+  }
+
+  /* Mode 1: Stacked High-Density 2-Column Clock */
+  .clock-mode-digital{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    width:100%;
+    height:100%;
+    min-height:0;
+    min-width:0;
+    max-width:100%;
+    max-height:100%;
   }
   .stacked-clock-grid{
     display:grid;
@@ -1332,7 +1388,7 @@
     text-align:center;
     justify-self:center;
     padding:1px 0;
-    margin:0;
+    margin:0 auto;
     width:100%;
   }
 
@@ -1368,7 +1424,22 @@
     width:100%;
     font-variant-numeric: tabular-nums;
     font-feature-settings: "tnum" 1;
-    transition:color 0.15s ease;
+    transition:color 0.15s ease, transform 0.1s ease;
+    cursor:pointer;
+    background:none !important;
+    border:none !important;
+    box-shadow:none !important;
+    padding:0;
+    margin:0;
+    outline:none;
+    user-select:none;
+  }
+  .clock-ampm-val:hover{
+    color:#49e6c4;
+    background:none !important;
+  }
+  .clock-ampm-val:active{
+    transform:scale(0.92);
   }
   .clock-ampm-val.is-24h{
     letter-spacing:-0.01em;
@@ -1389,6 +1460,43 @@
     width:100%;
     font-variant-numeric: tabular-nums;
     font-feature-settings: "tnum" 1;
+  }
+
+  /* Mode 2: Analog Wall Clock (Yellow & White Dial) */
+  .clock-mode-analog{
+    position:absolute !important;
+    inset:0 !important;
+    width:100% !important;
+    height:100% !important;
+    max-width:100% !important;
+    max-height:100% !important;
+    display:none !important;
+    align-items:center !important;
+    justify-content:center !important;
+    overflow:hidden !important;
+    padding:clamp(2px, 0.5vh, 6px) !important;
+    box-sizing:border-box !important;
+    pointer-events:none;
+  }
+  #topClockBlock[data-clock-mode="analog"] .clock-mode-analog{
+    display:flex !important;
+  }
+  .analog-clock-svg{
+    width:auto;
+    height:auto;
+    max-height:92%;
+    max-width:92%;
+    object-fit:contain;
+    filter:drop-shadow(0 4px 14px rgba(0,0,0,0.65));
+    user-select:none;
+    pointer-events:none;
+    flex:none;
+    margin:auto;
+  }
+  .analog-numerals-group text{
+    font-family:'Outfit',sans-serif;
+    font-variant-numeric:tabular-nums;
+    user-select:none;
   }
 
   /* Block 3: Mockup-Accurate Weather Block */
@@ -1791,8 +1899,8 @@
     gap:0;
     margin-bottom:0;
     align-items:stretch;
-    flex:1.25 1 auto;
-    min-height:clamp(120px, 22vh, 220px);
+    height:100%;
+    min-height:0;
     position:relative;
   }
   .panel{
@@ -1971,7 +2079,7 @@
     display:flex;
     flex-direction:column;
     align-items:flex-start;
-    justify-content:flex-start;
+    justify-content:center;
     padding:clamp(1px, 0.3vh, 3px) 0 0 0;
     min-height:0;
     overflow-y:auto;
@@ -2235,7 +2343,7 @@
     min-height:0;
     display:flex;
     flex-direction:column;
-    justify-content:flex-start;
+    justify-content:center;
     padding:clamp(1px, 0.3vh, 3px) 0 0 0;
     gap:clamp(4px, 0.8vh, 10px);
     overflow-y:auto;
@@ -3685,6 +3793,100 @@
     user-select:none !important;
   }
 
+  /* ---- Touch & Smart TV Remote Draggable Tier/Row Height Splitters ---- */
+  .tier-splitter{
+    width:100%;
+    height:6px;
+    position:relative;
+    cursor:row-resize;
+    user-select:none;
+    touch-action:none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:15;
+    flex:0 0 6px;
+    outline:none;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+  }
+  /* Generous touch target (28px vertical) for fingers on tablet / TV focus */
+  .tier-splitter::before{
+    content:'';
+    position:absolute;
+    top:-11px;
+    bottom:-11px;
+    left:0;
+    right:0;
+    z-index:2;
+  }
+  .tier-splitter-grip{
+    height:2px;
+    width:clamp(48px, 10vw, 84px);
+    background:rgba(140, 200, 210, 0.22);
+    border-radius:2px;
+    transition:background 0.2s ease, height 0.2s ease, box-shadow 0.2s ease, width 0.2s ease;
+    pointer-events:none;
+    position:relative;
+  }
+  .tier-splitter:hover .tier-splitter-grip,
+  .tier-splitter:focus-visible .tier-splitter-grip,
+  .tier-splitter.is-dragging .tier-splitter-grip{
+    background:#49e6c4;
+    height:3px;
+    width:clamp(72px, 14vw, 120px);
+    box-shadow:0 0 10px rgba(73, 230, 196, 0.85);
+  }
+  .tier-splitter:focus-visible{
+    outline:none;
+  }
+  .tier-splitter:focus-visible .tier-splitter-grip{
+    background:#49e6c4;
+    height:4px;
+    width:clamp(84px, 16vw, 140px);
+    box-shadow:0 0 14px #49e6c4, 0 0 24px rgba(73, 230, 196, 0.5);
+  }
+  .tier-splitter.is-locked-resize{
+    cursor:ns-resize !important;
+  }
+  .tier-splitter.is-locked-resize .tier-splitter-grip{
+    background:#38bdf8 !important;
+    height:4px !important;
+    width:clamp(84px, 16vw, 140px) !important;
+    box-shadow:0 0 16px #38bdf8, 0 0 32px rgba(56, 189, 248, 0.85) !important;
+    animation:seamPulseGlow 1.4s ease-in-out infinite alternate;
+  }
+  .tier-splitter.is-locked-resize::after{
+    content:'▲ ▼';
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    font-family:'Outfit', sans-serif;
+    font-size:0.62rem;
+    font-weight:700;
+    letter-spacing:0.18em;
+    color:#ffffff;
+    background:rgba(2, 6, 8, 0.92);
+    border:1px solid #38bdf8;
+    border-radius:12px;
+    padding:2px 7px;
+    pointer-events:none;
+    z-index:9;
+    box-shadow:0 0 14px rgba(56, 189, 248, 0.7);
+    white-space:nowrap;
+    animation:seamBadgePulse 1.4s ease-in-out infinite alternate;
+  }
+
+  body.is-resizing-rows{
+    cursor:row-resize !important;
+    user-select:none !important;
+  }
+  body.is-resizing-rows *{
+    user-select:none !important;
+  }
+
   /* ---- Floating TV Remote Resize HUD Control Center ---- */
   .remote-resize-hud{
     position:fixed;
@@ -4493,21 +4695,21 @@
     display:flex;
     flex-direction:column;
     position:relative;
-    flex:0 0 auto;
-    min-height:clamp(60px, 14vh, 130px);
+    height:100%;
+    min-height:0;
     width:100%;
     align-items:stretch;
-    justify-content:center;
+    justify-content:stretch;
   }
   .day-card{
     display:flex;
     flex-direction:column;
     align-items:center;
-    justify-content:flex-start;
-    aspect-ratio:1 / 1;
-    max-height:clamp(140px, 24vh, 205px);
-    gap:clamp(2px, 0.5vh, 5px);
-    padding:clamp(7px, 1.3vh, 12px) clamp(4px, 1cqw, 8px) clamp(6px, 1.0vh, 10px);
+    justify-content:space-between;
+    height:100%;
+    min-height:0;
+    gap:clamp(2px, 0.5vh, 6px);
+    padding:clamp(6px, 1.2vh, 12px) clamp(4px, 1cqw, 8px) clamp(6px, 1.0vh, 10px);
     background:rgba(4, 11, 14, 0.70);
     border:1px solid var(--grid-line);
     border-radius:10px;
@@ -4516,8 +4718,9 @@
     overflow:hidden;
     transition:background 0.2s ease, border-color 0.2s ease;
     box-shadow:inset 0 1px 0 rgba(255,255,255,0.05), 0 2px 8px rgba(0,0,0,0.35);
-    margin:0 auto;
+    margin:0;
     width:100%;
+    box-sizing:border-box;
   }
   .day-card.is-today{
     background:rgba(8, 26, 32, 0.85);
@@ -4766,8 +4969,10 @@
     grid-template-columns:repeat(5, 1fr);
     gap:clamp(6px, 1.1vw, 12px);
     width:100%;
-    align-items:center;
-    justify-content:center;
+    height:100%;
+    min-height:0;
+    align-items:stretch;
+    justify-content:stretch;
     transition:opacity 0.22s ease, transform 0.22s ease;
   }
   .outlook-friends-grid{
@@ -4775,8 +4980,10 @@
     grid-template-columns:repeat(4, 1fr);
     gap:clamp(6px, 1.1vw, 12px);
     width:100%;
+    height:100%;
+    min-height:0;
     align-items:stretch;
-    justify-content:center;
+    justify-content:stretch;
     transition:opacity 0.22s ease, transform 0.22s ease;
   }
   .outlook-view-transition-in{
@@ -4794,9 +5001,9 @@
     align-items:stretch;
     justify-content:space-between;
     height:100%;
-    min-height:155px;
+    min-height:0;
     gap:clamp(2px, 0.8cqw, 5px);
-    padding:clamp(8px, 1.8cqw, 12px) clamp(10px, 2.2cqw, 14px);
+    padding:clamp(6px, 1.5vh, 12px) clamp(8px, 1.8cqw, 14px);
     background:rgba(4, 11, 14, 0.78);
     border:1px solid var(--grid-line);
     border-radius:12px;
@@ -4805,7 +5012,7 @@
     overflow:hidden;
     transition:background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
     box-shadow:inset 0 1px 0 rgba(255,255,255,0.06), 0 3px 12px rgba(0,0,0,0.45);
-    margin:0 auto;
+    margin:0;
     width:100%;
     position:relative;
     user-select:none;
@@ -5116,7 +5323,8 @@
       flex:none !important;
       padding:10px 8px 10px 28px !important;
     }
-    .row-splitter{
+    .row-splitter,
+    .tier-splitter{
       display:none !important;
     }
     .topbar{
@@ -5220,7 +5428,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.092026.0802</span>
+        <span id="appVersionText">v1.092826.2136</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -5283,14 +5491,77 @@
         <div class="splitter-grip"></div>
       </div>
 
-      <!-- CERTIFIED BLOCK 2: STACKED HIGH-DENSITY CLOCK (YELLOW DIGITS + WHITE PM / 24H + SECONDS) -->
-      <div class="top-cert-card" id="topClockBlock" role="button" tabindex="0" aria-label="Toggle 12-Hour or 24-Hour clock format" title="Tap clock to toggle 12-Hour / 24-Hour time format" onclick="">
-        <div class="stacked-clock-grid">
-          <div class="clock-hour-val" id="clockHour">11</div>
-          <div class="clock-ampm-val" id="clockAmpm">PM</div>
-          <div class="clock-colon-dots" id="clockDots">••</div>
-          <div class="clock-min-val" id="clockMin">05</div>
-          <div class="clock-sec-val" id="clockSec">20</div>
+      <!-- CERTIFIED BLOCK 2: 2-MODE INTERACTIVE CLOCK (1. STANDARD DIGITAL • 2. ANALOG WALL CLOCK) -->
+      <div class="top-cert-card" id="topClockBlock" role="button" tabindex="0" data-clock-mode="digital" aria-label="Clock display. Tap to cycle mode: Standard Digital, Analog Wall Clock. Tap AM/PM to toggle 12H/24H." title="Tap clock to cycle mode (Digital • Analog) • Tap AM/PM to toggle 12H/24H">
+        
+        <!-- Mode 1: Standard Stacked High-Density Digital Clock -->
+        <div class="clock-mode-view clock-mode-digital" id="clockDigitalMode">
+          <div class="stacked-clock-grid">
+            <div class="clock-hour-val" id="clockHour">11</div>
+            <div class="clock-ampm-val" id="clockAmpm" role="button" tabindex="0" title="Tap to toggle 12-Hour / 24-Hour mode" aria-label="Toggle 12-Hour or 24-Hour mode">PM</div>
+            <div class="clock-colon-dots" id="clockDots">••</div>
+            <div class="clock-min-val" id="clockMin">05</div>
+            <div class="clock-sec-val" id="clockSec">20</div>
+          </div>
+        </div>
+
+        <!-- Mode 2: Analog Wall Clock (Yellow & White Classic Wall Clock Dial) -->
+        <div class="clock-mode-view clock-mode-analog" id="clockAnalogMode" style="display:none;">
+          <svg class="analog-clock-svg" id="analogClockSvg" viewBox="0 0 200 200" aria-hidden="true">
+            <defs>
+              <radialGradient id="analogBezelGrad" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#141c24"/>
+                <stop offset="85%" stop-color="#090d12"/>
+                <stop offset="100%" stop-color="#1e293b"/>
+              </radialGradient>
+              <linearGradient id="analogRimGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="rgba(255,255,255,0.25)"/>
+                <stop offset="50%" stop-color="rgba(73,230,196,0.35)"/>
+                <stop offset="100%" stop-color="rgba(0,0,0,0.65)"/>
+              </linearGradient>
+              <filter id="analogGlow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="0" stdDeviation="2.5" flood-color="#ffe600" flood-opacity="0.45"/>
+              </filter>
+              <filter id="analogMinGlow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="0" stdDeviation="2.2" flood-color="#ffffff" flood-opacity="0.4"/>
+              </filter>
+            </defs>
+            <!-- Outer Bezel & Case -->
+            <circle cx="100" cy="100" r="97" fill="url(#analogBezelGrad)" stroke="url(#analogRimGrad)" stroke-width="3"/>
+            <circle cx="100" cy="100" r="93" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+            
+            <!-- Minute and Hour Dial Ticks -->
+            <g id="analogDialTicks"></g>
+
+            <!-- Numerals 1 to 12 -->
+            <g id="analogNumerals" class="analog-numerals-group"></g>
+
+            <!-- Hands -->
+            <!-- Hour Hand (Yellow, Bold, Tapered Baton with Pointed Tip) -->
+            <g id="analogHourHand">
+              <path d="M 97.5 106 L 97 96 L 98 56 L 100 48 L 102 56 L 103 96 L 102.5 106 Z" fill="rgba(0,0,0,0.5)" transform="translate(1, 1.5)"/>
+              <path d="M 97.5 106 L 97 96 L 98 56 L 100 48 L 102 56 L 103 96 L 102.5 106 Z" fill="#ffe600" stroke="#ffd000" stroke-width="0.6"/>
+              <line x1="100" y1="96" x2="100" y2="50" stroke="#fff59d" stroke-width="1.2" stroke-linecap="round"/>
+            </g>
+
+            <!-- Minute Hand (White & Silver, Sleek, Reaching Minute Track) -->
+            <g id="analogMinHand">
+              <path d="M 98 108 L 97.8 96 L 98.8 28 L 100 20 L 101.2 28 L 102.2 96 L 102 108 Z" fill="rgba(0,0,0,0.5)" transform="translate(1, 1.5)"/>
+              <path d="M 98 108 L 97.8 96 L 98.8 28 L 100 20 L 101.2 28 L 102.2 96 L 102 108 Z" fill="#ffffff" stroke="#cbd5e1" stroke-width="0.6"/>
+              <line x1="100" y1="96" x2="100" y2="22" stroke="#94a3b8" stroke-width="1.0" stroke-linecap="round"/>
+            </g>
+
+            <!-- Second Hand (Vibrant Yellow / Accent Sweep Hand with Hub and Tail) -->
+            <g id="analogSecHandGroup">
+              <line x1="100" y1="116" x2="100" y2="16" stroke="rgba(0,0,0,0.4)" stroke-width="1.6" stroke-linecap="round" transform="translate(1, 1.5)"/>
+              <line id="analogSecHand" x1="100" y1="116" x2="100" y2="16" stroke="#ffd748" stroke-width="1.6" stroke-linecap="round"/>
+              <circle cx="100" cy="112" r="3.2" fill="#ffd748" stroke="#cca529" stroke-width="0.6"/>
+            </g>
+
+            <!-- Center Pivot Pin (Two-tone Gold & Dark Bezel) -->
+            <circle cx="100" cy="100" r="5.5" fill="#141c24" stroke="#ffe600" stroke-width="2.2"/>
+            <circle cx="100" cy="100" r="2.2" fill="#ffe600"/>
+          </svg>
         </div>
       </div>
 
@@ -5374,6 +5645,11 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- HORIZONTAL TIER SPLITTER 0 (Between Row 1 & Row 2) -->
+    <div class="tier-splitter" id="tierSplitter0" data-tier-seam="0" tabindex="0" role="separator" aria-orientation="horizontal" aria-label="Resize row heights. Press OK to lock into adjust mode, Up and Down arrows to resize." title="Drag or press OK to adjust row heights • Double-tap to reset">
+      <div class="tier-splitter-grip"></div>
     </div>
 
     <div class="panels" id="panelsRow">
@@ -5728,6 +6004,11 @@
         <span id="comfortText" style="display:none;"></span>
         <div id="alertBox" style="display:none;"><span id="alertText"></span></div>
       </div>
+    </div>
+
+    <!-- HORIZONTAL TIER SPLITTER 1 (Between Row 2 & Row 3) -->
+    <div class="tier-splitter" id="tierSplitter1" data-tier-seam="1" tabindex="0" role="separator" aria-orientation="horizontal" aria-label="Resize row heights. Press OK to lock into adjust mode, Up and Down arrows to resize." title="Drag or press OK to adjust row heights • Double-tap to reset">
+      <div class="tier-splitter-grip"></div>
     </div>
 
     <!-- 5-DAY OUTLOOK & WEATHER FRIENDS MULTI-LOCATION STATION -->
@@ -6150,6 +6431,235 @@
     return Math.max(jan, jul) !== d.getTimezoneOffset();
   }
 
+  /* ---------------------------------------------------------------
+     2-MODE INTERACTIVE CLOCK SYSTEM (DIGITAL • ANALOG)
+  --------------------------------------------------------------- */
+  const CLOCK_MODES = ['digital', 'analog'];
+  let currentClockMode = 'digital';
+  try{
+    const savedMode = localStorage.getItem('wf_clock_mode');
+    if(CLOCK_MODES.includes(savedMode)) currentClockMode = savedMode;
+    else if(savedMode === 'hybrid') {
+      currentClockMode = 'analog';
+      localStorage.setItem('wf_clock_mode', 'analog');
+    }
+  }catch(e){}
+
+  let standardClockMetrics = { width: 0, height: 0 };
+
+  function fitDigitalClockToContainer(){
+    const clockBlock = document.getElementById('topClockBlock');
+    const clockHour = document.getElementById('clockHour');
+    const clockMin = document.getElementById('clockMin');
+    const clockColon = document.getElementById('clockColon');
+    const clockAmpm = document.getElementById('clockAmpm');
+    const clockSec = document.getElementById('clockSec');
+    const grid = document.getElementById('stackedClockGrid');
+    if(!clockBlock || !clockHour || !clockMin) return;
+
+    const style = window.getComputedStyle(clockBlock);
+    const padX = (parseFloat(style.paddingLeft) || 0) + (parseFloat(style.paddingRight) || 0);
+    const padY = (parseFloat(style.paddingTop) || 0) + (parseFloat(style.paddingBottom) || 0);
+
+    const curW = Math.max(60, clockBlock.clientWidth - padX);
+    const curH = Math.max(60, clockBlock.clientHeight - padY);
+
+    // Height-dominant stacked layout: hour on top, colon, min on bottom
+    const byH = curH * 0.46;
+    const byW = curW * 0.44;
+    const digitSize = Math.max(26, Math.min(140, Math.floor(Math.min(byH, byW))));
+
+    const colonSize = Math.max(10, Math.round(digitSize * 0.28));
+    const ampmSize = Math.max(11, Math.round(digitSize * 0.36));
+    const secSize = Math.max(10, Math.round(digitSize * 0.30));
+    const colGap = Math.max(6, Math.min(24, Math.round(digitSize * 0.22)));
+    const rowGap = Math.max(1, Math.min(5, Math.round(digitSize * 0.04)));
+
+    clockHour.style.fontSize = digitSize + 'px';
+    clockMin.style.fontSize = digitSize + 'px';
+    if(clockColon) clockColon.style.fontSize = colonSize + 'px';
+    if(clockAmpm) clockAmpm.style.fontSize = ampmSize + 'px';
+    if(clockSec) clockSec.style.fontSize = secSize + 'px';
+    if(grid){
+      grid.style.columnGap = colGap + 'px';
+      grid.style.rowGap = rowGap + 'px';
+    }
+  }
+
+  function fitAnalogClock(){
+    const clockBlock = document.getElementById('topClockBlock');
+    if(!clockBlock) return;
+
+    const style = window.getComputedStyle(clockBlock);
+    const padX = (parseFloat(style.paddingLeft) || 0) + (parseFloat(style.paddingRight) || 0);
+    const padY = (parseFloat(style.paddingTop) || 0) + (parseFloat(style.paddingBottom) || 0);
+
+    const curW = Math.max(50, clockBlock.clientWidth - padX);
+    const curH = Math.max(50, clockBlock.clientHeight - padY);
+
+    // Scale dynamically to 90% of available dimension without artificial caps
+    const safeDim = Math.max(50, Math.floor(Math.min(curW, curH) * 0.90));
+
+    const analogSvg = document.getElementById('analogClockSvg');
+    if(analogSvg){
+      analogSvg.style.width = safeDim + 'px';
+      analogSvg.style.height = safeDim + 'px';
+      analogSvg.style.maxWidth = safeDim + 'px';
+      analogSvg.style.maxHeight = safeDim + 'px';
+    }
+  }
+
+  function fitClockBlockToContainer(){
+    if(currentClockMode === 'analog'){
+      fitAnalogClock();
+    } else {
+      fitDigitalClockToContainer();
+    }
+  }
+
+  function measureStandardClockBlock(){
+    fitClockBlockToContainer();
+  }
+
+  function setClockMode(mode, save = true){
+    if(!CLOCK_MODES.includes(mode)) mode = 'digital';
+
+    // If currently in standard digital mode, always record standard size before switching out
+    if(currentClockMode === 'digital'){
+      measureStandardClockBlock();
+    }
+
+    currentClockMode = mode;
+    if(save){
+      try{
+        localStorage.setItem('wf_clock_mode', mode);
+      }catch(e){}
+    }
+
+    const clockCard = document.getElementById('topClockBlock');
+    if(clockCard){
+      clockCard.setAttribute('data-clock-mode', mode);
+      const modeNames = { digital: 'Standard Digital', analog: 'Analog Wall Clock' };
+      clockCard.setAttribute('aria-label', `Clock: ${modeNames[mode]}. Tap to switch mode. Tap AM/PM to toggle 12H/24H.`);
+      clockCard.setAttribute('title', `Clock Mode: ${modeNames[mode]} (Tap clock to cycle • Tap AM/PM to toggle 12H/24H)`);
+
+      // Strictly lock card dimensions when in analog mode so it NEVER expands or pushes the block space larger
+      if(mode === 'analog' && standardClockMetrics.width > 40 && standardClockMetrics.height > 40){
+        const style = window.getComputedStyle(clockCard);
+        const padX = (parseFloat(style.paddingLeft) || 0) + (parseFloat(style.paddingRight) || 0);
+        const padY = (parseFloat(style.paddingTop) || 0) + (parseFloat(style.paddingBottom) || 0);
+        clockCard.style.maxWidth = Math.ceil(standardClockMetrics.width + padX) + 'px';
+        clockCard.style.maxHeight = Math.ceil(standardClockMetrics.height + padY) + 'px';
+      } else {
+        clockCard.style.maxWidth = '';
+        clockCard.style.maxHeight = '';
+      }
+    }
+
+    const digitalEl = document.getElementById('clockDigitalMode');
+    const analogEl = document.getElementById('clockAnalogMode');
+
+    if(digitalEl){
+      if(mode === 'digital'){
+        digitalEl.style.visibility = 'visible';
+        digitalEl.style.pointerEvents = 'auto';
+      } else {
+        // Keep in flow to strictly anchor the card size, but make invisible and non-interactive
+        digitalEl.style.visibility = 'hidden';
+        digitalEl.style.pointerEvents = 'none';
+      }
+    }
+    if(analogEl) analogEl.style.setProperty('display', (mode === 'analog') ? 'flex' : 'none', 'important');
+
+    fitAnalogClock();
+
+    if(typeof tickClock === 'function'){
+      tickClock();
+    }
+  }
+
+  function cycleClockMode(){
+    const nextIdx = (CLOCK_MODES.indexOf(currentClockMode) + 1) % CLOCK_MODES.length;
+    setClockMode(CLOCK_MODES[nextIdx], true);
+  }
+
+  function initClockModes(){
+    // 1. Populate Analog Clock Ticks (12 major hour ticks, 48 minor minute ticks)
+    const ticksGroup = document.getElementById('analogDialTicks');
+    if(ticksGroup && ticksGroup.children.length === 0){
+      const frag = document.createDocumentFragment();
+      for(let i = 0; i < 60; i++){
+        const angle = i * 6;
+        const rad = angle * Math.PI / 180;
+        const isHour = (i % 5 === 0);
+        const rInner = isHour ? 84 : 88.5;
+        const rOuter = 91.5;
+        const x1 = (100 + rInner * Math.sin(rad)).toFixed(2);
+        const y1 = (100 - rInner * Math.cos(rad)).toFixed(2);
+        const x2 = (100 + rOuter * Math.sin(rad)).toFixed(2);
+        const y2 = (100 - rOuter * Math.cos(rad)).toFixed(2);
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', x1);
+        line.setAttribute('y1', y1);
+        line.setAttribute('x2', x2);
+        line.setAttribute('y2', y2);
+        line.setAttribute('stroke', isHour ? '#ffe600' : 'rgba(255,255,255,0.32)');
+        line.setAttribute('stroke-width', isHour ? '2.4' : '1.1');
+        line.setAttribute('stroke-linecap', 'round');
+        frag.appendChild(line);
+      }
+      ticksGroup.appendChild(frag);
+    }
+
+    // 2. Populate Analog Clock Numerals 1 to 12
+    const numsGroup = document.getElementById('analogNumerals');
+    if(numsGroup && numsGroup.children.length === 0){
+      const frag = document.createDocumentFragment();
+      for(let i = 1; i <= 12; i++){
+        const angle = i * 30;
+        const rad = angle * Math.PI / 180;
+        const rNum = 70;
+        const x = (100 + rNum * Math.sin(rad)).toFixed(2);
+        const y = (100 - rNum * Math.cos(rad)).toFixed(2);
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', x);
+        text.setAttribute('y', y);
+        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('dominant-baseline', 'central');
+        text.setAttribute('font-family', "'Outfit', sans-serif");
+        const isCardinal = (i % 3 === 0);
+        text.setAttribute('font-size', isCardinal ? '14' : '12');
+        text.setAttribute('font-weight', isCardinal ? '800' : '700');
+        text.setAttribute('fill', isCardinal ? '#ffe600' : '#ffffff');
+        text.textContent = String(i);
+        frag.appendChild(text);
+      }
+      numsGroup.appendChild(frag);
+    }
+
+    // Apply active clock mode
+    setClockMode(currentClockMode, false);
+  }
+
+  function updateAnalogClock(now){
+    const s = now.getSeconds();
+    const m = now.getMinutes() + s / 60;
+    const h = (now.getHours() % 12) + m / 60;
+
+    const hourDeg = h * 30;
+    const minDeg = m * 6;
+    const secDeg = s * 6;
+
+    const hourHand = document.getElementById('analogHourHand');
+    if(hourHand) hourHand.setAttribute('transform', `rotate(${hourDeg.toFixed(2)} 100 100)`);
+
+    const minHand = document.getElementById('analogMinHand');
+    if(minHand) minHand.setAttribute('transform', `rotate(${minDeg.toFixed(2)} 100 100)`);
+
+    const secHandGroup = document.getElementById('analogSecHandGroup');
+    if(secHandGroup) secHandGroup.setAttribute('transform', `rotate(${secDeg.toFixed(2)} 100 100)`);
+  }
+
   function tickClock(){
     const now = new Date();
     const rawHours = now.getHours();
@@ -6188,6 +6698,9 @@
 
     const secEl = document.getElementById('clockSec');
     if(secEl) secEl.textContent = seconds;
+
+    // Update Mode 2 (Analog Wall Clock)
+    updateAnalogClock(now);
 
     // Backward compatibility for existing selectors
     const digitsEl = document.getElementById('timeDigits');
@@ -6610,6 +7123,8 @@
     window.addEventListener('resize', fitWeatherBlockToContainer);
   }
 
+  initClockModes();
+  measureStandardClockBlock();
   tickClock();
   fitDateBlockToContainer();
   fitWeatherBlockToContainer();
@@ -6624,7 +7139,7 @@
       if(now - lastTrigger < 320) return; // Prevent double trigger from touchend + synthetic click
       lastTrigger = now;
       if(e && typeof e.stopPropagation === 'function') e.stopPropagation();
-      actionFn();
+      actionFn(e);
     };
 
     // 1. Mouse / Pointer / Touch clicks
@@ -6659,9 +7174,34 @@
     }
   }
 
+  // 1. Tapping AM/PM in Digital mode toggles 12H / 24H format without switching mode
+  const clockAmpmEl = document.getElementById('clockAmpm');
+  if(clockAmpmEl){
+    attachInteractiveAction(clockAmpmEl, (e) => {
+      if(e && typeof e.stopPropagation === 'function') e.stopPropagation();
+      toggleTimeFormat();
+    });
+  }
+
+  // 2. Tapping anywhere else on the Clock card toggles between the 2 modes:
+  //    Mode 1 (Standard Digital) <-> Mode 2 (Analog Wall Clock)
   const topClockCard = document.getElementById('topClockBlock');
   if(topClockCard){
-    attachInteractiveAction(topClockCard, toggleTimeFormat);
+    attachInteractiveAction(topClockCard, (e) => {
+      if(e && e.target && e.target.closest && e.target.closest('#clockAmpm')){
+        return;
+      }
+      cycleClockMode();
+    });
+
+    if(window.ResizeObserver){
+      const clockObserver = new ResizeObserver(() => {
+        measureStandardClockBlock();
+      });
+      clockObserver.observe(topClockCard);
+    } else {
+      window.addEventListener('resize', measureStandardClockBlock);
+    }
   }
 
   // NOMAD Interactive Toggle: Tap Temperature to toggle °F / °C
@@ -7122,6 +7662,95 @@
       `;
       grid.appendChild(card);
     }
+    fitOutlookCardsToContainer();
+  }
+
+  function fitOutlookCardsToContainer(){
+    const outlookEl = document.getElementById('outlook');
+    if(!outlookEl) return;
+
+    const availH = outlookEl.clientHeight;
+    const availW = outlookEl.clientWidth;
+    if(availH <= 20) return;
+
+    // Scale forecast day cards dynamically
+    const dayCards = outlookEl.querySelectorAll('.day-card');
+    if(dayCards.length > 0){
+      const padV = Math.max(3, Math.min(14, Math.round(availH * 0.055)));
+      const padH = Math.max(3, Math.min(10, Math.round(availW * 0.008)));
+      const cardGap = Math.max(1, Math.min(8, Math.round(availH * 0.026)));
+
+      const namePx = Math.max(10, Math.min(18, Math.round(availH * 0.088)));
+      const iconDim = Math.max(20, Math.min(52, Math.round(availH * 0.23)));
+      const descPx = Math.max(9, Math.min(14, Math.round(availH * 0.068)));
+      const hiLoPx = Math.max(13, Math.min(27, Math.round(availH * 0.125)));
+      const telemPx = Math.max(9, Math.min(13, Math.round(availH * 0.062)));
+      const telemIconDim = Math.max(10, Math.min(15, Math.round(telemPx * 1.15)));
+
+      dayCards.forEach(card => {
+        card.style.padding = `${padV}px ${padH}px`;
+        card.style.gap = `${cardGap}px`;
+
+        const dname = card.querySelector('.dname');
+        if(dname) dname.style.fontSize = `${namePx}px`;
+
+        const dicon = card.querySelector('.dicon');
+        if(dicon){
+          dicon.style.width = `${iconDim}px`;
+          dicon.style.height = `${iconDim}px`;
+        }
+
+        const ddesc = card.querySelector('.ddesc');
+        if(ddesc) ddesc.style.fontSize = `${descPx}px`;
+
+        const hiLo = card.querySelector('.hi-lo');
+        if(hiLo) hiLo.style.fontSize = `${hiLoPx}px`;
+
+        const telemVals = card.querySelectorAll('.day-telem-val');
+        telemVals.forEach(v => { v.style.fontSize = `${telemPx}px`; });
+
+        const telemIcons = card.querySelectorAll('.day-telem-icon');
+        telemIcons.forEach(ic => {
+          ic.style.width = `${telemIconDim}px`;
+          ic.style.height = `${telemIconDim}px`;
+        });
+      });
+    }
+
+    // Scale Weather Friends cards if visible
+    const friendCards = outlookEl.querySelectorAll('.friend-card');
+    if(friendCards.length > 0){
+      const padV = Math.max(4, Math.min(14, Math.round(availH * 0.065)));
+      const padH = Math.max(6, Math.min(16, Math.round(availW * 0.012)));
+      const fNamePx = Math.max(11, Math.min(20, Math.round(availH * 0.098)));
+      const fTempPx = Math.max(18, Math.min(48, Math.round(availH * 0.21)));
+      const fTelemPx = Math.max(9, Math.min(14, Math.round(availH * 0.068)));
+
+      friendCards.forEach(fcard => {
+        fcard.style.padding = `${padV}px ${padH}px`;
+        const fname = fcard.querySelector('.friend-name');
+        if(fname) fname.style.fontSize = `${fNamePx}px`;
+
+        const ftemp = fcard.querySelector('.friend-temp-num');
+        if(ftemp) ftemp.style.fontSize = `${fTempPx}px`;
+
+        const ftelems = fcard.querySelectorAll('.friend-telem-val');
+        ftelems.forEach(tv => { tv.style.fontSize = `${fTelemPx}px`; });
+      });
+    }
+  }
+
+  // Setup ResizeObserver on Outlook container
+  const outlookContainerEl = document.getElementById('outlook');
+  if(window.ResizeObserver && outlookContainerEl){
+    let outlookResizeTimer = null;
+    const outlookObserver = new ResizeObserver(() => {
+      if(outlookResizeTimer) cancelAnimationFrame(outlookResizeTimer);
+      outlookResizeTimer = requestAnimationFrame(fitOutlookCardsToContainer);
+    });
+    outlookObserver.observe(outlookContainerEl);
+  } else {
+    window.addEventListener('resize', fitOutlookCardsToContainer);
   }
 
   /* ===============================================================
@@ -7499,6 +8128,8 @@
       });
     });
 
+    fitOutlookCardsToContainer();
+
     // Fetch live weather concurrently
     const fetchPromises = weatherFriendsList.map(async (friend) => {
       try {
@@ -7507,6 +8138,7 @@
         if(card){
           const timeInfo = getFriendTimeInfo(friend.timezone, friend.timeFormat || '12');
           populateFriendCardMarkup(card, friend, data, timeInfo);
+          fitOutlookCardsToContainer();
         }
       } catch(err){
         console.warn(`Could not load weather for ${friend.name}:`, err.message);
@@ -7514,6 +8146,7 @@
     });
 
     await Promise.allSettled(fetchPromises);
+    fitOutlookCardsToContainer();
   }
 
   function toFriendUnitTemp(tempF, unit){
@@ -8276,7 +8909,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.092026.0802';
+  const CLIENT_APP_VERSION = 'v1.092826.2136';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -9276,10 +9909,10 @@
     buf.style.width = targetW + 'px';
     buf.innerHTML = buildInspirationHtml(cleanText, cleanAuthor);
 
-    // Dynamic pre-plexor font scale for quotes (14.0px to 25.5px)
+    // Dynamic pre-plexor font scale for quotes (14.0px to up to 48px depending on headroom)
     // Seamlessly expands short/medium quotes to fill available height, scales down gracefully for long text
     let low = 28; // 14.0 * 2
-    let high = 51; // 25.5 * 2
+    let high = Math.min(96, Math.max(52, Math.round(targetH * 0.38))) * 2;
     let bestSize = 14.0;
     let bestLineHeight = 1.30;
     let foundFit = false;
@@ -9289,8 +9922,8 @@
     while(low <= high){
       const mid = Math.floor((low + high) / 2);
       const testPx = mid / 2;
-      const lh = testPx >= 20 ? 1.24 : (testPx >= 17 ? 1.28 : 1.32);
-      const testAuthorPx = Math.max(12.0, Math.min(16.5, Math.round(testPx * 0.68)));
+      const lh = testPx >= 24 ? 1.20 : (testPx >= 19 ? 1.25 : 1.30);
+      const testAuthorPx = Math.max(12.0, Math.min(22.0, Math.round(testPx * 0.65)));
 
       buf.style.fontSize = testPx + 'px';
       buf.style.lineHeight = String(lh);
@@ -9729,17 +10362,17 @@
     const h = Math.floor(rect.height || eightballStage.clientHeight);
     if(w <= 20 || h <= 20) return;
 
-    // Use 82% of the smaller dimension minus 8px buffer so sphere and its outer glows never touch boundaries
+    // Use 86% of the smaller dimension minus 4px buffer so sphere and its outer glows never touch boundaries
     const minDim = Math.min(w, h);
-    const targetDiameter = Math.max(64, Math.min(260, Math.floor(minDim * 0.82) - 8));
+    const targetDiameter = Math.max(64, Math.min(380, Math.floor(minDim * 0.86) - 4));
     eightballSphere.style.setProperty('--eightball-size', targetDiameter + 'px');
     eightballSphere.style.width = targetDiameter + 'px';
     eightballSphere.style.height = targetDiameter + 'px';
 
     // Proportional dimensions for Notebook & Attic Box
-    const tomeWidth = Math.max(120, Math.min(350, Math.floor(w * 0.94)));
-    const tomeHeight = Math.max(64, Math.min(210, Math.floor(h * 0.84)));
-    const boxHeight = Math.max(70, Math.min(230, Math.floor(h * 0.92))); // 10% taller
+    const tomeWidth = Math.max(120, Math.min(420, Math.floor(w * 0.94)));
+    const tomeHeight = Math.max(64, Math.min(320, Math.floor(h * 0.88)));
+    const boxHeight = Math.max(70, Math.min(340, Math.floor(h * 0.94))); // 10% taller
     if(notebookTome){
       notebookTome.style.setProperty('--notebook-width', tomeWidth + 'px');
       notebookTome.style.setProperty('--notebook-height', tomeHeight + 'px');
@@ -10892,26 +11525,27 @@
 
     const titleLen = title.length;
     // Adaptively scale title ratio & max title size based on character count so short titles can fill nicely without overwhelming
+    const heightBoost = Math.max(1.0, Math.min(1.45, usableH / 140));
     let titleRatio = 1.32;
-    let maxTitlePx = 26.0;
+    let maxTitlePx = Math.round(26.0 * heightBoost);
     let minTitlePx = 14.5;
     if (titleLen > 48) {
       titleRatio = 1.12;
-      maxTitlePx = 18.0;
+      maxTitlePx = Math.round(18.0 * heightBoost);
       minTitlePx = 13.0;
     } else if (titleLen > 32) {
       titleRatio = 1.20;
-      maxTitlePx = 22.0;
+      maxTitlePx = Math.round(22.0 * heightBoost);
       minTitlePx = 13.5;
     } else if (titleLen > 20) {
       titleRatio = 1.28;
-      maxTitlePx = 24.5;
+      maxTitlePx = Math.round(24.5 * heightBoost);
       minTitlePx = 14.0;
     }
 
     function testFit(text, summaryPx) {
       const titlePx = Math.min(maxTitlePx, Math.max(minTitlePx, Math.round(summaryPx * titleRatio)));
-      const gapPx = Math.min(10, Math.max(4, Math.round(summaryPx * 0.40)));
+      const gapPx = Math.min(14, Math.max(4, Math.round(summaryPx * 0.40)));
 
       hBufTitle.textContent = title;
       hBufTitle.style.fontSize = titlePx + 'px';
@@ -10930,7 +11564,7 @@
       return (rH <= targetH && rW <= targetW + 2);
     }
 
-    function findBestSummaryPx(text, minPx = 12.5, maxPx = 22.0) {
+    function findBestSummaryPx(text, minPx = 12.5, maxPx = Math.max(22.0, Math.min(32.0, Math.round(usableH * 0.17)))) {
       let low = Math.round(minPx * 2);
       let high = Math.round(maxPx * 2);
       let best = 0;
@@ -11419,11 +12053,12 @@
   loadAllChannels(false);
 
   /* ---------------------------------------------------------------
-     INTERACTIVE ROW SEAM SPLITTERS (HORIZONTAL RESIZING)
+     INTERACTIVE ROW SEAM & TIER SPLITTERS (HORIZONTAL & VERTICAL RESIZING)
   --------------------------------------------------------------- */
   function initRowSplitters(){
     const topRowEl = document.getElementById('topTier');
     const midRowEl = document.getElementById('panelsRow');
+    const screenEl = document.getElementById('screen');
 
     // Default column weights
     // Top row: Date (1.25fr), Clock (0.85fr narrower), Weather (1.25fr)
@@ -11432,6 +12067,25 @@
     const DEFAULT_MID = [1.0, 1.0, 1.0];
 
     const MIN_WEIGHT = 0.45; // Prevents any block from collapsing completely
+
+    // Default row height weights for the 3 horizontal tiers
+    const DEFAULT_ROW_HEIGHT_WEIGHTS = {
+      topTier: 1.0,
+      panelsRow: 1.25,
+      outlook: 0.95
+    };
+    const MIN_ROW_HEIGHT_WEIGHT = 0.35;
+    const STEP_HEIGHT_DELTA = 0.10;
+    const ROW_MIN_HEIGHTS = {
+      topTier: 95,
+      panelsRow: 115,
+      outlook: 65
+    };
+    const ROW_FRIENDLY_NAMES = {
+      topTier: 'Date & Clock',
+      panelsRow: 'Center Panels',
+      outlook: '5-Day Outlook'
+    };
 
     function applyWeights(rowId, weights){
       if(rowId === 'top' && topRowEl){
@@ -11466,7 +12120,73 @@
     applyWeights('top', currentWeights.top);
     applyWeights('mid', currentWeights.mid);
 
+    function loadSavedRowHeightWeights(){
+      try{
+        const raw = localStorage.getItem('wf_row_height_weights');
+        if(raw){
+          const parsed = JSON.parse(raw);
+          if(parsed && typeof parsed === 'object' && ['topTier', 'panelsRow', 'outlook'].every(id => typeof parsed[id] === 'number' && parsed[id] >= MIN_ROW_HEIGHT_WEIGHT)){
+            return parsed;
+          }
+        }
+      }catch(e){}
+      return { ...DEFAULT_ROW_HEIGHT_WEIGHTS };
+    }
+
+    let currentRowHeightWeights = loadSavedRowHeightWeights();
+
+    function applyRowHeightWeights(weights){
+      if(!screenEl) return;
+      ['topTier', 'panelsRow', 'outlook'].forEach(id => {
+        const val = (weights && weights[id] !== undefined) ? weights[id] : DEFAULT_ROW_HEIGHT_WEIGHTS[id];
+        screenEl.style.setProperty(`--rh-${id}`, String(val));
+      });
+    }
+
+    applyRowHeightWeights(currentRowHeightWeights);
+
+    function syncTierSplitters(){
+      const sp0 = document.getElementById('tierSplitter0');
+      const sp1 = document.getElementById('tierSplitter1');
+      if(!screenEl || !sp0 || !sp1) return;
+
+      const activeRows = (typeof currentRowOrder !== 'undefined' ? currentRowOrder : ['topTier', 'panelsRow', 'outlook'])
+        .filter(id => !(typeof rowCollapsedState !== 'undefined' && rowCollapsedState[id]));
+
+      if(activeRows.length <= 1){
+        sp0.style.display = 'none';
+        sp1.style.display = 'none';
+      } else if(activeRows.length === 2){
+        sp0.style.display = 'flex';
+        sp1.style.display = 'none';
+        const firstRowEl = document.getElementById(activeRows[0]);
+        if(firstRowEl && firstRowEl.nextSibling !== sp0){
+          firstRowEl.after(sp0);
+        }
+        sp0.dataset.aboveRow = activeRows[0];
+        sp0.dataset.belowRow = activeRows[1];
+      } else if(activeRows.length >= 3){
+        sp0.style.display = 'flex';
+        sp1.style.display = 'flex';
+        const firstRowEl = document.getElementById(activeRows[0]);
+        const secondRowEl = document.getElementById(activeRows[1]);
+        if(firstRowEl && firstRowEl.nextSibling !== sp0){
+          firstRowEl.after(sp0);
+        }
+        if(secondRowEl && secondRowEl.nextSibling !== sp1){
+          secondRowEl.after(sp1);
+        }
+        sp0.dataset.aboveRow = activeRows[0];
+        sp0.dataset.belowRow = activeRows[1];
+        sp1.dataset.aboveRow = activeRows[1];
+        sp1.dataset.belowRow = activeRows[2];
+      }
+    }
+    window.syncTierSplitters = syncTierSplitters;
+    syncTierSplitters();
+
     const splitters = document.querySelectorAll('.row-splitter');
+    const tierSplitters = document.querySelectorAll('.tier-splitter');
     const hudEl = document.getElementById('remoteResizeHud');
     const hudTextEl = document.getElementById('remoteResizeHudText');
     const hudPctBadge = document.getElementById('remoteResizePctBadge');
@@ -11474,12 +12194,18 @@
     const hudRightBtn = document.getElementById('remoteResizeRightBtn');
     const hudResetBtn = document.getElementById('remoteResizeResetBtn');
     const hudExitBtn = document.getElementById('remoteResizeExitBtn');
+    const hudHintEl = document.getElementById('remoteResizeHudHint');
 
     let activeLockedSplitter = null;
     const STEP_DELTA = 0.14; // ~5% width shift per remote press or click for clearly visible adjustments
 
     function getSplitterLabel(sp){
       if(!sp) return 'Blocks';
+      if(sp.classList.contains('tier-splitter')){
+        const above = ROW_FRIENDLY_NAMES[sp.dataset.aboveRow] || 'Row';
+        const below = ROW_FRIENDLY_NAMES[sp.dataset.belowRow] || 'Row';
+        return `${above} ↕ ${below}`;
+      }
       const r = sp.dataset.row;
       const s = parseInt(sp.dataset.seam, 10);
       if(r === 'top'){
@@ -11494,18 +12220,42 @@
       if(!hudEl) return;
       const target = sp || activeLockedSplitter;
       if(!target) return;
-      const rId = target.dataset.row;
+      const isTier = target.classList.contains('tier-splitter');
+
       if(hudTextEl){
-        hudTextEl.innerHTML = `Resizing: <b>${getSplitterLabel(target)}</b>`;
+        hudTextEl.innerHTML = isTier ? `Resizing Row Heights: <b>${getSplitterLabel(target)}</b>` : `Resizing: <b>${getSplitterLabel(target)}</b>`;
       }
-      if(hudPctBadge && currentWeights[rId]){
-        const w = currentWeights[rId];
-        const sum = w[0] + w[1] + w[2];
-        const p0 = Math.round((w[0] / sum) * 100);
-        const p1 = Math.round((w[1] / sum) * 100);
-        const p2 = Math.round((w[2] / sum) * 100);
-        hudPctBadge.textContent = `${p0}% | ${p1}% | ${p2}%`;
+
+      if(hudPctBadge){
+        if(isTier){
+          const sum = currentRowHeightWeights.topTier + currentRowHeightWeights.panelsRow + currentRowHeightWeights.outlook;
+          const p0 = Math.round((currentRowHeightWeights.topTier / sum) * 100);
+          const p1 = Math.round((currentRowHeightWeights.panelsRow / sum) * 100);
+          const p2 = Math.round((currentRowHeightWeights.outlook / sum) * 100);
+          hudPctBadge.textContent = `${p0}% | ${p1}% | ${p2}%`;
+        } else {
+          const rId = target.dataset.row;
+          if(currentWeights[rId]){
+            const w = currentWeights[rId];
+            const sum = w[0] + w[1] + w[2];
+            const p0 = Math.round((w[0] / sum) * 100);
+            const p1 = Math.round((w[1] / sum) * 100);
+            const p2 = Math.round((w[2] / sum) * 100);
+            hudPctBadge.textContent = `${p0}% | ${p1}% | ${p2}%`;
+          }
+        }
       }
+
+      if(isTier){
+        if(hudLeftBtn) hudLeftBtn.textContent = '▲ NUDGE UP';
+        if(hudRightBtn) hudRightBtn.textContent = 'NUDGE DOWN ▼';
+        if(hudHintEl) hudHintEl.innerHTML = 'Smart TV Remote: Press <b>▲</b> <b>▼</b> to nudge • <b>OK</b> to finish • <b>0</b> to reset';
+      } else {
+        if(hudLeftBtn) hudLeftBtn.textContent = '◀ SHIFT LEFT';
+        if(hudRightBtn) hudRightBtn.textContent = 'SHIFT RIGHT ▶';
+        if(hudHintEl) hudHintEl.innerHTML = 'Smart TV Remote: Press <b>◀</b> <b>▶</b> to nudge • <b>OK</b> to finish • <b>0</b> to reset';
+      }
+
       positionResizeHud(target);
     }
 
@@ -11514,15 +12264,41 @@
       const target = sp || activeLockedSplitter;
       if(!target) return;
 
+      const hudW = hudEl.offsetWidth || 560;
+      const hudH = hudEl.offsetHeight || 80;
+      const pad = 12;
+
+      if(target.classList.contains('tier-splitter')){
+        const seamRect = target.getBoundingClientRect();
+        let targetLeft = (window.innerWidth - hudW) / 2;
+        targetLeft = Math.max(pad, Math.min(window.innerWidth - hudW - pad, targetLeft));
+        hudEl.style.left = `${Math.round(targetLeft)}px`;
+
+        if(seamRect.top < window.innerHeight * 0.5){
+          let targetTop = seamRect.bottom + 10;
+          if(targetTop + hudH > window.innerHeight - pad){
+            targetTop = window.innerHeight - hudH - pad;
+          }
+          hudEl.style.top = `${Math.round(targetTop)}px`;
+          hudEl.style.bottom = 'auto';
+          hudEl.setAttribute('data-placement', 'under');
+        } else {
+          let targetBottom = (window.innerHeight - seamRect.top) + 10;
+          if(targetBottom + hudH > window.innerHeight - pad){
+            targetBottom = window.innerHeight - hudH - pad;
+          }
+          hudEl.style.bottom = `${Math.round(targetBottom)}px`;
+          hudEl.style.top = 'auto';
+          hudEl.setAttribute('data-placement', 'above');
+        }
+        return;
+      }
+
       const rowEl = target.closest('.panels') || target.closest('.topbar') || target.closest('.dashboard-row') || target.parentElement;
       if(!rowEl) return;
 
       const rowRect = rowEl.getBoundingClientRect();
       const seamRect = target.getBoundingClientRect();
-      
-      const hudW = hudEl.offsetWidth || 560;
-      const hudH = hudEl.offsetHeight || 80;
-      const pad = 12;
 
       // 1. Horizontal Position: Center directly over the active seam
       const seamCenterX = seamRect.left + (seamRect.width / 2);
@@ -11532,8 +12308,6 @@
       hudEl.style.left = `${Math.round(targetLeft)}px`;
 
       // 2. Vertical Position:
-      // - TOP SEAM: Place controls UNDER the row (leaving Date, Clock & Weather 100% visible)
-      // - BOTTOM SEAM: Place controls ABOVE the seam / row (leaving 8-Ball, Quote & Holidays 100% visible)
       const isTopRow = (target.dataset.row === 'top') || (rowRect.top < window.innerHeight * 0.42);
 
       if(isTopRow){
@@ -11572,10 +12346,16 @@
       if(target){
         target.classList.remove('is-locked-resize');
         if(save){
-          const rId = target.dataset.row;
-          try{
-            localStorage.setItem(`wf_layout_${rId}_weights`, JSON.stringify(currentWeights[rId]));
-          }catch(err){}
+          if(target.classList.contains('tier-splitter')){
+            try{
+              localStorage.setItem('wf_row_height_weights', JSON.stringify(currentRowHeightWeights));
+            }catch(err){}
+          } else {
+            const rId = target.dataset.row;
+            try{
+              localStorage.setItem(`wf_layout_${rId}_weights`, JSON.stringify(currentWeights[rId]));
+            }catch(err){}
+          }
         }
       }
       activeLockedSplitter = null;
@@ -11605,21 +12385,35 @@
       hudLeftBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         e.preventDefault();
-        if(activeLockedSplitter) nudgeSplitter(activeLockedSplitter, -STEP_DELTA);
+        if(activeLockedSplitter){
+          if(activeLockedSplitter.classList.contains('tier-splitter')){
+            nudgeTierSplitter(activeLockedSplitter, -STEP_HEIGHT_DELTA);
+          } else {
+            nudgeSplitter(activeLockedSplitter, -STEP_DELTA);
+          }
+        }
       });
     }
     if(hudRightBtn){
       hudRightBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         e.preventDefault();
-        if(activeLockedSplitter) nudgeSplitter(activeLockedSplitter, STEP_DELTA);
+        if(activeLockedSplitter){
+          if(activeLockedSplitter.classList.contains('tier-splitter')){
+            nudgeTierSplitter(activeLockedSplitter, STEP_HEIGHT_DELTA);
+          } else {
+            nudgeSplitter(activeLockedSplitter, STEP_DELTA);
+          }
+        }
       });
     }
     if(hudResetBtn){
       hudResetBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         e.preventDefault();
-        if(activeLockedSplitter) resetSplitterRow(activeLockedSplitter);
+        if(activeLockedSplitter){
+          resetSplitterRow(activeLockedSplitter);
+        }
       });
     }
     if(hudExitBtn){
@@ -11641,6 +12435,16 @@
       const c = e.keyCode || e.which || 0;
       return k === 'ArrowRight' || k === 'Right' || k === 'UIKeyInputRightArrow' || c === 39;
     }
+    function isUpKey(e){
+      const k = e.key || '';
+      const c = e.keyCode || e.which || 0;
+      return k === 'ArrowUp' || k === 'Up' || k === 'UIKeyInputUpArrow' || c === 38;
+    }
+    function isDownKey(e){
+      const k = e.key || '';
+      const c = e.keyCode || e.which || 0;
+      return k === 'ArrowDown' || k === 'Down' || k === 'UIKeyInputDownArrow' || c === 40;
+    }
     function isOkKey(e){
       const k = e.key || '';
       const c = e.keyCode || e.which || 0;
@@ -11659,9 +12463,57 @@
       return k === '0' || k === 'Numpad0' || c === 48 || c === 96;
     }
 
+    function nudgeTierSplitter(sp, deltaWeight){
+      if(!sp) return;
+      const aboveId = sp.dataset.aboveRow;
+      const belowId = sp.dataset.belowRow;
+      if(!aboveId || !belowId) return;
+
+      const sumPairWeight = currentRowHeightWeights[aboveId] + currentRowHeightWeights[belowId];
+      let wAbove = currentRowHeightWeights[aboveId] + deltaWeight;
+      let wBelow = currentRowHeightWeights[belowId] - deltaWeight;
+
+      if(wAbove < MIN_ROW_HEIGHT_WEIGHT){
+        wBelow -= (MIN_ROW_HEIGHT_WEIGHT - wAbove);
+        wAbove = MIN_ROW_HEIGHT_WEIGHT;
+      }
+      if(wBelow < MIN_ROW_HEIGHT_WEIGHT){
+        wAbove -= (MIN_ROW_HEIGHT_WEIGHT - wBelow);
+        wBelow = MIN_ROW_HEIGHT_WEIGHT;
+      }
+
+      currentRowHeightWeights[aboveId] = parseFloat(wAbove.toFixed(3));
+      currentRowHeightWeights[belowId] = parseFloat(wBelow.toFixed(3));
+
+      applyRowHeightWeights(currentRowHeightWeights);
+      try{
+        localStorage.setItem('wf_row_height_weights', JSON.stringify(currentRowHeightWeights));
+      }catch(err){}
+
+      updateResizeHud(sp);
+      triggerAllContentRefits();
+    }
+
+    function resetRowHeights(sp){
+      currentRowHeightWeights = { ...DEFAULT_ROW_HEIGHT_WEIGHTS };
+      applyRowHeightWeights(currentRowHeightWeights);
+      try{
+        localStorage.removeItem('wf_row_height_weights');
+      }catch(err){}
+      if(sp) updateResizeHud(sp);
+      triggerAllContentRefits();
+      if(activeLockedSplitter === sp){
+        unlockSplitter(sp, false);
+      }
+    }
+
     // Step-wise adjust weights by delta (used by TV remote arrow keys, HUD buttons and long-hold)
     function nudgeSplitter(sp, deltaWeight){
       if(!sp) return;
+      if(sp.classList.contains('tier-splitter')){
+        nudgeTierSplitter(sp, deltaWeight);
+        return;
+      }
       const rowId = sp.dataset.row;
       const seamIndex = parseInt(sp.dataset.seam, 10);
       const startW = [...currentWeights[rowId]];
@@ -11717,6 +12569,10 @@
 
     function resetSplitterRow(sp){
       if(!sp) return;
+      if(sp.classList.contains('tier-splitter')){
+        resetRowHeights(sp);
+        return;
+      }
       const rowId = sp.dataset.row;
       const def = rowId === 'top' ? DEFAULT_TOP : DEFAULT_MID;
       currentWeights[rowId] = [...def];
@@ -11738,6 +12594,167 @@
       }
     }
 
+    // Attach dragging to vertical tier splitters (Row Height)
+    tierSplitters.forEach(splitter => {
+      let startY = 0;
+      let startAboveH = 0;
+      let startBelowH = 0;
+      let combinedH = 0;
+      let startWeights = {};
+      let aboveRowId = '';
+      let belowRowId = '';
+      let isDragging = false;
+      let longPressTimer = null;
+      let didLongPressTrigger = false;
+
+      function onPointerDown(e){
+        if(e.button !== undefined && e.button !== 0) return;
+        aboveRowId = splitter.dataset.aboveRow;
+        belowRowId = splitter.dataset.belowRow;
+        if(!aboveRowId || !belowRowId) return;
+
+        const aboveEl = document.getElementById(aboveRowId);
+        const belowEl = document.getElementById(belowRowId);
+        if(!aboveEl || !belowEl) return;
+
+        didLongPressTrigger = false;
+        longPressTimer = setTimeout(() => {
+          didLongPressTrigger = true;
+          toggleLockSplitter(splitter);
+        }, 550);
+
+        const aboveRect = aboveEl.getBoundingClientRect();
+        const belowRect = belowEl.getBoundingClientRect();
+        startY = e.clientY;
+        startAboveH = aboveRect.height;
+        startBelowH = belowRect.height;
+        combinedH = startAboveH + startBelowH;
+        startWeights = { ...currentRowHeightWeights };
+
+        isDragging = true;
+        splitter.classList.add('is-dragging');
+        document.body.classList.add('is-resizing-rows');
+
+        if(splitter.setPointerCapture && e.pointerId !== undefined){
+          try{ splitter.setPointerCapture(e.pointerId); }catch(err){}
+        }
+
+        window.addEventListener('pointermove', onPointerMove, { passive: false });
+        window.addEventListener('pointerup', onPointerUp);
+        window.addEventListener('pointercancel', onPointerUp);
+      }
+
+      function onPointerMove(e){
+        if(!isDragging) return;
+        if(longPressTimer && Math.abs(e.clientY - startY) > 4){
+          clearTimeout(longPressTimer);
+          longPressTimer = null;
+        }
+        if(e.cancelable && typeof e.preventDefault === 'function') e.preventDefault();
+
+        const deltaY = e.clientY - startY;
+        const minAbove = ROW_MIN_HEIGHTS[aboveRowId] || 95;
+        const minBelow = ROW_MIN_HEIGHTS[belowRowId] || 65;
+
+        let newAboveH = startAboveH + deltaY;
+        newAboveH = Math.max(minAbove, Math.min(combinedH - minBelow, newAboveH));
+        const frac = newAboveH / combinedH;
+
+        const sumPairWeight = (startWeights[aboveRowId] || DEFAULT_ROW_HEIGHT_WEIGHTS[aboveRowId]) + 
+                              (startWeights[belowRowId] || DEFAULT_ROW_HEIGHT_WEIGHTS[belowRowId]);
+        
+        currentRowHeightWeights[aboveRowId] = Math.max(MIN_ROW_HEIGHT_WEIGHT, parseFloat((sumPairWeight * frac).toFixed(3)));
+        currentRowHeightWeights[belowRowId] = Math.max(MIN_ROW_HEIGHT_WEIGHT, parseFloat((sumPairWeight - currentRowHeightWeights[aboveRowId]).toFixed(3)));
+
+        applyRowHeightWeights(currentRowHeightWeights);
+        triggerAllContentRefits();
+
+        if(activeLockedSplitter === splitter){
+          updateResizeHud(splitter);
+        }
+      }
+
+      function onPointerUp(e){
+        if(!isDragging) return;
+        if(longPressTimer){
+          clearTimeout(longPressTimer);
+          longPressTimer = null;
+        }
+        isDragging = false;
+        splitter.classList.remove('is-dragging');
+        document.body.classList.remove('is-resizing-rows');
+
+        if(splitter.releasePointerCapture && e && e.pointerId !== undefined){
+          try{ splitter.releasePointerCapture(e.pointerId); }catch(err){}
+        }
+
+        window.removeEventListener('pointermove', onPointerMove);
+        window.removeEventListener('pointerup', onPointerUp);
+        window.removeEventListener('pointercancel', onPointerUp);
+
+        try{
+          localStorage.setItem('wf_row_height_weights', JSON.stringify(currentRowHeightWeights));
+        }catch(err){}
+
+        triggerAllContentRefits();
+        if(activeLockedSplitter === splitter){
+          updateResizeHud(splitter);
+        }
+      }
+
+      splitter.addEventListener('pointerdown', onPointerDown);
+
+      let lastTapTime = 0;
+      splitter.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if(didLongPressTrigger) return;
+        const now = Date.now();
+        if(now - lastTapTime < 320){
+          resetRowHeights(splitter);
+        } else {
+          toggleLockSplitter(splitter);
+        }
+        lastTapTime = now;
+      });
+
+      splitter.addEventListener('keydown', (e) => {
+        if(isOkKey(e)){
+          e.preventDefault();
+          e.stopPropagation();
+          toggleLockSplitter(splitter);
+          return;
+        }
+        if(isUpKey(e) || isLeftKey(e)){
+          e.preventDefault();
+          e.stopPropagation();
+          if(!activeLockedSplitter) lockSplitter(splitter);
+          nudgeTierSplitter(splitter, -STEP_HEIGHT_DELTA);
+          return;
+        }
+        if(isDownKey(e) || isRightKey(e)){
+          e.preventDefault();
+          e.stopPropagation();
+          if(!activeLockedSplitter) lockSplitter(splitter);
+          nudgeTierSplitter(splitter, STEP_HEIGHT_DELTA);
+          return;
+        }
+        if(isResetKey(e)){
+          e.preventDefault();
+          e.stopPropagation();
+          resetRowHeights(splitter);
+          return;
+        }
+        if(isBackKey(e)){
+          if(activeLockedSplitter){
+            e.preventDefault();
+            e.stopPropagation();
+            unlockSplitter(splitter, true);
+          }
+        }
+      });
+    });
+
+    // Attach dragging to horizontal column splitters (Block Width)
     splitters.forEach(splitter => {
       const rowId = splitter.dataset.row;
       const seamIndex = parseInt(splitter.dataset.seam, 10);
@@ -11755,7 +12772,6 @@
         if(!rowEl) return;
 
         didLongPressTrigger = false;
-        // Start long-press detection (550ms hold locks seam into resize mode on TVs/touchscreens)
         longPressTimer = setTimeout(() => {
           didLongPressTrigger = true;
           toggleLockSplitter(splitter);
@@ -11775,7 +12791,6 @@
         if(!isDragging || containerWidth <= 0) return;
         const deltaX = e.clientX - startX;
         if(Math.abs(deltaX) > 4 && longPressTimer){
-          // User started dragging, cancel long press
           clearTimeout(longPressTimer);
           longPressTimer = null;
         }
@@ -11857,11 +12872,6 @@
       splitter.addEventListener('pointerup', onPointerUp);
       splitter.addEventListener('pointercancel', onPointerUp);
 
-      // Tap / Click handler:
-      // - If long press triggered, do nothing
-      // - If double click/tap (< 350ms), reset to default 1:1 proportions
-      // - If already locked, clicking left or right half nudges that direction (great for TV pointer remotes)
-      // - Otherwise, toggles lock mode
       let lastTapTime = 0;
       splitter.addEventListener('click', (e) => {
         if(didLongPressTrigger) return;
@@ -11884,7 +12894,6 @@
 
       // Smart TV Remote & Keyboard Controls directly on focused splitter:
       splitter.addEventListener('keydown', (e) => {
-        // Enter / Space / OK key on Smart TV Remote toggles lock mode
         if(isOkKey(e)){
           e.preventDefault();
           e.stopPropagation();
@@ -11892,7 +12901,6 @@
           return;
         }
 
-        // Left / Right arrows resize adjacent blocks
         if(isLeftKey(e)){
           e.preventDefault();
           e.stopPropagation();
@@ -11908,7 +12916,6 @@
           return;
         }
 
-        // 0 key resets to default
         if(isResetKey(e)){
           e.preventDefault();
           e.stopPropagation();
@@ -11916,7 +12923,6 @@
           return;
         }
 
-        // Escape / Back unlocks
         if(isBackKey(e)){
           if(activeLockedSplitter){
             e.preventDefault();
@@ -11928,9 +12934,29 @@
     });
 
     // Global Keydown Handler for when a seam is in active locked resize mode
-    // Allows Left/Right arrow nudges and OK / Escape locks from anywhere on the page
     window.addEventListener('keydown', (e) => {
       if(!activeLockedSplitter) return;
+
+      if(activeLockedSplitter.classList.contains('tier-splitter')){
+        if(isUpKey(e) || isLeftKey(e)){
+          e.preventDefault();
+          e.stopPropagation();
+          nudgeTierSplitter(activeLockedSplitter, -STEP_HEIGHT_DELTA);
+        } else if(isDownKey(e) || isRightKey(e)){
+          e.preventDefault();
+          e.stopPropagation();
+          nudgeTierSplitter(activeLockedSplitter, STEP_HEIGHT_DELTA);
+        } else if(isOkKey(e) || isBackKey(e)){
+          e.preventDefault();
+          e.stopPropagation();
+          unlockSplitter(activeLockedSplitter, true);
+        } else if(isResetKey(e)){
+          e.preventDefault();
+          e.stopPropagation();
+          resetRowHeights(activeLockedSplitter);
+        }
+        return;
+      }
 
       if(isLeftKey(e)){
         e.preventDefault();
@@ -12025,22 +13051,20 @@
     } catch(e){}
   }
 
+  let allContentRefitRaf = null;
   function triggerAllContentRefits(){
-    if(typeof fitDateBlockToContainer === 'function'){
-      setTimeout(fitDateBlockToContainer, 30);
-    }
-    if(typeof fitWeatherBlockToContainer === 'function'){
-      setTimeout(fitWeatherBlockToContainer, 30);
-    }
-    if(typeof resizeEightball === 'function'){
-      setTimeout(resizeEightball, 30);
-    }
-    if(typeof fitQuoteTextToContainer === 'function' && typeof currentInspirationData !== 'undefined' && currentInspirationData){
-      setTimeout(() => fitQuoteTextToContainer(currentInspirationData.text, currentInspirationData.author), 30);
-    }
-    if(typeof screenAndFitHolidayText === 'function'){
-      setTimeout(screenAndFitHolidayText, 30);
-    }
+    if(allContentRefitRaf) cancelAnimationFrame(allContentRefitRaf);
+    allContentRefitRaf = requestAnimationFrame(() => {
+      if(typeof fitDateBlockToContainer === 'function') fitDateBlockToContainer();
+      if(typeof fitClockBlockToContainer === 'function') fitClockBlockToContainer();
+      if(typeof fitWeatherBlockToContainer === 'function') fitWeatherBlockToContainer();
+      if(typeof resizeEightball === 'function') resizeEightball();
+      if(typeof fitQuoteTextToContainer === 'function' && typeof currentInspirationData !== 'undefined' && currentInspirationData){
+        fitQuoteTextToContainer(currentInspirationData.text, currentInspirationData.author);
+      }
+      if(typeof screenAndFitHolidayText === 'function') screenAndFitHolidayText();
+      if(typeof fitOutlookCardsToContainer === 'function') fitOutlookCardsToContainer();
+    });
   }
 
   function unrollAllRows(){
@@ -12120,6 +13144,9 @@
     });
 
     updateRowArrowControls();
+    if(typeof syncTierSplitters === 'function'){
+      syncTierSplitters();
+    }
     triggerAllContentRefits();
 
     // Check if ALL shades are rolled up -> Trigger STARFIELD OF CONSCIOUSNESS WARP!

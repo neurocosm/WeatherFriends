@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Supernode Framework</title>
+  <meta name="description" content="Supernode Framework - Modular Hardware Chassis & Resizable Tile Grid">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bezel-hi: #2b333a;
+      --bezel: #1b2126;
+      --bezel-lo: #101417;
+      
+      --screen-bg: #0b1013;
+      --screen-bg-2: #12191f;
+      
+      --card-bg: rgba(255, 255, 255, 0.025);
+      --card-border: rgba(255, 255, 255, 0.07);
+      --card-hover: rgba(255, 255, 255, 0.04);
+      
+      --text-main: #e2e8f0;
+      --text-muted: #7e8f9b;
+      --text-dim: #475569;
+      --accent-blue: #38bdf8;
+      --accent-green: #34d399;
+      --accent-amber: #fbbf24;
+      
+      --rh-row1: 1.0;
+      --rh-row2: 1.25;
+      --rh-row3: 0.95;
+      
+      --r1-w1: 1;
+      --r1-w2: 1;
+      --r1-w3: 1;
+      
+      --r2-w1: 1;
+      --r2-w2: 1;
+      --r2-w3: 1;
+    }
+
+    *{
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body{
+      width: 100%;
+      height: 100%;
+      background: #000000;
+      color: var(--text-main);
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(4px, 1.2vh, 12px) clamp(6px, 1.5vw, 14px);
+    }
+
+    /* Outer Hardware Device Frame with Equal 12px Bezels */
+    .device{
+      width: 100%;
+      max-width: 1440px;
+      height: 100%;
+      min-height: 0;
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(155deg, var(--bezel-hi), var(--bezel) 40%, var(--bezel-lo));
+      border-radius: 16px;
+      padding: 0 12px 12px 2px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -2px 6px rgba(0,0,0,0.3);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Subtle Micro Branding in the 12px Top Bezel Area */
+    .device-header-strip{
+      height: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 6px 0 14px;
+      user-select: none;
+      opacity: 0.45;
+      transition: opacity 0.2s ease;
+    }
+    .device-header-strip:hover{
+      opacity: 0.85;
+    }
+    .brand-name{
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .brand-ver{
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7.5px;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+    }
+
+    .device-body{
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      flex: 1 1 auto;
+      height: calc(100% - 14px);
+      min-height: 0;
+      width: 100%;
+      position: relative;
+    }
+
+    /* Left Hardware Rail (8px Width, 2px Margin) */
+    .bezel-rail{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: stretch;
+      flex: 0 0 8px;
+      width: 8px;
+      margin-right: 2px;
+      height: 100%;
+      min-height: 0;
+      padding-top: clamp(6px, 1.2vh, 12px);
+      padding-bottom: clamp(4px, 0.8vh, 8px);
+      position: relative;
+      z-index: 25;
+      user-select: none;
+      gap: 6px;
+    }
+
+    .bezel-row-ctrl{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(8px, 1.4vh, 14px);
+      width: 100%;
+      min-height: 0;
+      position: relative;
+      transition: flex 0.25s cubic-bezier(0.16, 1, 0.3, 1), min-height 0.25s ease, max-height 0.25s ease;
+    }
+    .bezel-row-ctrl[data-row-id="row1"]:not(.is-row-collapsed){ flex: var(--rh-row1, 1.0) 1 0px !important; }
+    .bezel-row-ctrl[data-row-id="row2"]:not(.is-row-collapsed){ flex: var(--rh-row2, 1.25) 1 0px !important; }
+    .bezel-row-ctrl[data-row-id="row3"]:not(.is-row-collapsed){ flex: var(--rh-row3, 0.95) 1 0px !important; }
+
+    .bezel-row-ctrl.is-row-collapsed{
+      flex: 0 0 16px !important;
+      min-height: 16px !important;
+      max-height: 16px !important;
+      gap: 0 !important;
+    }
+
+    /* Hardware Buttons (Subtle Industrial Gray Palette) */
+    .bezel-btn{
+      background: transparent;
+      border: none;
+      outline: none;
+      padding: 4px 0;
+      margin: 0;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      line-height: 1;
+      min-height: 16px;
+      width: 100%;
+    }
+    .bezel-btn:focus-visible{
+      outline: 1px dotted #8294a0;
+      outline-offset: 1px;
+    }
+
+    .bezel-shutter-block{
+      display: block;
+      width: 7px;
+      height: 4.5px;
+      background: #768793;
+      border: 1px solid #4a5761;
+      border-radius: 1px;
+      transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+    }
+    .bezel-btn-shutter:hover .bezel-shutter-block{
+      background: #9fb0bc;
+      border-color: #63737e;
+    }
+    .bezel-btn-shutter:active .bezel-shutter-block{
+      transform: scale(0.90);
+      background: #54636d;
+    }
+    .bezel-row-ctrl.is-row-collapsed .bezel-shutter-block{
+      background: #877f72;
+      border-color: #575249;
+    }
+    .bezel-row-ctrl.is-row-collapsed .bezel-btn-shutter:hover .bezel-shutter-block{
+      background: #a89e8f;
+      border-color: #6e685e;
+    }
+
+    .bezel-btn-arrow{
+      color: #768793;
+      transition: color 0.15s ease, transform 0.1s ease;
+    }
+    .bezel-btn-arrow:hover{
+      color: #a8b8c4;
+      transform: scale(1.15);
+    }
+    .bezel-btn-arrow:active{
+      transform: scale(0.85);
+      color: #54636d;
+    }
+    .bezel-arrow-icon{
+      display: block;
+      pointer-events: none;
+      fill: currentColor;
+    }
+
+    .bezel-row-ctrl.slot-top .bezel-arrow-up{ display: none !important; }
+    .bezel-row-ctrl.slot-bottom .bezel-arrow-down{ display: none !important; }
+    .bezel-row-ctrl.is-row-collapsed .bezel-btn-arrow,
+    .bezel-row-ctrl.is-row-collapsed .bezel-btn-dice{ display: none !important; }
+
+    .bezel-btn-dice{
+      color: #768793;
+      transition: color 0.15s ease, transform 0.15s ease;
+    }
+    .bezel-btn-dice:hover{
+      color: #a8b8c4;
+      transform: scale(1.15);
+    }
+    .bezel-btn-dice:active{
+      transform: scale(0.88);
+      color: #54636d;
+    }
+    .bezel-dice-icon{
+      display: block;
+      pointer-events: none;
+    }
+    .bezel-dice-icon rect{
+      stroke: currentColor;
+      fill: rgba(118, 135, 147, 0.08);
+    }
+    .bezel-dice-icon circle{
+      fill: currentColor;
+    }
+    .bezel-btn-dice.is-alt-view{
+      color: #cbd5e1;
+    }
+    .bezel-btn-dice.is-alt-view rect{
+      stroke: #cbd5e1;
+      fill: rgba(203, 213, 225, 0.15);
+    }
+    .bezel-btn-dice.is-alt-view circle{
+      fill: #cbd5e1;
+    }
+
+    /* Inner Screen CRT Canvas */
+    .screen{
+      position: relative;
+      flex: 1 1 auto;
+      height: 100%;
+      min-height: 0;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: stretch;
+      background: radial-gradient(120% 140% at 50% 0%, var(--screen-bg-2), var(--screen-bg) 70%);
+      border-radius: 10px;
+      border: 1px solid #000;
+      box-shadow: inset 0 0 40px rgba(0,0,0,0.9), inset 0 0 2px #000;
+      padding: clamp(6px, 1.2vh, 12px) clamp(8px, 1.2vw, 14px) clamp(4px, 0.8vh, 8px) clamp(8px, 1.2vw, 14px);
+      overflow: hidden;
+    }
+
+    /* Row Containers - Edge-to-Edge Flex Stretch */
+    .screen-row{
+      width: 100%;
+      min-height: 48px;
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      justify-content: stretch;
+      gap: 0;
+      position: relative;
+      overflow: hidden;
+      transition: flex 0.25s cubic-bezier(0.16, 1, 0.3, 1), min-height 0.25s ease, max-height 0.25s ease;
+    }
+
+    #row1:not(.is-row-collapsed){ flex: var(--rh-row1, 1.0) 1 0px !important; }
+    #row2:not(.is-row-collapsed){ flex: var(--rh-row2, 1.25) 1 0px !important; }
+    #row3:not(.is-row-collapsed){ flex: var(--rh-row3, 0.95) 1 0px !important; }
+
+    #row1.is-row-collapsed,
+    #row2.is-row-collapsed,
+    #row3.is-row-collapsed{
+      flex: 0 0 16px !important;
+      min-height: 16px !important;
+      max-height: 16px !important;
+      height: 16px !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      gap: 0 !important;
+    }
+
+    .is-row-collapsed > :not(.row-shutter-bar){
+      display: none !important;
+    }
+    .is-row-collapsed .row-shutter-bar{
+      display: flex !important;
+    }
+
+    .row-shutter-bar{
+      display: none;
+      width: 100%;
+      height: 16px;
+      box-sizing: border-box;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(180deg, rgba(20, 30, 36, 0.95), rgba(10, 16, 20, 0.95));
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 4px;
+      cursor: pointer;
+      user-select: none;
+      color: var(--text-muted);
+      font-size: 8px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: background 0.18s ease, border-color 0.18s ease;
+    }
+    .row-shutter-bar:hover{
+      background: linear-gradient(180deg, rgba(30, 45, 55, 0.95), rgba(15, 22, 28, 0.95));
+      border-color: rgba(255, 255, 255, 0.25);
+      color: var(--text-main);
+    }
+    .shutter-dot{
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #877f72;
+    }
+    .shutter-hint{
+      font-size: 7.5px;
+      opacity: 0.6;
+      font-weight: 400;
+    }
+
+    /* Horizontal Tier Drag Splitter */
+    .tier-splitter{
+      flex: 0 0 6px;
+      height: 6px;
+      min-height: 6px;
+      max-height: 6px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: row-resize;
+      user-select: none;
+      z-index: 10;
+      transition: background 0.15s ease;
+    }
+    .tier-splitter:hover, .tier-splitter.is-dragging{
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .tier-splitter-grip{
+      width: 48px;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 1px;
+      transition: background 0.15s ease, width 0.15s ease;
+    }
+    .tier-splitter:hover .tier-splitter-grip, .tier-splitter.is-dragging .tier-splitter-grip{
+      background: #cbd5e1;
+      width: 64px;
+    }
+
+    /* Vertical Column Drag Splitters */
+    .col-splitter{
+      flex: 0 0 6px;
+      width: 6px;
+      min-width: 6px;
+      max-width: 6px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: col-resize;
+      user-select: none;
+      z-index: 10;
+      transition: background 0.15s ease;
+    }
+    .col-splitter:hover, .col-splitter.is-dragging{
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .col-splitter-grip{
+      width: 2px;
+      height: 32px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 1px;
+      transition: background 0.15s ease, height 0.15s ease;
+    }
+    .col-splitter:hover .col-splitter-grip, .col-splitter.is-dragging .col-splitter-grip{
+      background: #cbd5e1;
+      height: 48px;
+    }
+
+    /* Equal Stretch Columns Across Row 1 & Row 2 */
+    #panel1A{ flex: var(--r1-w1, 1) 1 0px; min-width: 0; width: 0; }
+    #panel1B{ flex: var(--r1-w2, 1) 1 0px; min-width: 0; width: 0; }
+    #panel1C{ flex: var(--r1-w3, 1) 1 0px; min-width: 0; width: 0; }
+
+    #panel2A{ flex: var(--r2-w1, 1) 1 0px; min-width: 0; width: 0; }
+    #panel2B{ flex: var(--r2-w2, 1) 1 0px; min-width: 0; width: 0; }
+    #panel2C{ flex: var(--r2-w3, 1) 1 0px; min-width: 0; width: 0; }
+
+    /* Generic Modular Tile Cards */
+    .tile-card{
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+    .tile-card:hover{
+      border-color: rgba(255, 255, 255, 0.14);
+      background: var(--card-hover);
+    }
+
+    .tile-header{
+      height: 26px;
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      background: rgba(0, 0, 0, 0.18);
+      user-select: none;
+    }
+    .tile-title{
+      font-size: 8.5px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+    .tile-badge{
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7.5px;
+      padding: 1.5px 5px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-dim);
+    }
+
+    .tile-body{
+      flex: 1 1 auto;
+      height: 100%;
+      min-height: 0;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Populated Content Mock Styling */
+    .panel-content-wrap{
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .kpi-grid{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .kpi-cell{
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .kpi-label{
+      font-size: 8px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .kpi-val{
+      font-size: 19px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-main);
+      line-height: 1.1;
+    }
+    .kpi-val small{
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .kpi-val.highlight{
+      color: var(--accent-green);
+    }
+    .kpi-sub{
+      font-size: 8px;
+      color: var(--text-muted);
+    }
+
+    .status-pill-row{
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding-top: 4px;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    .status-indicator{
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-green);
+    }
+    .status-text{
+      font-size: 8.5px;
+      color: var(--text-muted);
+    }
+
+    .mock-chart-container{
+      flex: 1 1 auto;
+      min-height: 38px;
+      display: flex;
+      align-items: flex-end;
+      padding-bottom: 4px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .mock-chart-bars{
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 4px;
+    }
+    .chart-bar{
+      flex: 1 1 auto;
+      background: linear-gradient(180deg, rgba(56, 189, 248, 0.8), rgba(56, 189, 248, 0.25));
+      border-radius: 2px 2px 0 0;
+      min-width: 4px;
+    }
+    .chart-legend{
+      display: flex;
+      justify-content: space-between;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7.5px;
+      color: var(--text-dim);
+    }
+
+    .metric-list{
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .metric-row{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 3px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    }
+    .m-key{
+      font-size: 8.5px;
+      color: var(--text-muted);
+    }
+    .m-val{
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+    .m-val.highlight{
+      color: var(--accent-blue);
+    }
+
+    .gauge-display{
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .gauge-val-group{
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+    .gauge-number{
+      font-size: 20px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-main);
+    }
+    .gauge-unit{
+      font-size: 9px;
+      color: var(--text-dim);
+      font-weight: 600;
+    }
+    .gauge-track{
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .gauge-fill{
+      height: 100%;
+      background: var(--accent-blue);
+      border-radius: 2px;
+    }
+    .data-tag-row{
+      display: flex;
+      gap: 8px;
+      font-size: 7.5px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-dim);
+    }
+
+    .matrix-grid{
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+    }
+    .matrix-cell{
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+      padding: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+    .matrix-cell.active{
+      border-color: rgba(56, 189, 248, 0.25);
+    }
+    .node-id{
+      font-size: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-muted);
+    }
+    .node-status{
+      font-size: 7.5px;
+      font-weight: 600;
+      color: var(--accent-green);
+    }
+    .matrix-cell.standby .node-status{
+      color: var(--accent-amber);
+    }
+    .matrix-summary{
+      font-size: 7.5px;
+      color: var(--text-dim);
+      letter-spacing: 0.06em;
+    }
+
+    .log-stream{
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .log-entry{
+      display: flex;
+      gap: 6px;
+      font-size: 8px;
+      line-height: 1.3;
+    }
+    .log-ts{
+      color: var(--text-dim);
+    }
+    .log-msg{
+      color: var(--text-muted);
+    }
+
+    /* Row 3 Modular Grid Trays */
+    .grid-tray{
+      width: 100%;
+      height: 100%;
+      display: grid;
+      gap: 6px;
+    }
+    #primaryTray{
+      grid-template-columns: repeat(5, 1fr);
+    }
+    #secondaryTray{
+      grid-template-columns: repeat(4, 1fr);
+      display: none;
+    }
+
+    .tray-cell-wrap{
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .tray-num{
+      font-size: 16px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-main);
+    }
+    .tray-num small{
+      font-size: 9.5px;
+      color: var(--text-muted);
+    }
+    .tray-desc{
+      font-size: 8px;
+      color: var(--text-muted);
+    }
+    .tray-sparkline{
+      height: 14px;
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      padding-top: 2px;
+    }
+    .spark-bar{
+      flex: 1 1 auto;
+      background: var(--accent-blue);
+      opacity: 0.7;
+      border-radius: 1px;
+    }
+
+    .row-swap-anim{
+      animation: rowSwapGlide 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    @keyframes rowSwapGlide{
+      0%{ opacity: 0.7; transform: scale(0.995); }
+      100%{ opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="device" id="supernodeDevice">
+  
+  <!-- Subtle Micro Header Strip (Inside Top 12px Area) -->
+  <div class="device-header-strip">
+    <span class="brand-name">SUPERNODE FRAMEWORK</span>
+    <span class="brand-ver">v1.09302026.1832</span>
+  </div>
+
+  <div class="device-body" id="deviceBody">
+    <!-- Physical Left Bezel Control Rail (8px Narrow Profile) -->
+    <div class="bezel-rail" id="bezelRail" aria-label="Chassis row controls">
+      
+      <!-- Row 1 Controls -->
+      <div class="bezel-row-ctrl slot-top" id="ctrlRow1" data-row-id="row1" aria-label="Row 1 controls">
+        <button type="button" class="bezel-btn bezel-btn-shutter" title="Roll up row (window shade)" aria-label="Roll up row 1">
+          <span class="bezel-shutter-block"></span>
+        </button>
+        <button type="button" class="bezel-btn bezel-btn-arrow bezel-arrow-up" title="Move row up" aria-label="Move row up">
+          <svg class="bezel-arrow-icon" viewBox="0 0 10 10" width="6.5" height="6.5">
+            <polygon points="5,1 9,8 1,8"/>
+          </svg>
+        </button>
+        <button type="button" class="bezel-btn bezel-btn-arrow bezel-arrow-down" title="Move row down" aria-label="Move row down">
+          <svg class="bezel-arrow-icon" viewBox="0 0 10 10" width="6.5" height="6.5">
+            <polygon points="1,2 9,2 5,9"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Row 2 Controls -->
+      <div class="bezel-row-ctrl slot-mid" id="ctrlRow2" data-row-id="row2" aria-label="Row 2 controls">
+        <button type="button" class="bezel-btn bezel-btn-shutter" title="Roll up row (window shade)" aria-label="Roll up row 2">
+          <span class="bezel-shutter-block"></span>
+        </button>
+        <button type="button" class="bezel-btn bezel-btn-arrow bezel-arrow-up" title="Move row up" aria-label="Move row up">
+          <svg class="bezel-arrow-icon" viewBox="0 0 10 10" width="6.5" height="6.5">
+            <polygon points="5,1 9,8 1,8"/>
+          </svg>
+        </button>
+        <button type="button" class="bezel-btn bezel-btn-arrow bezel-arrow-down" title="Move row down" aria-label="Move row down">
+          <svg class="bezel-arrow-icon" viewBox="0 0 10 10" width="6.5" height="6.5">
+            <polygon points="1,2 9,2 5,9"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Row 3 Controls -->
+      <div class="bezel-row-ctrl slot-bottom" id="ctrlRow3" data-row-id="row3" aria-label="Row 3 controls">
+        <button type="button" class="bezel-btn bezel-btn-shutter" title="Roll up row (window shade)" aria-label="Roll up row 3">
+          <span class="bezel-shutter-block"></span>
+        </button>
+        <button type="button" class="bezel-btn bezel-btn-arrow bezel-arrow-up" title="Move row up" aria-label="Move row up">
+          <svg class="bezel-arrow-icon" viewBox="0 0 10 10" width="6.5" height="6.5">
+            <polygon points="5,1 9,8 1,8"/>
+          </svg>
+        </button>
+        <button type="button" class="bezel-btn bezel-btn-arrow bezel-arrow-down" title="Move row down" aria-label="Move row down">
+          <svg class="bezel-arrow-icon" viewBox="0 0 10 10" width="6.5" height="6.5">
+            <polygon points="1,2 9,2 5,9"/>
+          </svg>
+        </button>
+        <button type="button" class="bezel-btn bezel-btn-dice" id="bezelDiceBtn" title="Switch view: Primary Grid ⇄ Alternate Tray" aria-label="Toggle tray view">
+          <svg class="bezel-dice-icon" viewBox="0 0 20 20" width="7.5" height="7.5">
+            <rect x="1.5" y="1.5" width="17" height="17" rx="3" stroke-width="2"/>
+            <circle cx="6" cy="6" r="1.8"/>
+            <circle cx="14" cy="6" r="1.8"/>
+            <circle cx="10" cy="10" r="1.8"/>
+            <circle cx="6" cy="14" r="1.8"/>
+            <circle cx="14" cy="14" r="1.8"/>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Main Screen Display -->
+    <div class="screen" id="screen">
+      
+      <!-- ==================== TIER ROW 1 (3-COLUMNS FULL WIDTH) ==================== -->
+      <div class="screen-row" id="row1">
+        <div class="row-shutter-bar" id="shutterRow1" role="button" tabindex="0" title="Click to unroll Tier 1">
+          <span class="shutter-dot"></span>
+          <span>TIER 1 (ROW 1) <span class="shutter-hint">(click to unroll)</span></span>
+        </div>
+
+        <div class="tile-card" id="panel1A">
+          <div class="tile-header">
+            <span class="tile-title">System Overview</span>
+            <span class="tile-badge">1A • LIVE</span>
+          </div>
+          <div class="tile-body" id="body1A"></div>
+        </div>
+
+        <div class="col-splitter" data-row="row1" data-seam="0" role="separator" aria-orientation="vertical" title="Drag to resize width">
+          <div class="col-splitter-grip"></div>
+        </div>
+
+        <div class="tile-card" id="panel1B">
+          <div class="tile-header">
+            <span class="tile-title">Activity Stream</span>
+            <span class="tile-badge">1B • SIGNAL</span>
+          </div>
+          <div class="tile-body" id="body1B"></div>
+        </div>
+
+        <div class="col-splitter" data-row="row1" data-seam="1" role="separator" aria-orientation="vertical" title="Drag to resize width">
+          <div class="col-splitter-grip"></div>
+        </div>
+
+        <div class="tile-card" id="panel1C">
+          <div class="tile-header">
+            <span class="tile-title">Signal Monitor</span>
+            <span class="tile-badge">1C • ACTIVE</span>
+          </div>
+          <div class="tile-body" id="body1C"></div>
+        </div>
+      </div>
+
+      <!-- TIER SPLITTER 0 -->
+      <div class="tier-splitter" id="tierSplitter0" data-tier-seam="0" role="separator" aria-orientation="horizontal" title="Drag to resize tier heights">
+        <div class="tier-splitter-grip"></div>
+      </div>
+
+      <!-- ==================== TIER ROW 2 (3-COLUMNS FULL WIDTH) ==================== -->
+      <div class="screen-row" id="row2">
+        <div class="row-shutter-bar" id="shutterRow2" role="button" tabindex="0" title="Click to unroll Tier 2">
+          <span class="shutter-dot"></span>
+          <span>TIER 2 (ROW 2) <span class="shutter-hint">(click to unroll)</span></span>
+        </div>
+
+        <div class="tile-card" id="panel2A">
+          <div class="tile-header">
+            <span class="tile-title">Pipeline Vectors</span>
+            <span class="tile-badge">2A • FLOW</span>
+          </div>
+          <div class="tile-body" id="body2A"></div>
+        </div>
+
+        <div class="col-splitter" data-row="row2" data-seam="0" role="separator" aria-orientation="vertical" title="Drag to resize width">
+          <div class="col-splitter-grip"></div>
+        </div>
+
+        <div class="tile-card" id="panel2B">
+          <div class="tile-header">
+            <span class="tile-title">Node Matrix Inspector</span>
+            <span class="tile-badge">2B • QUORUM</span>
+          </div>
+          <div class="tile-body" id="body2B"></div>
+        </div>
+
+        <div class="col-splitter" data-row="row2" data-seam="1" role="separator" aria-orientation="vertical" title="Drag to resize width">
+          <div class="col-splitter-grip"></div>
+        </div>
+
+        <div class="tile-card" id="panel2C">
+          <div class="tile-header">
+            <span class="tile-title">Operations Log</span>
+            <span class="tile-badge">2C • FEED</span>
+          </div>
+          <div class="tile-body" id="body2C"></div>
+        </div>
+      </div>
+
+      <!-- TIER SPLITTER 1 -->
+      <div class="tier-splitter" id="tierSplitter1" data-tier-seam="1" role="separator" aria-orientation="horizontal" title="Drag to resize tier heights">
+        <div class="tier-splitter-grip"></div>
+      </div>
+
+      <!-- ==================== TIER ROW 3 (MODULAR TRAY) ==================== -->
+      <div class="screen-row" id="row3">
+        <div class="row-shutter-bar" id="shutterRow3" role="button" tabindex="0" title="Click to unroll Tier 3">
+          <span class="shutter-dot"></span>
+          <span id="shutterRow3Label">TIER 3 (MODULAR TRAY) <span class="shutter-hint">(click to unroll)</span></span>
+        </div>
+
+        <!-- Primary Tray (5 Columns) -->
+        <div class="grid-tray" id="primaryTray">
+          <div class="tile-card">
+            <div class="tile-header"><span class="tile-title">Channel 01</span><span class="tile-badge">01</span></div>
+            <div class="tile-body" id="slotBody1"></div>
+          </div>
+          <div class="tile-card">
+            <div class="tile-header"><span class="tile-title">Channel 02</span><span class="tile-badge">02</span></div>
+            <div class="tile-body" id="slotBody2"></div>
+          </div>
+          <div class="tile-card">
+            <div class="tile-header"><span class="tile-title">Channel 03</span><span class="tile-badge">03</span></div>
+            <div class="tile-body" id="slotBody3"></div>
+          </div>
+          <div class="tile-card">
+            <div class="tile-header"><span class="tile-title">Channel 04</span><span class="tile-badge">04</span></div>
+            <div class="tile-body" id="slotBody4"></div>
+          </div>
+          <div class="tile-card">
+            <div class="tile-header"><span class="tile-title">Channel 05</span><span class="tile-badge">05</span></div>
+            <div class="tile-body" id="slotBody5"></div>
+          </div>
+        </div>
+
+        <!-- Secondary Alternate Tray (4 Columns) -->
+        <div class="grid-tray" id="secondaryTray">
+          <div class="tile-card">
+            <div class="tile-header"><span class="tile-title">Aux Alpha</span><span class="tile-badge">AUX</span></div>
+            <div class="tile-body"><div class="tray-cell-wrap"><span class="tray-num">SEC-A</span><span class="tray-desc">Standby Array</span></div></div>
+          </div>
+          <div class="tile-card">
+            <div class="tile-header"><span class="tile-title">Aux Beta</span><span class="tile-badge">AUX</span></div>
+            <div class="tile-body"><div class="tray-cell-wrap"><span class="tray-num">SEC-B</span><span class="tray-desc">Backup Tunnel</span></div></div>
+          </div>
+          <div class="tile-card">
+            <div class="tile-header"><span class="tile-title">Aux Gamma</span><span class="tile-badge">AUX</span></div>
+            <div class="tile-body"><div class="tray-cell-wrap"><span class="tray-num">SEC-C</span><span class="tray-desc">Relay Gateway</span></div></div>
+          </div>
+          <div class="tile-card">
+            <div class="tile-header"><span class="tile-title">Aux Delta</span><span class="tile-badge">AUX</span></div>
+            <div class="tile-body"><div class="tray-cell-wrap"><span class="tray-num">SEC-D</span><span class="tray-desc">Telemetry Bus</span></div></div>
+          </div>
+        </div>
+
+      </div>
+
+    </div> <!-- #screen -->
+  </div> <!-- #deviceBody -->
+
+</div> <!-- #supernodeDevice -->
+
+<script>
+(function(){
+  'use strict';
+
+  const DEFAULT_ROW_ORDER = ['row1', 'row2', 'row3'];
+  const VALID_ROW_IDS = ['row1', 'row2', 'row3'];
+  const DEFAULT_ROW_HEIGHTS = { row1: 1.0, row2: 1.25, row3: 0.95 };
+  const DEFAULT_COL_WEIGHTS = [1, 1, 1];
+
+  let currentRowOrder = [...DEFAULT_ROW_ORDER];
+  let rowCollapsedState = { row1: false, row2: false, row3: false };
+  let activeTrayView = 'primary';
+
+  try {
+    const savedOrder = JSON.parse(localStorage.getItem('supernode_row_order'));
+    if(Array.isArray(savedOrder) && savedOrder.length === 3 && savedOrder.every(id => VALID_ROW_IDS.includes(id))){
+      currentRowOrder = savedOrder;
+    }
+  } catch(e){}
+
+  try {
+    const savedCollapsed = JSON.parse(localStorage.getItem('supernode_row_collapsed'));
+    if(savedCollapsed && typeof savedCollapsed === 'object'){
+      VALID_ROW_IDS.forEach(id => {
+        if(typeof savedCollapsed[id] === 'boolean') rowCollapsedState[id] = savedCollapsed[id];
+      });
+    }
+  } catch(e){}
+
+  try {
+    const savedTray = localStorage.getItem('supernode_tray_view');
+    if(savedTray === 'secondary') activeTrayView = 'secondary';
+  } catch(e){}
+
+  function loadRowHeights(){
+    try {
+      const saved = JSON.parse(localStorage.getItem('supernode_row_heights'));
+      if(saved && typeof saved === 'object' && VALID_ROW_IDS.every(id => typeof saved[id] === 'number')){
+        return saved;
+      }
+    } catch(e){}
+    return { ...DEFAULT_ROW_HEIGHTS };
+  }
+
+  let currentRowHeights = loadRowHeights();
+
+  function applyRowHeights(weights){
+    VALID_ROW_IDS.forEach(id => {
+      const val = (weights && weights[id] !== undefined) ? weights[id] : DEFAULT_ROW_HEIGHTS[id];
+      document.documentElement.style.setProperty(`--rh-${id}`, String(val));
+    });
+  }
+
+  applyRowHeights(currentRowHeights);
+
+  function loadColWeights(rowKey){
+    try {
+      const saved = JSON.parse(localStorage.getItem(`supernode_${rowKey}_weights`));
+      if(Array.isArray(saved) && saved.length === 3 && saved.every(n => typeof n === 'number' && n > 0.05)){
+        return saved;
+      }
+    } catch(e){}
+    return [...DEFAULT_COL_WEIGHTS];
+  }
+
+  const colWeights = {
+    row1: loadColWeights('row1'),
+    row2: loadColWeights('row2')
+  };
+
+  function applyColWeights(rowKey, weights){
+    const prefix = rowKey === 'row1' ? '--r1-w' : '--r2-w';
+    document.documentElement.style.setProperty(`${prefix}1`, String(weights[0]));
+    document.documentElement.style.setProperty(`${prefix}2`, String(weights[1]));
+    document.documentElement.style.setProperty(`${prefix}3`, String(weights[2]));
+  }
+
+  applyColWeights('row1', colWeights.row1);
+  applyColWeights('row2', colWeights.row2);
+
+  // Splitter Dragging (Horizontal Tier Splitters)
+  function initTierSplitters(){
+    const splitters = document.querySelectorAll('.tier-splitter');
+
+    splitters.forEach(sp => {
+      sp.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        sp.classList.add('is-dragging');
+        sp.setPointerCapture(e.pointerId);
+
+        const startY = e.clientY;
+        const seamIdx = parseInt(sp.dataset.tierSeam, 10);
+        
+        const activeRows = currentRowOrder.filter(id => !rowCollapsedState[id]);
+        if(activeRows.length < 2) return;
+
+        const rowAboveId = activeRows[seamIdx];
+        const rowBelowId = activeRows[seamIdx + 1];
+        if(!rowAboveId || !rowBelowId) return;
+
+        const rowAboveEl = document.getElementById(rowAboveId);
+        const rowBelowEl = document.getElementById(rowBelowId);
+        const initialAboveHeight = rowAboveEl.offsetHeight;
+        const initialBelowHeight = rowBelowEl.offsetHeight;
+        const totalH = initialAboveHeight + initialBelowHeight;
+
+        const onPointerMove = (ev) => {
+          const dy = ev.clientY - startY;
+          let newAboveH = initialAboveHeight + dy;
+          let newBelowH = initialBelowHeight - dy;
+
+          const minH = 50;
+          if(newAboveH < minH){ newAboveH = minH; newBelowH = totalH - minH; }
+          if(newBelowH < minH){ newBelowH = minH; newAboveH = totalH - minH; }
+
+          const ratioAbove = newAboveH / totalH;
+          const ratioBelow = newBelowH / totalH;
+          const sumWeights = currentRowHeights[rowAboveId] + currentRowHeights[rowBelowId];
+
+          currentRowHeights[rowAboveId] = +(sumWeights * ratioAbove).toFixed(3);
+          currentRowHeights[rowBelowId] = +(sumWeights * ratioBelow).toFixed(3);
+
+          applyRowHeights(currentRowHeights);
+        };
+
+        const onPointerUp = (ev) => {
+          sp.classList.remove('is-dragging');
+          sp.releasePointerCapture(ev.pointerId);
+          window.removeEventListener('pointermove', onPointerMove);
+          window.removeEventListener('pointerup', onPointerUp);
+          try {
+            localStorage.setItem('supernode_row_heights', JSON.stringify(currentRowHeights));
+          } catch(err){}
+        };
+
+        window.addEventListener('pointermove', onPointerMove);
+        window.addEventListener('pointerup', onPointerUp);
+      });
+
+      sp.addEventListener('dblclick', () => {
+        currentRowHeights = { ...DEFAULT_ROW_HEIGHTS };
+        applyRowHeights(currentRowHeights);
+        try {
+          localStorage.setItem('supernode_row_heights', JSON.stringify(currentRowHeights));
+        } catch(err){}
+      });
+    });
+  }
+
+  // Column Splitter Dragging (Vertical Column Splitters)
+  function initColSplitters(){
+    const colSplitters = document.querySelectorAll('.col-splitter');
+
+    colSplitters.forEach(sp => {
+      sp.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        sp.classList.add('is-dragging');
+        sp.setPointerCapture(e.pointerId);
+
+        const rowKey = sp.dataset.row;
+        const seamIdx = parseInt(sp.dataset.seam, 10);
+        const startX = e.clientX;
+
+        const rowEl = document.getElementById(rowKey);
+        const cards = rowEl.querySelectorAll('.tile-card');
+        const cardA = cards[seamIdx];
+        const cardB = cards[seamIdx + 1];
+
+        const initialW_A = cardA.offsetWidth;
+        const initialW_B = cardB.offsetWidth;
+        const totalW = initialW_A + initialW_B;
+
+        const onPointerMove = (ev) => {
+          const dx = ev.clientX - startX;
+          let newW_A = initialW_A + dx;
+          let newW_B = initialW_B - dx;
+
+          const minW = 60;
+          if(newW_A < minW){ newW_A = minW; newW_B = totalW - minW; }
+          if(newW_B < minW){ newW_B = minW; newW_A = totalW - minW; }
+
+          const ratioA = newW_A / totalW;
+          const ratioB = newW_B / totalW;
+          const sumW = colWeights[rowKey][seamIdx] + colWeights[rowKey][seamIdx + 1];
+
+          colWeights[rowKey][seamIdx] = +(sumW * ratioA).toFixed(3);
+          colWeights[rowKey][seamIdx + 1] = +(sumW * ratioB).toFixed(3);
+
+          applyColWeights(rowKey, colWeights[rowKey]);
+        };
+
+        const onPointerUp = (ev) => {
+          sp.classList.remove('is-dragging');
+          sp.releasePointerCapture(ev.pointerId);
+          window.removeEventListener('pointermove', onPointerMove);
+          window.removeEventListener('pointerup', onPointerUp);
+          try {
+            localStorage.setItem(`supernode_${rowKey}_weights`, JSON.stringify(colWeights[rowKey]));
+          } catch(err){}
+        };
+
+        window.addEventListener('pointermove', onPointerMove);
+        window.addEventListener('pointerup', onPointerUp);
+      });
+
+      sp.addEventListener('dblclick', () => {
+        const rowKey = sp.dataset.row;
+        colWeights[rowKey] = [...DEFAULT_COL_WEIGHTS];
+        applyColWeights(rowKey, colWeights[rowKey]);
+        try {
+          localStorage.setItem(`supernode_${rowKey}_weights`, JSON.stringify(colWeights[rowKey]));
+        } catch(err){}
+      });
+    });
+  }
+
+  function updateRowCollapseUI(animate = false){
+    const screenEl = document.getElementById('screen');
+    const bezelRail = document.getElementById('bezelRail');
+    if(!screenEl || !bezelRail) return;
+
+    const collapsedIds = currentRowOrder.filter(id => !!rowCollapsedState[id]);
+    const activeIds = currentRowOrder.filter(id => !rowCollapsedState[id]);
+    const displayOrder = [...collapsedIds, ...activeIds];
+
+    displayOrder.forEach(id => {
+      const el = document.getElementById(id);
+      if(el && screenEl.contains(el)){
+        screenEl.appendChild(el);
+        if(animate){
+          el.classList.remove('row-swap-anim');
+          void el.offsetWidth;
+          el.classList.add('row-swap-anim');
+        }
+      }
+
+      const ctrlId = `ctrl${id.charAt(0).toUpperCase() + id.slice(1)}`;
+      const ctrlEl = document.getElementById(ctrlId);
+      if(ctrlEl && bezelRail.contains(ctrlEl)){
+        bezelRail.appendChild(ctrlEl);
+      }
+    });
+
+    VALID_ROW_IDS.forEach(rowId => {
+      const rowEl = document.getElementById(rowId);
+      const isCollapsed = !!rowCollapsedState[rowId];
+      if(!rowEl) return;
+
+      rowEl.classList.toggle('is-row-collapsed', isCollapsed);
+
+      const ctrlId = `ctrl${rowId.charAt(0).toUpperCase() + rowId.slice(1)}`;
+      const ctrlEl = document.getElementById(ctrlId);
+      if(ctrlEl){
+        ctrlEl.classList.toggle('is-row-collapsed', isCollapsed);
+        const toggleBtn = ctrlEl.querySelector('.bezel-btn-shutter');
+        if(toggleBtn){
+          toggleBtn.title = isCollapsed ? 'Unroll row' : 'Roll up row';
+          toggleBtn.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
+        }
+      }
+    });
+
+    updateArrowControls();
+    syncTierSplittersVisibility();
+  }
+
+  function toggleRowCollapse(rowId){
+    rowCollapsedState[rowId] = !rowCollapsedState[rowId];
+    try {
+      localStorage.setItem('supernode_row_collapsed', JSON.stringify(rowCollapsedState));
+    } catch(e){}
+    updateRowCollapseUI(true);
+  }
+
+  function updateArrowControls(){
+    const slotClasses = ['slot-top', 'slot-mid', 'slot-bottom'];
+    const activeIds = currentRowOrder.filter(id => !rowCollapsedState[id]);
+
+    currentRowOrder.forEach((rowId, index) => {
+      const ctrlId = `ctrl${rowId.charAt(0).toUpperCase() + rowId.slice(1)}`;
+      const ctrlEl = document.getElementById(ctrlId);
+      if(!ctrlEl) return;
+
+      slotClasses.forEach(c => ctrlEl.classList.remove(c));
+      ctrlEl.classList.add(slotClasses[index]);
+
+      const isCollapsed = !!rowCollapsedState[rowId];
+      const upBtn = ctrlEl.querySelector('.bezel-arrow-up');
+      const downBtn = ctrlEl.querySelector('.bezel-arrow-down');
+
+      if(!isCollapsed){
+        const activeIdx = activeIds.indexOf(rowId);
+        if(upBtn) upBtn.style.display = activeIdx > 0 ? 'inline-flex' : 'none';
+        if(downBtn) downBtn.style.display = (activeIdx >= 0 && activeIdx < activeIds.length - 1) ? 'inline-flex' : 'none';
+      }
+    });
+  }
+
+  function syncTierSplittersVisibility(){
+    const sp0 = document.getElementById('tierSplitter0');
+    const sp1 = document.getElementById('tierSplitter1');
+    const screenEl = document.getElementById('screen');
+    if(!sp0 || !sp1 || !screenEl) return;
+
+    const activeRows = currentRowOrder.filter(id => !rowCollapsedState[id]);
+
+    if(activeRows.length <= 1){
+      sp0.style.display = 'none';
+      sp1.style.display = 'none';
+    } else if(activeRows.length === 2){
+      sp0.style.display = 'flex';
+      sp1.style.display = 'none';
+      const firstRowEl = document.getElementById(activeRows[0]);
+      if(firstRowEl) firstRowEl.after(sp0);
+    } else {
+      sp0.style.display = 'flex';
+      sp1.style.display = 'flex';
+      const r0 = document.getElementById(activeRows[0]);
+      const r1 = document.getElementById(activeRows[1]);
+      if(r0) r0.after(sp0);
+      if(r1) r1.after(sp1);
+    }
+  }
+
+  function moveRow(rowId, direction){
+    const activeIds = currentRowOrder.filter(id => !rowCollapsedState[id]);
+    const activeIdx = activeIds.indexOf(rowId);
+    if(activeIdx === -1) return;
+
+    if(direction === 'up' && activeIdx > 0){
+      const targetId = activeIds[activeIdx - 1];
+      const idxA = currentRowOrder.indexOf(rowId);
+      const idxB = currentRowOrder.indexOf(targetId);
+      const newOrder = [...currentRowOrder];
+      newOrder[idxA] = targetId;
+      newOrder[idxB] = rowId;
+      applyNewRowOrder(newOrder);
+    } else if(direction === 'down' && activeIdx < activeIds.length - 1){
+      const targetId = activeIds[activeIdx + 1];
+      const idxA = currentRowOrder.indexOf(rowId);
+      const idxB = currentRowOrder.indexOf(targetId);
+      const newOrder = [...currentRowOrder];
+      newOrder[idxA] = targetId;
+      newOrder[idxB] = rowId;
+      applyNewRowOrder(newOrder);
+    }
+  }
+
+  function applyNewRowOrder(newOrder){
+    currentRowOrder = newOrder;
+    try {
+      localStorage.setItem('supernode_row_order', JSON.stringify(currentRowOrder));
+    } catch(e){}
+    updateRowCollapseUI(true);
+  }
+
+  function bindBezelControls(){
+    VALID_ROW_IDS.forEach(rowId => {
+      const ctrlId = `ctrl${rowId.charAt(0).toUpperCase() + rowId.slice(1)}`;
+      const ctrlEl = document.getElementById(ctrlId);
+      if(!ctrlEl) return;
+
+      const toggleBtn = ctrlEl.querySelector('.bezel-btn-shutter');
+      const upBtn = ctrlEl.querySelector('.bezel-arrow-up');
+      const downBtn = ctrlEl.querySelector('.bezel-arrow-down');
+
+      if(toggleBtn){
+        toggleBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleRowCollapse(rowId);
+        });
+      }
+      if(upBtn){
+        upBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          moveRow(rowId, 'up');
+        });
+      }
+      if(downBtn){
+        downBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          moveRow(rowId, 'down');
+        });
+      }
+
+      ctrlEl.addEventListener('dblclick', (e) => {
+        e.stopPropagation();
+        applyNewRowOrder([...DEFAULT_ROW_ORDER]);
+      });
+
+      const shutterBar = document.getElementById(`shutter${rowId.charAt(0).toUpperCase() + rowId.slice(1)}`);
+      if(shutterBar){
+        shutterBar.addEventListener('click', () => {
+          toggleRowCollapse(rowId);
+        });
+      }
+    });
+
+    const diceBtn = document.getElementById('bezelDiceBtn');
+    if(diceBtn){
+      diceBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setTrayView(activeTrayView === 'primary' ? 'secondary' : 'primary');
+      });
+    }
+  }
+
+  function setTrayView(view){
+    activeTrayView = view;
+    try {
+      localStorage.setItem('supernode_tray_view', activeTrayView);
+    } catch(e){}
+
+    const primaryTray = document.getElementById('primaryTray');
+    const secondaryTray = document.getElementById('secondaryTray');
+    const diceBtn = document.getElementById('bezelDiceBtn');
+    const label = document.getElementById('shutterRow3Label');
+
+    if(activeTrayView === 'secondary'){
+      if(primaryTray) primaryTray.style.display = 'none';
+      if(secondaryTray) secondaryTray.style.display = 'grid';
+      if(diceBtn) diceBtn.classList.add('is-alt-view');
+      if(label) label.innerHTML = 'TIER 3 (ALTERNATE TRAY) <span class="shutter-hint">(click to unroll)</span>';
+    } else {
+      if(primaryTray) primaryTray.style.display = 'grid';
+      if(secondaryTray) secondaryTray.style.display = 'none';
+      if(diceBtn) diceBtn.classList.remove('is-alt-view');
+      if(label) label.innerHTML = 'TIER 3 (PRIMARY TRAY) <span class="shutter-hint">(click to unroll)</span>';
+    }
+  }
+
+  // Populate Mock Modules into Placeholders
+  function populateSampleModules(){
+    // If external module files are loaded via window.Panel1A, etc., use them, otherwise use built-in fallbacks!
+    const modules = [
+      { id: 'body1A', fn: window.Panel1A },
+      { id: 'body1B', fn: window.Panel1B },
+      { id: 'body1C', fn: window.Panel1C },
+      { id: 'body2A', fn: window.Panel2A },
+      { id: 'body2B', fn: window.Panel2B },
+      { id: 'body2C', fn: window.Panel2C },
+      { id: 'slotBody1', fn: window.Slot1 },
+      { id: 'slotBody2', fn: window.Slot2 },
+      { id: 'slotBody3', fn: window.Slot3 },
+      { id: 'slotBody4', fn: window.Slot4 },
+      { id: 'slotBody5', fn: window.Slot5 }
+    ];
+
+    modules.forEach(m => {
+      const el = document.getElementById(m.id);
+      if(!el) return;
+      if(m.fn && typeof m.fn.init === 'function'){
+        m.fn.init(el);
+      } else {
+        // Built-in standalone rendering
+        if(m.id === 'body1A'){
+          el.innerHTML = `
+            <div class="panel-content-wrap">
+              <div class="kpi-grid">
+                <div class="kpi-cell"><span class="kpi-label">Node Efficiency</span><span class="kpi-val highlight">99.4%</span><span class="kpi-sub">Nominal • 0.2ms</span></div>
+                <div class="kpi-cell"><span class="kpi-label">Throughput</span><span class="kpi-val">1,842<small>/s</small></span><span class="kpi-sub">+4.2% baseline</span></div>
+              </div>
+              <div class="status-pill-row"><span class="status-indicator"></span><span class="status-text">Core Cluster: Active (Cluster-01)</span></div>
+            </div>`;
+        } else if(m.id === 'body1B'){
+          el.innerHTML = `
+            <div class="panel-content-wrap">
+              <div class="mock-chart-container">
+                <div class="mock-chart-bars">
+                  <div class="chart-bar" style="height:45%"></div><div class="chart-bar" style="height:65%"></div>
+                  <div class="chart-bar" style="height:80%"></div><div class="chart-bar" style="height:55%"></div>
+                  <div class="chart-bar" style="height:90%"></div><div class="chart-bar" style="height:72%"></div>
+                  <div class="chart-bar" style="height:85%"></div><div class="chart-bar" style="height:60%"></div>
+                  <div class="chart-bar" style="height:95%"></div><div class="chart-bar" style="height:78%"></div>
+                </div>
+              </div>
+              <div class="chart-legend"><span>MIN: 42.0</span><span>AVG: 74.5</span><span>PEAK: 98.2</span></div>
+            </div>`;
+        } else if(m.id === 'body1C'){
+          el.innerHTML = `
+            <div class="panel-content-wrap">
+              <div class="metric-list">
+                <div class="metric-row"><span class="m-key">Ingress Packets</span><span class="m-val">428,910</span></div>
+                <div class="metric-row"><span class="m-key">Buffer Headroom</span><span class="m-val highlight">88.2%</span></div>
+                <div class="metric-row"><span class="m-key">Peer Handshakes</span><span class="m-val">16 / 16 OK</span></div>
+              </div>
+            </div>`;
+        } else if(m.id === 'body2A'){
+          el.innerHTML = `
+            <div class="panel-content-wrap">
+              <div class="gauge-display">
+                <div class="gauge-val-group"><span class="gauge-number">384.6</span><span class="gauge-unit">MB/SEC</span></div>
+                <div class="gauge-track"><div class="gauge-fill" style="width:76%"></div></div>
+              </div>
+              <div class="data-tag-row"><span>BANDWIDTH: OPTIMAL</span><span>DROP: 0.00%</span></div>
+            </div>`;
+        } else if(m.id === 'body2B'){
+          el.innerHTML = `
+            <div class="panel-content-wrap">
+              <div class="matrix-grid">
+                <div class="matrix-cell active"><span class="node-id">N-01</span><span class="node-status">SYNC</span></div>
+                <div class="matrix-cell active"><span class="node-id">N-02</span><span class="node-status">SYNC</span></div>
+                <div class="matrix-cell active"><span class="node-id">N-03</span><span class="node-status">SYNC</span></div>
+                <div class="matrix-cell active"><span class="node-id">N-04</span><span class="node-status">SYNC</span></div>
+                <div class="matrix-cell active"><span class="node-id">N-05</span><span class="node-status">SYNC</span></div>
+                <div class="matrix-cell standby"><span class="node-id">N-06</span><span class="node-status">IDLE</span></div>
+              </div>
+              <div class="matrix-summary"><span>5 ONLINE • 1 STANDBY • QUORUM VERIFIED</span></div>
+            </div>`;
+        } else if(m.id === 'body2C'){
+          el.innerHTML = `
+            <div class="panel-content-wrap">
+              <div class="log-stream">
+                <div class="log-entry"><span class="log-ts">18:32:04</span><span class="log-msg">State committed: tx_7921a</span></div>
+                <div class="log-entry"><span class="log-ts">18:32:19</span><span class="log-msg">Topology rebalanced: 0.1ms</span></div>
+                <div class="log-entry"><span class="log-ts">18:32:45</span><span class="log-msg">Telemetry heartbeat confirmed</span></div>
+              </div>
+            </div>`;
+        } else if(m.id.startsWith('slotBody')){
+          const num = m.id.replace('slotBody', '0');
+          el.innerHTML = `
+            <div class="tray-cell-wrap">
+              <span class="tray-num">9${num}<small>%</small></span>
+              <span class="tray-desc">Channel ${num} Signal</span>
+              <div class="tray-sparkline"><div class="spark-bar" style="height:60%"></div><div class="spark-bar" style="height:85%"></div><div class="spark-bar" style="height:70%"></div><div class="spark-bar" style="height:90%"></div></div>
+            </div>`;
+        }
+      }
+    });
+  }
+
+  // Initialization
+  document.addEventListener('DOMContentLoaded', () => {
+    initTierSplitters();
+    initColSplitters();
+    bindBezelControls();
+    updateRowCollapseUI(false);
+    setTrayView(activeTrayView);
+    populateSampleModules();
+  });
+
+})();
+</script>
+</body>
+</html>

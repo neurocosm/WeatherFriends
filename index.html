@@ -113,7 +113,7 @@
     flex-direction:column;
     background:linear-gradient(155deg,var(--bezel-hi),var(--bezel) 40%,var(--bezel-lo));
     border-radius:18px;
-    padding:clamp(4px, 0.9vh, 8px) clamp(8px, 1.2vw, 12px);
+    padding:clamp(4px, 0.9vh, 8px) clamp(8px, 1.2vw, 12px) clamp(4px, 0.9vh, 8px) 2px;
     box-shadow:0 25px 60px rgba(0,0,0,0.55), inset 0 1px 0 var(--bezel-inset-hi, rgba(255,255,255,0.6)), inset 0 -2px 6px var(--bezel-inset-lo, rgba(0,0,0,0.15));
     overflow:hidden;
     box-sizing:border-box;
@@ -897,7 +897,7 @@
     border-radius:10px;
     border:1px solid #000;
     box-shadow:inset 0 0 40px rgba(0,0,0,0.9), inset 0 0 2px #000;
-    padding:clamp(6px, 1.2vh, 12px) clamp(8px, 1.2vw, 14px) clamp(4px, 0.8vh, 8px) clamp(26px, 2.5vw, 32px);
+    padding:clamp(6px, 1.2vh, 12px) clamp(8px, 1.2vw, 14px) clamp(4px, 0.8vh, 8px) clamp(8px, 1.2vw, 14px);
     overflow:hidden;
     box-sizing:border-box;
     filter: brightness(var(--board-brightness, 1.0)) contrast(calc(1 + (1 - var(--board-brightness, 1.0)) * 0.15));
@@ -964,134 +964,194 @@
     z-index:10;
   }
 
-  /* Hardware-Style 1-Dimensional Light Gray Row Order Steppers (Outside the Frames) */
-  .row-order-ctrl{
-    position:absolute;
-    left:clamp(-27px, -2.5vw, -22px);
-    top:50%;
-    transform:translateY(-50%);
+  /* Hardware Chassis Body & Physical Left Bezel Control Rail */
+  .device-body{
+    display:flex;
+    flex-direction:row;
+    align-items:stretch;
+    flex:1 1 auto;
+    height:100%;
+    min-height:0;
+    width:100%;
+    position:relative;
+  }
+  .bezel-rail{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:stretch;
+    flex:0 0 8px;
+    width:8px;
+    margin-right:2px;
+    height:100%;
+    min-height:0;
+    padding-top:clamp(6px, 1.2vh, 12px);
+    padding-bottom:clamp(4px, 0.8vh, 8px);
+    box-sizing:border-box;
+    position:relative;
+    z-index:25;
+    user-select:none;
+    pointer-events:auto;
+    gap:6px;
+  }
+  .bezel-row-ctrl{
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:center;
-    gap:4px;
-    z-index:35;
-    pointer-events:auto;
-    user-select:none;
-    transition:opacity 0.2s ease, top 0.2s ease, transform 0.2s ease;
+    gap:clamp(8px, 1.4vh, 14px);
+    width:100%;
+    min-height:0;
+    position:relative;
+    box-sizing:border-box;
+    transition:flex 0.25s cubic-bezier(0.16, 1, 0.3, 1), min-height 0.25s ease, max-height 0.25s ease;
   }
-  .row-order-ctrl.slot-top,
-  .row-order-ctrl.slot-mid,
-  .row-order-ctrl.slot-bottom{
-    top:50%;
-    bottom:auto;
-    transform:translateY(-50%);
+  .bezel-row-ctrl[data-row-id="topTier"]:not(.is-row-collapsed){
+    flex:var(--rh-topTier, 1.0) 1 0px !important;
+  }
+  .bezel-row-ctrl[data-row-id="panelsRow"]:not(.is-row-collapsed){
+    flex:var(--rh-panelsRow, 1.25) 1 0px !important;
+  }
+  .bezel-row-ctrl[data-row-id="outlook"]:not(.is-row-collapsed){
+    flex:var(--rh-outlook, 0.95) 1 0px !important;
+  }
+  .bezel-row-ctrl.is-row-collapsed{
+    flex:0 0 16px !important;
+    min-height:16px !important;
+    max-height:16px !important;
+    gap:0 !important;
   }
 
-  /* Row Window-Shade Roller Toggle (Dash / Dot) */
-  .row-shutter-toggle{
+  /* Hardware Bezel Buttons (Subtle Industrial Gray Palette, Identifiable & Non-Dramatic) */
+  .bezel-btn{
     background:transparent;
     border:none;
     outline:none;
-    width:22px;
-    height:20px;
-    padding:0;
+    padding:4px 0;
     margin:0;
     cursor:pointer;
     display:inline-flex;
     align-items:center;
     justify-content:center;
     -webkit-tap-highlight-color:transparent;
-    position:relative;
-    transition:transform 0.18s ease;
+    user-select:none;
+    box-shadow:none !important;
+    text-shadow:none !important;
+    filter:none !important;
+    line-height:1;
+    min-height:16px;
+    width:100%;
+    box-sizing:border-box;
   }
-  .row-shutter-toggle:hover{
-    transform:scale(1.22);
-  }
-  .row-shutter-toggle:active{
-    transform:scale(0.9);
-  }
-  .row-shutter-toggle:focus-visible{
-    outline:1px dashed rgba(73, 230, 196, 0.6);
+  .bezel-btn:focus-visible{
+    outline:1px dotted #8294a0;
     outline-offset:1px;
   }
-  /* Dash indicator when open/unrolled */
-  .row-shutter-dash{
+
+  /* 1. Shutter Block (Roll up / Window Shade Toggle in Muted Industrial Gray) */
+  .bezel-shutter-block{
     display:block;
-    width:12px;
-    height:2.6px;
-    background:#49e6c4;
-    border-radius:2px;
-    box-shadow:0 0 5px rgba(73, 230, 196, 0.45);
-    transition:background 0.2s ease, box-shadow 0.2s ease;
+    width:7px;
+    height:4.5px;
+    background:#768793;
+    border:1px solid #4a5761;
+    border-radius:1px;
+    box-sizing:border-box;
+    box-shadow:none !important;
+    transition:background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
   }
-  .row-shutter-toggle:hover .row-shutter-dash{
-    background:#7effdb;
-    box-shadow:0 0 8px rgba(73, 230, 196, 0.85);
+  .bezel-btn-shutter:hover .bezel-shutter-block{
+    background:#9fb0bc;
+    border-color:#63737e;
   }
-  /* Dot indicator when collapsed/rolled up */
-  .row-shutter-dot{
-    display:none;
-    width:9px;
-    height:9px;
-    border-radius:50%;
-    background:#ffb648;
-    box-shadow:0 0 7px rgba(255, 182, 72, 0.75), inset 0 1px 1px rgba(255, 255, 255, 0.5);
-    transition:background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  .bezel-btn-shutter:active .bezel-shutter-block{
+    transform:scale(0.90);
+    background:#54636d;
   }
-  .row-shutter-toggle:hover .row-shutter-dot{
-    background:#ffd17d;
-    box-shadow:0 0 11px rgba(255, 182, 72, 1);
+  /* Rolled up (collapsed) state: distinct muted pewter/warm-gray slat indicator */
+  .bezel-row-ctrl.is-row-collapsed .bezel-shutter-block{
+    background:#877f72;
+    border-color:#575249;
+  }
+  .bezel-row-ctrl.is-row-collapsed .bezel-btn-shutter:hover .bezel-shutter-block{
+    background:#a89e8f;
+    border-color:#6e685e;
+  }
+
+  /* 2. Directional Triangles (Subtle Identifiable Gray) */
+  .bezel-btn-arrow{
+    color:#768793;
+    box-shadow:none !important;
+    transition:color 0.15s ease, transform 0.1s ease;
+  }
+  .bezel-btn-arrow:hover{
+    color:#a8b8c4;
     transform:scale(1.15);
   }
-
-  .row-arrow-btn{
-    background:transparent;
-    border:none;
-    outline:none;
-    width:22px;
-    height:22px;
-    padding:0;
-    margin:0;
-    cursor:pointer;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    color:#9eb0b8; /* Simple 1-dimensional light gray */
-    opacity:0.45;  /* Noticeable up close, quiet & unobtrusive from distance */
-    transition:opacity 0.18s ease, color 0.18s ease, transform 0.15s ease;
-    border-radius:4px;
-    -webkit-tap-highlight-color:transparent;
-    line-height:1;
+  .bezel-btn-arrow:active{
+    transform:scale(0.85);
+    color:#54636d;
   }
-  .row-arrow-btn:hover{
-    opacity:1;
-    color:#ffffff;
-    transform:scale(1.25);
-  }
-  .row-arrow-btn:active{
-    transform:scale(0.9);
-    color:var(--teal);
-    opacity:1;
-  }
-  .row-arrow-btn:focus-visible{
-    outline:1px dashed rgba(220, 231, 234, 0.6);
-    outline-offset:1px;
-  }
-  .row-arrow-icon{
-    width:15px;
-    height:15px;
-    stroke:currentColor;
-    stroke-width:2.2;
-    stroke-linecap:round;
-    stroke-linejoin:round;
+  .bezel-arrow-icon{
     display:block;
     pointer-events:none;
+    filter:none !important;
+    fill:currentColor;
   }
-  .row-order-ctrl.slot-top .row-arrow-up{
+
+  /* Slot dynamic visibility */
+  .bezel-row-ctrl.slot-top .bezel-arrow-up{
     display:none !important;
   }
-  .row-order-ctrl.slot-bottom .row-arrow-down{
+  .bezel-row-ctrl.slot-bottom .bezel-arrow-down{
+    display:none !important;
+  }
+  .bezel-row-ctrl.is-row-collapsed .bezel-btn-arrow,
+  .bezel-row-ctrl.is-row-collapsed .bezel-btn-dice{
+    display:none !important;
+  }
+
+  /* 3. 5 / Dice Button (WF / 5 Option in Muted Matching Gray) */
+  .bezel-btn-dice{
+    color:#768793;
+    box-shadow:none !important;
+    transition:color 0.15s ease, transform 0.15s ease;
+  }
+  .bezel-btn-dice:hover{
+    color:#a8b8c4;
+    transform:scale(1.15);
+  }
+  .bezel-btn-dice:active{
+    transform:scale(0.88);
+    color:#54636d;
+  }
+  .bezel-dice-icon{
+    display:block;
+    pointer-events:none;
+    filter:none !important;
+  }
+  .bezel-dice-icon rect{
+    stroke:currentColor;
+    fill:rgba(118, 135, 147, 0.08);
+  }
+  .bezel-dice-icon circle{
+    fill:currentColor;
+  }
+  /* In Weather Friends mode: clean silver-gray highlight, zero drama */
+  .bezel-btn-dice.is-friends-active{
+    color:#cbd5e1;
+  }
+  .bezel-btn-dice.is-friends-active rect{
+    stroke:#cbd5e1;
+    fill:rgba(203, 213, 225, 0.15);
+  }
+  .bezel-btn-dice.is-friends-active circle{
+    fill:#cbd5e1;
+  }
+
+  /* Theater Mode: cleanly hide bezel rail */
+  body.theater-active .bezel-rail,
+  .screen.theater-active .bezel-rail{
     display:none !important;
   }
 
@@ -5428,7 +5488,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.092826.2136</span>
+        <span id="appVersionText">v1.093026.2115</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -5447,30 +5507,73 @@
       </button>
     </div>
   </div>
-  <div class="screen" id="screen">
 
-    <div class="topbar" id="topTier">
-      <!-- 1-D Light Gray Row Reorder Stepper & Window-Shade Roller Toggle -->
-      <div class="row-order-ctrl slot-top" id="ctrlTopTier" data-row-id="topTier" aria-label="Reorder or collapse row">
-        <button type="button" class="row-shutter-toggle" title="Roll up row (window shade)" aria-label="Roll up row (window shade)">
-          <span class="row-shutter-dash"></span>
-          <span class="row-shutter-dot"></span>
+  <div class="device-body" id="deviceBody">
+    <!-- Physical Left Bezel Control Rail (NO-GLOW Tactile Hardware Controls) -->
+    <div class="bezel-rail" id="bezelRail" aria-label="Bezel row controls">
+      <div class="bezel-row-ctrl slot-top" id="ctrlTopTier" data-row-id="topTier" aria-label="Top row controls">
+        <button type="button" class="bezel-btn bezel-btn-shutter" title="Roll up row (window shade)" aria-label="Roll up row">
+          <span class="bezel-shutter-block"></span>
         </button>
-        <button type="button" class="row-arrow-btn row-arrow-up" title="Move row up" aria-label="Move row up">
-          <svg class="row-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="19" x2="12" y2="5"/>
-            <polyline points="5 12 12 5 19 12"/>
+        <button type="button" class="bezel-btn bezel-btn-arrow bezel-arrow-up" title="Move row up" aria-label="Move row up">
+          <svg class="bezel-arrow-icon" viewBox="0 0 10 10" width="6.5" height="6.5" fill="none">
+            <polygon points="5,1 9,8 1,8" fill="currentColor"/>
           </svg>
         </button>
-        <button type="button" class="row-arrow-btn row-arrow-down" title="Move row down" aria-label="Move row down">
-          <svg class="row-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19"/>
-            <polyline points="19 12 12 19 5 12"/>
+        <button type="button" class="bezel-btn bezel-btn-arrow bezel-arrow-down" title="Move row down" aria-label="Move row down">
+          <svg class="bezel-arrow-icon" viewBox="0 0 10 10" width="6.5" height="6.5" fill="none">
+            <polygon points="1,2 9,2 5,9" fill="currentColor"/>
           </svg>
         </button>
       </div>
 
-      <!-- Rolled-Up Horizontal Shutter / Shade Slat -->
+      <div class="bezel-row-ctrl slot-mid" id="ctrlPanelsRow" data-row-id="panelsRow" aria-label="Middle row controls">
+        <button type="button" class="bezel-btn bezel-btn-shutter" title="Roll up row (window shade)" aria-label="Roll up row">
+          <span class="bezel-shutter-block"></span>
+        </button>
+        <button type="button" class="bezel-btn bezel-btn-arrow bezel-arrow-up" title="Move row up" aria-label="Move row up">
+          <svg class="bezel-arrow-icon" viewBox="0 0 10 10" width="6.5" height="6.5" fill="none">
+            <polygon points="5,1 9,8 1,8" fill="currentColor"/>
+          </svg>
+        </button>
+        <button type="button" class="bezel-btn bezel-btn-arrow bezel-arrow-down" title="Move row down" aria-label="Move row down">
+          <svg class="bezel-arrow-icon" viewBox="0 0 10 10" width="6.5" height="6.5" fill="none">
+            <polygon points="1,2 9,2 5,9" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="bezel-row-ctrl slot-bottom" id="ctrlOutlook" data-row-id="outlook" aria-label="Bottom row controls">
+        <button type="button" class="bezel-btn bezel-btn-shutter" title="Roll up row (window shade)" aria-label="Roll up row">
+          <span class="bezel-shutter-block"></span>
+        </button>
+        <button type="button" class="bezel-btn bezel-btn-arrow bezel-arrow-up" title="Move row up" aria-label="Move row up">
+          <svg class="bezel-arrow-icon" viewBox="0 0 10 10" width="6.5" height="6.5" fill="none">
+            <polygon points="5,1 9,8 1,8" fill="currentColor"/>
+          </svg>
+        </button>
+        <button type="button" class="bezel-btn bezel-btn-arrow bezel-arrow-down" title="Move row down" aria-label="Move row down">
+          <svg class="bezel-arrow-icon" viewBox="0 0 10 10" width="6.5" height="6.5" fill="none">
+            <polygon points="1,2 9,2 5,9" fill="currentColor"/>
+          </svg>
+        </button>
+        <button type="button" class="bezel-btn bezel-btn-dice" id="bezelDiceBtn" title="Switch view: 5-Day Outlook ⇄ Weather Friends" aria-label="Switch between 5-Day Outlook and Weather Friends">
+          <svg class="bezel-dice-icon" viewBox="0 0 20 20" width="7.5" height="7.5" fill="none">
+            <rect x="1.5" y="1.5" width="17" height="17" rx="3" stroke="currentColor" stroke-width="2" fill="none"/>
+            <circle cx="6" cy="6" r="1.8" fill="currentColor"/>
+            <circle cx="14" cy="6" r="1.8" fill="currentColor"/>
+            <circle cx="10" cy="10" r="1.8" fill="currentColor"/>
+            <circle cx="6" cy="14" r="1.8" fill="currentColor"/>
+            <circle cx="14" cy="14" r="1.8" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="screen" id="screen">
+
+      <div class="topbar" id="topTier">
+        <!-- Rolled-Up Horizontal Shutter / Shade Slat -->
       <div class="row-shutter-bar" id="shutterTopTier" title="Click to pull down and unroll row" role="button" tabindex="0" aria-label="Unroll Date, Clock & Weather row">
         <span class="shutter-slat-dot"></span>
         <span class="shutter-slat-label">DATE • CLOCK • CURRENT WEATHER <span class="shutter-unroll-hint">(click to pull down)</span></span>
@@ -5653,26 +5756,6 @@
     </div>
 
     <div class="panels" id="panelsRow">
-      <!-- 1-D Light Gray Row Reorder Stepper & Window-Shade Roller Toggle -->
-      <div class="row-order-ctrl slot-mid" id="ctrlPanelsRow" data-row-id="panelsRow" aria-label="Reorder or collapse row">
-        <button type="button" class="row-shutter-toggle" title="Roll up row (window shade)" aria-label="Roll up row (window shade)">
-          <span class="row-shutter-dash"></span>
-          <span class="row-shutter-dot"></span>
-        </button>
-        <button type="button" class="row-arrow-btn row-arrow-up" title="Move row up" aria-label="Move row up">
-          <svg class="row-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="19" x2="12" y2="5"/>
-            <polyline points="5 12 12 5 19 12"/>
-          </svg>
-        </button>
-        <button type="button" class="row-arrow-btn row-arrow-down" title="Move row down" aria-label="Move row down">
-          <svg class="row-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19"/>
-            <polyline points="19 12 12 19 5 12"/>
-          </svg>
-        </button>
-      </div>
-
       <!-- Rolled-Up Horizontal Shutter / Shade Slat -->
       <div class="row-shutter-bar" id="shutterPanelsRow" title="Click to pull down and unroll row" role="button" tabindex="0" aria-label="Unroll Inquire, Inspiration & Celebrate row">
         <span class="shutter-slat-dot"></span>
@@ -6013,31 +6096,6 @@
 
     <!-- 5-DAY OUTLOOK & WEATHER FRIENDS MULTI-LOCATION STATION -->
     <div class="outlook" id="outlook">
-      <!-- 1-D Light Gray Row Reorder Stepper & Window-Shade Roller Toggle & View Swap -->
-      <div class="row-order-ctrl slot-bottom" id="ctrlOutlook" data-row-id="outlook" aria-label="Reorder, swap view, or collapse row">
-        <button type="button" class="row-shutter-toggle" title="Roll up row (window shade)" aria-label="Roll up row (window shade)">
-          <span class="row-shutter-dash"></span>
-          <span class="row-shutter-dot"></span>
-        </button>
-        <button type="button" class="row-arrow-btn row-arrow-up" title="Move row up" aria-label="Move row up">
-          <svg class="row-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="19" x2="12" y2="5"/>
-            <polyline points="5 12 12 5 19 12"/>
-          </svg>
-        </button>
-        <button type="button" class="row-arrow-btn row-arrow-down" title="Move row down" aria-label="Move row down">
-          <svg class="row-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="12" y1="5" x2="12" y2="19"/>
-            <polyline points="19 12 12 19 5 12"/>
-          </svg>
-        </button>
-        <button type="button" class="row-swap-view-btn" id="outlookSwapBtn" title="Switch view: 5-Day Forecast ⇄ Weather Friends" aria-label="Switch between 5-Day Outlook and Weather Friends">
-          <span class="row-swap-wf-badge" aria-hidden="true">
-            <span class="row-swap-wf-text">WF</span>
-          </span>
-        </button>
-      </div>
-
       <!-- Rolled-Up Horizontal Shutter / Shade Slat -->
       <div class="row-shutter-bar" id="shutterOutlook" title="Click to pull down and unroll row" role="button" tabindex="0" aria-label="Unroll forecast or friends row">
         <span class="shutter-slat-dot"></span>
@@ -6194,7 +6252,8 @@
       <div class="grav-wave-notice" id="gravWaveNotice" style="display:none !important;" aria-hidden="true"></div>
     </div>
 
-  </div>
+  </div> <!-- #screen -->
+  </div> <!-- #deviceBody -->
 
   <!-- Smart TV Remote Horizontal Block Resize HUD Pill -->
   <div class="remote-resize-hud" id="remoteResizeHud" role="dialog" aria-label="Block resize mode active">
@@ -8015,8 +8074,15 @@
 
     if(!outlookEl || !forecastGrid || !friendsGrid) return;
 
+    const bezelDiceBtn = document.getElementById('bezelDiceBtn');
+
     if(activeOutlookTrayView === 'friends'){
       outlookEl.classList.add('is-friends-view');
+      if(bezelDiceBtn){
+        bezelDiceBtn.classList.add('is-friends-active');
+        bezelDiceBtn.title = 'Switch view: 5-Day Outlook';
+        bezelDiceBtn.setAttribute('aria-label', 'Switch to 5-Day Outlook');
+      }
       if(swapBtn) {
         swapBtn.classList.add('is-friends-active');
         const swapText = swapBtn.querySelector('.row-swap-wf-text');
@@ -8038,6 +8104,11 @@
       renderWeatherFriends();
     } else {
       outlookEl.classList.remove('is-friends-view');
+      if(bezelDiceBtn){
+        bezelDiceBtn.classList.remove('is-friends-active');
+        bezelDiceBtn.title = 'Switch view: Weather Friends';
+        bezelDiceBtn.setAttribute('aria-label', 'Switch to Weather Friends');
+      }
       if(swapBtn) {
         swapBtn.classList.remove('is-friends-active');
         const swapText = swapBtn.querySelector('.row-swap-wf-text');
@@ -8909,7 +8980,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.092826.2136';
+  const CLIENT_APP_VERSION = 'v1.093026.2115';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -12136,10 +12207,10 @@
     let currentRowHeightWeights = loadSavedRowHeightWeights();
 
     function applyRowHeightWeights(weights){
-      if(!screenEl) return;
       ['topTier', 'panelsRow', 'outlook'].forEach(id => {
         const val = (weights && weights[id] !== undefined) ? weights[id] : DEFAULT_ROW_HEIGHT_WEIGHTS[id];
-        screenEl.style.setProperty(`--rh-${id}`, String(val));
+        if(screenEl) screenEl.style.setProperty(`--rh-${id}`, String(val));
+        document.documentElement.style.setProperty(`--rh-${id}`, String(val));
       });
     }
 
@@ -13134,7 +13205,12 @@
       const ctrlId = `ctrl${rowId.charAt(0).toUpperCase() + rowId.slice(1)}`;
       const ctrlEl = document.getElementById(ctrlId);
       if(ctrlEl){
-        const toggleBtn = ctrlEl.querySelector('.row-shutter-toggle');
+        if(isCollapsed){
+          ctrlEl.classList.add('is-row-collapsed');
+        } else {
+          ctrlEl.classList.remove('is-row-collapsed');
+        }
+        const toggleBtn = ctrlEl.querySelector('.bezel-btn-shutter');
         if(toggleBtn){
           toggleBtn.title = isCollapsed ? 'Unroll row (pull down window shade)' : 'Roll up row (window shade)';
           toggleBtn.setAttribute('aria-label', isCollapsed ? 'Unroll row' : 'Roll up row');
@@ -13142,6 +13218,17 @@
         }
       }
     });
+
+    const bezelRail = document.getElementById('bezelRail');
+    if(bezelRail){
+      displayOrder.forEach(id => {
+        const ctrlId = `ctrl${id.charAt(0).toUpperCase() + id.slice(1)}`;
+        const ctrlEl = document.getElementById(ctrlId);
+        if(ctrlEl && bezelRail.contains(ctrlEl)){
+          bezelRail.appendChild(ctrlEl);
+        }
+      });
+    }
 
     updateRowArrowControls();
     if(typeof syncTierSplitters === 'function'){
@@ -13170,57 +13257,74 @@
 
   function updateRowArrowControls(){
     const rowSlotClasses = ['slot-top', 'slot-mid', 'slot-bottom'];
-    const screenEl = document.getElementById('screen');
-    if(!screenEl) return;
+    const bezelRail = document.getElementById('bezelRail');
+    if(!bezelRail) return;
 
     const activeIds = currentRowOrder.filter(id => !rowCollapsedState[id]);
 
     currentRowOrder.forEach((rowId, index) => {
-      const rowEl = document.getElementById(rowId);
-      if(!rowEl) return;
-
       const isCollapsed = !!rowCollapsedState[rowId];
       const ctrlId = `ctrl${rowId.charAt(0).toUpperCase() + rowId.slice(1)}`;
       let ctrlEl = document.getElementById(ctrlId);
       if(!ctrlEl){
         ctrlEl = document.createElement('div');
-        ctrlEl.className = `row-order-ctrl ${rowSlotClasses[index]}`;
+        ctrlEl.className = `bezel-row-ctrl ${rowSlotClasses[index]}`;
         ctrlEl.id = ctrlId;
         ctrlEl.dataset.rowId = rowId;
-        ctrlEl.setAttribute('aria-label', 'Reorder or collapse row');
-        ctrlEl.innerHTML = `
-          <button type="button" class="row-shutter-toggle" title="Roll up row (window shade)" aria-label="Roll up row (window shade)">
-            <span class="row-shutter-dash"></span>
-            <span class="row-shutter-dot"></span>
-          </button>
-          <button type="button" class="row-arrow-btn row-arrow-up" title="Move row up" aria-label="Move row up">
-            <svg class="row-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="12" y1="19" x2="12" y2="5"/>
-              <polyline points="5 12 12 5 19 12"/>
-            </svg>
-          </button>
-          <button type="button" class="row-arrow-btn row-arrow-down" title="Move row down" aria-label="Move row down">
-            <svg class="row-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.0" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="12" y1="5" x2="12" y2="19"/>
-              <polyline points="19 12 12 19 5 12"/>
-            </svg>
-          </button>
-        `;
-        bindRowControlEvents(ctrlEl, rowId);
-      }
+        ctrlEl.setAttribute('aria-label', `${rowId} row controls`);
+        
+        let diceBtnHtml = '';
+        if(rowId === 'outlook'){
+          diceBtnHtml = `
+            <button type="button" class="bezel-btn bezel-btn-dice" id="bezelDiceBtn" title="Switch view: 5-Day Outlook ⇄ Weather Friends" aria-label="Switch between 5-Day Outlook and Weather Friends">
+              <svg class="bezel-dice-icon" viewBox="0 0 20 20" width="7.5" height="7.5" fill="none">
+                <rect x="1.5" y="1.5" width="17" height="17" rx="3" stroke="currentColor" stroke-width="2" fill="none"/>
+                <circle cx="6" cy="6" r="1.8" fill="currentColor"/>
+                <circle cx="14" cy="6" r="1.8" fill="currentColor"/>
+                <circle cx="10" cy="10" r="1.8" fill="currentColor"/>
+                <circle cx="6" cy="14" r="1.8" fill="currentColor"/>
+                <circle cx="14" cy="14" r="1.8" fill="currentColor"/>
+              </svg>
+            </button>
+          `;
+        }
 
-      // Ensure ctrl is inside this row
-      if(!rowEl.contains(ctrlEl)){
-        rowEl.insertBefore(ctrlEl, rowEl.firstChild);
+        ctrlEl.innerHTML = `
+          <button type="button" class="bezel-btn bezel-btn-shutter" title="Roll up row (window shade)" aria-label="Roll up row">
+            <span class="bezel-shutter-block"></span>
+          </button>
+          <button type="button" class="bezel-btn bezel-btn-arrow bezel-arrow-up" title="Move row up" aria-label="Move row up">
+            <svg class="bezel-arrow-icon" viewBox="0 0 10 10" width="6.5" height="6.5" fill="none">
+              <polygon points="5,1 9,8 1,8" fill="currentColor"/>
+            </svg>
+          </button>
+          <button type="button" class="bezel-btn bezel-btn-arrow bezel-arrow-down" title="Move row down" aria-label="Move row down">
+            <svg class="bezel-arrow-icon" viewBox="0 0 10 10" width="6.5" height="6.5" fill="none">
+              <polygon points="1,2 9,2 5,9" fill="currentColor"/>
+            </svg>
+          </button>
+          ${diceBtnHtml}
+        `;
+        bezelRail.appendChild(ctrlEl);
+        bindRowControlEvents(ctrlEl, rowId);
+      } else {
+        bezelRail.appendChild(ctrlEl);
+        bindRowControlEvents(ctrlEl, rowId);
       }
 
       // Update slot class
       rowSlotClasses.forEach(c => ctrlEl.classList.remove(c));
       ctrlEl.classList.add(rowSlotClasses[index]);
 
+      if(isCollapsed){
+        ctrlEl.classList.add('is-row-collapsed');
+      } else {
+        ctrlEl.classList.remove('is-row-collapsed');
+      }
+
       // Update button visibility & titles based on active rows
-      const upBtn = ctrlEl.querySelector('.row-arrow-up');
-      const downBtn = ctrlEl.querySelector('.row-arrow-down');
+      const upBtn = ctrlEl.querySelector('.bezel-arrow-up');
+      const downBtn = ctrlEl.querySelector('.bezel-arrow-down');
       if(!isCollapsed){
         const activeIndex = activeIds.indexOf(rowId);
         if(upBtn){
@@ -13233,44 +13337,16 @@
         }
       }
 
-      // If this is the outlook row, ensure the swap button is present directly under the arrows
+      // If this is the outlook row, ensure the dice button matches active view
       if(rowId === 'outlook'){
-        let swapBtn = ctrlEl.querySelector('.row-swap-view-btn');
-        if(!swapBtn){
-          swapBtn = document.createElement('button');
-          swapBtn.type = 'button';
-          swapBtn.className = 'row-swap-view-btn' + (activeOutlookTrayView === 'friends' ? ' is-friends-active' : '');
-          swapBtn.id = 'outlookSwapBtn';
-          swapBtn.setAttribute('title', activeOutlookTrayView === 'friends' ? 'Switch view: Weather Friends ⇄ 5-Day Outlook' : 'Switch view: 5-Day Outlook ⇄ Weather Friends');
-          swapBtn.setAttribute('aria-label', 'Switch view between 5-Day Outlook and Weather Friends');
-          swapBtn.innerHTML = `
-            <span class="row-swap-wf-badge" aria-hidden="true">
-              <span class="row-swap-wf-text">WF</span>
-            </span>
-          `;
-          ctrlEl.appendChild(swapBtn);
-          if(!swapBtn._swapBound){
-            swapBtn._swapBound = true;
-            swapBtn.addEventListener('click', (e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              if(typeof toggleOutlookView === 'function') toggleOutlookView();
-            });
-          }
-        } else {
-          if(!swapBtn.querySelector('.row-swap-wf-badge')){
-            swapBtn.innerHTML = `
-              <span class="row-swap-wf-badge" aria-hidden="true">
-                <span class="row-swap-wf-text">WF</span>
-              </span>
-            `;
-          }
+        const diceBtn = ctrlEl.querySelector('.bezel-btn-dice');
+        if(diceBtn){
           if(activeOutlookTrayView === 'friends'){
-            swapBtn.classList.add('is-friends-active');
-            swapBtn.setAttribute('title', 'Switch view: Weather Friends ⇄ 5-Day Outlook');
+            diceBtn.classList.add('is-friends-active');
+            diceBtn.title = 'Switch view: 5-Day Outlook';
           } else {
-            swapBtn.classList.remove('is-friends-active');
-            swapBtn.setAttribute('title', 'Switch view: 5-Day Outlook ⇄ Weather Friends');
+            diceBtn.classList.remove('is-friends-active');
+            diceBtn.title = 'Switch view: Weather Friends';
           }
         }
       }
@@ -13278,14 +13354,17 @@
   }
 
   function bindRowControlEvents(ctrlEl, rowId){
-    const toggleBtn = ctrlEl.querySelector('.row-shutter-toggle');
-    const upBtn = ctrlEl.querySelector('.row-arrow-up');
-    const downBtn = ctrlEl.querySelector('.row-arrow-down');
-    const swapBtn = ctrlEl.querySelector('.row-swap-view-btn');
+    if(ctrlEl._bezelBound) return;
+    ctrlEl._bezelBound = true;
 
-    if(swapBtn && !swapBtn._swapBound){
-      swapBtn._swapBound = true;
-      swapBtn.addEventListener('click', (e) => {
+    const toggleBtn = ctrlEl.querySelector('.bezel-btn-shutter');
+    const upBtn = ctrlEl.querySelector('.bezel-arrow-up');
+    const downBtn = ctrlEl.querySelector('.bezel-arrow-down');
+    const diceBtn = ctrlEl.querySelector('.bezel-btn-dice');
+
+    if(diceBtn && !diceBtn._diceBound){
+      diceBtn._diceBound = true;
+      diceBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         e.preventDefault();
         if(typeof toggleOutlookView === 'function') toggleOutlookView();

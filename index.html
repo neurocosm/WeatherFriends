@@ -739,6 +739,7 @@
   html[data-dim-level="1"] .dimmer-slider-wrap{ opacity:0.65; }
   html[data-dim-level="1"] .dimmer-dots-cluster{ opacity:0.65; }
   html[data-dim-level="1"] .dimmer-pct-label{ opacity:0.65; }
+  html[data-dim-level="1"] .bezel-rail{ opacity:0.75; }
 
   /* Level 2: Ambient Evening (50%) */
   html[data-dim-level="2"] .device-top .brand{ opacity:0.38; }
@@ -750,6 +751,7 @@
   html[data-dim-level="2"] .dimmer-dots-cluster{ opacity:0.38; }
   html[data-dim-level="2"] .dimmer-pct-label{ opacity:0.38; }
   html[data-dim-level="2"] .dimmer-dot-btn:not(.active){ opacity:0.18; }
+  html[data-dim-level="2"] .bezel-rail{ opacity:0.42; }
 
   /* Level 3: Twilight Dim (25%) */
   html[data-dim-level="3"] .device-top .brand{ opacity:0.16; }
@@ -778,10 +780,19 @@
     box-shadow:none !important;
     opacity:0.45;
   }
+  html[data-dim-level="3"] .bezel-rail{ opacity:0.18; }
 
   /* Level 4: Deep Night Mode (12%) */
   html[data-dim-level="4"] .device{
     box-shadow:0 10px 30px rgba(0,0,0,0.95);
+  }
+  html[data-dim-level="4"] .bezel-rail{
+    opacity:0.05;
+  }
+  html[data-dim-level="2"] .bezel-rail:hover,
+  html[data-dim-level="3"] .bezel-rail:hover,
+  html[data-dim-level="4"] .bezel-rail:hover{
+    opacity:0.85;
   }
   html[data-dim-level="4"] .device-dimmer{
     background:rgba(0,0,0,0.40);
@@ -993,6 +1004,8 @@
     user-select:none;
     pointer-events:auto;
     gap:6px;
+    filter: brightness(var(--board-brightness, 1.0)) contrast(calc(1 + (1 - var(--board-brightness, 1.0)) * 0.15));
+    transition: filter 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .bezel-row-ctrl{
     display:flex;
@@ -4171,14 +4184,25 @@
   .starfield-universe[data-theater-mode="candles"] .starfield-backdrop-veil{
     display:none;
   }
-  /* Clean Full-Screen Theater View: hide shade slats, labels, and dot toggles during ambient theater mode */
+  /* Clean Full-Screen Theater View: hide tier splitters, block column splitters, shade slats, labels, and remote resize HUD during ambient theater mode */
+  body.theater-active .tier-splitter,
+  body.theater-active .row-splitter,
+  body.theater-active .remote-resize-hud,
+  body.theater-active .tier-splitter-grip,
   body.theater-active .is-row-collapsed,
   body.theater-active .row-shutter-bar,
   body.theater-active .row-order-ctrl,
+  .screen.theater-active .tier-splitter,
+  .screen.theater-active .row-splitter,
+  .screen.theater-active .remote-resize-hud,
+  .screen.theater-active .tier-splitter-grip,
   .screen.theater-active .is-row-collapsed,
   .screen.theater-active .row-shutter-bar,
   .screen.theater-active .row-order-ctrl{
     display:none !important;
+    opacity:0 !important;
+    pointer-events:none !important;
+    visibility:hidden !important;
   }
   .starfield-canvas{
     position:absolute;
@@ -5488,7 +5512,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.093026.2146</span>
+        <span id="appVersionText">v1.100126.2005</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -8980,7 +9004,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.093026.2146';
+  const CLIENT_APP_VERSION = 'v1.100126.2005';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -12221,6 +12245,12 @@
       const sp1 = document.getElementById('tierSplitter1');
       if(!screenEl || !sp0 || !sp1) return;
 
+      if(typeof isTheaterActive !== 'undefined' && isTheaterActive){
+        sp0.style.display = 'none';
+        sp1.style.display = 'none';
+        return;
+      }
+
       const activeRows = (typeof currentRowOrder !== 'undefined' ? currentRowOrder : ['topTier', 'panelsRow', 'outlook'])
         .filter(id => !(typeof rowCollapsedState !== 'undefined' && rowCollapsedState[id]));
 
@@ -12401,6 +12431,7 @@
     }
 
     function showResizeHud(sp){
+      if(typeof isTheaterActive !== 'undefined' && isTheaterActive) return;
       if(!hudEl) return;
       updateResizeHud(sp);
       positionResizeHud(sp);
@@ -12411,6 +12442,7 @@
       if(!hudEl) return;
       hudEl.classList.remove('is-visible');
     }
+    window.hideResizeHud = hideResizeHud;
 
     function unlockSplitter(sp, save = true){
       const target = sp || activeLockedSplitter;
@@ -12432,8 +12464,10 @@
       activeLockedSplitter = null;
       hideResizeHud();
     }
+    window.unlockSplitter = unlockSplitter;
 
     function lockSplitter(sp){
+      if(typeof isTheaterActive !== 'undefined' && isTheaterActive) return;
       if(activeLockedSplitter && activeLockedSplitter !== sp){
         unlockSplitter(activeLockedSplitter, true);
       }
@@ -12444,6 +12478,7 @@
     }
 
     function toggleLockSplitter(sp){
+      if(typeof isTheaterActive !== 'undefined' && isTheaterActive) return;
       if(activeLockedSplitter === sp){
         unlockSplitter(sp, true);
       } else {
@@ -12679,6 +12714,7 @@
       let didLongPressTrigger = false;
 
       function onPointerDown(e){
+        if(typeof isTheaterActive !== 'undefined' && isTheaterActive) return;
         if(e.button !== undefined && e.button !== 0) return;
         aboveRowId = splitter.dataset.aboveRow;
         belowRowId = splitter.dataset.belowRow;
@@ -12777,6 +12813,7 @@
 
       let lastTapTime = 0;
       splitter.addEventListener('click', (e) => {
+        if(typeof isTheaterActive !== 'undefined' && isTheaterActive) return;
         e.stopPropagation();
         if(didLongPressTrigger) return;
         const now = Date.now();
@@ -12789,6 +12826,7 @@
       });
 
       splitter.addEventListener('keydown', (e) => {
+        if(typeof isTheaterActive !== 'undefined' && isTheaterActive) return;
         if(isOkKey(e)){
           e.preventDefault();
           e.stopPropagation();
@@ -12838,6 +12876,7 @@
       let didLongPressTrigger = false;
 
       function onPointerDown(e){
+        if(typeof isTheaterActive !== 'undefined' && isTheaterActive) return;
         if(e.button !== undefined && e.button !== 0) return;
         const rowEl = rowId === 'top' ? topRowEl : midRowEl;
         if(!rowEl) return;
@@ -12945,6 +12984,7 @@
 
       let lastTapTime = 0;
       splitter.addEventListener('click', (e) => {
+        if(typeof isTheaterActive !== 'undefined' && isTheaterActive) return;
         if(didLongPressTrigger) return;
         const now = Date.now();
         if(now - lastTapTime < 350){
@@ -12965,6 +13005,7 @@
 
       // Smart TV Remote & Keyboard Controls directly on focused splitter:
       splitter.addEventListener('keydown', (e) => {
+        if(typeof isTheaterActive !== 'undefined' && isTheaterActive) return;
         if(isOkKey(e)){
           e.preventDefault();
           e.stopPropagation();
@@ -13006,6 +13047,7 @@
 
     // Global Keydown Handler for when a seam is in active locked resize mode
     window.addEventListener('keydown', (e) => {
+      if(typeof isTheaterActive !== 'undefined' && isTheaterActive) return;
       if(!activeLockedSplitter) return;
 
       if(activeLockedSplitter.classList.contains('tier-splitter')){
@@ -14350,6 +14392,27 @@
     isTheaterActive = true;
     isStarfieldActive = true;
 
+    // Immediately dismiss any active row/block resize session or floating HUD
+    if(typeof window.unlockSplitter === 'function'){
+      window.unlockSplitter(null, false);
+    }
+    if(typeof window.hideResizeHud === 'function'){
+      window.hideResizeHud();
+    }
+    const resizeHudEl = document.getElementById('remoteResizeHud');
+    if(resizeHudEl){
+      resizeHudEl.classList.remove('is-visible');
+      resizeHudEl.style.display = 'none';
+    }
+    document.querySelectorAll('.tier-splitter, .row-splitter').forEach(sp => {
+      sp.classList.remove('is-locked-resize', 'is-dragging');
+      try{ sp.blur(); }catch(e){}
+    });
+    const sp0 = document.getElementById('tierSplitter0');
+    const sp1 = document.getElementById('tierSplitter1');
+    if(sp0) sp0.style.display = 'none';
+    if(sp1) sp1.style.display = 'none';
+
     document.body.classList.add('theater-active');
     const screenEl = document.getElementById('screen');
     if(screenEl) screenEl.classList.add('theater-active');
@@ -14455,6 +14518,13 @@
     document.body.classList.remove('theater-active');
     const screenEl = document.getElementById('screen');
     if(screenEl) screenEl.classList.remove('theater-active');
+    const resizeHudEl = document.getElementById('remoteResizeHud');
+    if(resizeHudEl){
+      resizeHudEl.style.display = '';
+    }
+    if(typeof window.syncTierSplitters === 'function'){
+      window.syncTierSplitters();
+    }
     if(warpHyperspaceBannerEl) warpHyperspaceBannerEl.classList.remove('is-showing');
     if(starfieldHudEl) starfieldHudEl.classList.remove('is-visible');
     if(gravWaveNoticeEl) gravWaveNoticeEl.classList.remove('is-showing');

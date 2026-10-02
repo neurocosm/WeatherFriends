@@ -5,6 +5,8 @@
     "": {
       "name": "weather-console",
       "dependencies": {
+        "@fontsource/dseg14-modern": "^5.3.0",
+        "@fontsource/dseg7-modern": "^5.3.0",
         "express": "^4.21.2",
         "sharp": "^0.35.4",
       },
@@ -12,6 +14,10 @@
   },
   "packages": {
     "@emnapi/runtime": ["@emnapi/runtime@1.11.3", "", { "dependencies": { "tslib": "^2.4.0" } }, "sha512-Xz4Tpyki7XyrpbUK1jR1AhdAdaXyhhY4lZ3neLodmhpuWfy2PAQN5B46sAiU4liOXGLkHypn/qU+jvfWSCYYLA=="],
+
+    "@fontsource/dseg14-modern": ["@fontsource/dseg14-modern@5.3.0", "", {}, "sha512-61J0tbxPxuOO5HTKkF3DUJodeUjcikKYL9nhE8IK49btLdYLUZP1N4gS7U+5K+RNMe5oBHcKoi8t2nCTwe7mTg=="],
+
+    "@fontsource/dseg7-modern": ["@fontsource/dseg7-modern@5.3.0", "", {}, "sha512-1b4fJ365QkTavlFXI/ZhHHfT39ebwEMbcUyptkPG4K4JLT2ve0TPOdytuI2ioUjM84bfI4QUexWZOFf0C4gvtg=="],
 
     "@img/colour": ["@img/colour@1.1.0", "", {}, "sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ=="],
 

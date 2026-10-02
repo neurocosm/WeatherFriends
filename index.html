@@ -20,7 +20,27 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Outfit:wght@300;400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Special+Elite&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/node_modules/@fontsource/dseg14-modern/700.css">
+<link rel="stylesheet" href="/node_modules/@fontsource/dseg7-modern/700.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/dseg14-modern@5.3.0/700.css">
 <style>
+  @font-face {
+    font-family: 'DSEG14 Modern';
+    font-style: normal;
+    font-display: swap;
+    font-weight: 700;
+    src: url('/node_modules/@fontsource/dseg14-modern/files/dseg14-modern-latin-700-normal.woff2') format('woff2'),
+         url('https://cdn.jsdelivr.net/npm/@fontsource/dseg14-modern@5.3.0/files/dseg14-modern-latin-700-normal.woff2') format('woff2');
+  }
+  @font-face {
+    font-family: 'DSEG7 Modern';
+    font-style: normal;
+    font-display: swap;
+    font-weight: 700;
+    src: url('/node_modules/@fontsource/dseg7-modern/files/dseg7-modern-latin-700-normal.woff2') format('woff2'),
+         url('https://cdn.jsdelivr.net/npm/@fontsource/dseg7-modern@5.3.0/files/dseg7-modern-latin-700-normal.woff2') format('woff2');
+  }
+
   @property --bezel-hi {
     syntax: '<color>';
     inherits: true;
@@ -1549,10 +1569,111 @@
     overflow:hidden !important;
     padding:clamp(2px, 0.5vh, 6px) !important;
     box-sizing:border-box !important;
-    pointer-events:none;
+    pointer-events:auto;
+    cursor:pointer;
+    transition:transform 0.15s ease, filter 0.15s ease;
   }
   #topClockBlock[data-clock-mode="analog"] .clock-mode-analog{
     display:flex !important;
+  }
+  #topClockBlock[data-clock-mode="analog-digital"]{
+    display:flex !important;
+    flex-direction:row !important;
+    align-items:center !important;
+    justify-content:space-evenly !important;
+    padding:clamp(4px, 0.8vh, 10px) clamp(6px, 1.4vw, 14px) !important;
+  }
+  #topClockBlock[data-clock-mode="analog-digital"] .clock-mode-digital{
+    display:none !important;
+  }
+  #topClockBlock[data-clock-mode="analog-digital"] .clock-mode-analog{
+    position:relative !important;
+    inset:auto !important;
+    display:flex !important;
+    width:auto !important;
+    height:100% !important;
+    flex:1 1 0% !important;
+    align-items:center !important;
+    justify-content:center !important;
+    padding:0 !important;
+    cursor:pointer;
+    pointer-events:auto !important;
+  }
+  .clock-mode-analog:hover{
+    filter:drop-shadow(0 0 10px rgba(255, 230, 0, 0.35));
+  }
+  .clock-mode-analog:active{
+    transform:scale(0.985);
+  }
+  .clock-mode-analog.is-long-pressing{
+    transform:scale(0.95);
+    filter:brightness(1.25) drop-shadow(0 0 18px rgba(255, 230, 0, 0.7)) !important;
+  }
+
+  /* Mode 3: Digital Font Sidecar (Vertical LCD Segment Display) */
+  .clock-sidecar-digital{
+    display:none;
+    height:100%;
+    flex:0 0 auto;
+    width:clamp(48px, 12vw, 84px);
+    align-items:center;
+    justify-content:center;
+    overflow:visible;
+    user-select:none;
+    pointer-events:auto;
+  }
+  #topClockBlock[data-clock-mode="analog-digital"] .clock-sidecar-digital{
+    display:flex !important;
+  }
+  .sidecar-track{
+    display:inline-flex;
+    flex-direction:row;
+    align-items:center;
+    justify-content:center;
+    gap:clamp(8px, 1.5vw, 16px);
+    transform:rotate(90deg);
+    transform-origin:center center;
+    white-space:nowrap;
+    font-family:'DSEG14 Modern', 'DSEG7 Modern', monospace;
+    font-weight:700;
+    line-height:1;
+    letter-spacing:0.04em;
+    filter:drop-shadow(0 2px 8px rgba(0,0,0,0.85));
+    cursor:default;
+  }
+  .sidecar-digits{
+    color:#ffe600;
+    font-size:clamp(1.25rem, 3.8vh, 2.2rem);
+    font-family:'DSEG14 Modern', 'DSEG7 Modern', monospace;
+    font-weight:700;
+    letter-spacing:0.04em;
+    text-shadow:0 0 10px rgba(255, 230, 0, 0.55), 0 0 20px rgba(255, 215, 0, 0.3);
+    user-select:none;
+  }
+  .sidecar-ampm{
+    color:#ffffff;
+    font-size:0.50em;
+    font-family:'DSEG14 Modern', 'DSEG7 Modern', monospace;
+    font-weight:700;
+    letter-spacing:0.04em;
+    text-shadow:0 0 8px rgba(255, 255, 255, 0.45);
+    cursor:pointer;
+    border-radius:4px;
+    padding:2px 4px;
+    align-self:center;
+    transition:color 0.15s ease, text-shadow 0.15s ease, transform 0.1s ease;
+    outline:none;
+  }
+  .sidecar-ampm:hover{
+    color:#38bdf8;
+    text-shadow:0 0 14px rgba(56, 189, 248, 0.85);
+    transform:scale(1.08);
+  }
+  .sidecar-ampm:active{
+    transform:scale(0.92);
+  }
+  .sidecar-ampm:focus-visible{
+    box-shadow:0 0 0 2px #38bdf8;
   }
   .analog-clock-svg{
     width:auto;
@@ -5512,7 +5633,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.100126.2005</span>
+        <span id="appVersionText">v1.100126.2059</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -5689,6 +5810,14 @@
             <circle cx="100" cy="100" r="5.5" fill="#141c24" stroke="#ffe600" stroke-width="2.2"/>
             <circle cx="100" cy="100" r="2.2" fill="#ffe600"/>
           </svg>
+        </div>
+
+        <!-- Mode 3: Digital Font Sidecar (Vertical LCD Segment Display) -->
+        <div class="clock-sidecar-digital" id="clockSidecarDigital" style="display:none;" aria-label="Digital time display">
+          <div class="sidecar-track" id="sidecarTrack">
+            <span class="sidecar-digits" id="sidecarDigits">8:49</span>
+            <span class="sidecar-ampm" id="sidecarAmpm" role="button" tabindex="0" title="Tap to toggle 12-Hour / 24-Hour mode" aria-label="Toggle 12-Hour or 24-Hour mode">PM</span>
+          </div>
         </div>
       </div>
 
@@ -6517,7 +6646,7 @@
   /* ---------------------------------------------------------------
      2-MODE INTERACTIVE CLOCK SYSTEM (DIGITAL • ANALOG)
   --------------------------------------------------------------- */
-  const CLOCK_MODES = ['digital', 'analog'];
+  const CLOCK_MODES = ['digital', 'analog', 'analog-digital'];
   let currentClockMode = 'digital';
   try{
     const savedMode = localStorage.getItem('wf_clock_mode');
@@ -6577,11 +6706,16 @@
     const padX = (parseFloat(style.paddingLeft) || 0) + (parseFloat(style.paddingRight) || 0);
     const padY = (parseFloat(style.paddingTop) || 0) + (parseFloat(style.paddingBottom) || 0);
 
-    const curW = Math.max(50, clockBlock.clientWidth - padX);
+    let curW = Math.max(50, clockBlock.clientWidth - padX);
     const curH = Math.max(50, clockBlock.clientHeight - padY);
 
-    // Scale dynamically to 90% of available dimension without artificial caps
-    const safeDim = Math.max(50, Math.floor(Math.min(curW, curH) * 0.90));
+    if(currentClockMode === 'analog-digital'){
+      const sidecarW = Math.max(48, Math.min(84, curW * 0.28));
+      curW = Math.max(50, curW - sidecarW - 8);
+    }
+
+    // Scale dynamically to 92% of available dimension without artificial caps
+    const safeDim = Math.max(50, Math.floor(Math.min(curW, curH) * 0.92));
 
     const analogSvg = document.getElementById('analogClockSvg');
     if(analogSvg){
@@ -6590,10 +6724,27 @@
       analogSvg.style.maxWidth = safeDim + 'px';
       analogSvg.style.maxHeight = safeDim + 'px';
     }
+
+    if(currentClockMode === 'analog-digital'){
+      fitSidecarDigital();
+    }
+  }
+
+  function fitSidecarDigital(){
+    const clockBlock = document.getElementById('topClockBlock');
+    const sidecarDigits = document.getElementById('sidecarDigits');
+    const sidecarAmpm = document.getElementById('sidecarAmpm');
+    if(!clockBlock || !sidecarDigits) return;
+
+    const curH = clockBlock.clientHeight;
+    // Scale targetSize so the entire rotated 5-digit time + 50% AM/PM badge fits with comfortable margins
+    const targetSize = Math.max(14, Math.min(32, Math.floor(curH * 0.145)));
+    sidecarDigits.style.fontSize = targetSize + 'px';
+    if(sidecarAmpm) sidecarAmpm.style.fontSize = Math.max(10, Math.round(targetSize * 0.50)) + 'px';
   }
 
   function fitClockBlockToContainer(){
-    if(currentClockMode === 'analog'){
+    if(currentClockMode === 'analog' || currentClockMode === 'analog-digital'){
       fitAnalogClock();
     } else {
       fitDigitalClockToContainer();
@@ -6622,12 +6773,16 @@
     const clockCard = document.getElementById('topClockBlock');
     if(clockCard){
       clockCard.setAttribute('data-clock-mode', mode);
-      const modeNames = { digital: 'Standard Digital', analog: 'Analog Wall Clock' };
-      clockCard.setAttribute('aria-label', `Clock: ${modeNames[mode]}. Tap to switch mode. Tap AM/PM to toggle 12H/24H.`);
-      clockCard.setAttribute('title', `Clock Mode: ${modeNames[mode]} (Tap clock to cycle • Tap AM/PM to toggle 12H/24H)`);
+      const modeNames = {
+        digital: 'Standard Digital',
+        analog: 'Analog Wall Clock',
+        'analog-digital': 'Analog with Digital Sidecar'
+      };
+      clockCard.setAttribute('aria-label', `Clock: ${modeNames[mode]}.`);
+      clockCard.setAttribute('title', `Clock Mode: ${modeNames[mode]}`);
 
       // Strictly lock card dimensions when in analog mode so it NEVER expands or pushes the block space larger
-      if(mode === 'analog' && standardClockMetrics.width > 40 && standardClockMetrics.height > 40){
+      if((mode === 'analog' || mode === 'analog-digital') && standardClockMetrics.width > 40 && standardClockMetrics.height > 40){
         const style = window.getComputedStyle(clockCard);
         const padX = (parseFloat(style.paddingLeft) || 0) + (parseFloat(style.paddingRight) || 0);
         const padY = (parseFloat(style.paddingTop) || 0) + (parseFloat(style.paddingBottom) || 0);
@@ -6641,18 +6796,23 @@
 
     const digitalEl = document.getElementById('clockDigitalMode');
     const analogEl = document.getElementById('clockAnalogMode');
+    const sidecarEl = document.getElementById('clockSidecarDigital');
 
     if(digitalEl){
       if(mode === 'digital'){
         digitalEl.style.visibility = 'visible';
         digitalEl.style.pointerEvents = 'auto';
+        digitalEl.style.display = 'flex';
       } else {
-        // Keep in flow to strictly anchor the card size, but make invisible and non-interactive
         digitalEl.style.visibility = 'hidden';
         digitalEl.style.pointerEvents = 'none';
+        digitalEl.style.display = 'none';
       }
     }
-    if(analogEl) analogEl.style.setProperty('display', (mode === 'analog') ? 'flex' : 'none', 'important');
+    if(analogEl) analogEl.style.setProperty('display', (mode === 'analog' || mode === 'analog-digital') ? 'flex' : 'none', 'important');
+    if(sidecarEl) sidecarEl.style.setProperty('display', (mode === 'analog-digital') ? 'flex' : 'none', 'important');
+
+    fitClockBlockToContainer();
 
     fitAnalogClock();
 
@@ -6784,6 +6944,22 @@
 
     // Update Mode 2 (Analog Wall Clock)
     updateAnalogClock(now);
+
+    // Update Mode 3 (Digital Font Sidecar)
+    const sidecarDigitsEl = document.getElementById('sidecarDigits');
+    if(sidecarDigitsEl){
+      const sidecarHour = is24Hour ? pad(rawHours) : String(parseInt(hourDisplay, 10));
+      sidecarDigitsEl.textContent = `${sidecarHour}:${minutes}`;
+    }
+    const sidecarAmpmEl = document.getElementById('sidecarAmpm');
+    if(sidecarAmpmEl){
+      sidecarAmpmEl.textContent = ampmDisplay;
+      if(is24Hour){
+        sidecarAmpmEl.classList.add('is-24h');
+      } else {
+        sidecarAmpmEl.classList.remove('is-24h');
+      }
+    }
 
     // Backward compatibility for existing selectors
     const digitsEl = document.getElementById('timeDigits');
@@ -7266,15 +7442,137 @@
     });
   }
 
-  // 2. Tapping anywhere else on the Clock card toggles between the 2 modes:
-  //    Mode 1 (Standard Digital) <-> Mode 2 (Analog Wall Clock)
-  const topClockCard = document.getElementById('topClockBlock');
-  if(topClockCard){
-    attachInteractiveAction(topClockCard, (e) => {
+  // 2. Tapping the TIME in digital mode goes to the Analog clock
+  const clockDigitalModeEl = document.getElementById('clockDigitalMode');
+  if(clockDigitalModeEl){
+    attachInteractiveAction(clockDigitalModeEl, (e) => {
       if(e && e.target && e.target.closest && e.target.closest('#clockAmpm')){
         return;
       }
-      cycleClockMode();
+      setClockMode('analog', true);
+    });
+  }
+
+  // 3. Analog Clock Interaction:
+  //    - Quick click: goes back to standard numeric time.
+  //    - Long press (> 450ms): moves analog clock to the left and adds digital font sidecar.
+  const clockAnalogModeEl = document.getElementById('clockAnalogMode');
+  if(clockAnalogModeEl){
+    let pressTimer = null;
+    let didLongPress = false;
+    let startX = 0;
+    let startY = 0;
+
+    function cancelTimer(){
+      if(pressTimer){
+        clearTimeout(pressTimer);
+        pressTimer = null;
+      }
+    }
+
+    function triggerLongPress(){
+      didLongPress = true;
+      try{ if(navigator.vibrate) navigator.vibrate(50); }catch(e){}
+      clockAnalogModeEl.classList.add('is-long-pressing');
+      setTimeout(() => clockAnalogModeEl.classList.remove('is-long-pressing'), 280);
+
+      if(currentClockMode === 'analog-digital'){
+        setClockMode('analog', true);
+      } else {
+        setClockMode('analog-digital', true);
+      }
+    }
+
+    clockAnalogModeEl.addEventListener('pointerdown', (e) => {
+      if(e.button !== undefined && e.button !== 0) return;
+      didLongPress = false;
+      startX = e.clientX;
+      startY = e.clientY;
+      cancelTimer();
+      pressTimer = setTimeout(triggerLongPress, 450);
+    });
+
+    window.addEventListener('pointermove', (e) => {
+      if(pressTimer && (Math.abs(e.clientX - startX) > 8 || Math.abs(e.clientY - startY) > 8)){
+        cancelTimer();
+      }
+    });
+
+    clockAnalogModeEl.addEventListener('pointerup', (e) => {
+      if(e.button !== undefined && e.button !== 0) return;
+      cancelTimer();
+      if(didLongPress){
+        if(e && typeof e.preventDefault === 'function') e.preventDefault();
+        if(e && typeof e.stopPropagation === 'function') e.stopPropagation();
+        return;
+      }
+      // Click on analog clock -> return to standard numeric time
+      setClockMode('digital', true);
+    });
+
+    clockAnalogModeEl.addEventListener('pointercancel', cancelTimer);
+
+    // Smart TV remote & Keyboard on Analog clock
+    let keyPressTimer = null;
+    let keyDidLongPress = false;
+    clockAnalogModeEl.addEventListener('keydown', (e) => {
+      if(e.key === 'd' || e.key === 'D'){
+        e.preventDefault();
+        e.stopPropagation();
+        if(currentClockMode === 'analog-digital'){
+          setClockMode('analog', true);
+        } else {
+          setClockMode('analog-digital', true);
+        }
+        return;
+      }
+      if(e.key === 'Enter' || e.key === ' ' || e.key === 'Select' || e.key === 'Accept'){
+        if(e.repeat) return;
+        keyDidLongPress = false;
+        if(keyPressTimer) clearTimeout(keyPressTimer);
+        keyPressTimer = setTimeout(() => {
+          keyDidLongPress = true;
+          if(currentClockMode === 'analog-digital'){
+            setClockMode('analog', true);
+          } else {
+            setClockMode('analog-digital', true);
+          }
+        }, 500);
+      }
+    });
+
+    clockAnalogModeEl.addEventListener('keyup', (e) => {
+      if(e.key === 'Enter' || e.key === ' ' || e.key === 'Select' || e.key === 'Accept'){
+        if(keyPressTimer) clearTimeout(keyPressTimer);
+        keyPressTimer = null;
+        if(!keyDidLongPress){
+          e.preventDefault();
+          e.stopPropagation();
+          setClockMode('digital', true);
+        }
+      }
+    });
+  }
+
+  // 4. Digital Font Sidecar: Tapping PM changes to 24H time for the digital addition
+  const sidecarAmpmEl = document.getElementById('sidecarAmpm');
+  if(sidecarAmpmEl){
+    attachInteractiveAction(sidecarAmpmEl, (e) => {
+      if(e && typeof e.stopPropagation === 'function') e.stopPropagation();
+      toggleTimeFormat();
+    });
+  }
+
+  // Fallback card-level observer and background clicks
+  const topClockCard = document.getElementById('topClockBlock');
+  if(topClockCard){
+    topClockCard.addEventListener('click', (e) => {
+      if(e && e.target && e.target.closest && (e.target.closest('#clockAmpm') || e.target.closest('#sidecarAmpm') || e.target.closest('#clockAnalogMode'))){
+        return;
+      }
+      if(currentClockMode === 'digital'){
+        setClockMode('analog', true);
+      }
     });
 
     if(window.ResizeObserver){
@@ -9004,7 +9302,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.100126.2005';
+  const CLIENT_APP_VERSION = 'v1.100126.2059';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');

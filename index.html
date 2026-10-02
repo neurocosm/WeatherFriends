@@ -5168,11 +5168,11 @@
     display:none !important;
   }
 
-  /* Outlook container grids */
+  /* Outlook container grids - Tight 6px spacing matching Top Row blocks */
   .outlook-forecast-grid{
     display:grid;
     grid-template-columns:repeat(5, 1fr);
-    gap:clamp(6px, 1.1vw, 12px);
+    gap:6px;
     width:100%;
     height:100%;
     min-height:0;
@@ -5183,7 +5183,7 @@
   .outlook-friends-grid{
     display:grid;
     grid-template-columns:repeat(4, 1fr);
-    gap:clamp(6px, 1.1vw, 12px);
+    gap:6px;
     width:100%;
     height:100%;
     min-height:0;
@@ -5437,20 +5437,21 @@
     opacity:0.85;
   }
 
-  /* Footer Strip: Hi / Lo & Feels Like */
+  /* Footer Strip: Hi / Lo & Feels Like - Raised Divider & 10% Larger Font */
   .friend-footer-strip{
     display:flex;
     align-items:center;
     justify-content:space-between;
     width:100%;
     min-width:0;
-    padding-top:4px;
-    border-top:1px solid rgba(73, 230, 196, 0.16);
+    padding-top:clamp(7px, 1.4vh, 12px);
+    padding-bottom:clamp(3px, 0.6vh, 6px);
+    border-top:1px solid rgba(73, 230, 196, 0.22);
     font-family:'Outfit', sans-serif;
-    font-size:clamp(0.76rem, 4.6cqw, 0.90rem);
+    font-size:clamp(0.85rem, 5.2cqw, 1.02rem);
     font-weight:400;
     color:#93b2be;
-    line-height:1;
+    line-height:1.1;
     margin-top:auto;
   }
   .friend-hilo{
@@ -5633,7 +5634,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.100126.2059</span>
+        <span id="appVersionText">v1.100126.2111</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -8106,6 +8107,7 @@
       const fNamePx = Math.max(11, Math.min(20, Math.round(availH * 0.098)));
       const fTempPx = Math.max(18, Math.min(48, Math.round(availH * 0.21)));
       const fTelemPx = Math.max(9, Math.min(14, Math.round(availH * 0.068)));
+      const fFooterPx = Math.max(11, Math.min(16, Math.round(availH * 0.082))); // ~10% larger for bottom Hi/Lo & Feels
 
       friendCards.forEach(fcard => {
         fcard.style.padding = `${padV}px ${padH}px`;
@@ -8117,6 +8119,9 @@
 
         const ftelems = fcard.querySelectorAll('.friend-telem-val');
         ftelems.forEach(tv => { tv.style.fontSize = `${fTelemPx}px`; });
+
+        const ffooter = fcard.querySelector('.friend-footer-strip');
+        if(ffooter) ffooter.style.fontSize = `${fFooterPx}px`;
       });
     }
   }
@@ -9302,7 +9307,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.100126.2059';
+  const CLIENT_APP_VERSION = 'v1.100126.2111';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');

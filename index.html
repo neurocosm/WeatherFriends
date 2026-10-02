@@ -5634,7 +5634,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.100126.2111</span>
+        <span id="appVersionText">v1.100126.2115</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -9307,7 +9307,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.100126.2111';
+  const CLIENT_APP_VERSION = 'v1.100126.2115';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -14957,7 +14957,7 @@
       y: ay,
       r: 10,
       maxR: Math.max(starfieldWidth, starfieldHeight) * 1.15,
-      speed: 20,
+      speed: 18,
       alpha: 0.95
     });
 
@@ -14972,9 +14972,6 @@
         if(pulseBtn) pulseBtn.classList.remove('is-pulsing');
       }, 350);
     }
-
-    // Trigger gradual reveal of the underlying dashboard at ~80% opacity, then smoothly fade back into pure black
-    triggerStarfieldDashboardReveal();
   }
 
   function renderStarfieldLoop(timestamp){
@@ -15045,7 +15042,7 @@
       s.onScreen = (s.sx >= -20 && s.sx <= w + 20 && s.sy >= -20 && s.sy <= h + 20);
 
       if(s.energy > 0.01){
-        s.energy *= 0.94;
+        s.energy *= 0.975;
       } else {
         s.energy = 0;
       }

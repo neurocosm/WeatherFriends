@@ -280,6 +280,57 @@
   .device-dimmer:hover .dimmer-pct-label{
     color:var(--teal);
   }
+  /* 256 Monochromatic Grayscale Mode Toggle Button (Inside Dimmer Pill, Right of %) */
+  .dimmer-mono-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:3.5px;
+    padding:1px 5px;
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(140,200,210,0.24);
+    border-radius:5px;
+    cursor:pointer;
+    user-select:none;
+    line-height:1;
+    margin-left:4px;
+    color:#8fa2af;
+    transition:background 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, opacity 0.25s ease;
+  }
+  .dimmer-mono-btn:hover{
+    background:rgba(255,255,255,0.14);
+    border-color:rgba(255,255,255,0.50);
+    color:#ffffff;
+  }
+  .dimmer-mono-btn:focus-visible{
+    outline:1.5px solid #ffffff;
+    outline-offset:1px;
+  }
+  .dimmer-mono-pip{
+    width:5px;
+    height:5px;
+    border-radius:50%;
+    background:#4e5d66;
+    transition:background 0.2s ease, box-shadow 0.2s ease;
+    flex-shrink:0;
+  }
+  .dimmer-mono-label{
+    font-family:'Share Tech Mono', monospace;
+    font-size:0.58rem;
+    font-weight:600;
+    letter-spacing:0.04em;
+    line-height:1;
+  }
+  /* Active 256 Monochromatic State */
+  .dimmer-mono-btn.is-active{
+    background:rgba(240,246,252,0.18);
+    border-color:rgba(255,255,255,0.80);
+    color:#ffffff;
+    box-shadow:0 0 8px rgba(255,255,255,0.30);
+  }
+  .dimmer-mono-btn.is-active .dimmer-mono-pip{
+    background:#ffffff;
+    box-shadow:0 0 5px rgba(255,255,255,0.95);
+  }
   .device-top .brand{
     font-family:'Outfit',sans-serif;
     font-weight:600;
@@ -725,19 +776,39 @@
   .wake-pill:focus-visible .wake-dot{
     background:#49e6c4 !important;
   }
+  .device-dimmer{
+    transition:background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .dimmer-slider-wrap,
+  .dimmer-dots-cluster,
+  .dimmer-pct-label{
+    transition:opacity 0.25s ease;
+  }
   .device-dimmer:hover,
-  .device-dimmer:focus-within{
+  .device-dimmer.is-interacting,
+  .device-dimmer:focus-visible{
     opacity:1 !important;
+    background:rgba(0,0,0,0.65) !important;
+    border-color:rgba(73,230,196,0.45) !important;
+    box-shadow:0 3px 14px rgba(0,0,0,0.7) !important;
   }
   .device-dimmer:hover .dimmer-slider-wrap,
   .device-dimmer:hover .dimmer-dots-cluster,
   .device-dimmer:hover .dimmer-pct-label,
   .device-dimmer:hover .dimmer-dot-btn,
-  .device-dimmer:focus-within .dimmer-slider-wrap,
-  .device-dimmer:focus-within .dimmer-dots-cluster,
-  .device-dimmer:focus-within .dimmer-pct-label,
-  .device-dimmer:focus-within .dimmer-dot-btn{
+  .device-dimmer:hover .dimmer-mono-btn,
+  .device-dimmer.is-interacting .dimmer-slider-wrap,
+  .device-dimmer.is-interacting .dimmer-dots-cluster,
+  .device-dimmer.is-interacting .dimmer-pct-label,
+  .device-dimmer.is-interacting .dimmer-dot-btn,
+  .device-dimmer.is-interacting .dimmer-mono-btn,
+  .device-dimmer:focus-visible .dimmer-slider-wrap,
+  .device-dimmer:focus-visible .dimmer-dots-cluster,
+  .device-dimmer:focus-visible .dimmer-pct-label,
+  .device-dimmer:focus-visible .dimmer-dot-btn,
+  .device-dimmer:focus-visible .dimmer-mono-btn{
     opacity:1 !important;
+    pointer-events:auto !important;
   }
 
   /* The Green Finder Icon: ALWAYS visible with emerald beacon glow */
@@ -746,9 +817,10 @@
   html[data-dim-level="2"] .dimmer-icon,
   html[data-dim-level="3"] .dimmer-icon,
   html[data-dim-level="4"] .dimmer-icon{
-    opacity:0.92 !important;
+    opacity:0.95 !important;
     stroke:#10b981 !important;
-    filter:drop-shadow(0 0 3px rgba(16,185,129,0.7)) !important;
+    color:#10b981 !important;
+    filter:drop-shadow(0 0 3px rgba(16,185,129,0.75)) !important;
   }
 
   /* Level 1: Soft Day (75%) */
@@ -773,7 +845,7 @@
   html[data-dim-level="2"] .dimmer-dot-btn:not(.active){ opacity:0.18; }
   html[data-dim-level="2"] .bezel-rail{ opacity:0.42; }
 
-  /* Level 3: Twilight Dim (25%) */
+  /* Level 3: Twilight Dim (25%) - Dims all dimmer controls to zero except the green icon */
   html[data-dim-level="3"] .device-top .brand{ opacity:0.16; }
   html[data-dim-level="3"] .device-top .version-pill{ opacity:0.14; }
   html[data-dim-level="3"] .wake-pill{
@@ -792,17 +864,21 @@
     animation:none !important;
     opacity:0.5;
   }
-  html[data-dim-level="3"] .dimmer-slider-wrap{ opacity:0.16; }
-  html[data-dim-level="3"] .dimmer-dots-cluster{ opacity:0.16; }
-  html[data-dim-level="3"] .dimmer-pct-label{ opacity:0.16; }
-  html[data-dim-level="3"] .dimmer-dot-btn:not(.active){ opacity:0.08; }
-  html[data-dim-level="3"] .dimmer-dot-btn.active{
-    box-shadow:none !important;
-    opacity:0.45;
+  html[data-dim-level="3"] .device-dimmer:not(:hover):not(.is-interacting):not(:focus-visible){
+    background:transparent;
+    border-color:transparent;
+    box-shadow:none;
+  }
+  html[data-dim-level="3"] .device-dimmer:not(:hover):not(.is-interacting):not(:focus-visible) .dimmer-slider-wrap,
+  html[data-dim-level="3"] .device-dimmer:not(:hover):not(.is-interacting):not(:focus-visible) .dimmer-dots-cluster,
+  html[data-dim-level="3"] .device-dimmer:not(:hover):not(.is-interacting):not(:focus-visible) .dimmer-pct-label,
+  html[data-dim-level="3"] .device-dimmer:not(:hover):not(.is-interacting):not(:focus-visible) .dimmer-mono-btn{
+    opacity:0;
+    pointer-events:none;
   }
   html[data-dim-level="3"] .bezel-rail{ opacity:0.18; }
 
-  /* Level 4: Deep Night Mode (12%) */
+  /* Level 4: Deep Night Mode (12%) - Only Green Sprite Button Glows */
   html[data-dim-level="4"] .device{
     box-shadow:0 10px 30px rgba(0,0,0,0.95);
   }
@@ -814,31 +890,17 @@
   html[data-dim-level="4"] .bezel-rail:hover{
     opacity:0.85;
   }
-  html[data-dim-level="4"] .device-dimmer{
-    background:rgba(0,0,0,0.40);
-    border-color:rgba(16,185,129,0.18);
+  html[data-dim-level="4"] .device-dimmer:not(:hover):not(.is-interacting):not(:focus-visible){
+    background:transparent;
+    border-color:transparent;
     box-shadow:none;
   }
-  html[data-dim-level="4"] .dimmer-slider-wrap{
-    opacity:0.04;
-  }
-  html[data-dim-level="4"] .dimmer-dots-cluster{
-    opacity:0.05;
-  }
-  html[data-dim-level="4"] .dimmer-pct-label{
-    opacity:0.05;
-  }
-  html[data-dim-level="4"] .dimmer-dot-btn:not(.active){
-    opacity:0.02;
-    background:rgba(255,255,255,0.02);
-    border-color:transparent;
-  }
-  html[data-dim-level="4"] .dimmer-dot-btn.active{
-    background:#10b981 !important;
-    border-color:#34d399 !important;
-    box-shadow:none !important;
-    opacity:0.25;
-    transform:none !important;
+  html[data-dim-level="4"] .device-dimmer:not(:hover):not(.is-interacting):not(:focus-visible) .dimmer-slider-wrap,
+  html[data-dim-level="4"] .device-dimmer:not(:hover):not(.is-interacting):not(:focus-visible) .dimmer-dots-cluster,
+  html[data-dim-level="4"] .device-dimmer:not(:hover):not(.is-interacting):not(:focus-visible) .dimmer-pct-label,
+  html[data-dim-level="4"] .device-dimmer:not(:hover):not(.is-interacting):not(:focus-visible) .dimmer-mono-btn{
+    opacity:0;
+    pointer-events:none;
   }
   html[data-dim-level="4"] .wake-pill,
   html[data-dim-level="4"] .pwa-install-btn{
@@ -913,6 +975,33 @@
   html[data-dim-level="4"] .grav-wave-notice{
     color:rgba(73, 230, 196, 0.25) !important;
     text-shadow:none !important;
+  }
+
+  /* ===============================================================
+     TRUE 256-GRADIENT MONOCHROMATIC GRAYSCALE MODE (8-BIT PHOTOMETRIC)
+     - Applies to all UI elements except the ambient theater
+     - Preserves full contrast, razor-sharp numbers, and specular dynamic range
+     - Seamlessly stacks with all 5 hardware dimmer brightness levels
+  =============================================================== */
+  html[data-grayscale-mode="256"] .device-top,
+  html[data-grayscale-mode="256"] .bezel-rail,
+  html[data-grayscale-mode="256"] .screen > *:not(#starfieldUniverse){
+    filter: url(#grayscale256Filter) contrast(1.05) brightness(0.99);
+    transition: filter 0.3s ease;
+  }
+  @supports not (filter: url(#grayscale256Filter)){
+    html[data-grayscale-mode="256"] .device-top,
+    html[data-grayscale-mode="256"] .bezel-rail,
+    html[data-grayscale-mode="256"] .screen > *:not(#starfieldUniverse){
+      filter: grayscale(100%) contrast(1.06) brightness(0.99);
+    }
+  }
+  /* Explicitly guarantee Ambient Theater Universe stays 100% full rich color */
+  #starfieldUniverse,
+  #starfieldUniverse *,
+  .starfield-universe,
+  .starfield-universe *{
+    filter: none !important;
   }
 
   .screen{
@@ -5606,6 +5695,25 @@
 </head>
 <body>
 
+<!-- True 256-Gradient Monochromatic Quantization Filter (ITU-R BT.709 Photometric Weights) -->
+<svg width="0" height="0" style="position:absolute;width:0;height:0;pointer-events:none;opacity:0;" aria-hidden="true">
+  <defs>
+    <filter id="grayscale256Filter" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="
+        0.2126 0.7152 0.0722 0 0
+        0.2126 0.7152 0.0722 0 0
+        0.2126 0.7152 0.0722 0 0
+        0      0      0      1 0
+      " result="luminance"/>
+      <feComponentTransfer in="luminance" result="quantized">
+        <feFuncR type="discrete" tableValues="0.0000 0.0039 0.0078 0.0118 0.0157 0.0196 0.0235 0.0275 0.0314 0.0353 0.0392 0.0431 0.0471 0.0510 0.0549 0.0588 0.0627 0.0667 0.0706 0.0745 0.0784 0.0824 0.0863 0.0902 0.0941 0.0980 0.1020 0.1059 0.1098 0.1137 0.1176 0.1216 0.1255 0.1294 0.1333 0.1373 0.1412 0.1451 0.1490 0.1529 0.1569 0.1608 0.1647 0.1686 0.1725 0.1765 0.1804 0.1843 0.1882 0.1922 0.1961 0.2000 0.2039 0.2078 0.2118 0.2157 0.2196 0.2235 0.2275 0.2314 0.2353 0.2392 0.2431 0.2471 0.2510 0.2549 0.2588 0.2627 0.2667 0.2706 0.2745 0.2784 0.2824 0.2863 0.2902 0.2941 0.2980 0.3020 0.3059 0.3098 0.3137 0.3176 0.3216 0.3255 0.3294 0.3333 0.3373 0.3412 0.3451 0.3490 0.3529 0.3569 0.3608 0.3647 0.3686 0.3725 0.3765 0.3804 0.3843 0.3882 0.3922 0.3961 0.4000 0.4039 0.4078 0.4118 0.4157 0.4196 0.4235 0.4275 0.4314 0.4353 0.4392 0.4431 0.4471 0.4510 0.4549 0.4588 0.4627 0.4667 0.4706 0.4745 0.4784 0.4824 0.4863 0.4902 0.4941 0.4980 0.5020 0.5059 0.5098 0.5137 0.5176 0.5216 0.5255 0.5294 0.5333 0.5373 0.5412 0.5451 0.5490 0.5529 0.5569 0.5608 0.5647 0.5686 0.5725 0.5765 0.5804 0.5843 0.5882 0.5922 0.5961 0.6000 0.6039 0.6078 0.6118 0.6157 0.6196 0.6235 0.6275 0.6314 0.6353 0.6392 0.6431 0.6471 0.6510 0.6549 0.6588 0.6627 0.6667 0.6706 0.6745 0.6784 0.6824 0.6863 0.6902 0.6941 0.6980 0.7020 0.7059 0.7098 0.7137 0.7176 0.7216 0.7255 0.7294 0.7333 0.7373 0.7412 0.7451 0.7490 0.7529 0.7569 0.7608 0.7647 0.7686 0.7725 0.7765 0.7804 0.7843 0.7882 0.7922 0.7961 0.8000 0.8039 0.8078 0.8118 0.8157 0.8196 0.8235 0.8275 0.8314 0.8353 0.8392 0.8431 0.8471 0.8510 0.8549 0.8588 0.8627 0.8667 0.8706 0.8745 0.8784 0.8824 0.8863 0.8902 0.8941 0.8980 0.9020 0.9059 0.9098 0.9137 0.9176 0.9216 0.9255 0.9294 0.9333 0.9373 0.9412 0.9451 0.9490 0.9529 0.9569 0.9608 0.9647 0.9686 0.9725 0.9765 0.9804 0.9843 0.9882 0.9922 0.9961 1.0000"/>
+        <feFuncG type="discrete" tableValues="0.0000 0.0039 0.0078 0.0118 0.0157 0.0196 0.0235 0.0275 0.0314 0.0353 0.0392 0.0431 0.0471 0.0510 0.0549 0.0588 0.0627 0.0667 0.0706 0.0745 0.0784 0.0824 0.0863 0.0902 0.0941 0.0980 0.1020 0.1059 0.1098 0.1137 0.1176 0.1216 0.1255 0.1294 0.1333 0.1373 0.1412 0.1451 0.1490 0.1529 0.1569 0.1608 0.1647 0.1686 0.1725 0.1765 0.1804 0.1843 0.1882 0.1922 0.1961 0.2000 0.2039 0.2078 0.2118 0.2157 0.2196 0.2235 0.2275 0.2314 0.2353 0.2392 0.2431 0.2471 0.2510 0.2549 0.2588 0.2627 0.2667 0.2706 0.2745 0.2784 0.2824 0.2863 0.2902 0.2941 0.2980 0.3020 0.3059 0.3098 0.3137 0.3176 0.3216 0.3255 0.3294 0.3333 0.3373 0.3412 0.3451 0.3490 0.3529 0.3569 0.3608 0.3647 0.3686 0.3725 0.3765 0.3804 0.3843 0.3882 0.3922 0.3961 0.4000 0.4039 0.4078 0.4118 0.4157 0.4196 0.4235 0.4275 0.4314 0.4353 0.4392 0.4431 0.4471 0.4510 0.4549 0.4588 0.4627 0.4667 0.4706 0.4745 0.4784 0.4824 0.4863 0.4902 0.4941 0.4980 0.5020 0.5059 0.5098 0.5137 0.5176 0.5216 0.5255 0.5294 0.5333 0.5373 0.5412 0.5451 0.5490 0.5529 0.5569 0.5608 0.5647 0.5686 0.5725 0.5765 0.5804 0.5843 0.5882 0.5922 0.5961 0.6000 0.6039 0.6078 0.6118 0.6157 0.6196 0.6235 0.6275 0.6314 0.6353 0.6392 0.6431 0.6471 0.6510 0.6549 0.6588 0.6627 0.6667 0.6706 0.6745 0.6784 0.6824 0.6863 0.6902 0.6941 0.6980 0.7020 0.7059 0.7098 0.7137 0.7176 0.7216 0.7255 0.7294 0.7333 0.7373 0.7412 0.7451 0.7490 0.7529 0.7569 0.7608 0.7647 0.7686 0.7725 0.7765 0.7804 0.7843 0.7882 0.7922 0.7961 0.8000 0.8039 0.8078 0.8118 0.8157 0.8196 0.8235 0.8275 0.8314 0.8353 0.8392 0.8431 0.8471 0.8510 0.8549 0.8588 0.8627 0.8667 0.8706 0.8745 0.8784 0.8824 0.8863 0.8902 0.8941 0.8980 0.9020 0.9059 0.9098 0.9137 0.9176 0.9216 0.9255 0.9294 0.9333 0.9373 0.9412 0.9451 0.9490 0.9529 0.9569 0.9608 0.9647 0.9686 0.9725 0.9765 0.9804 0.9843 0.9882 0.9922 0.9961 1.0000"/>
+        <feFuncB type="discrete" tableValues="0.0000 0.0039 0.0078 0.0118 0.0157 0.0196 0.0235 0.0275 0.0314 0.0353 0.0392 0.0431 0.0471 0.0510 0.0549 0.0588 0.0627 0.0667 0.0706 0.0745 0.0784 0.0824 0.0863 0.0902 0.0941 0.0980 0.1020 0.1059 0.1098 0.1137 0.1176 0.1216 0.1255 0.1294 0.1333 0.1373 0.1412 0.1451 0.1490 0.1529 0.1569 0.1608 0.1647 0.1686 0.1725 0.1765 0.1804 0.1843 0.1882 0.1922 0.1961 0.2000 0.2039 0.2078 0.2118 0.2157 0.2196 0.2235 0.2275 0.2314 0.2353 0.2392 0.2431 0.2471 0.2510 0.2549 0.2588 0.2627 0.2667 0.2706 0.2745 0.2784 0.2824 0.2863 0.2902 0.2941 0.2980 0.3020 0.3059 0.3098 0.3137 0.3176 0.3216 0.3255 0.3294 0.3333 0.3373 0.3412 0.3451 0.3490 0.3529 0.3569 0.3608 0.3647 0.3686 0.3725 0.3765 0.3804 0.3843 0.3882 0.3922 0.3961 0.4000 0.4039 0.4078 0.4118 0.4157 0.4196 0.4235 0.4275 0.4314 0.4353 0.4392 0.4431 0.4471 0.4510 0.4549 0.4588 0.4627 0.4667 0.4706 0.4745 0.4784 0.4824 0.4863 0.4902 0.4941 0.4980 0.5020 0.5059 0.5098 0.5137 0.5176 0.5216 0.5255 0.5294 0.5333 0.5373 0.5412 0.5451 0.5490 0.5529 0.5569 0.5608 0.5647 0.5686 0.5725 0.5765 0.5804 0.5843 0.5882 0.5922 0.5961 0.6000 0.6039 0.6078 0.6118 0.6157 0.6196 0.6235 0.6275 0.6314 0.6353 0.6392 0.6431 0.6471 0.6510 0.6549 0.6588 0.6627 0.6667 0.6706 0.6745 0.6784 0.6824 0.6863 0.6902 0.6941 0.6980 0.7020 0.7059 0.7098 0.7137 0.7176 0.7216 0.7255 0.7294 0.7333 0.7373 0.7412 0.7451 0.7490 0.7529 0.7569 0.7608 0.7647 0.7686 0.7725 0.7765 0.7804 0.7843 0.7882 0.7922 0.7961 0.8000 0.8039 0.8078 0.8118 0.8157 0.8196 0.8235 0.8275 0.8314 0.8353 0.8392 0.8431 0.8471 0.8510 0.8549 0.8588 0.8627 0.8667 0.8706 0.8745 0.8784 0.8824 0.8863 0.8902 0.8941 0.8980 0.9020 0.9059 0.9098 0.9137 0.9176 0.9216 0.9255 0.9294 0.9333 0.9373 0.9412 0.9451 0.9490 0.9529 0.9569 0.9608 0.9647 0.9686 0.9725 0.9765 0.9804 0.9843 0.9882 0.9922 0.9961 1.0000"/>
+      </feComponentTransfer>
+    </filter>
+  </defs>
+</svg>
+
 <div class="device">
   <div class="device-top">
     <!-- 5-Dot Board Dimmer & Continuous Hardware Slider (Far Left) -->
@@ -5625,6 +5733,10 @@
         <button type="button" class="dimmer-dot-btn" data-level="4" data-pct="12%" title="12% Brightness (Deep Night Beacon)" aria-label="12% Brightness"></button>
       </div>
       <span class="dimmer-pct-label" id="dimmerPctLabel">100%</span>
+      <button type="button" class="dimmer-mono-btn" id="dimmerMonoBtn" title="256-Gradient Monochromatic Grayscale Mode • Tap to toggle • Key: G" aria-label="Toggle 256 Grayscale Mode" aria-pressed="false">
+        <span class="dimmer-mono-pip"></span>
+        <span class="dimmer-mono-label">256</span>
+      </button>
     </div>
 
     <div class="brand">
@@ -5634,7 +5746,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.100126.2115</span>
+        <span id="appVersionText">v1.100226.1926</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -9307,7 +9419,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.100126.2115';
+  const CLIENT_APP_VERSION = 'v1.100226.1926';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -9913,12 +10025,18 @@
       const level = parseInt(btn.getAttribute('data-level'), 10);
       if(!isNaN(level)){
         applyBoardDimmer(level, true);
+        btn.blur();
+        if(boardDimmerEl) boardDimmerEl.classList.remove('is-interacting');
       }
     });
   });
 
   // Bind continuous range slider
   if(dimmerSlider){
+    dimmerSlider.addEventListener('pointerdown', (e) => {
+      e.stopPropagation();
+      if(boardDimmerEl) boardDimmerEl.classList.add('is-interacting');
+    });
     dimmerSlider.addEventListener('input', (e) => {
       e.stopPropagation();
       applyContinuousBrightness(parseFloat(dimmerSlider.value), true);
@@ -9926,8 +10044,17 @@
     dimmerSlider.addEventListener('change', (e) => {
       e.stopPropagation();
       applyContinuousBrightness(parseFloat(dimmerSlider.value), true);
+      dimmerSlider.blur();
+      if(boardDimmerEl) boardDimmerEl.classList.remove('is-interacting');
     });
-    dimmerSlider.addEventListener('pointerdown', (e) => e.stopPropagation());
+    dimmerSlider.addEventListener('pointerup', () => {
+      dimmerSlider.blur();
+      if(boardDimmerEl) boardDimmerEl.classList.remove('is-interacting');
+    });
+    dimmerSlider.addEventListener('touchend', () => {
+      dimmerSlider.blur();
+      if(boardDimmerEl) boardDimmerEl.classList.remove('is-interacting');
+    });
     dimmerSlider.addEventListener('click', (e) => e.stopPropagation());
   }
 
@@ -9936,6 +10063,56 @@
     boardDimmerEl.addEventListener('click', (e) => {
       if(e.target.closest('.dimmer-dot-btn') || e.target.closest('.dimmer-slider-wrap')) return;
       cycleBoardDimmer(true);
+      boardDimmerEl.blur();
+    });
+    boardDimmerEl.addEventListener('mouseleave', () => {
+      boardDimmerEl.classList.remove('is-interacting');
+      if(dimmerSlider) dimmerSlider.blur();
+    });
+  }
+
+  // ---------------------------------------------------------------
+  // TRUE 256-GRADIENT MONOCHROMATIC GRAYSCALE CONTROLLER
+  // - 8-Bit Quantized Photometric Luminance Pipeline (ITU-R BT.709)
+  // - Preserves full rich contrast and specular whites
+  // - Excludes Theater mode strictly (Starfield/Aquarium/Candles stay in vivid color)
+  // - Works in tandem with all 5 hardware dimmer brightness levels
+  // - Shortcut: 'G' key
+  // ---------------------------------------------------------------
+  let isGrayscale256Active = false;
+
+  function setGrayscale256Mode(enable, save = true){
+    isGrayscale256Active = !!enable;
+    if(isGrayscale256Active){
+      document.documentElement.setAttribute('data-grayscale-mode', '256');
+    } else {
+      document.documentElement.removeAttribute('data-grayscale-mode');
+    }
+    const monoBtn = document.getElementById('dimmerMonoBtn');
+    if(monoBtn){
+      monoBtn.classList.toggle('is-active', isGrayscale256Active);
+      monoBtn.setAttribute('aria-pressed', String(isGrayscale256Active));
+      monoBtn.title = isGrayscale256Active
+        ? '256-Gradient Monochromatic Grayscale Active • Tap to disable • Key: G'
+        : '256-Gradient Monochromatic Grayscale Mode • Tap to toggle • Key: G';
+    }
+    if(save){
+      try{
+        localStorage.setItem('wf_grayscale_256_mode', isGrayscale256Active ? 'true' : 'false');
+      }catch(e){}
+    }
+  }
+
+  function toggleGrayscale256Mode(){
+    setGrayscale256Mode(!isGrayscale256Active, true);
+  }
+
+  const dimmerMonoBtn = document.getElementById('dimmerMonoBtn');
+  if(dimmerMonoBtn){
+    dimmerMonoBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleGrayscale256Mode();
+      dimmerMonoBtn.blur();
     });
   }
 
@@ -9959,6 +10136,9 @@
     if(e.key === 'd' || e.key === 'D'){
       e.preventDefault();
       cycleBoardDimmer(true);
+    } else if(e.key === 'g' || e.key === 'G'){
+      e.preventDefault();
+      toggleGrayscale256Mode();
     }
   });
 
@@ -9988,6 +10168,14 @@
   }catch(e){
     applyBoardDimmer(0, false);
   }
+
+  // Restore saved 256-grayscale state on startup
+  try{
+    const savedMono = localStorage.getItem('wf_grayscale_256_mode');
+    if(savedMono === 'true'){
+      setGrayscale256Mode(true, false);
+    }
+  }catch(e){}
 
   // PWA Service Worker Registration & Platform-Aware Install Prompt Handler
   const pwaInstallBtn = document.getElementById('pwaInstallBtn');

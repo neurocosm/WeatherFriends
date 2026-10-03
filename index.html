@@ -1682,30 +1682,13 @@
   .clock-mode-analog:active{
     transform:scale(0.985);
   }
-  .analog-ampm-aperture{
-    cursor:pointer;
-    user-select:none;
-    pointer-events:auto;
-    transition:transform 0.15s ease, filter 0.15s ease;
-  }
-  .analog-ampm-aperture:hover rect{
-    stroke:rgba(73, 230, 196, 0.9);
-    fill:rgba(73, 230, 196, 0.22);
-  }
-  .analog-ampm-aperture:hover text{
-    fill:#49e6c4;
-  }
-  .analog-ampm-aperture:active{
-    transform:scale(0.93);
-    transform-origin:136px 100px;
-  }
 
-  /* Mode 3: Digital Font Sidecar (Vertical LCD Segment Display) */
+  /* Mode 3: Digital Font Sidecar (Right Side Up Stacked Mini Digital) */
   .clock-sidecar-digital{
     display:none;
     height:100%;
     flex:0 0 auto;
-    width:clamp(48px, 12vw, 84px);
+    width:clamp(46px, 12vw, 84px);
     align-items:center;
     justify-content:center;
     overflow:visible;
@@ -1716,54 +1699,69 @@
     display:flex !important;
   }
   .sidecar-track{
-    display:inline-flex;
-    flex-direction:row;
+    display:flex;
+    flex-direction:column;
     align-items:center;
     justify-content:center;
-    gap:clamp(8px, 1.5vw, 16px);
-    transform:rotate(90deg);
-    transform-origin:center center;
-    white-space:nowrap;
-    font-family:'DSEG14 Modern', 'DSEG7 Modern', monospace;
-    font-weight:700;
-    line-height:1;
-    letter-spacing:0.04em;
-    filter:drop-shadow(0 2px 8px rgba(0,0,0,0.85));
+    gap:clamp(1px, 0.4vh, 3px);
     cursor:default;
-  }
-  .sidecar-digits{
-    color:#ffe600;
-    font-size:clamp(1.25rem, 3.8vh, 2.2rem);
-    font-family:'DSEG14 Modern', 'DSEG7 Modern', monospace;
-    font-weight:700;
-    letter-spacing:0.04em;
-    text-shadow:0 0 10px rgba(255, 230, 0, 0.55), 0 0 20px rgba(255, 215, 0, 0.3);
     user-select:none;
   }
+  .sidecar-hour,
+  .sidecar-min{
+    font-family:'Outfit', sans-serif;
+    font-weight:500;
+    line-height:0.88;
+    color:#ffe600;
+    letter-spacing:0.02em;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+    text-shadow:0 0 6px rgba(255, 230, 0, 0.35);
+    user-select:none;
+    text-align:center;
+  }
+  .sidecar-dots{
+    font-family:'Outfit', sans-serif;
+    font-weight:500;
+    line-height:0.75;
+    color:#ffe600;
+    letter-spacing:0.14em;
+    text-align:center;
+    user-select:none;
+    margin:0 auto;
+    text-shadow:0 0 5px rgba(255, 230, 0, 0.35);
+  }
   .sidecar-ampm{
+    font-family:'Outfit', sans-serif;
+    font-weight:500;
+    line-height:1;
     color:#ffffff;
-    font-size:0.50em;
-    font-family:'DSEG14 Modern', 'DSEG7 Modern', monospace;
-    font-weight:700;
     letter-spacing:0.04em;
-    text-shadow:0 0 8px rgba(255, 255, 255, 0.45);
-    cursor:pointer;
+    padding:2px 6px;
     border-radius:4px;
-    padding:2px 4px;
-    align-self:center;
-    transition:color 0.15s ease, text-shadow 0.15s ease, transform 0.1s ease;
-    outline:none;
+    background:rgba(255, 255, 255, 0.08);
+    border:1px solid rgba(255, 255, 255, 0.18);
+    transition:all 0.15s ease;
+    cursor:pointer;
+    user-select:none;
+    margin-top:clamp(2px, 0.5vh, 4px);
+    text-align:center;
   }
   .sidecar-ampm:hover{
-    color:#38bdf8;
-    text-shadow:0 0 14px rgba(56, 189, 248, 0.85);
-    transform:scale(1.08);
+    color:#49e6c4;
+    border-color:rgba(73, 230, 196, 0.8);
+    background:rgba(73, 230, 196, 0.18);
+  }
+  .sidecar-ampm.is-24h{
+    color:#49e6c4;
+    border-color:rgba(73, 230, 196, 0.5);
+    background:rgba(73, 230, 196, 0.14);
   }
   .sidecar-ampm:active{
     transform:scale(0.92);
   }
   .sidecar-ampm:focus-visible{
-    box-shadow:0 0 0 2px #38bdf8;
+    box-shadow:0 0 0 2px #49e6c4;
   }
   .analog-clock-svg{
     width:auto;
@@ -5741,7 +5739,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.100226.2245</span>
+        <span id="appVersionText">v1.100226.2257</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -5892,12 +5890,6 @@
             <!-- Numerals 1 to 12 -->
             <g id="analogNumerals" class="analog-numerals-group"></g>
 
-            <!-- AM / PM / 24H Marker Aperture (Positioned cleanly between Center Pinion and Numeral 3) -->
-            <g id="analogAmpmGroup" class="analog-ampm-aperture" role="button" tabindex="0" aria-label="Toggle 12-Hour or 24-Hour mode" title="Tap to toggle 12-Hour / 24-Hour mode">
-              <rect x="122" y="91.5" width="28" height="17" rx="3.5" fill="rgba(8, 16, 22, 0.72)" stroke="rgba(255, 255, 255, 0.18)" stroke-width="0.8"/>
-              <text id="analogAmpmText" x="136" y="100.5" text-anchor="middle" dominant-baseline="central" font-family="'Outfit', sans-serif" font-size="14" font-weight="800" letter-spacing="0.04em" fill="#ffffff">PM</text>
-            </g>
-
             <!-- Hands -->
             <!-- Hour Hand (Yellow, Bold, Tapered Baton with Pointed Tip) -->
             <g id="analogHourHand">
@@ -5926,11 +5918,13 @@
           </svg>
         </div>
 
-        <!-- Mode 3: Digital Font Sidecar (Vertical LCD Segment Display) -->
+        <!-- Mode 3: Digital Font Sidecar (Right Side Up Stacked Mini Digital) -->
         <div class="clock-sidecar-digital" id="clockSidecarDigital" style="display:none;" aria-label="Digital time display">
           <div class="sidecar-track" id="sidecarTrack">
-            <span class="sidecar-digits" id="sidecarDigits">8:49</span>
-            <span class="sidecar-ampm" id="sidecarAmpm" role="button" tabindex="0" title="Tap to toggle 12-Hour / 24-Hour mode" aria-label="Toggle 12-Hour or 24-Hour mode">PM</span>
+            <div class="sidecar-hour" id="sidecarHour">11</div>
+            <div class="sidecar-dots" id="sidecarDots">••</div>
+            <div class="sidecar-min" id="sidecarMin">27</div>
+            <div class="sidecar-ampm" id="sidecarAmpm" role="button" tabindex="0" title="Tap to toggle 12-Hour / 24-Hour mode" aria-label="Toggle 12-Hour or 24-Hour mode">PM</div>
           </div>
         </div>
       </div>
@@ -6846,15 +6840,19 @@
 
   function fitSidecarDigital(){
     const clockBlock = document.getElementById('topClockBlock');
-    const sidecarDigits = document.getElementById('sidecarDigits');
+    const sidecarHour = document.getElementById('sidecarHour');
+    const sidecarMin = document.getElementById('sidecarMin');
+    const sidecarDots = document.getElementById('sidecarDots');
     const sidecarAmpm = document.getElementById('sidecarAmpm');
-    if(!clockBlock || !sidecarDigits) return;
+    if(!clockBlock || !sidecarHour || !sidecarMin) return;
 
     const curH = clockBlock.clientHeight;
-    // Scale targetSize so the entire rotated 5-digit time + 50% AM/PM badge fits with comfortable margins
-    const targetSize = Math.max(14, Math.min(32, Math.floor(curH * 0.145)));
-    sidecarDigits.style.fontSize = targetSize + 'px';
-    if(sidecarAmpm) sidecarAmpm.style.fontSize = Math.max(10, Math.round(targetSize * 0.50)) + 'px';
+    // Scale targetSize so hours, dots, minutes, and AM/PM pill fit stacked comfortably
+    const targetSize = Math.max(15, Math.min(38, Math.floor(curH * 0.25)));
+    sidecarHour.style.fontSize = targetSize + 'px';
+    sidecarMin.style.fontSize = targetSize + 'px';
+    if(sidecarDots) sidecarDots.style.fontSize = Math.max(9, Math.round(targetSize * 0.42)) + 'px';
+    if(sidecarAmpm) sidecarAmpm.style.fontSize = Math.max(10, Math.round(targetSize * 0.38)) + 'px';
   }
 
   function fitClockBlockToContainer(){
@@ -7089,22 +7087,15 @@
     // Update Mode 2 (Analog Wall Clock)
     updateAnalogClock(now);
     updateAnalogDialNumerals(now);
-    const analogAmpmTextEl = document.getElementById('analogAmpmText');
-    if(analogAmpmTextEl){
-      if(is24Hour){
-        analogAmpmTextEl.textContent = '24H';
-        analogAmpmTextEl.setAttribute('fill', '#49e6c4');
-      } else {
-        analogAmpmTextEl.textContent = rawHours >= 12 ? 'PM' : 'AM';
-        analogAmpmTextEl.setAttribute('fill', '#ffffff');
-      }
-    }
 
-    // Update Mode 3 (Digital Font Sidecar)
-    const sidecarDigitsEl = document.getElementById('sidecarDigits');
-    if(sidecarDigitsEl){
-      const sidecarHour = is24Hour ? pad(rawHours) : String(parseInt(hourDisplay, 10));
-      sidecarDigitsEl.textContent = `${sidecarHour}:${minutes}`;
+    // Update Mode 3 (Digital Font Sidecar - Right-Side Up Stacked)
+    const sidecarHourEl = document.getElementById('sidecarHour');
+    if(sidecarHourEl){
+      sidecarHourEl.textContent = hourDisplay;
+    }
+    const sidecarMinEl = document.getElementById('sidecarMin');
+    if(sidecarMinEl){
+      sidecarMinEl.textContent = minutes;
     }
     const sidecarAmpmEl = document.getElementById('sidecarAmpm');
     if(sidecarAmpmEl){
@@ -7606,21 +7597,12 @@
     });
   }
 
-  // 3. Analog Wall Clock: Tapping the AM/PM/24H complication toggles 12H / 24H mode
-  const analogAmpmGroupEl = document.getElementById('analogAmpmGroup');
-  if(analogAmpmGroupEl){
-    attachInteractiveAction(analogAmpmGroupEl, (e) => {
-      if(e && typeof e.stopPropagation === 'function') e.stopPropagation();
-      toggleTimeFormat();
-    });
-  }
-
-  // 4. 1-Tap Clock Mode Cycle: Stacked Digital (default) -> Analog -> Hybrid -> Stacked Digital
+  // 3. 1-Tap Clock Mode Cycle: Stacked Digital (default) -> Analog -> Hybrid -> Stacked Digital
   const topClockCard = document.getElementById('topClockBlock');
   if(topClockCard){
     topClockCard.addEventListener('click', (e) => {
-      // Do not cycle clock mode if user tapped any AM/PM/24H badges (which toggle 12H / 24H)
-      if(e && e.target && e.target.closest && (e.target.closest('#clockAmpm') || e.target.closest('#sidecarAmpm') || e.target.closest('#analogAmpmGroup'))){
+      // Do not cycle clock mode if user tapped digital AM/PM badges (which toggle 12H / 24H)
+      if(e && e.target && e.target.closest && (e.target.closest('#clockAmpm') || e.target.closest('#sidecarAmpm'))){
         return;
       }
       cycleClockMode();
@@ -7628,8 +7610,8 @@
 
     // Smart TV remote & Keyboard navigation (Enter, Space, Select, Accept, 'C')
     topClockCard.addEventListener('keydown', (e) => {
-      if(e.target && (e.target.id === 'clockAmpm' || e.target.id === 'sidecarAmpm' || e.target.id === 'analogAmpmGroup')){
-        // Let the AM/PM/24H button toggle 12H / 24H format
+      if(e.target && (e.target.id === 'clockAmpm' || e.target.id === 'sidecarAmpm')){
+        // Let the digital AM/PM button toggle 12H / 24H format
         return;
       }
       if(e.key === 'Enter' || e.key === ' ' || e.key === 'Select' || e.key === 'Accept' || e.key === 'c' || e.key === 'C'){
@@ -9369,7 +9351,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.100226.2245';
+  const CLIENT_APP_VERSION = 'v1.100226.2257';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');

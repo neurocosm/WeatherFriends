@@ -1682,9 +1682,22 @@
   .clock-mode-analog:active{
     transform:scale(0.985);
   }
-  .clock-mode-analog.is-long-pressing{
-    transform:scale(0.95);
-    filter:brightness(1.25) drop-shadow(0 0 18px rgba(255, 230, 0, 0.7)) !important;
+  .analog-ampm-aperture{
+    cursor:pointer;
+    user-select:none;
+    pointer-events:auto;
+    transition:transform 0.15s ease, filter 0.15s ease;
+  }
+  .analog-ampm-aperture:hover rect{
+    stroke:rgba(73, 230, 196, 0.9);
+    fill:rgba(73, 230, 196, 0.22);
+  }
+  .analog-ampm-aperture:hover text{
+    fill:#49e6c4;
+  }
+  .analog-ampm-aperture:active{
+    transform:scale(0.93);
+    transform-origin:136px 100px;
   }
 
   /* Mode 3: Digital Font Sidecar (Vertical LCD Segment Display) */
@@ -5728,7 +5741,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.100226.1952</span>
+        <span id="appVersionText">v1.100226.2245</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -5834,8 +5847,8 @@
         <div class="splitter-grip"></div>
       </div>
 
-      <!-- CERTIFIED BLOCK 2: 2-MODE INTERACTIVE CLOCK (1. STANDARD DIGITAL • 2. ANALOG WALL CLOCK) -->
-      <div class="top-cert-card" id="topClockBlock" role="button" tabindex="0" data-clock-mode="digital" aria-label="Clock display. Tap to cycle mode: Standard Digital, Analog Wall Clock. Tap AM/PM to toggle 12H/24H." title="Tap clock to cycle mode (Digital • Analog) • Tap AM/PM to toggle 12H/24H">
+      <!-- CERTIFIED BLOCK 2: 3-MODE INTERACTIVE CLOCK (1. STACKED DIGITAL • 2. ANALOG • 3. HYBRID) -->
+      <div class="top-cert-card" id="topClockBlock" role="button" tabindex="0" data-clock-mode="digital" aria-label="Clock display. Tap to cycle mode: Stacked Digital, Analog Wall Clock, Hybrid Analog & Digital. Tap AM/PM to toggle 12H/24H." title="Tap clock to cycle mode (Digital • Analog • Hybrid) • Tap AM/PM to toggle 12H/24H">
         
         <!-- Mode 1: Standard Stacked High-Density Digital Clock -->
         <div class="clock-mode-view clock-mode-digital" id="clockDigitalMode">
@@ -5878,6 +5891,12 @@
 
             <!-- Numerals 1 to 12 -->
             <g id="analogNumerals" class="analog-numerals-group"></g>
+
+            <!-- AM / PM / 24H Marker Aperture (Positioned cleanly between Center Pinion and Numeral 3) -->
+            <g id="analogAmpmGroup" class="analog-ampm-aperture" role="button" tabindex="0" aria-label="Toggle 12-Hour or 24-Hour mode" title="Tap to toggle 12-Hour / 24-Hour mode">
+              <rect x="122" y="91.5" width="28" height="17" rx="3.5" fill="rgba(8, 16, 22, 0.72)" stroke="rgba(255, 255, 255, 0.18)" stroke-width="0.8"/>
+              <text id="analogAmpmText" x="136" y="100.5" text-anchor="middle" dominant-baseline="central" font-family="'Outfit', sans-serif" font-size="14" font-weight="800" letter-spacing="0.04em" fill="#ffffff">PM</text>
+            </g>
 
             <!-- Hands -->
             <!-- Hour Hand (Yellow, Bold, Tapered Baton with Pointed Tip) -->
@@ -6739,7 +6758,7 @@
   }
 
   /* ---------------------------------------------------------------
-     2-MODE INTERACTIVE CLOCK SYSTEM (DIGITAL • ANALOG)
+     3-MODE INTERACTIVE CLOCK SYSTEM (DIGITAL • ANALOG • HYBRID)
   --------------------------------------------------------------- */
   const CLOCK_MODES = ['digital', 'analog', 'analog-digital'];
   let currentClockMode = 'digital';
@@ -6747,8 +6766,8 @@
     const savedMode = localStorage.getItem('wf_clock_mode');
     if(CLOCK_MODES.includes(savedMode)) currentClockMode = savedMode;
     else if(savedMode === 'hybrid') {
-      currentClockMode = 'analog';
-      localStorage.setItem('wf_clock_mode', 'analog');
+      currentClockMode = 'analog-digital';
+      localStorage.setItem('wf_clock_mode', 'analog-digital');
     }
   }catch(e){}
 
@@ -6869,12 +6888,12 @@
     if(clockCard){
       clockCard.setAttribute('data-clock-mode', mode);
       const modeNames = {
-        digital: 'Standard Digital',
+        digital: 'Stacked Digital',
         analog: 'Analog Wall Clock',
-        'analog-digital': 'Analog with Digital Sidecar'
+        'analog-digital': 'Hybrid Analog & Digital'
       };
-      clockCard.setAttribute('aria-label', `Clock: ${modeNames[mode]}.`);
-      clockCard.setAttribute('title', `Clock Mode: ${modeNames[mode]}`);
+      clockCard.setAttribute('aria-label', `Clock: ${modeNames[mode]}. Tap to cycle modes.`);
+      clockCard.setAttribute('title', `Clock Mode: ${modeNames[mode]} • Tap to cycle modes • Tap AM/PM to toggle 12H/24H`);
 
       // Strictly lock card dimensions when in analog mode so it NEVER expands or pushes the block space larger
       if((mode === 'analog' || mode === 'analog-digital') && standardClockMetrics.width > 40 && standardClockMetrics.height > 40){
@@ -6960,6 +6979,7 @@
         const x = (100 + rNum * Math.sin(rad)).toFixed(2);
         const y = (100 - rNum * Math.cos(rad)).toFixed(2);
         const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('id', `analogNum_${i}`);
         text.setAttribute('x', x);
         text.setAttribute('y', y);
         text.setAttribute('text-anchor', 'middle');
@@ -6977,6 +6997,35 @@
 
     // Apply active clock mode
     setClockMode(currentClockMode, false);
+  }
+
+  function updateAnalogDialNumerals(now){
+    const rawHours = now.getHours();
+    const isPm = rawHours >= 12;
+    for(let i = 1; i <= 12; i++){
+      const textEl = document.getElementById(`analogNum_${i}`);
+      if(!textEl) continue;
+      let displayStr = String(i);
+      if(is24Hour){
+        if(isPm){
+          // In PM: 12 is 12 (noon), 1 is 13, 2 is 14 ... 11 is 23
+          displayStr = (i === 12) ? '12' : String(i + 12);
+        } else {
+          // In AM: 12 is 00 (midnight), 1 is 1 ... 11 is 11
+          displayStr = (i === 12) ? '00' : String(i);
+        }
+      }
+      if(textEl.textContent !== displayStr){
+        textEl.textContent = displayStr;
+      }
+      const isCardinal = (i % 3 === 0);
+      const isTwoDigit = displayStr.length > 1;
+      if(is24Hour && isTwoDigit){
+        textEl.setAttribute('font-size', isCardinal ? '13' : '11.5');
+      } else {
+        textEl.setAttribute('font-size', isCardinal ? '14' : '12');
+      }
+    }
   }
 
   function updateAnalogClock(now){
@@ -7039,6 +7088,17 @@
 
     // Update Mode 2 (Analog Wall Clock)
     updateAnalogClock(now);
+    updateAnalogDialNumerals(now);
+    const analogAmpmTextEl = document.getElementById('analogAmpmText');
+    if(analogAmpmTextEl){
+      if(is24Hour){
+        analogAmpmTextEl.textContent = '24H';
+        analogAmpmTextEl.setAttribute('fill', '#49e6c4');
+      } else {
+        analogAmpmTextEl.textContent = rawHours >= 12 ? 'PM' : 'AM';
+        analogAmpmTextEl.setAttribute('fill', '#ffffff');
+      }
+    }
 
     // Update Mode 3 (Digital Font Sidecar)
     const sidecarDigitsEl = document.getElementById('sidecarDigits');
@@ -7537,119 +7597,7 @@
     });
   }
 
-  // 2. Tapping the TIME in digital mode goes to the Analog clock
-  const clockDigitalModeEl = document.getElementById('clockDigitalMode');
-  if(clockDigitalModeEl){
-    attachInteractiveAction(clockDigitalModeEl, (e) => {
-      if(e && e.target && e.target.closest && e.target.closest('#clockAmpm')){
-        return;
-      }
-      setClockMode('analog', true);
-    });
-  }
-
-  // 3. Analog Clock Interaction:
-  //    - Quick click: goes back to standard numeric time.
-  //    - Long press (> 450ms): moves analog clock to the left and adds digital font sidecar.
-  const clockAnalogModeEl = document.getElementById('clockAnalogMode');
-  if(clockAnalogModeEl){
-    let pressTimer = null;
-    let didLongPress = false;
-    let startX = 0;
-    let startY = 0;
-
-    function cancelTimer(){
-      if(pressTimer){
-        clearTimeout(pressTimer);
-        pressTimer = null;
-      }
-    }
-
-    function triggerLongPress(){
-      didLongPress = true;
-      try{ if(navigator.vibrate) navigator.vibrate(50); }catch(e){}
-      clockAnalogModeEl.classList.add('is-long-pressing');
-      setTimeout(() => clockAnalogModeEl.classList.remove('is-long-pressing'), 280);
-
-      if(currentClockMode === 'analog-digital'){
-        setClockMode('analog', true);
-      } else {
-        setClockMode('analog-digital', true);
-      }
-    }
-
-    clockAnalogModeEl.addEventListener('pointerdown', (e) => {
-      if(e.button !== undefined && e.button !== 0) return;
-      didLongPress = false;
-      startX = e.clientX;
-      startY = e.clientY;
-      cancelTimer();
-      pressTimer = setTimeout(triggerLongPress, 450);
-    });
-
-    window.addEventListener('pointermove', (e) => {
-      if(pressTimer && (Math.abs(e.clientX - startX) > 8 || Math.abs(e.clientY - startY) > 8)){
-        cancelTimer();
-      }
-    });
-
-    clockAnalogModeEl.addEventListener('pointerup', (e) => {
-      if(e.button !== undefined && e.button !== 0) return;
-      cancelTimer();
-      if(didLongPress){
-        if(e && typeof e.preventDefault === 'function') e.preventDefault();
-        if(e && typeof e.stopPropagation === 'function') e.stopPropagation();
-        return;
-      }
-      // Click on analog clock -> return to standard numeric time
-      setClockMode('digital', true);
-    });
-
-    clockAnalogModeEl.addEventListener('pointercancel', cancelTimer);
-
-    // Smart TV remote & Keyboard on Analog clock
-    let keyPressTimer = null;
-    let keyDidLongPress = false;
-    clockAnalogModeEl.addEventListener('keydown', (e) => {
-      if(e.key === 'd' || e.key === 'D'){
-        e.preventDefault();
-        e.stopPropagation();
-        if(currentClockMode === 'analog-digital'){
-          setClockMode('analog', true);
-        } else {
-          setClockMode('analog-digital', true);
-        }
-        return;
-      }
-      if(e.key === 'Enter' || e.key === ' ' || e.key === 'Select' || e.key === 'Accept'){
-        if(e.repeat) return;
-        keyDidLongPress = false;
-        if(keyPressTimer) clearTimeout(keyPressTimer);
-        keyPressTimer = setTimeout(() => {
-          keyDidLongPress = true;
-          if(currentClockMode === 'analog-digital'){
-            setClockMode('analog', true);
-          } else {
-            setClockMode('analog-digital', true);
-          }
-        }, 500);
-      }
-    });
-
-    clockAnalogModeEl.addEventListener('keyup', (e) => {
-      if(e.key === 'Enter' || e.key === ' ' || e.key === 'Select' || e.key === 'Accept'){
-        if(keyPressTimer) clearTimeout(keyPressTimer);
-        keyPressTimer = null;
-        if(!keyDidLongPress){
-          e.preventDefault();
-          e.stopPropagation();
-          setClockMode('digital', true);
-        }
-      }
-    });
-  }
-
-  // 4. Digital Font Sidecar: Tapping PM changes to 24H time for the digital addition
+  // 2. Digital Font Sidecar: Tapping PM in Hybrid mode toggles 12H / 24H format without switching mode
   const sidecarAmpmEl = document.getElementById('sidecarAmpm');
   if(sidecarAmpmEl){
     attachInteractiveAction(sidecarAmpmEl, (e) => {
@@ -7658,15 +7606,35 @@
     });
   }
 
-  // Fallback card-level observer and background clicks
+  // 3. Analog Wall Clock: Tapping the AM/PM/24H complication toggles 12H / 24H mode
+  const analogAmpmGroupEl = document.getElementById('analogAmpmGroup');
+  if(analogAmpmGroupEl){
+    attachInteractiveAction(analogAmpmGroupEl, (e) => {
+      if(e && typeof e.stopPropagation === 'function') e.stopPropagation();
+      toggleTimeFormat();
+    });
+  }
+
+  // 4. 1-Tap Clock Mode Cycle: Stacked Digital (default) -> Analog -> Hybrid -> Stacked Digital
   const topClockCard = document.getElementById('topClockBlock');
   if(topClockCard){
     topClockCard.addEventListener('click', (e) => {
-      if(e && e.target && e.target.closest && (e.target.closest('#clockAmpm') || e.target.closest('#sidecarAmpm') || e.target.closest('#clockAnalogMode'))){
+      // Do not cycle clock mode if user tapped any AM/PM/24H badges (which toggle 12H / 24H)
+      if(e && e.target && e.target.closest && (e.target.closest('#clockAmpm') || e.target.closest('#sidecarAmpm') || e.target.closest('#analogAmpmGroup'))){
         return;
       }
-      if(currentClockMode === 'digital'){
-        setClockMode('analog', true);
+      cycleClockMode();
+    });
+
+    // Smart TV remote & Keyboard navigation (Enter, Space, Select, Accept, 'C')
+    topClockCard.addEventListener('keydown', (e) => {
+      if(e.target && (e.target.id === 'clockAmpm' || e.target.id === 'sidecarAmpm' || e.target.id === 'analogAmpmGroup')){
+        // Let the AM/PM/24H button toggle 12H / 24H format
+        return;
+      }
+      if(e.key === 'Enter' || e.key === ' ' || e.key === 'Select' || e.key === 'Accept' || e.key === 'c' || e.key === 'C'){
+        e.preventDefault();
+        cycleClockMode();
       }
     });
 
@@ -9401,7 +9369,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.100226.1952';
+  const CLIENT_APP_VERSION = 'v1.100226.2245';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');

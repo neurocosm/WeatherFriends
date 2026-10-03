@@ -158,11 +158,11 @@
     transform:translateY(-50%);
     display:inline-flex;
     align-items:center;
-    gap:6px;
+    gap:4.5px;
     background:rgba(0,0,0,0.32);
     border:1px solid rgba(140,200,210,0.22);
     border-radius:12px;
-    padding:2px 7px 2px 6px;
+    padding:2px 6px 2px 6px;
     cursor:pointer;
     user-select:none;
     transition:all 0.2s ease;
@@ -197,7 +197,7 @@
   .dimmer-slider-wrap{
     display:inline-flex;
     align-items:center;
-    margin:0 2px;
+    margin:0 1px 0 0;
   }
   .dimmer-slider{
     -webkit-appearance:none;
@@ -238,43 +238,35 @@
     box-shadow:0 0 5px rgba(73,230,196,0.8);
     cursor:pointer;
   }
-  .dimmer-dots-cluster{
-    display:inline-flex;
-    align-items:center;
-    gap:4px;
-  }
-  .dimmer-dot-btn{
-    width:7px;
-    height:7px;
+  .dimmer-warmth-dot{
+    width:8px;
+    height:8px;
     border-radius:50%;
-    background:rgba(255,255,255,0.18);
-    border:1px solid rgba(255,255,255,0.22);
+    background:var(--dimmer-active-dot, #ffe600);
+    border:1px solid var(--dimmer-active-dot-border, #fff275);
+    box-shadow:var(--dimmer-active-dot-shadow, 0 0 6px rgba(255,230,0,0.75));
     padding:0;
     margin:0;
     cursor:pointer;
     flex:none;
-    transition:all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    position:relative;
+    transition:transform 0.18s ease, background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
   }
-  .dimmer-dot-btn:hover{
-    transform:scale(1.25);
-    background:rgba(73,230,196,0.7);
-    border-color:var(--teal);
+  .dimmer-warmth-dot:hover{
+    transform:scale(1.35);
   }
-  .dimmer-dot-btn.active{
-    background:var(--dimmer-active-dot, #ffe600);
-    border-color:var(--dimmer-active-dot-border, #fff275);
-    box-shadow:var(--dimmer-active-dot-shadow, 0 0 6px rgba(255,230,0,0.75));
-    transform:scale(1.15);
+  .dimmer-warmth-dot:focus-visible{
+    outline:1.5px solid #ffffff;
+    outline-offset:1.5px;
   }
   .dimmer-pct-label{
     font-family:'Share Tech Mono',monospace;
     font-size:0.62rem;
     color:var(--ink-dim);
     letter-spacing:0.02em;
-    margin-left:1px;
-    min-width:28px;
-    text-align:right;
+    margin-left:0;
+    padding-left:1px;
+    min-width:auto;
+    text-align:left;
     transition:color 0.2s ease;
   }
   .device-dimmer:hover .dimmer-pct-label{
@@ -284,15 +276,15 @@
   .dimmer-mono-btn{
     display:inline-flex;
     align-items:center;
-    gap:3.5px;
-    padding:1px 5px;
+    gap:3px;
+    padding:1px 4.5px;
     background:rgba(255,255,255,0.06);
     border:1px solid rgba(140,200,210,0.24);
     border-radius:5px;
     cursor:pointer;
     user-select:none;
     line-height:1;
-    margin-left:4px;
+    margin-left:2px;
     color:#8fa2af;
     transition:background 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, opacity 0.25s ease;
   }
@@ -780,7 +772,7 @@
     transition:background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
   }
   .dimmer-slider-wrap,
-  .dimmer-dots-cluster,
+  .dimmer-warmth-dot,
   .dimmer-pct-label{
     transition:opacity 0.25s ease;
   }
@@ -793,19 +785,16 @@
     box-shadow:0 3px 14px rgba(0,0,0,0.7) !important;
   }
   .device-dimmer:hover .dimmer-slider-wrap,
-  .device-dimmer:hover .dimmer-dots-cluster,
+  .device-dimmer:hover .dimmer-warmth-dot,
   .device-dimmer:hover .dimmer-pct-label,
-  .device-dimmer:hover .dimmer-dot-btn,
   .device-dimmer:hover .dimmer-mono-btn,
   .device-dimmer.is-interacting .dimmer-slider-wrap,
-  .device-dimmer.is-interacting .dimmer-dots-cluster,
+  .device-dimmer.is-interacting .dimmer-warmth-dot,
   .device-dimmer.is-interacting .dimmer-pct-label,
-  .device-dimmer.is-interacting .dimmer-dot-btn,
   .device-dimmer.is-interacting .dimmer-mono-btn,
   .device-dimmer:focus-visible .dimmer-slider-wrap,
-  .device-dimmer:focus-visible .dimmer-dots-cluster,
+  .device-dimmer:focus-visible .dimmer-warmth-dot,
   .device-dimmer:focus-visible .dimmer-pct-label,
-  .device-dimmer:focus-visible .dimmer-dot-btn,
   .device-dimmer:focus-visible .dimmer-mono-btn{
     opacity:1 !important;
     pointer-events:auto !important;
@@ -829,7 +818,7 @@
   html[data-dim-level="1"] .wake-pill{ opacity:0.65; }
   html[data-dim-level="1"] .pwa-install-btn{ opacity:0.65; }
   html[data-dim-level="1"] .dimmer-slider-wrap{ opacity:0.65; }
-  html[data-dim-level="1"] .dimmer-dots-cluster{ opacity:0.65; }
+  html[data-dim-level="1"] .dimmer-warmth-dot{ opacity:0.65; }
   html[data-dim-level="1"] .dimmer-pct-label{ opacity:0.65; }
   html[data-dim-level="1"] .bezel-rail{ opacity:0.75; }
 
@@ -840,9 +829,8 @@
   html[data-dim-level="2"] .pwa-install-btn{ opacity:0.38; }
   html[data-dim-level="2"] .wake-pill.active .wake-dot{ animation-duration:5s; opacity:0.7; }
   html[data-dim-level="2"] .dimmer-slider-wrap{ opacity:0.38; }
-  html[data-dim-level="2"] .dimmer-dots-cluster{ opacity:0.38; }
+  html[data-dim-level="2"] .dimmer-warmth-dot{ opacity:0.38; }
   html[data-dim-level="2"] .dimmer-pct-label{ opacity:0.38; }
-  html[data-dim-level="2"] .dimmer-dot-btn:not(.active){ opacity:0.18; }
   html[data-dim-level="2"] .bezel-rail{ opacity:0.42; }
 
   /* Level 3: Twilight Dim (25%) - Dims all dimmer controls to zero except the green icon */
@@ -870,7 +858,7 @@
     box-shadow:none;
   }
   html[data-dim-level="3"] .device-dimmer:not(:hover):not(.is-interacting):not(:focus-visible) .dimmer-slider-wrap,
-  html[data-dim-level="3"] .device-dimmer:not(:hover):not(.is-interacting):not(:focus-visible) .dimmer-dots-cluster,
+  html[data-dim-level="3"] .device-dimmer:not(:hover):not(.is-interacting):not(:focus-visible) .dimmer-warmth-dot,
   html[data-dim-level="3"] .device-dimmer:not(:hover):not(.is-interacting):not(:focus-visible) .dimmer-pct-label,
   html[data-dim-level="3"] .device-dimmer:not(:hover):not(.is-interacting):not(:focus-visible) .dimmer-mono-btn{
     opacity:0;
@@ -896,7 +884,7 @@
     box-shadow:none;
   }
   html[data-dim-level="4"] .device-dimmer:not(:hover):not(.is-interacting):not(:focus-visible) .dimmer-slider-wrap,
-  html[data-dim-level="4"] .device-dimmer:not(:hover):not(.is-interacting):not(:focus-visible) .dimmer-dots-cluster,
+  html[data-dim-level="4"] .device-dimmer:not(:hover):not(.is-interacting):not(:focus-visible) .dimmer-warmth-dot,
   html[data-dim-level="4"] .device-dimmer:not(:hover):not(.is-interacting):not(:focus-visible) .dimmer-pct-label,
   html[data-dim-level="4"] .device-dimmer:not(:hover):not(.is-interacting):not(:focus-visible) .dimmer-mono-btn{
     opacity:0;
@@ -5725,13 +5713,7 @@
       <div class="dimmer-slider-wrap">
         <input type="range" class="dimmer-slider" id="dimmerSlider" min="10" max="100" step="1" value="100" aria-label="Continuous brightness slider (10% - 100%)" title="Continuous dimmer slider">
       </div>
-      <div class="dimmer-dots-cluster" id="dimmerDots">
-        <button type="button" class="dimmer-dot-btn active" data-level="0" data-pct="100%" title="100% Brightness (Full Day)" aria-label="100% Brightness"></button>
-        <button type="button" class="dimmer-dot-btn" data-level="1" data-pct="75%" title="75% Brightness (Soft Day)" aria-label="75% Brightness"></button>
-        <button type="button" class="dimmer-dot-btn" data-level="2" data-pct="50%" title="50% Brightness (Ambient Evening)" aria-label="50% Brightness"></button>
-        <button type="button" class="dimmer-dot-btn" data-level="3" data-pct="25%" title="25% Brightness (Twilight Dim)" aria-label="25% Brightness"></button>
-        <button type="button" class="dimmer-dot-btn" data-level="4" data-pct="12%" title="12% Brightness (Deep Night Beacon)" aria-label="12% Brightness"></button>
-      </div>
+      <button type="button" class="dimmer-warmth-dot" id="dimmerWarmthDot" title="Brightness Warmth: 100% (Daylight Gold) • Tap to cycle presets" aria-label="Brightness warmth indicator. Tap to cycle brightness."></button>
       <span class="dimmer-pct-label" id="dimmerPctLabel">100%</span>
       <button type="button" class="dimmer-mono-btn" id="dimmerMonoBtn" title="256-Gradient Monochromatic Grayscale Mode • Tap to toggle • Key: G" aria-label="Toggle 256 Grayscale Mode" aria-pressed="false">
         <span class="dimmer-mono-pip"></span>
@@ -5746,7 +5728,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.100226.1926</span>
+        <span id="appVersionText">v1.100226.1952</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -9419,7 +9401,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.100226.1926';
+  const CLIENT_APP_VERSION = 'v1.100226.1952';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -9884,10 +9866,46 @@
 
   let currentDimmerIndex = 0;
   const boardDimmerEl = document.getElementById('boardDimmer');
-  const dimmerDotsContainer = document.getElementById('dimmerDots');
+  const dimmerWarmthDot = document.getElementById('dimmerWarmthDot');
   const dimmerPctLabel = document.getElementById('dimmerPctLabel');
   const dimmerSlider = document.getElementById('dimmerSlider');
-  const dimmerDotButtons = dimmerDotsContainer ? Array.from(dimmerDotsContainer.querySelectorAll('.dimmer-dot-btn')) : [];
+
+  function updateDimmerWarmthDot(pct, levelIdx){
+    if(!dimmerWarmthDot) return;
+    const p = Math.max(10, Math.min(100, Math.round(pct)));
+    let bg, border, shadow, desc;
+    if(p >= 90){
+      bg = '#ffe600';
+      border = '#fff275';
+      shadow = '0 0 6px rgba(255,230,0,0.85)';
+      desc = 'Daylight Gold (100%)';
+    } else if(p >= 65){
+      bg = '#fbbf24';
+      border = '#fde68a';
+      shadow = '0 0 5px rgba(251,191,36,0.65)';
+      desc = 'Soft Day Amber (75%)';
+    } else if(p >= 40){
+      bg = '#f97316';
+      border = '#fdba74';
+      shadow = '0 0 5px rgba(249,115,22,0.60)';
+      desc = 'Evening Sunset (50%)';
+    } else if(p >= 20){
+      bg = '#06b6d4';
+      border = '#67e8f9';
+      shadow = '0 0 5px rgba(6,182,212,0.55)';
+      desc = 'Twilight Cyan (25%)';
+    } else {
+      bg = '#10b981';
+      border = '#34d399';
+      shadow = '0 0 6px rgba(16,185,129,0.75)';
+      desc = 'Night Beacon (12%)';
+    }
+    dimmerWarmthDot.style.background = bg;
+    dimmerWarmthDot.style.borderColor = border;
+    dimmerWarmthDot.style.boxShadow = shadow;
+    dimmerWarmthDot.title = `Brightness: ${p}% • Warmth: ${desc} • Tap to cycle presets`;
+    dimmerWarmthDot.setAttribute('aria-label', `Brightness warmth: ${desc}. Tap to cycle presets.`);
+  }
 
   function applyBoardDimmer(index, save = true){
     const safeIdx = (index >= 0 && index < DIMMER_LEVELS.length) ? index : 0;
@@ -9922,23 +9940,15 @@
     if(config.activeDotBorder) rootStyle.setProperty('--dimmer-active-dot-border', config.activeDotBorder);
     if(config.activeDotShadow) rootStyle.setProperty('--dimmer-active-dot-shadow', config.activeDotShadow);
 
-    // Update UI dot states
-    dimmerDotButtons.forEach((btn, idx) => {
-      if(idx === safeIdx){
-        btn.classList.add('active');
-        btn.setAttribute('aria-pressed', 'true');
-      } else {
-        btn.classList.remove('active');
-        btn.setAttribute('aria-pressed', 'false');
-      }
-    });
+    // Update dynamic warmth dot
+    updateDimmerWarmthDot(config.pct, safeIdx);
 
     if(dimmerPctLabel){
       dimmerPctLabel.textContent = config.label;
     }
 
     if(boardDimmerEl){
-      boardDimmerEl.title = `Display Brightness: ${config.label} (${config.desc}) • Adjust slider or tap dots/press 'D' to step`;
+      boardDimmerEl.title = `Display Brightness: ${config.label} (${config.desc}) • Adjust slider or tap warmth dot/press 'D' to step`;
     }
 
     if(save){
@@ -9975,17 +9985,8 @@
     currentDimmerIndex = closestIdx;
     document.documentElement.setAttribute('data-dim-level', String(closestIdx));
 
-    // Update preset dots highlight (active only if matches preset)
-    dimmerDotButtons.forEach((btn) => {
-      const dotPct = parseInt(btn.getAttribute('data-pct'), 10);
-      if(dotPct === clampedPct){
-        btn.classList.add('active');
-        btn.setAttribute('aria-pressed', 'true');
-      } else {
-        btn.classList.remove('active');
-        btn.setAttribute('aria-pressed', 'false');
-      }
-    });
+    // Update dynamic warmth dot in real time
+    updateDimmerWarmthDot(clampedPct, closestIdx);
 
     const config = DIMMER_LEVELS[closestIdx];
     if(config.bezelHi) rootStyle.setProperty('--bezel-hi', config.bezelHi);
@@ -10000,7 +10001,7 @@
     if(config.activeDotShadow) rootStyle.setProperty('--dimmer-active-dot-shadow', config.activeDotShadow);
 
     if(boardDimmerEl){
-      boardDimmerEl.title = `Display Brightness: ${clampedPct}% • Drag slider or tap dots/press 'D' to step`;
+      boardDimmerEl.title = `Display Brightness: ${clampedPct}% • Drag slider or tap warmth dot/press 'D' to step`;
     }
 
     if(save){
@@ -10018,18 +10019,15 @@
     applyBoardDimmer(next, true);
   }
 
-  // Bind individual dot click/tap
-  dimmerDotButtons.forEach((btn) => {
-    btn.addEventListener('click', (e) => {
+  // Bind single warmth dot click/tap
+  if(dimmerWarmthDot){
+    dimmerWarmthDot.addEventListener('click', (e) => {
       e.stopPropagation();
-      const level = parseInt(btn.getAttribute('data-level'), 10);
-      if(!isNaN(level)){
-        applyBoardDimmer(level, true);
-        btn.blur();
-        if(boardDimmerEl) boardDimmerEl.classList.remove('is-interacting');
-      }
+      cycleBoardDimmer(true);
+      dimmerWarmthDot.blur();
+      if(boardDimmerEl) boardDimmerEl.classList.remove('is-interacting');
     });
-  });
+  }
 
   // Bind continuous range slider
   if(dimmerSlider){
@@ -10058,10 +10056,10 @@
     dimmerSlider.addEventListener('click', (e) => e.stopPropagation());
   }
 
-  // Tap anywhere on dimmer cluster (outside slider & dots) cycles to next level
+  // Tap anywhere on dimmer pill (outside slider, dot, mono toggle) cycles to next level
   if(boardDimmerEl){
     boardDimmerEl.addEventListener('click', (e) => {
-      if(e.target.closest('.dimmer-dot-btn') || e.target.closest('.dimmer-slider-wrap')) return;
+      if(e.target.closest('.dimmer-warmth-dot') || e.target.closest('.dimmer-slider-wrap') || e.target.closest('.dimmer-mono-btn')) return;
       cycleBoardDimmer(true);
       boardDimmerEl.blur();
     });
@@ -11643,76 +11641,20 @@
     }, 700);
   }
 
-  // LONG-PRESS DETECTION ON 8-BALL PANEL (Works with mouse, touch, and TV remotes)
-  let oracleLongPressTimer = null;
-  let didOracleLongPress = false;
-  const ORACLE_LONG_PRESS_MS = 650; // 650ms to open secret menu
-
+  // Direct Click/Tap and Keyboard Activation on 8-Ball Panel (Instantaneous, no long-press popup)
   if(eightballPanel){
-    function startOracleLongPress(){
-      didOracleLongPress = false;
-      if(oracleLongPressTimer) clearTimeout(oracleLongPressTimer);
-      oracleLongPressTimer = setTimeout(() => {
-        didOracleLongPress = true;
-        openOraclePicker();
-      }, ORACLE_LONG_PRESS_MS);
-    }
-
-    function cancelOracleLongPress(){
-      if(oracleLongPressTimer){
-        clearTimeout(oracleLongPressTimer);
-        oracleLongPressTimer = null;
-      }
-    }
-
-    eightballPanel.addEventListener('pointerdown', (e) => {
-      // Left click or primary touch only
-      if(e.button !== undefined && e.button !== 0) return;
-      startOracleLongPress();
-    });
-    eightballPanel.addEventListener('pointerup', (e) => {
-      cancelOracleLongPress();
-    });
-    eightballPanel.addEventListener('pointerleave', (e) => {
-      cancelOracleLongPress();
-    });
-    eightballPanel.addEventListener('pointercancel', (e) => {
-      cancelOracleLongPress();
-    });
-
     eightballPanel.addEventListener('click', (e) => {
+      // Don't trigger if user clicked one of the oracle title pills
+      if(e.target.closest('.oracle-title-pill')) return;
       e.stopPropagation();
-      if(didOracleLongPress){
-        didOracleLongPress = false;
-        return;
-      }
       shakeEightBall();
     });
 
-    // Keyboard support (e.g. OK button on TV remotes or keyboard)
-    let oracleKeyHoldTimer = null;
-    let didOracleKeyHold = false;
     eightballPanel.addEventListener('keydown', (e) => {
+      if(e.target.closest('.oracle-title-pill')) return;
       if(e.key === 'Enter' || e.key === ' '){
-        if(!oracleKeyHoldTimer){
-          didOracleKeyHold = false;
-          oracleKeyHoldTimer = setTimeout(() => {
-            didOracleKeyHold = true;
-            openOraclePicker();
-          }, ORACLE_LONG_PRESS_MS);
-        }
-      }
-    });
-    eightballPanel.addEventListener('keyup', (e) => {
-      if(e.key === 'Enter' || e.key === ' '){
-        if(oracleKeyHoldTimer){
-          clearTimeout(oracleKeyHoldTimer);
-          oracleKeyHoldTimer = null;
-        }
-        if(!didOracleKeyHold){
-          shakeEightBall();
-        }
-        didOracleKeyHold = false;
+        e.preventDefault();
+        shakeEightBall();
       }
     });
   }

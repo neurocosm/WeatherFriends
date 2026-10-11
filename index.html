@@ -133,7 +133,7 @@
     flex-direction:column;
     background:linear-gradient(155deg,var(--bezel-hi),var(--bezel) 40%,var(--bezel-lo));
     border-radius:18px;
-    padding:clamp(4px, 0.9vh, 8px) clamp(8px, 1.2vw, 12px) clamp(4px, 0.9vh, 8px) 2px;
+    padding:clamp(4px, 0.9vh, 8px) clamp(8px, 1.2vw, 12px);
     box-shadow:0 25px 60px rgba(0,0,0,0.55), inset 0 1px 0 var(--bezel-inset-hi, rgba(255,255,255,0.6)), inset 0 -2px 6px var(--bezel-inset-lo, rgba(0,0,0,0.15));
     overflow:hidden;
     box-sizing:border-box;
@@ -1083,185 +1083,80 @@
     width:100%;
     position:relative;
   }
-  .bezel-rail{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:stretch;
-    flex:0 0 8px;
-    width:8px;
-    margin-right:2px;
-    height:100%;
-    min-height:0;
-    padding-top:clamp(6px, 1.2vh, 12px);
-    padding-bottom:clamp(4px, 0.8vh, 8px);
-    box-sizing:border-box;
-    position:relative;
-    z-index:25;
-    user-select:none;
-    pointer-events:auto;
-    gap:6px;
-    filter: brightness(var(--board-brightness, 1.0)) contrast(calc(1 + (1 - var(--board-brightness, 1.0)) * 0.15));
-    transition: filter 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .bezel-row-ctrl{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    gap:clamp(8px, 1.4vh, 14px);
-    width:100%;
-    min-height:0;
-    position:relative;
-    box-sizing:border-box;
-    transition:flex 0.25s cubic-bezier(0.16, 1, 0.3, 1), min-height 0.25s ease, max-height 0.25s ease;
-  }
-  .bezel-row-ctrl[data-row-id="topTier"]:not(.is-row-collapsed){
-    flex:var(--rh-topTier, 1.0) 1 0px !important;
-  }
-  .bezel-row-ctrl[data-row-id="panelsRow"]:not(.is-row-collapsed){
-    flex:var(--rh-panelsRow, 1.25) 1 0px !important;
-  }
-  .bezel-row-ctrl[data-row-id="outlook"]:not(.is-row-collapsed){
-    flex:var(--rh-outlook, 0.95) 1 0px !important;
-  }
-  .bezel-row-ctrl.is-row-collapsed{
-    flex:0 0 16px !important;
-    min-height:16px !important;
-    max-height:16px !important;
-    gap:0 !important;
-  }
-
-  /* Hardware Bezel Buttons (Subtle Industrial Gray Palette, Identifiable & Non-Dramatic) */
-  .bezel-btn{
+  /* Tactile Seam Swap Dots - Mutual Row Position Transposition Switch */
+  .seam-swap-dot{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    z-index:20;
     background:transparent;
     border:none;
-    outline:none;
-    padding:4px 0;
+    padding:0;
     margin:0;
     cursor:pointer;
-    display:inline-flex;
+    display:flex;
     align-items:center;
     justify-content:center;
+    /* Generous, effortless touch area for fingers on tablet/phone (28px x 28px) */
+    width:28px;
+    height:28px;
     -webkit-tap-highlight-color:transparent;
+    outline:none;
     user-select:none;
-    box-shadow:none !important;
-    text-shadow:none !important;
-    filter:none !important;
-    line-height:1;
-    min-height:16px;
-    width:100%;
-    box-sizing:border-box;
   }
-  .bezel-btn:focus-visible{
-    outline:1px dotted #8294a0;
-    outline-offset:1px;
+  .seam-swap-dot.seam-swap-left{
+    left:-9px; /* Center of 28px button is at +5px from container's left edge */
+  }
+  .seam-swap-dot.seam-swap-right{
+    right:-9px; /* Center of 28px button is at +5px from container's right edge */
   }
 
-  /* 1. Shutter Block (Roll up / Window Shade Toggle in Muted Industrial Gray) */
-  .bezel-shutter-block{
+  .seam-dot-core{
     display:block;
-    width:7px;
-    height:4.5px;
-    background:#768793;
-    border:1px solid #4a5761;
-    border-radius:1px;
+    width:5px;
+    height:5px;
+    border-radius:50%;
+    /* Solid color matching outline tone with zero border ring */
+    background:rgba(140, 200, 210, 0.50);
+    border:none;
     box-sizing:border-box;
-    box-shadow:none !important;
-    transition:background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+    box-shadow:none;
+    transition:transform 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+               background 0.18s ease,
+               box-shadow 0.18s ease;
   }
-  .bezel-btn-shutter:hover .bezel-shutter-block{
-    background:#9fb0bc;
-    border-color:#63737e;
+  .seam-swap-dot:hover .seam-dot-core{
+    background:#49e6c4;
+    box-shadow:0 0 8px rgba(73, 230, 196, 0.95);
+    transform:scale(1.3);
   }
-  .bezel-btn-shutter:active .bezel-shutter-block{
-    transform:scale(0.90);
-    background:#54636d;
-  }
-  /* Rolled up (collapsed) state: distinct muted pewter/warm-gray slat indicator */
-  .bezel-row-ctrl.is-row-collapsed .bezel-shutter-block{
-    background:#877f72;
-    border-color:#575249;
-  }
-  .bezel-row-ctrl.is-row-collapsed .bezel-btn-shutter:hover .bezel-shutter-block{
-    background:#a89e8f;
-    border-color:#6e685e;
-  }
-
-  /* 2. Directional Triangles (Subtle Identifiable Gray) */
-  .bezel-btn-arrow{
-    color:#768793;
-    box-shadow:none !important;
-    transition:color 0.15s ease, transform 0.1s ease;
-  }
-  .bezel-btn-arrow:hover{
-    color:#a8b8c4;
-    transform:scale(1.15);
-  }
-  .bezel-btn-arrow:active{
+  .seam-swap-dot:active .seam-dot-core{
     transform:scale(0.85);
-    color:#54636d;
+    background:#38bdf8;
+    box-shadow:0 0 10px rgba(56, 189, 248, 0.9);
   }
-  .bezel-arrow-icon{
-    display:block;
-    pointer-events:none;
-    filter:none !important;
-    fill:currentColor;
+  .seam-swap-dot:focus-visible{
+    outline:none;
   }
-
-  /* Slot dynamic visibility */
-  .bezel-row-ctrl.slot-top .bezel-arrow-up{
-    display:none !important;
-  }
-  .bezel-row-ctrl.slot-bottom .bezel-arrow-down{
-    display:none !important;
-  }
-  .bezel-row-ctrl.is-row-collapsed .bezel-btn-arrow,
-  .bezel-row-ctrl.is-row-collapsed .bezel-btn-dice{
-    display:none !important;
+  .seam-swap-dot:focus-visible .seam-dot-core{
+    background:#49e6c4;
+    box-shadow:0 0 0 2px rgba(73, 230, 196, 0.45), 0 0 12px #49e6c4;
+    transform:scale(1.35);
   }
 
-  /* 3. 5 / Dice Button (WF / 5 Option in Muted Matching Gray) */
-  .bezel-btn-dice{
-    color:#768793;
-    box-shadow:none !important;
-    transition:color 0.15s ease, transform 0.15s ease;
+  /* Tactile pulse animation on row swap */
+  .seam-swap-dot.is-swapped-pulse .seam-dot-core{
+    animation:seamDotPulse 0.32s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .bezel-btn-dice:hover{
-    color:#a8b8c4;
-    transform:scale(1.15);
-  }
-  .bezel-btn-dice:active{
-    transform:scale(0.88);
-    color:#54636d;
-  }
-  .bezel-dice-icon{
-    display:block;
-    pointer-events:none;
-    filter:none !important;
-  }
-  .bezel-dice-icon rect{
-    stroke:currentColor;
-    fill:rgba(118, 135, 147, 0.08);
-  }
-  .bezel-dice-icon circle{
-    fill:currentColor;
-  }
-  /* In Weather Friends mode: clean silver-gray highlight, zero drama */
-  .bezel-btn-dice.is-friends-active{
-    color:#cbd5e1;
-  }
-  .bezel-btn-dice.is-friends-active rect{
-    stroke:#cbd5e1;
-    fill:rgba(203, 213, 225, 0.15);
-  }
-  .bezel-btn-dice.is-friends-active circle{
-    fill:#cbd5e1;
+  @keyframes seamDotPulse{
+    0%{ transform:scale(0.85); background:#38bdf8; box-shadow:0 0 12px #38bdf8; }
+    50%{ transform:scale(1.4); background:#49e6c4; box-shadow:0 0 14px #49e6c4; }
+    100%{ transform:scale(1.0); }
   }
 
-  /* Theater Mode: cleanly hide bezel rail */
-  body.theater-active .bezel-rail,
-  .screen.theater-active .bezel-rail{
+  /* Ambient Theater Mode: cleanly hide seam swap dots */
+  body.theater-active .seam-swap-dot,
+  .screen.theater-active .seam-swap-dot{
     display:none !important;
   }
 
@@ -1322,38 +1217,22 @@
     letter-spacing:0.5px;
   }
 
-  /* Collapsed Row States (Rolled Up - 16px Slimline) */
+  /* Collapsed Row States (Rolled Up - Hidden to retain maximum screen real estate) */
   .is-row-collapsed{
-    display:flex !important;
-    flex-direction:row !important;
-    align-items:center !important;
-    flex:0 0 16px !important;
-    min-height:16px !important;
-    max-height:16px !important;
-    height:16px !important;
+    display:none !important;
+    flex:0 0 0px !important;
+    min-height:0 !important;
+    max-height:0 !important;
+    height:0 !important;
     padding:0 !important;
     margin:0 !important;
     gap:0 !important;
-    overflow:visible !important;
+    overflow:hidden !important;
+    opacity:0 !important;
+    pointer-events:none !important;
   }
-  .is-row-collapsed > :not(.row-order-ctrl):not(.row-shutter-bar){
+  .is-row-collapsed > *{
     display:none !important;
-  }
-  .is-row-collapsed .row-shutter-bar{
-    display:flex !important;
-  }
-  .is-row-collapsed .row-order-ctrl{
-    top:50% !important;
-    transform:translateY(-50%) !important;
-  }
-  .is-row-collapsed .row-order-ctrl .row-arrow-btn{
-    display:none !important;
-  }
-  .is-row-collapsed .row-shutter-dash{
-    display:none !important;
-  }
-  .is-row-collapsed .row-shutter-dot{
-    display:block !important;
   }
 
   /* Physical Glide on Row Reordering */
@@ -2684,18 +2563,13 @@
     display:flex;
     flex-direction:column;
     position:relative;
-    cursor:pointer;
+    cursor:default;
     user-select:none;
     -webkit-tap-highlight-color:transparent;
     overflow:hidden;
     font-family:'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
     padding:clamp(6px, 1.2vh, 12px) clamp(8px, 1.2vw, 14px);
     gap:clamp(3px, 0.6vh, 6px);
-    transition:border-color 0.25s ease, box-shadow 0.25s ease;
-  }
-  .eightball-panel:hover{
-    border-color:rgba(73, 230, 196, 0.45);
-    box-shadow:0 0 16px rgba(73, 230, 196, 0.15);
   }
   #eightballTitle{
     font-family:'Outfit',sans-serif;
@@ -2715,10 +2589,6 @@
     margin-left:4px;
     vertical-align:baseline;
     transition:color 0.2s ease, opacity 0.2s ease;
-  }
-  .eightball-panel:hover .eightball-sub-hint{
-    color:#ffffff;
-    opacity:1;
   }
   .eightball-stage{
     flex:1 1 0;
@@ -2751,9 +2621,24 @@
     display:flex;
     align-items:center;
     justify-content:center;
-    transition:transform 0.12s ease;
+    transition:transform 0.14s cubic-bezier(0.2, 0.8, 0.4, 1), box-shadow 0.2s ease;
     border:1px solid rgba(73, 230, 196, 0.25);
     flex-shrink:0;
+    cursor:pointer;
+    outline:none;
+  }
+  .eightball-sphere:hover,
+  .eightball-sphere:focus-visible{
+    transform:scale(1.025);
+    box-shadow:
+      inset 0 4px 10px rgba(255, 255, 255, 0.32),
+      inset 0 -8px 18px rgba(0, 0, 0, 0.85),
+      0 8px 24px rgba(0, 0, 0, 0.8),
+      0 0 20px rgba(73, 230, 196, 0.45);
+    border-color:rgba(73, 230, 196, 0.6);
+  }
+  .eightball-sphere:active{
+    transform:scale(0.97);
   }
   .eightball-sphere::after{
     content:'';
@@ -3071,10 +2956,15 @@
     perspective:1000px;
     user-select:none;
     cursor:pointer;
-    transition:transform 0.18s ease;
+    outline:none;
+    transition:transform 0.16s cubic-bezier(0.2, 0.8, 0.4, 1);
   }
-  .open-book-wrapper:hover{
-    transform:scale(1.02);
+  .open-book-wrapper:hover,
+  .open-book-wrapper:focus-visible{
+    transform:scale(1.025);
+  }
+  .open-book-wrapper:active{
+    transform:scale(0.975);
   }
   .open-book-shadow{
     position:absolute;
@@ -3334,6 +3224,15 @@
     justify-content:flex-end;
     cursor:pointer;
     user-select:none;
+    outline:none;
+    transition:transform 0.16s cubic-bezier(0.2, 0.8, 0.4, 1);
+  }
+  .attic-box:hover,
+  .attic-box:focus-visible{
+    transform:scale(1.025);
+  }
+  .attic-box:active{
+    transform:scale(0.975);
   }
   /* Shadow beneath box */
   .attic-box-shadow{
@@ -3596,7 +3495,7 @@
     box-sizing:border-box;
     overflow:hidden;
     user-select:none;
-    cursor:pointer;
+    cursor:default;
     -webkit-tap-highlight-color:transparent;
   }
   .oracle-mode-candle .candle-container{
@@ -3629,7 +3528,7 @@
     box-sizing:border-box;
   }
 
-  /* Candle Visual SVG Stage - Intelligent height scaling */
+  /* Candle Visual SVG Stage - Intelligent height scaling (Isolated touch target) */
   .candle-visual-stage{
     flex:0 0 auto;
     height:var(--candle-height, 100%);
@@ -3644,6 +3543,15 @@
     position:relative;
     z-index:3;
     cursor:pointer;
+    outline:none;
+    transition:transform 0.16s cubic-bezier(0.2, 0.8, 0.4, 1);
+  }
+  .candle-visual-stage:hover,
+  .candle-visual-stage:focus-visible{
+    transform:scale(1.03);
+  }
+  .candle-visual-stage:active{
+    transform:scale(0.97);
   }
   .candle-svg{
     position:relative;
@@ -3718,12 +3626,9 @@
     line-height:var(--candle-line-height, 1.35);
     letter-spacing:0.025em;
     color:rgba(255, 235, 205, 0.92);
-    cursor:pointer;
+    cursor:default;
     text-decoration:none !important;
     z-index:5;
-  }
-  .candle-container:hover .candle-bottom-hint{
-    color:rgba(255, 215, 130, 0.98);
   }
   .candle-text-line{
     display:block;
@@ -3740,10 +3645,6 @@
     text-shadow:0 0 8px rgba(255, 140, 100, 0.45);
     transition:transform 0.25s ease, color 0.25s ease;
   }
-  .candle-container:hover .candle-heart-symbol{
-    transform:scale(1.15);
-    color:#ffa588;
-  }
   .candle-press-hint{
     display:inline-block;
     font-size:0.90em;
@@ -3754,7 +3655,7 @@
     text-decoration:none !important; /* Strictly NO underline */
     opacity:0.95;
     white-space:nowrap;
-    cursor:pointer;
+    cursor:default;
   }
   .candle-press-hint.candle-press-action{
     font-size:0.92em;
@@ -4042,29 +3943,193 @@
   }
   /* Directional arrow badges on locked seam */
   .row-splitter.is-locked-resize::after{
-    content:'◀ ▶';
+    display:none !important;
+  }
+  .tier-splitter.is-locked-resize::after{
+    display:none !important;
+  }
+
+  /* Distinctive, Spacious, Touch-Friendly Locked Seam Action Pill */
+  .seam-adjust-capsule{
     position:absolute;
     top:50%;
     left:50%;
     transform:translate(-50%, -50%);
-    font-family:'Outfit', sans-serif;
-    font-size:0.62rem;
-    font-weight:700;
-    letter-spacing:0.18em;
-    color:#ffffff;
-    background:rgba(2, 6, 8, 0.92);
-    border:1px solid #38bdf8;
-    border-radius:12px;
-    padding:2px 7px;
-    pointer-events:none;
-    z-index:9;
-    box-shadow:0 0 14px rgba(56, 189, 248, 0.7);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    background:rgba(3, 9, 14, 0.96);
+    border:1.5px solid #38bdf8;
+    border-radius:22px;
+    padding:6px 14px;
+    pointer-events:auto;
+    z-index:90;
+    box-shadow:0 0 24px rgba(56, 189, 248, 0.75), 0 8px 30px rgba(0, 0, 0, 0.95);
     white-space:nowrap;
-    animation:seamBadgePulse 1.4s ease-in-out infinite alternate;
+    animation:seamBadgePulse 1.8s ease-in-out infinite alternate;
+    user-select:none;
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
+  }
+  /* Generous invisible halo so pointer never rolls off into dead space between seam and popover */
+  .seam-adjust-capsule::before{
+    content:'';
+    position:absolute;
+    inset:-16px -14px;
+    z-index:-1;
+    pointer-events:auto;
+  }
+  .seam-adjust-capsule.is-vertical{
+    flex-direction:column;
+    gap:6px;
+    padding:8px 16px;
+  }
+  .seam-adjust-capsule-row{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+  }
+  .seam-adjust-capsule-hint{
+    font-size:0.68rem;
+    font-weight:600;
+    letter-spacing:0.5px;
+    text-transform:uppercase;
+    color:rgba(186, 230, 253, 0.9);
+    text-align:center;
+    pointer-events:none;
+    max-width:320px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .seam-adjust-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(18, 32, 44, 0.9);
+    border:1px solid rgba(56, 189, 248, 0.4);
+    color:#e0f2fe;
+    font-family:'Outfit', sans-serif;
+    font-size:0.95rem;
+    font-weight:700;
+    line-height:1;
+    min-width:38px;
+    min-height:38px;
+    padding:6px 10px;
+    border-radius:12px;
+    cursor:pointer;
+    transition:all 0.15s ease;
+    user-select:none;
+    -webkit-tap-highlight-color:transparent;
+    box-shadow:0 2px 8px rgba(0,0,0,0.4);
+    position:relative;
+    overflow:hidden;
+  }
+  .seam-adjust-btn .arrow-hold-bar{
+    position:absolute;
+    bottom:0;
+    left:0;
+    width:100%;
+    height:3px;
+    background:#38bdf8;
+    transform:scaleX(0);
+    transform-origin:left center;
+    transition:none;
+    pointer-events:none;
+  }
+  .seam-adjust-btn.is-unroll-target .arrow-hold-bar{
+    background:#49e6c4;
+  }
+  .seam-adjust-btn.is-holding-arrow .arrow-hold-bar{
+    transform:scaleX(1);
+    transition:transform 0.5s cubic-bezier(0.1, 0.9, 0.2, 1);
+  }
+  .seam-adjust-btn.is-holding-arrow{
+    transform:scale(0.93) !important;
+    background:#0284c7 !important;
+    border-color:#38bdf8 !important;
+    color:#ffffff !important;
+    box-shadow:0 0 20px rgba(56, 189, 248, 0.95) !important;
+  }
+  .seam-adjust-btn.is-unroll-target{
+    background:rgba(8, 42, 38, 0.92);
+    border-color:rgba(73, 230, 196, 0.7);
+    color:#49e6c4;
+    box-shadow:0 0 14px rgba(73, 230, 196, 0.55);
+    animation:unrollTargetPulse 1.6s ease-in-out infinite alternate;
+  }
+  @keyframes unrollTargetPulse{
+    0%{ box-shadow:0 0 8px rgba(73, 230, 196, 0.4); border-color:rgba(73, 230, 196, 0.55); }
+    100%{ box-shadow:0 0 18px rgba(73, 230, 196, 0.95); border-color:#49e6c4; }
+  }
+  .seam-adjust-btn.is-unroll-target:hover,
+  .seam-adjust-btn.is-unroll-target:focus-visible{
+    background:#0f766e;
+    border-color:#49e6c4;
+    color:#ffffff;
+    box-shadow:0 0 18px rgba(73, 230, 196, 0.9);
+  }
+  .seam-adjust-btn.is-unroll-target.is-holding-arrow{
+    background:#0d9488 !important;
+    border-color:#49e6c4 !important;
+    box-shadow:0 0 22px rgba(73, 230, 196, 0.95) !important;
+  }
+  .seam-adjust-btn:hover,
+  .seam-adjust-btn:focus-visible{
+    background:#0284c7;
+    border-color:#38bdf8;
+    color:#ffffff;
+    box-shadow:0 0 14px rgba(56, 189, 248, 0.8);
+    transform:scale(1.08);
+    outline:none;
+  }
+  .seam-adjust-btn:active{
+    transform:scale(0.92);
+  }
+  .seam-adjust-btn.btn-close{
+    background:rgba(239, 68, 68, 0.16);
+    border-color:rgba(239, 68, 68, 0.55);
+    color:#fca5a5;
+    font-size:1.15rem;
+    font-weight:900;
+    min-width:40px;
+    min-height:38px;
+    margin:0 4px;
+  }
+  .seam-adjust-btn.btn-close:hover,
+  .seam-adjust-btn.btn-close:focus-visible{
+    background:#dc2626;
+    border-color:#f87171;
+    color:#ffffff;
+    box-shadow:0 0 16px rgba(239, 68, 68, 0.85);
+    transform:scale(1.1);
   }
   @keyframes seamBadgePulse{
-    0%{ transform:translate(-50%, -50%) scale(0.96); opacity:0.92; }
-    100%{ transform:translate(-50%, -50%) scale(1.06); opacity:1; }
+    0%{ transform:translate(-50%, -50%) scale(0.98); box-shadow:0 0 18px rgba(56, 189, 248, 0.6), 0 8px 24px rgba(0,0,0,0.9); }
+    100%{ transform:translate(-50%, -50%) scale(1.03); box-shadow:0 0 28px rgba(73, 230, 196, 0.85), 0 8px 30px rgba(0,0,0,0.95); }
+  }
+
+  /* Seam line state when adjacent row(s) are rolled up / collapsed */
+  .tier-splitter.has-collapsed-above,
+  .tier-splitter.has-collapsed-below{
+    background:rgba(56, 189, 248, 0.08);
+    box-shadow:inset 0 0 6px rgba(56, 189, 248, 0.15);
+  }
+  .tier-splitter.has-collapsed-above .tier-splitter-grip,
+  .tier-splitter.has-collapsed-below .tier-splitter-grip{
+    background:rgba(56, 189, 248, 0.65);
+    height:3px;
+    width:clamp(64px, 12vw, 100px);
+    box-shadow:0 0 10px rgba(56, 189, 248, 0.65);
+  }
+  .tier-splitter.has-collapsed-above:hover .tier-splitter-grip,
+  .tier-splitter.has-collapsed-below:hover .tier-splitter-grip{
+    background:#38bdf8;
+    height:4px;
+    width:clamp(84px, 16vw, 140px);
+    box-shadow:0 0 16px rgba(56, 189, 248, 0.95);
   }
 
   body.is-resizing-blocks{
@@ -4093,14 +4158,14 @@
     padding:0;
     box-sizing:border-box;
   }
-  /* Generous touch target (28px vertical) for fingers on tablet / TV focus */
+  /* Generous touch target (28px vertical) for fingers on tablet / TV focus (recedes at left/right edges for seam swap buttons) */
   .tier-splitter::before{
     content:'';
     position:absolute;
     top:-11px;
     bottom:-11px;
-    left:0;
-    right:0;
+    left:24px;
+    right:24px;
     z-index:2;
   }
   .tier-splitter-grip{
@@ -4130,7 +4195,14 @@
     box-shadow:0 0 14px #49e6c4, 0 0 24px rgba(73, 230, 196, 0.5);
   }
   .tier-splitter.is-locked-resize{
-    cursor:ns-resize !important;
+    cursor:default !important;
+    z-index:95 !important;
+  }
+  .tier-splitter.is-locked-resize::before{
+    top:-28px !important;
+    bottom:-28px !important;
+    left:0 !important;
+    right:0 !important;
   }
   .tier-splitter.is-locked-resize .tier-splitter-grip{
     background:#38bdf8 !important;
@@ -4138,27 +4210,6 @@
     width:clamp(84px, 16vw, 140px) !important;
     box-shadow:0 0 16px #38bdf8, 0 0 32px rgba(56, 189, 248, 0.85) !important;
     animation:seamPulseGlow 1.4s ease-in-out infinite alternate;
-  }
-  .tier-splitter.is-locked-resize::after{
-    content:'▲ ▼';
-    position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%, -50%);
-    font-family:'Outfit', sans-serif;
-    font-size:0.62rem;
-    font-weight:700;
-    letter-spacing:0.18em;
-    color:#ffffff;
-    background:rgba(2, 6, 8, 0.92);
-    border:1px solid #38bdf8;
-    border-radius:12px;
-    padding:2px 7px;
-    pointer-events:none;
-    z-index:9;
-    box-shadow:0 0 14px rgba(56, 189, 248, 0.7);
-    white-space:nowrap;
-    animation:seamBadgePulse 1.4s ease-in-out infinite alternate;
   }
 
   body.is-resizing-rows{
@@ -5009,11 +5060,16 @@
     container-type:inline-size;
     min-width:0;
     overflow:hidden;
-    transition:background 0.2s ease, border-color 0.2s ease;
+    transition:background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
     box-shadow:inset 0 1px 0 rgba(255,255,255,0.05), 0 2px 8px rgba(0,0,0,0.35);
     margin:0;
     width:100%;
     box-sizing:border-box;
+  }
+  .day-card:hover{
+    border-color:rgba(73, 230, 196, 0.55);
+    background:rgba(8, 24, 30, 0.88);
+    box-shadow:inset 0 1px 0 rgba(73,230,196,0.3), 0 6px 20px rgba(0,0,0,0.55);
   }
   .day-card.is-today{
     background:rgba(8, 26, 32, 0.85);
@@ -5270,7 +5326,7 @@
   }
   .outlook-friends-grid{
     display:grid;
-    grid-template-columns:repeat(4, 1fr);
+    grid-template-columns:repeat(5, 1fr);
     gap:6px;
     width:100%;
     height:100%;
@@ -5315,6 +5371,61 @@
     border-color:rgba(73, 230, 196, 0.55);
     background:rgba(8, 24, 30, 0.88);
     box-shadow:inset 0 1px 0 rgba(73,230,196,0.3), 0 6px 20px rgba(0,0,0,0.55);
+  }
+
+  /* Center Block (Block 3) - Distinctive Frame Line & Interactive Tray Swap */
+  .day-card.is-center-swap-block,
+  .friend-card.is-center-swap-block{
+    border-color:rgba(255, 186, 72, 0.42); /* Subtle warm amber frame line */
+    box-shadow:inset 0 1px 0 rgba(255, 186, 72, 0.18), 0 3px 12px rgba(0,0,0,0.45);
+    position:relative;
+  }
+  .day-card.is-center-swap-block:hover,
+  .friend-card.is-center-swap-block:hover{
+    border-color:rgba(255, 186, 72, 0.85);
+    background:rgba(20, 24, 22, 0.90);
+    box-shadow:inset 0 1px 0 rgba(255, 186, 72, 0.40), 0 0 18px rgba(255, 186, 72, 0.35);
+    cursor:pointer;
+  }
+  .is-center-swap-block::after{
+    content:'';
+    position:absolute;
+    bottom:2px;
+    left:50%;
+    transform:translateX(-50%);
+    width:14px;
+    height:2px;
+    border-radius:1px;
+    background:rgba(255, 186, 72, 0.45);
+    transition:width 0.22s ease, background 0.22s ease, box-shadow 0.22s ease;
+    pointer-events:none;
+    z-index:5;
+  }
+  .is-center-swap-block:hover::after{
+    width:24px;
+    background:#ffb648;
+    box-shadow:0 0 6px rgba(255, 186, 72, 0.85);
+  }
+  .is-center-swap-block.is-holding-swap{
+    border-color:#ffb648 !important;
+    background:rgba(32, 26, 12, 0.94) !important;
+    box-shadow:0 0 24px rgba(255, 186, 72, 0.8), inset 0 0 14px rgba(255, 186, 72, 0.32) !important;
+    transform:scale(0.978);
+    transition:transform 0.48s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.48s ease-out;
+  }
+  .is-center-swap-block.is-holding-swap::after{
+    width:48px;
+    background:#49e6c4;
+    box-shadow:0 0 10px #49e6c4;
+    transition:width 0.48s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease;
+  }
+  .is-center-swap-block.is-swapped-pulse{
+    animation:centerSwapPulse 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes centerSwapPulse{
+    0%{ transform:scale(0.978); box-shadow:0 0 24px rgba(255,186,72,0.9); }
+    50%{ transform:scale(1.025); box-shadow:0 0 32px #49e6c4, inset 0 0 12px #49e6c4; border-color:#49e6c4; }
+    100%{ transform:scale(1); }
   }
   .friend-card-header{
     display:flex;
@@ -5615,10 +5726,18 @@
       overflow:visible !important;
       display:block !important;
       flex:none !important;
-      padding:10px 8px 10px 28px !important;
+      padding:10px 8px !important;
     }
-    .row-splitter,
+    .row-splitter{
+      display:none !important;
+    }
     .tier-splitter{
+      display:flex !important;
+      height:14px !important;
+      cursor:default !important;
+      margin:4px 0 !important;
+    }
+    .tier-splitter-grip{
       display:none !important;
     }
     .topbar{
@@ -5739,7 +5858,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.100326.0510</span>
+        <span id="appVersionText">v1.101026.2335</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -5760,75 +5879,15 @@
   </div>
 
   <div class="device-body" id="deviceBody">
-    <!-- Physical Left Bezel Control Rail (NO-GLOW Tactile Hardware Controls) -->
-    <div class="bezel-rail" id="bezelRail" aria-label="Bezel row controls">
-      <div class="bezel-row-ctrl slot-top" id="ctrlTopTier" data-row-id="topTier" aria-label="Top row controls">
-        <button type="button" class="bezel-btn bezel-btn-shutter" title="Roll up row (window shade)" aria-label="Roll up row">
-          <span class="bezel-shutter-block"></span>
-        </button>
-        <button type="button" class="bezel-btn bezel-btn-arrow bezel-arrow-up" title="Move row up" aria-label="Move row up">
-          <svg class="bezel-arrow-icon" viewBox="0 0 10 10" width="6.5" height="6.5" fill="none">
-            <polygon points="5,1 9,8 1,8" fill="currentColor"/>
-          </svg>
-        </button>
-        <button type="button" class="bezel-btn bezel-btn-arrow bezel-arrow-down" title="Move row down" aria-label="Move row down">
-          <svg class="bezel-arrow-icon" viewBox="0 0 10 10" width="6.5" height="6.5" fill="none">
-            <polygon points="1,2 9,2 5,9" fill="currentColor"/>
-          </svg>
-        </button>
-      </div>
-
-      <div class="bezel-row-ctrl slot-mid" id="ctrlPanelsRow" data-row-id="panelsRow" aria-label="Middle row controls">
-        <button type="button" class="bezel-btn bezel-btn-shutter" title="Roll up row (window shade)" aria-label="Roll up row">
-          <span class="bezel-shutter-block"></span>
-        </button>
-        <button type="button" class="bezel-btn bezel-btn-arrow bezel-arrow-up" title="Move row up" aria-label="Move row up">
-          <svg class="bezel-arrow-icon" viewBox="0 0 10 10" width="6.5" height="6.5" fill="none">
-            <polygon points="5,1 9,8 1,8" fill="currentColor"/>
-          </svg>
-        </button>
-        <button type="button" class="bezel-btn bezel-btn-arrow bezel-arrow-down" title="Move row down" aria-label="Move row down">
-          <svg class="bezel-arrow-icon" viewBox="0 0 10 10" width="6.5" height="6.5" fill="none">
-            <polygon points="1,2 9,2 5,9" fill="currentColor"/>
-          </svg>
-        </button>
-      </div>
-
-      <div class="bezel-row-ctrl slot-bottom" id="ctrlOutlook" data-row-id="outlook" aria-label="Bottom row controls">
-        <button type="button" class="bezel-btn bezel-btn-shutter" title="Roll up row (window shade)" aria-label="Roll up row">
-          <span class="bezel-shutter-block"></span>
-        </button>
-        <button type="button" class="bezel-btn bezel-btn-arrow bezel-arrow-up" title="Move row up" aria-label="Move row up">
-          <svg class="bezel-arrow-icon" viewBox="0 0 10 10" width="6.5" height="6.5" fill="none">
-            <polygon points="5,1 9,8 1,8" fill="currentColor"/>
-          </svg>
-        </button>
-        <button type="button" class="bezel-btn bezel-btn-arrow bezel-arrow-down" title="Move row down" aria-label="Move row down">
-          <svg class="bezel-arrow-icon" viewBox="0 0 10 10" width="6.5" height="6.5" fill="none">
-            <polygon points="1,2 9,2 5,9" fill="currentColor"/>
-          </svg>
-        </button>
-        <button type="button" class="bezel-btn bezel-btn-dice" id="bezelDiceBtn" title="Switch view: 5-Day Outlook ⇄ Weather Friends" aria-label="Switch between 5-Day Outlook and Weather Friends">
-          <svg class="bezel-dice-icon" viewBox="0 0 20 20" width="7.5" height="7.5" fill="none">
-            <rect x="1.5" y="1.5" width="17" height="17" rx="3" stroke="currentColor" stroke-width="2" fill="none"/>
-            <circle cx="6" cy="6" r="1.8" fill="currentColor"/>
-            <circle cx="14" cy="6" r="1.8" fill="currentColor"/>
-            <circle cx="10" cy="10" r="1.8" fill="currentColor"/>
-            <circle cx="6" cy="14" r="1.8" fill="currentColor"/>
-            <circle cx="14" cy="14" r="1.8" fill="currentColor"/>
-          </svg>
-        </button>
-      </div>
-    </div>
-
     <div class="screen" id="screen">
 
       <div class="topbar" id="topTier">
+
         <!-- Rolled-Up Horizontal Shutter / Shade Slat -->
-      <div class="row-shutter-bar" id="shutterTopTier" title="Click to pull down and unroll row" role="button" tabindex="0" aria-label="Unroll Date, Clock & Weather row">
-        <span class="shutter-slat-dot"></span>
-        <span class="shutter-slat-label">DATE • CLOCK • CURRENT WEATHER <span class="shutter-unroll-hint">(click to pull down)</span></span>
-      </div>
+        <div class="row-shutter-bar" id="shutterTopTier" title="Click to pull down and unroll row" role="button" tabindex="0" aria-label="Unroll Date, Clock & Weather row">
+          <span class="shutter-slat-dot"></span>
+          <span class="shutter-slat-label">DATE • CLOCK • CURRENT WEATHER <span class="shutter-unroll-hint">(click to pull down)</span></span>
+        </div>
 
       <!-- CERTIFIED BLOCK 1: FULL-HEIGHT 4-TIER DATE & PERIOD -->
       <div class="top-cert-card" id="topDateBlock">
@@ -6012,8 +6071,14 @@
     </div>
 
     <!-- HORIZONTAL TIER SPLITTER 0 (Between Row 1 & Row 2) -->
-    <div class="tier-splitter" id="tierSplitter0" data-tier-seam="0" tabindex="0" role="separator" aria-orientation="horizontal" aria-label="Resize row heights. Press OK to lock into adjust mode, Up and Down arrows to resize." title="Drag or press OK to adjust row heights • Double-tap to reset">
+    <div class="tier-splitter" id="tierSplitter0" data-tier-seam="0" tabindex="0" role="separator" aria-orientation="horizontal" aria-label="Row seam divider between top row and middle row" title="Drag or press OK to adjust row heights">
+      <button type="button" class="seam-swap-dot seam-swap-left" data-seam="0" title="Swap top row with middle row" aria-label="Swap top row with middle row">
+        <span class="seam-dot-core"></span>
+      </button>
       <div class="tier-splitter-grip"></div>
+      <button type="button" class="seam-swap-dot seam-swap-right" data-seam="0" title="Swap top row with middle row" aria-label="Swap top row with middle row">
+        <span class="seam-dot-core"></span>
+      </button>
     </div>
 
     <div class="panels" id="panelsRow">
@@ -6024,7 +6089,7 @@
       </div>
 
       <!-- ORACLE / INQUIRE ARTIFACTS (Center-Left Square: 8-Ball, Notebook, Attic Chest) -->
-      <div class="panel eightball-panel" id="panelEightball" title="Tap to consult Inquire">
+      <div class="panel eightball-panel" id="panelEightball">
         <div class="panel-head oracle-panel-head">
           <div class="ttl">
             <span class="label" id="inquireTitle">Inquire</span>
@@ -6039,8 +6104,8 @@
         </div>
 
         <div class="eightball-stage">
-          <!-- 1. TRADITIONAL MAGIC 8-BALL SPHERE -->
-          <div class="eightball-sphere" id="eightballSphere">
+          <!-- 1. TRADITIONAL MAGIC 8-BALL SPHERE (Touch target isolated strictly to sphere) -->
+          <div class="eightball-sphere" id="eightballSphere" tabindex="0" role="button" aria-label="Magic 8-Ball. Press to ask a question." title="Magic 8-Ball • Tap to shake">
             <div class="eightball-window">
               <div class="eightball-die" id="eightballDie">
                 <!-- Isometric icosahedron floating triangle SVG cleanly inscribed in view window -->
@@ -6066,9 +6131,9 @@
             </div>
           </div>
 
-          <!-- 2. THE BOOK OF ANSWERS (Open Tome with Arched Pages & Crisp Parchment) -->
+          <!-- 2. THE BOOK OF ANSWERS (Touch target isolated strictly to open tome) -->
           <div class="notebook-container" id="notebookContainer">
-            <div class="open-book-wrapper" id="notebookTome">
+            <div class="open-book-wrapper" id="notebookTome" tabindex="0" role="button" aria-label="The Book of Answers. Press to turn page." title="The Book of Answers • Tap to turn page">
               <div class="open-book-shadow"></div>
               <div class="open-book-cover-edge left"></div>
               <div class="open-book-cover-edge right"></div>
@@ -6104,9 +6169,9 @@
             </div>
           </div>
 
-          <!-- 3. THE ATTIC BOX / BOX OF WORDS (Aged wooden chest with dust puff) -->
+          <!-- 3. THE ATTIC BOX / CHEST (Touch target isolated strictly to chest) -->
           <div class="box-container" id="boxContainer">
-            <div class="attic-box" id="atticBox">
+            <div class="attic-box" id="atticBox" tabindex="0" role="button" aria-label="The Attic Chest. Press to reveal answer." title="The Attic Chest • Tap to open">
               <div class="attic-box-shadow"></div>
               <div class="attic-box-lid" id="atticBoxLid">
                 <div class="attic-lid-handle"></div>
@@ -6141,11 +6206,11 @@
             </div>
           </div>
 
-          <!-- 4. MAKE A WISH CANDLE -->
-          <div class="candle-container" id="candleContainer" role="button" tabindex="0" title="Make a Wish • Press anywhere" aria-label="Make a Wish on the candle">
+          <!-- 4. MAKE A WISH CANDLE (Touch target isolated strictly to candle stage) -->
+          <div class="candle-container" id="candleContainer">
             <div class="candle-ensemble" id="candleEnsemble">
               <!-- Visual SVG Candle Stage (Taller stately candle) -->
-              <div class="candle-visual-stage" id="candleVisualStage" title="Candle • Press to make a wish">
+              <div class="candle-visual-stage" id="candleVisualStage" tabindex="0" role="button" aria-label="Make a Wish on the candle. Press to begin countdown." title="Candle • Tap to make a wish">
                 <div class="candle-aura-glow" id="candleAuraGlow"></div>
                 <svg class="candle-svg" id="candleSvg" viewBox="0 0 150 250" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg" aria-label="A burning candle with a realistic flickering flame">
                   <defs>
@@ -6351,8 +6416,14 @@
     </div>
 
     <!-- HORIZONTAL TIER SPLITTER 1 (Between Row 2 & Row 3) -->
-    <div class="tier-splitter" id="tierSplitter1" data-tier-seam="1" tabindex="0" role="separator" aria-orientation="horizontal" aria-label="Resize row heights. Press OK to lock into adjust mode, Up and Down arrows to resize." title="Drag or press OK to adjust row heights • Double-tap to reset">
+    <div class="tier-splitter" id="tierSplitter1" data-tier-seam="1" tabindex="0" role="separator" aria-orientation="horizontal" aria-label="Row seam divider between middle row and bottom row" title="Drag or press OK to adjust row heights">
+      <button type="button" class="seam-swap-dot seam-swap-left" data-seam="1" title="Swap middle row with bottom row" aria-label="Swap middle row with bottom row">
+        <span class="seam-dot-core"></span>
+      </button>
       <div class="tier-splitter-grip"></div>
+      <button type="button" class="seam-swap-dot seam-swap-right" data-seam="1" title="Swap middle row with bottom row" aria-label="Swap middle row with bottom row">
+        <span class="seam-dot-core"></span>
+      </button>
     </div>
 
     <!-- 5-DAY OUTLOOK & WEATHER FRIENDS MULTI-LOCATION STATION -->
@@ -6515,24 +6586,6 @@
 
   </div> <!-- #screen -->
   </div> <!-- #deviceBody -->
-
-  <!-- Smart TV Remote Horizontal Block Resize HUD Pill -->
-  <div class="remote-resize-hud" id="remoteResizeHud" role="dialog" aria-label="Block resize mode active">
-    <span class="hud-icon">📐</span>
-    <div class="hud-content">
-      <div class="hud-title-row">
-        <span id="remoteResizeHudText" class="hud-title">Resizing: <b>Date ↔ Clock</b></span>
-        <span class="hud-pct-badge" id="remoteResizePctBadge">38% | 24% | 38%</span>
-      </div>
-      <div class="hud-btn-group">
-        <button type="button" class="hud-btn hud-btn-left" id="remoteResizeLeftBtn" title="Shift seam left (Remote: ◀)">◀ SHIFT LEFT</button>
-        <button type="button" class="hud-btn hud-btn-right" id="remoteResizeRightBtn" title="Shift seam right (Remote: ▶)">SHIFT RIGHT ▶</button>
-        <button type="button" class="hud-btn hud-btn-reset" id="remoteResizeResetBtn" title="Reset proportions to default (Remote: 0)">↺ RESET</button>
-        <button type="button" class="hud-btn hud-btn-done" id="remoteResizeExitBtn" title="Save & exit resize mode (Remote: OK / Enter)">✓ DONE</button>
-      </div>
-      <div class="hud-hint" id="remoteResizeHudHint">Smart TV Remote: Press <b>◀</b> <b>▶</b> to nudge • <b>OK</b> to finish • <b>0</b> to reset</div>
-    </div>
-  </div>
 
   <!-- Location Search & ZIP Code Modal (NOMAD / Weather Friends) -->
   <div class="loc-search-overlay" id="locSearchModal" style="display:none;" role="dialog" aria-modal="true" aria-label="Set Weather Location">
@@ -8031,7 +8084,12 @@
     for(let i=0;i<5 && i<dData.time.length;i++){
       const d = new Date(dData.time[i] + 'T12:00:00');
       const card = document.createElement('div');
-      card.className = 'day-card' + (i === 0 ? ' is-today' : '');
+      const isCenter = (i === 2);
+      card.className = 'day-card' + (i === 0 ? ' is-today' : '') + (isCenter ? ' is-center-swap-block' : '');
+      if(isCenter){
+        card.setAttribute('title', 'Center block • Hold to swap with Weather Friends');
+        card.setAttribute('aria-label', `${i===0 ? 'TODAY' : dayNames[d.getDay()]} forecast. Center block: hold to swap to Weather Friends`);
+      }
       const dn = i===0 ? 'TODAY' : dayNames[d.getDay()];
       const hi = toDisplayTemp(dData.temperature_2m_max[i]);
       const lo = toDisplayTemp(dData.temperature_2m_min[i]);
@@ -8147,11 +8205,11 @@
     const friendCards = outlookEl.querySelectorAll('.friend-card');
     if(friendCards.length > 0){
       const padV = Math.max(4, Math.min(14, Math.round(availH * 0.065)));
-      const padH = Math.max(6, Math.min(16, Math.round(availW * 0.012)));
-      const fNamePx = Math.max(11, Math.min(20, Math.round(availH * 0.098)));
-      const fTempPx = Math.max(18, Math.min(48, Math.round(availH * 0.21)));
-      const fTelemPx = Math.max(9, Math.min(14, Math.round(availH * 0.068)));
-      const fFooterPx = Math.max(11, Math.min(16, Math.round(availH * 0.082))); // ~10% larger for bottom Hi/Lo & Feels
+      const padH = Math.max(4, Math.min(13, Math.round(availW * 0.010)));
+      const fNamePx = Math.max(10, Math.min(18, Math.round(availH * 0.092)));
+      const fTempPx = Math.max(17, Math.min(44, Math.round(availH * 0.20)));
+      const fTelemPx = Math.max(8, Math.min(13, Math.round(availH * 0.064)));
+      const fFooterPx = Math.max(10, Math.min(15, Math.round(availH * 0.078))); // ~10% larger for bottom Hi/Lo & Feels
 
       friendCards.forEach(fcard => {
         fcard.style.padding = `${padV}px ${padH}px`;
@@ -8241,6 +8299,20 @@
       admin1: 'HI',
       badge: '🇺🇸',
       tempUnit: 'F',
+      timeFormat: '12'
+    },
+    {
+      id: 'friend_5',
+      name: 'Alex',
+      locationName: 'Sydney, New South Wales, Australia',
+      shortCity: 'Sydney, NSW',
+      lat: -33.8688,
+      lon: 151.2093,
+      timezone: 'Australia/Sydney',
+      countryCode: 'AU',
+      admin1: 'NSW',
+      badge: '🇦🇺',
+      tempUnit: 'C',
       timeFormat: '12'
     }
   ];
@@ -8344,13 +8416,16 @@
       if(saved){
         const parsed = JSON.parse(saved);
         if(Array.isArray(parsed) && parsed.length >= 2){
-          // Auto-migrate from 3 to 4 friends seamlessly
+          // Auto-migrate from 3 or 4 to 5 friends seamlessly
           if(parsed.length === 3 && DEFAULT_WEATHER_FRIENDS[3]){
             parsed.push(JSON.parse(JSON.stringify(DEFAULT_WEATHER_FRIENDS[3])));
-            try {
-              localStorage.setItem('wf_weather_friends_v3', JSON.stringify(parsed));
-            } catch(e){}
           }
+          if(parsed.length === 4 && DEFAULT_WEATHER_FRIENDS[4]){
+            parsed.push(JSON.parse(JSON.stringify(DEFAULT_WEATHER_FRIENDS[4])));
+          }
+          try {
+            localStorage.setItem('wf_weather_friends_v3', JSON.stringify(parsed));
+          } catch(e){}
           return parsed;
         }
       }
@@ -8514,9 +8589,15 @@
     if(!grid) return;
 
     grid.innerHTML = '';
-    weatherFriendsList.forEach((friend) => {
+    const centerIdx = Math.floor(weatherFriendsList.length / 2); // index 2 for 5 friends
+    weatherFriendsList.forEach((friend, idx) => {
       const card = document.createElement('div');
-      card.className = 'friend-card';
+      const isCenter = (idx === centerIdx);
+      card.className = 'friend-card' + (isCenter ? ' is-center-swap-block' : '');
+      if(isCenter){
+        card.setAttribute('title', 'Center block • Hold to swap with 5-Day Outlook');
+        card.setAttribute('aria-label', `${friend.name} weather. Center block: hold to swap to 5-Day Outlook`);
+      }
       card.id = `card_${friend.id}`;
       card.dataset.friendId = friend.id;
 
@@ -8922,7 +9003,108 @@
       });
     }
 
+    const bezelDiceBtn = document.getElementById('bezelDiceBtn');
+    if(bezelDiceBtn && !bezelDiceBtn._diceBound){
+      bezelDiceBtn._diceBound = true;
+      bezelDiceBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        toggleOutlookView();
+      });
+    }
+
     setOutlookView(activeOutlookTrayView, false);
+    initCenterBlockSwapHold();
+  }
+
+  /* Tactile Center Block (Block 3) Press-and-Hold Tray Swap (5-Day Outlook <-> Weather Friends) */
+  function initCenterBlockSwapHold(){
+    const outlook = document.getElementById('outlook');
+    if(!outlook || outlook._swapHoldBound) return;
+    outlook._swapHoldBound = true;
+
+    let holdTimer = null;
+    let startX = 0;
+    let startY = 0;
+    let currentTargetCard = null;
+    let didSwap = false;
+    const HOLD_DURATION_MS = 480;
+
+    function startHold(e){
+      // Only primary mouse button
+      if(e.type === 'mousedown' && e.button !== 0) return;
+
+      const centerCard = e.target.closest('.is-center-swap-block');
+      if(!centerCard || !outlook.contains(centerCard)) return;
+
+      currentTargetCard = centerCard;
+      didSwap = false;
+
+      const pt = (e.touches && e.touches[0]) ? e.touches[0] : e;
+      startX = pt.clientX;
+      startY = pt.clientY;
+
+      centerCard.classList.add('is-holding-swap');
+
+      clearTimeout(holdTimer);
+      holdTimer = setTimeout(() => {
+        didSwap = true;
+        centerCard.classList.remove('is-holding-swap');
+        centerCard.classList.add('is-swapped-pulse');
+        setTimeout(() => centerCard.classList.remove('is-swapped-pulse'), 420);
+
+        try {
+          if(navigator.vibrate) navigator.vibrate(40);
+        } catch(err){}
+
+        toggleOutlookView();
+      }, HOLD_DURATION_MS);
+    }
+
+    function moveHold(e){
+      if(!holdTimer || !currentTargetCard) return;
+      const pt = (e.touches && e.touches[0]) ? e.touches[0] : e;
+      const dx = Math.abs(pt.clientX - startX);
+      const dy = Math.abs(pt.clientY - startY);
+      if(dx > 8 || dy > 8){
+        cancelHold();
+      }
+    }
+
+    function endHold(e){
+      if(didSwap){
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      cancelHold();
+    }
+
+    function cancelHold(){
+      clearTimeout(holdTimer);
+      holdTimer = null;
+      if(currentTargetCard){
+        currentTargetCard.classList.remove('is-holding-swap');
+        currentTargetCard = null;
+      }
+    }
+
+    outlook.addEventListener('mousedown', startHold, { passive: true });
+    window.addEventListener('mousemove', moveHold, { passive: true });
+    window.addEventListener('mouseup', endHold, { capture: true });
+
+    outlook.addEventListener('touchstart', startHold, { passive: true });
+    window.addEventListener('touchmove', moveHold, { passive: true });
+    window.addEventListener('touchend', endHold, { capture: true });
+    window.addEventListener('touchcancel', cancelHold, { passive: true });
+
+    // Catch click event in capture phase if long press just triggered
+    outlook.addEventListener('click', (e) => {
+      if(didSwap){
+        e.preventDefault();
+        e.stopPropagation();
+        didSwap = false;
+      }
+    }, true);
   }
 
   // Self-initialize the Weather Friends engine
@@ -9351,7 +9533,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.100326.0510';
+  const CLIENT_APP_VERSION = 'v1.101026.2335';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -11511,14 +11693,14 @@
     }
   }
 
-  // Bind direct user actions to Candle
-  if(candleContainer){
-    candleContainer.addEventListener('click', (e) => {
+  // Bind direct user actions strictly to Candle itself (only tapping the candle counts down to make a wish)
+  if(candleVisualStage){
+    candleVisualStage.addEventListener('click', (e) => {
       e.stopPropagation();
       e.preventDefault();
       handleCandleClick();
     });
-    candleContainer.addEventListener('keydown', (e) => {
+    candleVisualStage.addEventListener('keydown', (e) => {
       if(e.key === 'Enter' || e.key === ' '){
         e.stopPropagation();
         e.preventDefault();
@@ -11527,24 +11709,23 @@
     });
   }
 
+  // Allow clicking the [relight] action label only when the candle has been blown out
+  if(candleBottomHint){
+    candleBottomHint.addEventListener('click', (e) => {
+      const relightAction = e.target.closest('.candle-press-action');
+      if(relightAction && candleState === 'blown'){
+        e.stopPropagation();
+        e.preventDefault();
+        resetCandleToLit(false);
+      }
+    });
+  }
+
   // Initialize responsive candle layout immediately
   updateCandleLayout();
 
   function shakeEightBall(){
-    if(currentOracleMode === 'notebook'){
-      turnNotebookPage();
-      return;
-    }
-    if(currentOracleMode === 'box'){
-      openAtticBox();
-      return;
-    }
-    if(currentOracleMode === 'candle'){
-      handleCandleClick();
-      return;
-    }
-
-    // Classic 8-Ball mode
+    // Classic 8-Ball mode: isolated strictly to the sphere
     if(isShaking8Ball) return;
     isShaking8Ball = true;
 
@@ -11594,20 +11775,47 @@
     }, 700);
   }
 
-  // Direct Click/Tap and Keyboard Activation on 8-Ball Panel (Instantaneous, no long-press popup)
-  if(eightballPanel){
-    eightballPanel.addEventListener('click', (e) => {
-      // Don't trigger if user clicked one of the oracle title pills
-      if(e.target.closest('.oracle-title-pill')) return;
+  // 1. Magic 8-Ball: Touch/Click is isolated strictly to the 8-Ball sphere itself
+  if(eightballSphere){
+    eightballSphere.addEventListener('click', (e) => {
       e.stopPropagation();
       shakeEightBall();
     });
-
-    eightballPanel.addEventListener('keydown', (e) => {
-      if(e.target.closest('.oracle-title-pill')) return;
+    eightballSphere.addEventListener('keydown', (e) => {
       if(e.key === 'Enter' || e.key === ' '){
         e.preventDefault();
+        e.stopPropagation();
         shakeEightBall();
+      }
+    });
+  }
+
+  // 2. The Book of Answers: Touch/Click is isolated strictly to the open notebook tome itself
+  if(notebookTome){
+    notebookTome.addEventListener('click', (e) => {
+      e.stopPropagation();
+      turnNotebookPage();
+    });
+    notebookTome.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        e.stopPropagation();
+        turnNotebookPage();
+      }
+    });
+  }
+
+  // 3. The Attic Box / Chest: Touch/Click is isolated strictly to the chest itself (preserving the rest of the block)
+  if(atticBox){
+    atticBox.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openAtticBox();
+    });
+    atticBox.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        e.stopPropagation();
+        openAtticBox();
       }
     });
   }
@@ -12558,7 +12766,7 @@
       outlook: 0.95
     };
     const MIN_ROW_HEIGHT_WEIGHT = 0.35;
-    const STEP_HEIGHT_DELTA = 0.10;
+    const STEP_HEIGHT_DELTA = 0.025; // Smaller, gentle increment per adjustment (~1% tier height)
     const ROW_MIN_HEIGHTS = {
       topTier: 95,
       panelsRow: 115,
@@ -12639,36 +12847,67 @@
         return;
       }
 
-      const activeRows = (typeof currentRowOrder !== 'undefined' ? currentRowOrder : ['topTier', 'panelsRow', 'outlook'])
-        .filter(id => !(typeof rowCollapsedState !== 'undefined' && rowCollapsedState[id]));
+      // Always maintain thin seam lines in the layout so rolled up rows can be restored
+      sp0.style.display = 'flex';
+      sp1.style.display = 'flex';
 
-      if(activeRows.length <= 1){
-        sp0.style.display = 'none';
-        sp1.style.display = 'none';
-      } else if(activeRows.length === 2){
-        sp0.style.display = 'flex';
-        sp1.style.display = 'none';
-        const firstRowEl = document.getElementById(activeRows[0]);
-        if(firstRowEl && firstRowEl.nextSibling !== sp0){
-          firstRowEl.after(sp0);
-        }
-        sp0.dataset.aboveRow = activeRows[0];
-        sp0.dataset.belowRow = activeRows[1];
-      } else if(activeRows.length >= 3){
-        sp0.style.display = 'flex';
-        sp1.style.display = 'flex';
-        const firstRowEl = document.getElementById(activeRows[0]);
-        const secondRowEl = document.getElementById(activeRows[1]);
-        if(firstRowEl && firstRowEl.nextSibling !== sp0){
-          firstRowEl.after(sp0);
-        }
-        if(secondRowEl && secondRowEl.nextSibling !== sp1){
-          secondRowEl.after(sp1);
-        }
-        sp0.dataset.aboveRow = activeRows[0];
-        sp0.dataset.belowRow = activeRows[1];
-        sp1.dataset.aboveRow = activeRows[1];
-        sp1.dataset.belowRow = activeRows[2];
+      const rOrder = (typeof currentRowOrder !== 'undefined' ? currentRowOrder : ['topTier', 'panelsRow', 'outlook']);
+      const r0 = rOrder[0];
+      const r1 = rOrder[1];
+      const r2 = rOrder[2];
+
+      const row0El = document.getElementById(r0);
+      const row1El = document.getElementById(r1);
+      const row2El = document.getElementById(r2);
+
+      // Keep natural sequential flow in screen DOM: row0 -> sp0 -> row1 -> sp1 -> row2
+      if(row0El && row1El && row2El){
+        if(row0El.nextSibling !== sp0) row0El.after(sp0);
+        if(row1El.nextSibling !== sp1) row1El.after(sp1);
+      }
+
+      sp0.dataset.aboveRow = r0;
+      sp0.dataset.belowRow = r1;
+      sp1.dataset.aboveRow = r1;
+      sp1.dataset.belowRow = r2;
+
+      const c0 = !!(typeof rowCollapsedState !== 'undefined' && rowCollapsedState[r0]);
+      const c1 = !!(typeof rowCollapsedState !== 'undefined' && rowCollapsedState[r1]);
+      const c2 = !!(typeof rowCollapsedState !== 'undefined' && rowCollapsedState[r2]);
+
+      sp0.classList.toggle('has-collapsed-above', c0);
+      sp0.classList.toggle('has-collapsed-below', c1);
+      sp1.classList.toggle('has-collapsed-above', c1);
+      sp1.classList.toggle('has-collapsed-below', c2);
+
+      const ROW_NAMES = {
+        topTier: 'Top Row',
+        panelsRow: 'Middle Row',
+        outlook: 'Bottom Row'
+      };
+
+      if(c0 && c1){
+        sp0.title = `Row Seam • ${ROW_NAMES[r0]} & ${ROW_NAMES[r1]} rolled up • Click to open controls`;
+      } else if(c0){
+        sp0.title = `Row Seam • ${ROW_NAMES[r0]} above rolled up • Click to open controls (Hold ▲ to unroll)`;
+      } else if(c1){
+        sp0.title = `Row Seam • ${ROW_NAMES[r1]} below rolled up • Click to open controls (Hold ▼ to unroll)`;
+      } else {
+        sp0.title = `Row Seam Divider between ${ROW_NAMES[r0]} & ${ROW_NAMES[r1]} • Adjust heights (Hold ▲ rolls up above, Hold ▼ rolls up below)`;
+      }
+
+      if(c1 && c2){
+        sp1.title = `Row Seam • ${ROW_NAMES[r1]} & ${ROW_NAMES[r2]} rolled up • Click to open controls`;
+      } else if(c1){
+        sp1.title = `Row Seam • ${ROW_NAMES[r1]} above rolled up • Click to open controls (Hold ▲ to unroll)`;
+      } else if(c2){
+        sp1.title = `Row Seam • ${ROW_NAMES[r2]} below rolled up • Click to open controls (Hold ▼ to unroll)`;
+      } else {
+        sp1.title = `Row Seam Divider between ${ROW_NAMES[r1]} & ${ROW_NAMES[r2]} • Adjust heights (Hold ▲ rolls up above, Hold ▼ rolls up below)`;
+      }
+
+      if(typeof updateSeamDots === 'function'){
+        updateSeamDots();
       }
     }
     window.syncTierSplitters = syncTierSplitters;
@@ -12676,166 +12915,37 @@
 
     const splitters = document.querySelectorAll('.row-splitter');
     const tierSplitters = document.querySelectorAll('.tier-splitter');
-    const hudEl = document.getElementById('remoteResizeHud');
-    const hudTextEl = document.getElementById('remoteResizeHudText');
-    const hudPctBadge = document.getElementById('remoteResizePctBadge');
-    const hudLeftBtn = document.getElementById('remoteResizeLeftBtn');
-    const hudRightBtn = document.getElementById('remoteResizeRightBtn');
-    const hudResetBtn = document.getElementById('remoteResizeResetBtn');
-    const hudExitBtn = document.getElementById('remoteResizeExitBtn');
-    const hudHintEl = document.getElementById('remoteResizeHudHint');
-
     let activeLockedSplitter = null;
-    const STEP_DELTA = 0.14; // ~5% width shift per remote press or click for clearly visible adjustments
+    let lockedSplitterTimer = null;
+    const STEP_DELTA = 0.035; // Fine-grained ~1% width shift per remote press or click for precision adjustments
 
-    function getSplitterLabel(sp){
-      if(!sp) return 'Blocks';
-      if(sp.classList.contains('tier-splitter')){
-        const above = ROW_FRIENDLY_NAMES[sp.dataset.aboveRow] || 'Row';
-        const below = ROW_FRIENDLY_NAMES[sp.dataset.belowRow] || 'Row';
-        return `${above} ↕ ${below}`;
+    function clearLockedSplitterTimer(){
+      if(lockedSplitterTimer){
+        clearTimeout(lockedSplitterTimer);
+        lockedSplitterTimer = null;
       }
-      const r = sp.dataset.row;
-      const s = parseInt(sp.dataset.seam, 10);
-      if(r === 'top'){
-        return s === 0 ? 'Date ↔ Clock' : 'Clock ↔ Weather';
-      } else if(r === 'mid'){
-        return s === 0 ? '8-Ball ↔ Inspiration' : 'Inspiration ↔ Checkiday';
-      }
-      return 'Blocks';
     }
 
-    function updateResizeHud(sp){
-      if(!hudEl) return;
-      const target = sp || activeLockedSplitter;
-      if(!target) return;
-      const isTier = target.classList.contains('tier-splitter');
-
-      if(hudTextEl){
-        hudTextEl.innerHTML = isTier ? `Resizing Row Heights: <b>${getSplitterLabel(target)}</b>` : `Resizing: <b>${getSplitterLabel(target)}</b>`;
-      }
-
-      if(hudPctBadge){
-        if(isTier){
-          const sum = currentRowHeightWeights.topTier + currentRowHeightWeights.panelsRow + currentRowHeightWeights.outlook;
-          const p0 = Math.round((currentRowHeightWeights.topTier / sum) * 100);
-          const p1 = Math.round((currentRowHeightWeights.panelsRow / sum) * 100);
-          const p2 = Math.round((currentRowHeightWeights.outlook / sum) * 100);
-          hudPctBadge.textContent = `${p0}% | ${p1}% | ${p2}%`;
-        } else {
-          const rId = target.dataset.row;
-          if(currentWeights[rId]){
-            const w = currentWeights[rId];
-            const sum = w[0] + w[1] + w[2];
-            const p0 = Math.round((w[0] / sum) * 100);
-            const p1 = Math.round((w[1] / sum) * 100);
-            const p2 = Math.round((w[2] / sum) * 100);
-            hudPctBadge.textContent = `${p0}% | ${p1}% | ${p2}%`;
+    function resetLockedSplitterTimer(){
+      clearLockedSplitterTimer();
+      if(activeLockedSplitter){
+        // Generous 25 seconds inactivity timer so user has ample time to interact
+        lockedSplitterTimer = setTimeout(() => {
+          if(activeLockedSplitter){
+            unlockSplitter(activeLockedSplitter, true);
           }
-        }
-      }
-
-      if(isTier){
-        if(hudLeftBtn) hudLeftBtn.textContent = '▲ NUDGE UP';
-        if(hudRightBtn) hudRightBtn.textContent = 'NUDGE DOWN ▼';
-        if(hudHintEl) hudHintEl.innerHTML = 'Smart TV Remote: Press <b>▲</b> <b>▼</b> to nudge • <b>OK</b> to finish • <b>0</b> to reset';
-      } else {
-        if(hudLeftBtn) hudLeftBtn.textContent = '◀ SHIFT LEFT';
-        if(hudRightBtn) hudRightBtn.textContent = 'SHIFT RIGHT ▶';
-        if(hudHintEl) hudHintEl.innerHTML = 'Smart TV Remote: Press <b>◀</b> <b>▶</b> to nudge • <b>OK</b> to finish • <b>0</b> to reset';
-      }
-
-      positionResizeHud(target);
-    }
-
-    function positionResizeHud(sp){
-      if(!hudEl) return;
-      const target = sp || activeLockedSplitter;
-      if(!target) return;
-
-      const hudW = hudEl.offsetWidth || 560;
-      const hudH = hudEl.offsetHeight || 80;
-      const pad = 12;
-
-      if(target.classList.contains('tier-splitter')){
-        const seamRect = target.getBoundingClientRect();
-        let targetLeft = (window.innerWidth - hudW) / 2;
-        targetLeft = Math.max(pad, Math.min(window.innerWidth - hudW - pad, targetLeft));
-        hudEl.style.left = `${Math.round(targetLeft)}px`;
-
-        if(seamRect.top < window.innerHeight * 0.5){
-          let targetTop = seamRect.bottom + 10;
-          if(targetTop + hudH > window.innerHeight - pad){
-            targetTop = window.innerHeight - hudH - pad;
-          }
-          hudEl.style.top = `${Math.round(targetTop)}px`;
-          hudEl.style.bottom = 'auto';
-          hudEl.setAttribute('data-placement', 'under');
-        } else {
-          let targetBottom = (window.innerHeight - seamRect.top) + 10;
-          if(targetBottom + hudH > window.innerHeight - pad){
-            targetBottom = window.innerHeight - hudH - pad;
-          }
-          hudEl.style.bottom = `${Math.round(targetBottom)}px`;
-          hudEl.style.top = 'auto';
-          hudEl.setAttribute('data-placement', 'above');
-        }
-        return;
-      }
-
-      const rowEl = target.closest('.panels') || target.closest('.topbar') || target.closest('.dashboard-row') || target.parentElement;
-      if(!rowEl) return;
-
-      const rowRect = rowEl.getBoundingClientRect();
-      const seamRect = target.getBoundingClientRect();
-
-      // 1. Horizontal Position: Center directly over the active seam
-      const seamCenterX = seamRect.left + (seamRect.width / 2);
-      let targetLeft = seamCenterX - (hudW / 2);
-      targetLeft = Math.max(pad, Math.min(window.innerWidth - hudW - pad, targetLeft));
-
-      hudEl.style.left = `${Math.round(targetLeft)}px`;
-
-      // 2. Vertical Position:
-      const isTopRow = (target.dataset.row === 'top') || (rowRect.top < window.innerHeight * 0.42);
-
-      if(isTopRow){
-        let targetTop = rowRect.bottom + 8;
-        if(targetTop + hudH > window.innerHeight - pad){
-          targetTop = window.innerHeight - hudH - pad;
-        }
-        hudEl.style.top = `${Math.round(targetTop)}px`;
-        hudEl.style.bottom = 'auto';
-        hudEl.setAttribute('data-placement', 'under');
-      } else {
-        let targetBottom = (window.innerHeight - rowRect.top) + 8;
-        if(targetBottom + hudH > window.innerHeight - pad){
-          targetBottom = window.innerHeight - hudH - pad;
-        }
-        hudEl.style.bottom = `${Math.round(targetBottom)}px`;
-        hudEl.style.top = 'auto';
-        hudEl.setAttribute('data-placement', 'above');
+        }, 25000);
       }
     }
-
-    function showResizeHud(sp){
-      if(typeof isTheaterActive !== 'undefined' && isTheaterActive) return;
-      if(!hudEl) return;
-      updateResizeHud(sp);
-      positionResizeHud(sp);
-      hudEl.classList.add('is-visible');
-    }
-
-    function hideResizeHud(){
-      if(!hudEl) return;
-      hudEl.classList.remove('is-visible');
-    }
-    window.hideResizeHud = hideResizeHud;
 
     function unlockSplitter(sp, save = true){
+      clearLockedSplitterTimer();
       const target = sp || activeLockedSplitter;
       if(target){
         target.classList.remove('is-locked-resize');
+        const pill = target.querySelector('.seam-adjust-capsule');
+        if(pill) pill.remove();
+
         if(save){
           if(target.classList.contains('tier-splitter')){
             try{
@@ -12850,9 +12960,198 @@
         }
       }
       activeLockedSplitter = null;
-      hideResizeHud();
     }
     window.unlockSplitter = unlockSplitter;
+    function updateResizeHud(){}
+    window.updateResizeHud = updateResizeHud;
+    window.hideResizeHud = () => {};
+    window.showResizeHud = () => {};
+    window.positionResizeHud = () => {};
+
+    function renderSeamAdjustPill(sp){
+      if(!sp) return;
+      const existing = sp.querySelector('.seam-adjust-capsule');
+      if(existing) existing.remove();
+
+      const isTier = sp.classList.contains('tier-splitter');
+      const pill = document.createElement('div');
+      pill.className = `seam-adjust-capsule ${isTier ? 'is-vertical' : 'is-horizontal'}`;
+      pill.setAttribute('role', 'toolbar');
+      pill.setAttribute('aria-label', isTier ? 'Adjust Row Heights' : 'Adjust Block Widths');
+
+      const aboveId = isTier ? sp.dataset.aboveRow : '';
+      const belowId = isTier ? sp.dataset.belowRow : '';
+      const ROW_NAMES = {
+        topTier: 'Top Row',
+        panelsRow: 'Middle Row',
+        outlook: 'Bottom Row'
+      };
+      const aboveName = ROW_NAMES[aboveId] || 'Row Above';
+      const belowName = ROW_NAMES[belowId] || 'Row Below';
+      const isAboveCollapsed = !!(isTier && aboveId && typeof rowCollapsedState !== 'undefined' && rowCollapsedState[aboveId]);
+      const isBelowCollapsed = !!(isTier && belowId && typeof rowCollapsedState !== 'undefined' && rowCollapsedState[belowId]);
+
+      const btnDec = document.createElement('button');
+      btnDec.type = 'button';
+      btnDec.className = `seam-adjust-btn btn-dec ${isTier && isAboveCollapsed ? 'is-unroll-target' : ''}`;
+      btnDec.innerHTML = `${isTier ? '▲' : '◀'}<span class="arrow-hold-bar"></span>`;
+
+      const btnClose = document.createElement('button');
+      btnClose.type = 'button';
+      btnClose.className = 'seam-adjust-btn btn-close';
+      btnClose.innerHTML = '✕';
+      btnClose.title = 'Close adjustment mode (Done)';
+      btnClose.setAttribute('aria-label', 'Done / Close');
+
+      const btnInc = document.createElement('button');
+      btnInc.type = 'button';
+      btnInc.className = `seam-adjust-btn btn-inc ${isTier && isBelowCollapsed ? 'is-unroll-target' : ''}`;
+      btnInc.innerHTML = `${isTier ? '▼' : '▶'}<span class="arrow-hold-bar"></span>`;
+
+      if(isTier){
+        btnDec.title = isAboveCollapsed
+          ? `Hold ▲ (or click) to unroll ${aboveName}`
+          : `Click to adjust height • Hold ▲ (0.5s) to roll up ${aboveName}`;
+        btnInc.title = isBelowCollapsed
+          ? `Hold ▼ (or click) to unroll ${belowName}`
+          : `Click to adjust height • Hold ▼ (0.5s) to roll up ${belowName}`;
+      } else {
+        btnDec.title = 'Nudge seam left';
+        btnInc.title = 'Nudge seam right';
+      }
+      btnDec.setAttribute('aria-label', btnDec.title);
+      btnInc.setAttribute('aria-label', btnInc.title);
+
+      function attachArrowHold(btn, isUpArrow){
+        let holdTimer = null;
+        let didLongPress = false;
+        let startX = 0;
+        let startY = 0;
+
+        function clearHold(){
+          if(holdTimer){
+            clearTimeout(holdTimer);
+            holdTimer = null;
+          }
+          btn.classList.remove('is-holding-arrow');
+        }
+
+        btn.addEventListener('pointerdown', (e) => {
+          if(e.button !== undefined && e.button !== 0) return;
+          e.stopPropagation();
+          didLongPress = false;
+          startX = e.clientX;
+          startY = e.clientY;
+          resetLockedSplitterTimer();
+
+          btn.classList.add('is-holding-arrow');
+          holdTimer = setTimeout(() => {
+            didLongPress = true;
+            clearHold();
+            if(isTier){
+              const targetId = isUpArrow ? aboveId : belowId;
+              if(targetId && typeof toggleRowCollapse === 'function'){
+                toggleRowCollapse(targetId);
+              }
+            } else {
+              nudgeSplitter(sp, isUpArrow ? -STEP_DELTA * 3 : STEP_DELTA * 3);
+            }
+          }, 500);
+        });
+
+        btn.addEventListener('pointermove', (e) => {
+          if(!holdTimer) return;
+          if(Math.hypot(e.clientX - startX, e.clientY - startY) > 12){
+            clearHold();
+          }
+        });
+
+        btn.addEventListener('pointerup', (e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          const wasLong = didLongPress;
+          clearHold();
+
+          if(!wasLong){
+            if(isTier){
+              if(isUpArrow){
+                if(isAboveCollapsed){
+                  // If row above was rolled up, click also unrolls it!
+                  if(aboveId && typeof toggleRowCollapse === 'function') toggleRowCollapse(aboveId);
+                } else {
+                  nudgeTierSplitter(sp, -STEP_HEIGHT_DELTA);
+                }
+              } else {
+                if(isBelowCollapsed){
+                  // If row below was rolled up, click also unrolls it!
+                  if(belowId && typeof toggleRowCollapse === 'function') toggleRowCollapse(belowId);
+                } else {
+                  nudgeTierSplitter(sp, STEP_HEIGHT_DELTA);
+                }
+              }
+            } else {
+              nudgeSplitter(sp, isUpArrow ? -STEP_DELTA : STEP_DELTA);
+            }
+            resetLockedSplitterTimer();
+          }
+        });
+
+        btn.addEventListener('pointercancel', clearHold);
+        btn.addEventListener('pointerleave', clearHold);
+      }
+
+      attachArrowHold(btnDec, true);
+      attachArrowHold(btnInc, false);
+
+      btnClose.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        unlockSplitter(sp, true);
+      });
+
+      // Prevent pointer events on the pill from starting seam drags
+      pill.addEventListener('pointerdown', (e) => {
+        e.stopPropagation();
+      });
+
+      const btnRow = document.createElement('div');
+      btnRow.className = 'seam-adjust-capsule-row';
+      btnRow.appendChild(btnDec);
+      btnRow.appendChild(btnClose);
+      btnRow.appendChild(btnInc);
+      pill.appendChild(btnRow);
+
+      if(isTier){
+        const hint = document.createElement('div');
+        hint.className = 'seam-adjust-capsule-hint';
+        if(isAboveCollapsed && isBelowCollapsed){
+          hint.textContent = `Hold ▲ unrolls ${aboveName} • Hold ▼ unrolls ${belowName}`;
+        } else if(isAboveCollapsed){
+          hint.textContent = `Hold ▲ to unroll ${aboveName} • Hold ▼ rolls up ${belowName}`;
+        } else if(isBelowCollapsed){
+          hint.textContent = `Hold ▲ rolls up ${aboveName} • Hold ▼ to unroll ${belowName}`;
+        } else {
+          hint.textContent = `Hold ▲ rolls up above • Hold ▼ rolls up below`;
+        }
+        pill.appendChild(hint);
+
+        // Clamp vertical position so capsule is never cut off near top or bottom screen bezel
+        if(screenEl){
+          const spRect = sp.getBoundingClientRect();
+          const scRect = screenEl.getBoundingClientRect();
+          if(spRect.top - scRect.top < 45){
+            pill.style.top = '28px';
+            pill.style.transform = 'translate(-50%, 0)';
+          } else if(scRect.bottom - spRect.bottom < 45){
+            pill.style.top = 'auto';
+            pill.style.bottom = '28px';
+            pill.style.transform = 'translate(-50%, 0)';
+          }
+        }
+      }
+
+      sp.appendChild(pill);
+    }
 
     function lockSplitter(sp){
       if(typeof isTheaterActive !== 'undefined' && isTheaterActive) return;
@@ -12861,8 +13160,9 @@
       }
       activeLockedSplitter = sp;
       sp.classList.add('is-locked-resize');
-      showResizeHud(sp);
+      renderSeamAdjustPill(sp);
       try{ sp.focus(); }catch(e){}
+      resetLockedSplitterTimer();
     }
 
     function toggleLockSplitter(sp){
@@ -12872,50 +13172,6 @@
       } else {
         lockSplitter(sp);
       }
-    }
-
-    // Direct On-Screen TV HUD Interactive Buttons
-    if(hudLeftBtn){
-      hudLeftBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        if(activeLockedSplitter){
-          if(activeLockedSplitter.classList.contains('tier-splitter')){
-            nudgeTierSplitter(activeLockedSplitter, -STEP_HEIGHT_DELTA);
-          } else {
-            nudgeSplitter(activeLockedSplitter, -STEP_DELTA);
-          }
-        }
-      });
-    }
-    if(hudRightBtn){
-      hudRightBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        if(activeLockedSplitter){
-          if(activeLockedSplitter.classList.contains('tier-splitter')){
-            nudgeTierSplitter(activeLockedSplitter, STEP_HEIGHT_DELTA);
-          } else {
-            nudgeSplitter(activeLockedSplitter, STEP_DELTA);
-          }
-        }
-      });
-    }
-    if(hudResetBtn){
-      hudResetBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        if(activeLockedSplitter){
-          resetSplitterRow(activeLockedSplitter);
-        }
-      });
-    }
-    if(hudExitBtn){
-      hudExitBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        unlockSplitter(null, true);
-      });
     }
 
     // Universal Smart TV Remote Key Identifier (Samsung Tizen, LG webOS, Android TV, Fire TV, Sony, Apple TV)
@@ -13104,9 +13360,19 @@
       function onPointerDown(e){
         if(typeof isTheaterActive !== 'undefined' && isTheaterActive) return;
         if(e.button !== undefined && e.button !== 0) return;
+        if(e.target && e.target.closest('.seam-swap-dot')) return;
         aboveRowId = splitter.dataset.aboveRow;
         belowRowId = splitter.dataset.belowRow;
         if(!aboveRowId || !belowRowId) return;
+
+        const isAboveC = !!(typeof rowCollapsedState !== 'undefined' && rowCollapsedState[aboveRowId]);
+        const isBelowC = !!(typeof rowCollapsedState !== 'undefined' && rowCollapsedState[belowRowId]);
+
+        // If an adjacent row is collapsed, touch/click directly activates the seam controls
+        if(isAboveC || isBelowC){
+          toggleLockSplitter(splitter);
+          return;
+        }
 
         const aboveEl = document.getElementById(aboveRowId);
         const belowEl = document.getElementById(belowRowId);
@@ -13202,11 +13468,27 @@
       let lastTapTime = 0;
       splitter.addEventListener('click', (e) => {
         if(typeof isTheaterActive !== 'undefined' && isTheaterActive) return;
+        if(e.target && e.target.closest('.seam-swap-dot')) return;
         e.stopPropagation();
         if(didLongPressTrigger) return;
         const now = Date.now();
         if(now - lastTapTime < 320){
           resetRowHeights(splitter);
+        } else if(activeLockedSplitter === splitter){
+          // If the user clicks anywhere directly on the splitter seam (outside the pill),
+          // nudge or dismiss depending on location
+          const rect = splitter.getBoundingClientRect();
+          const clickY = e.clientY;
+          const distFromCenter = Math.abs(clickY - (rect.top + rect.height / 2));
+          if(distFromCenter < 28){
+            unlockSplitter(splitter, true);
+          } else if(clickY < rect.top + rect.height / 2){
+            nudgeTierSplitter(splitter, -STEP_HEIGHT_DELTA);
+            resetLockedSplitterTimer();
+          } else {
+            nudgeTierSplitter(splitter, STEP_HEIGHT_DELTA);
+            resetLockedSplitterTimer();
+          }
         } else {
           toggleLockSplitter(splitter);
         }
@@ -13221,18 +13503,19 @@
           toggleLockSplitter(splitter);
           return;
         }
+        const delta = e.shiftKey ? STEP_HEIGHT_DELTA * 2.5 : STEP_HEIGHT_DELTA;
         if(isUpKey(e) || isLeftKey(e)){
           e.preventDefault();
           e.stopPropagation();
           if(!activeLockedSplitter) lockSplitter(splitter);
-          nudgeTierSplitter(splitter, -STEP_HEIGHT_DELTA);
+          nudgeTierSplitter(splitter, -delta);
           return;
         }
         if(isDownKey(e) || isRightKey(e)){
           e.preventDefault();
           e.stopPropagation();
           if(!activeLockedSplitter) lockSplitter(splitter);
-          nudgeTierSplitter(splitter, STEP_HEIGHT_DELTA);
+          nudgeTierSplitter(splitter, delta);
           return;
         }
         if(isResetKey(e)){
@@ -13373,6 +13656,7 @@
       let lastTapTime = 0;
       splitter.addEventListener('click', (e) => {
         if(typeof isTheaterActive !== 'undefined' && isTheaterActive) return;
+        e.stopPropagation();
         if(didLongPressTrigger) return;
         const now = Date.now();
         if(now - lastTapTime < 350){
@@ -13380,10 +13664,17 @@
         } else if(activeLockedSplitter === splitter){
           const rect = splitter.getBoundingClientRect();
           const clickX = e.clientX;
-          if(clickX < rect.left + rect.width / 2){
+          const clickY = e.clientY;
+          const distFromCenterY = Math.abs(clickY - (rect.top + rect.height / 2));
+          // If clicking near center (outside the pill), dismiss locked mode
+          if(distFromCenterY < 28){
+            unlockSplitter(splitter, true);
+          } else if(clickX < rect.left + rect.width / 2){
             nudgeSplitter(splitter, -STEP_DELTA);
+            resetLockedSplitterTimer();
           } else {
             nudgeSplitter(splitter, STEP_DELTA);
+            resetLockedSplitterTimer();
           }
         } else {
           toggleLockSplitter(splitter);
@@ -13401,18 +13692,19 @@
           return;
         }
 
+        const delta = e.shiftKey ? STEP_DELTA * 2.5 : STEP_DELTA;
         if(isLeftKey(e)){
           e.preventDefault();
           e.stopPropagation();
           if(!activeLockedSplitter) lockSplitter(splitter);
-          nudgeSplitter(splitter, -STEP_DELTA);
+          nudgeSplitter(splitter, -delta);
           return;
         }
         if(isRightKey(e)){
           e.preventDefault();
           e.stopPropagation();
           if(!activeLockedSplitter) lockSplitter(splitter);
-          nudgeSplitter(splitter, STEP_DELTA);
+          nudgeSplitter(splitter, delta);
           return;
         }
 
@@ -13439,15 +13731,33 @@
       if(!activeLockedSplitter) return;
 
       if(activeLockedSplitter.classList.contains('tier-splitter')){
+        const aboveId = activeLockedSplitter.dataset.aboveRow;
+        const belowId = activeLockedSplitter.dataset.belowRow;
+        const isAboveCollapsed = !!(aboveId && typeof rowCollapsedState !== 'undefined' && rowCollapsedState[aboveId]);
+        const isBelowCollapsed = !!(belowId && typeof rowCollapsedState !== 'undefined' && rowCollapsedState[belowId]);
+
+        const delta = e.shiftKey ? STEP_HEIGHT_DELTA * 2.5 : STEP_HEIGHT_DELTA;
         if(isUpKey(e) || isLeftKey(e)){
           e.preventDefault();
           e.stopPropagation();
-          nudgeTierSplitter(activeLockedSplitter, -STEP_HEIGHT_DELTA);
+          if(isAboveCollapsed && typeof toggleRowCollapse === 'function'){
+            toggleRowCollapse(aboveId);
+            renderSeamAdjustPill(activeLockedSplitter);
+          } else {
+            nudgeTierSplitter(activeLockedSplitter, -delta);
+          }
+          resetLockedSplitterTimer();
         } else if(isDownKey(e) || isRightKey(e)){
           e.preventDefault();
           e.stopPropagation();
-          nudgeTierSplitter(activeLockedSplitter, STEP_HEIGHT_DELTA);
-        } else if(isOkKey(e) || isBackKey(e)){
+          if(isBelowCollapsed && typeof toggleRowCollapse === 'function'){
+            toggleRowCollapse(belowId);
+            renderSeamAdjustPill(activeLockedSplitter);
+          } else {
+            nudgeTierSplitter(activeLockedSplitter, delta);
+          }
+          resetLockedSplitterTimer();
+        } else if(isOkKey(e) || isBackKey(e) || e.key === 'Escape'){
           e.preventDefault();
           e.stopPropagation();
           unlockSplitter(activeLockedSplitter, true);
@@ -13459,15 +13769,18 @@
         return;
       }
 
+      const delta = e.shiftKey ? STEP_DELTA * 2.5 : STEP_DELTA;
       if(isLeftKey(e)){
         e.preventDefault();
         e.stopPropagation();
-        nudgeSplitter(activeLockedSplitter, -STEP_DELTA);
+        nudgeSplitter(activeLockedSplitter, -delta);
+        resetLockedSplitterTimer();
       } else if(isRightKey(e)){
         e.preventDefault();
         e.stopPropagation();
-        nudgeSplitter(activeLockedSplitter, STEP_DELTA);
-      } else if(isOkKey(e) || isBackKey(e)){
+        nudgeSplitter(activeLockedSplitter, delta);
+        resetLockedSplitterTimer();
+      } else if(isOkKey(e) || isBackKey(e) || e.key === 'Escape'){
         e.preventDefault();
         e.stopPropagation();
         unlockSplitter(activeLockedSplitter, true);
@@ -13476,6 +13789,13 @@
         e.stopPropagation();
         resetSplitterRow(activeLockedSplitter);
       }
+    });
+
+    // Dismiss locked resize mode when clicking anywhere outside the active seam
+    window.addEventListener('pointerdown', (e) => {
+      if(!activeLockedSplitter) return;
+      if(e.target && (e.target.closest('.row-splitter') || e.target.closest('.tier-splitter'))) return;
+      unlockSplitter(activeLockedSplitter, true);
     });
 
     window.addEventListener('resize', () => {
@@ -13600,25 +13920,30 @@
     const screenEl = document.getElementById('screen');
     if(!screenEl) return;
 
-    // Separate into collapsed and active rows based on current saved order
-    const collapsedIds = currentRowOrder.filter(id => !!rowCollapsedState[id]);
-    const activeIds = currentRowOrder.filter(id => !rowCollapsedState[id]);
+    // Maintain natural screen layout flow: Row 0 -> Seam 0 -> Row 1 -> Seam 1 -> Row 2
+    const row0 = document.getElementById(currentRowOrder[0]);
+    const row1 = document.getElementById(currentRowOrder[1]);
+    const row2 = document.getElementById(currentRowOrder[2]);
+    const sp0 = document.getElementById('tierSplitter0');
+    const sp1 = document.getElementById('tierSplitter1');
 
-    // ALL rolled-up shades reside docked at the top of the display stack!
-    // Active rows expand below them in their designated order.
-    const displayOrder = [...collapsedIds, ...activeIds];
+    if(row0 && sp0 && row1 && sp1 && row2){
+      screenEl.appendChild(row0);
+      screenEl.appendChild(sp0);
+      screenEl.appendChild(row1);
+      screenEl.appendChild(sp1);
+      screenEl.appendChild(row2);
 
-    displayOrder.forEach(id => {
-      const el = document.getElementById(id);
-      if(el && screenEl.contains(el)){
-        screenEl.appendChild(el);
-        if(animate){
-          el.classList.remove('row-swap-anim');
-          void el.offsetWidth;
-          el.classList.add('row-swap-anim');
-        }
+      if(animate){
+        [row0, row1, row2].forEach(el => {
+          if(el && !el.classList.contains('is-row-collapsed')){
+            el.classList.remove('row-swap-anim');
+            void el.offsetWidth;
+            el.classList.add('row-swap-anim');
+          }
+        });
       }
-    });
+    }
 
     VALID_ROW_IDS.forEach(rowId => {
       const rowEl = document.getElementById(rowId);
@@ -13631,43 +13956,34 @@
         rowEl.classList.remove('is-row-collapsed');
       }
 
-      // Update toggle button accessibility and tooltip
-      const ctrlId = `ctrl${rowId.charAt(0).toUpperCase() + rowId.slice(1)}`;
-      const ctrlEl = document.getElementById(ctrlId);
-      if(ctrlEl){
-        if(isCollapsed){
-          ctrlEl.classList.add('is-row-collapsed');
-        } else {
-          ctrlEl.classList.remove('is-row-collapsed');
+      // Update corner shade button icon and tooltip if present
+      const shadeBtn = rowEl.querySelector('.row-shade-btn');
+      if(shadeBtn){
+        const dashIcon = shadeBtn.querySelector('.shade-dash-icon');
+        if(dashIcon){
+          dashIcon.textContent = isCollapsed ? '●' : '—';
         }
-        const toggleBtn = ctrlEl.querySelector('.bezel-btn-shutter');
-        if(toggleBtn){
-          toggleBtn.title = isCollapsed ? 'Unroll row (pull down window shade)' : 'Roll up row (window shade)';
-          toggleBtn.setAttribute('aria-label', isCollapsed ? 'Unroll row' : 'Roll up row');
-          toggleBtn.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
-        }
+        shadeBtn.title = isCollapsed ? 'Unroll row' : 'Roll up row';
+        shadeBtn.setAttribute('aria-label', isCollapsed ? 'Unroll row' : 'Roll up row');
       }
     });
 
-    const bezelRail = document.getElementById('bezelRail');
-    if(bezelRail){
-      displayOrder.forEach(id => {
-        const ctrlId = `ctrl${id.charAt(0).toUpperCase() + id.slice(1)}`;
-        const ctrlEl = document.getElementById(ctrlId);
-        if(ctrlEl && bezelRail.contains(ctrlEl)){
-          bezelRail.appendChild(ctrlEl);
-        }
-      });
-    }
-
-    updateRowArrowControls();
     if(typeof syncTierSplitters === 'function'){
       syncTierSplitters();
     }
+    updateSeamDots();
     triggerAllContentRefits();
 
-    // Check if ALL shades are rolled up -> Trigger STARFIELD OF CONSCIOUSNESS WARP!
-    const allCollapsed = (collapsedIds.length === VALID_ROW_IDS.length);
+    // If a splitter's adjustment capsule is currently open, refresh its controls and hints live!
+    if(typeof activeLockedSplitter !== 'undefined' && activeLockedSplitter){
+      if(typeof renderSeamAdjustPill === 'function'){
+        renderSeamAdjustPill(activeLockedSplitter);
+      }
+    }
+
+    // Check if ALL rows are rolled up -> Trigger STARFIELD OF CONSCIOUSNESS WARP!
+    const collapsedCount = VALID_ROW_IDS.filter(id => !!rowCollapsedState[id]).length;
+    const allCollapsed = (collapsedCount === VALID_ROW_IDS.length);
     if(allCollapsed){
       if(typeof startStarfieldWarpHyperspace === 'function'){
         startStarfieldWarpHyperspace();
@@ -13685,151 +14001,113 @@
     updateRowCollapseUI(true);
   }
 
-  function updateRowArrowControls(){
-    const rowSlotClasses = ['slot-top', 'slot-mid', 'slot-bottom'];
-    const bezelRail = document.getElementById('bezelRail');
-    if(!bezelRail) return;
-
+  /* Tactile Seam Swap Dots & Dynamic Adjacent Row Transposition */
+  function swapAdjacentRows(seamIndex){
     const activeIds = currentRowOrder.filter(id => !rowCollapsedState[id]);
+    if(seamIndex < 0 || seamIndex >= activeIds.length - 1) return;
 
-    currentRowOrder.forEach((rowId, index) => {
-      const isCollapsed = !!rowCollapsedState[rowId];
-      const ctrlId = `ctrl${rowId.charAt(0).toUpperCase() + rowId.slice(1)}`;
-      let ctrlEl = document.getElementById(ctrlId);
-      if(!ctrlEl){
-        ctrlEl = document.createElement('div');
-        ctrlEl.className = `bezel-row-ctrl ${rowSlotClasses[index]}`;
-        ctrlEl.id = ctrlId;
-        ctrlEl.dataset.rowId = rowId;
-        ctrlEl.setAttribute('aria-label', `${rowId} row controls`);
-        
-        let diceBtnHtml = '';
-        if(rowId === 'outlook'){
-          diceBtnHtml = `
-            <button type="button" class="bezel-btn bezel-btn-dice" id="bezelDiceBtn" title="Switch view: 5-Day Outlook ⇄ Weather Friends" aria-label="Switch between 5-Day Outlook and Weather Friends">
-              <svg class="bezel-dice-icon" viewBox="0 0 20 20" width="7.5" height="7.5" fill="none">
-                <rect x="1.5" y="1.5" width="17" height="17" rx="3" stroke="currentColor" stroke-width="2" fill="none"/>
-                <circle cx="6" cy="6" r="1.8" fill="currentColor"/>
-                <circle cx="14" cy="6" r="1.8" fill="currentColor"/>
-                <circle cx="10" cy="10" r="1.8" fill="currentColor"/>
-                <circle cx="6" cy="14" r="1.8" fill="currentColor"/>
-                <circle cx="14" cy="14" r="1.8" fill="currentColor"/>
-              </svg>
-            </button>
-          `;
-        }
+    const rowA = activeIds[seamIndex];
+    const rowB = activeIds[seamIndex + 1];
+    const idxA = currentRowOrder.indexOf(rowA);
+    const idxB = currentRowOrder.indexOf(rowB);
+    if(idxA === -1 || idxB === -1) return;
 
-        ctrlEl.innerHTML = `
-          <button type="button" class="bezel-btn bezel-btn-shutter" title="Roll up row (window shade)" aria-label="Roll up row">
-            <span class="bezel-shutter-block"></span>
-          </button>
-          <button type="button" class="bezel-btn bezel-btn-arrow bezel-arrow-up" title="Move row up" aria-label="Move row up">
-            <svg class="bezel-arrow-icon" viewBox="0 0 10 10" width="6.5" height="6.5" fill="none">
-              <polygon points="5,1 9,8 1,8" fill="currentColor"/>
-            </svg>
-          </button>
-          <button type="button" class="bezel-btn bezel-btn-arrow bezel-arrow-down" title="Move row down" aria-label="Move row down">
-            <svg class="bezel-arrow-icon" viewBox="0 0 10 10" width="6.5" height="6.5" fill="none">
-              <polygon points="1,2 9,2 5,9" fill="currentColor"/>
-            </svg>
-          </button>
-          ${diceBtnHtml}
-        `;
-        bezelRail.appendChild(ctrlEl);
-        bindRowControlEvents(ctrlEl, rowId);
-      } else {
-        bezelRail.appendChild(ctrlEl);
-        bindRowControlEvents(ctrlEl, rowId);
-      }
+    const newOrder = [...currentRowOrder];
+    newOrder[idxA] = rowB;
+    newOrder[idxB] = rowA;
 
-      // Update slot class
-      rowSlotClasses.forEach(c => ctrlEl.classList.remove(c));
-      ctrlEl.classList.add(rowSlotClasses[index]);
-
-      if(isCollapsed){
-        ctrlEl.classList.add('is-row-collapsed');
-      } else {
-        ctrlEl.classList.remove('is-row-collapsed');
-      }
-
-      // Update button visibility & titles based on active rows
-      const upBtn = ctrlEl.querySelector('.bezel-arrow-up');
-      const downBtn = ctrlEl.querySelector('.bezel-arrow-down');
-      if(!isCollapsed){
-        const activeIndex = activeIds.indexOf(rowId);
-        if(upBtn){
-          upBtn.style.display = activeIndex > 0 ? 'inline-flex' : 'none';
-          upBtn.title = 'Move row up';
-        }
-        if(downBtn){
-          downBtn.style.display = (activeIndex >= 0 && activeIndex < activeIds.length - 1) ? 'inline-flex' : 'none';
-          downBtn.title = 'Move row down';
-        }
-      }
-
-      // If this is the outlook row, ensure the dice button matches active view
-      if(rowId === 'outlook'){
-        const diceBtn = ctrlEl.querySelector('.bezel-btn-dice');
-        if(diceBtn){
-          if(activeOutlookTrayView === 'friends'){
-            diceBtn.classList.add('is-friends-active');
-            diceBtn.title = 'Switch view: 5-Day Outlook';
-          } else {
-            diceBtn.classList.remove('is-friends-active');
-            diceBtn.title = 'Switch view: Weather Friends';
-          }
-        }
-      }
-    });
+    applyRowOrder(newOrder, true);
   }
+  window.swapAdjacentRows = swapAdjacentRows;
 
-  function bindRowControlEvents(ctrlEl, rowId){
-    if(ctrlEl._bezelBound) return;
-    ctrlEl._bezelBound = true;
+  function updateSeamDots(){
+    const rowNames = {
+      topTier: 'Date, Clock & Weather',
+      panelsRow: 'Inquire & Inspiration',
+      outlook: '5-Day Outlook'
+    };
 
-    const toggleBtn = ctrlEl.querySelector('.bezel-btn-shutter');
-    const upBtn = ctrlEl.querySelector('.bezel-arrow-up');
-    const downBtn = ctrlEl.querySelector('.bezel-arrow-down');
-    const diceBtn = ctrlEl.querySelector('.bezel-btn-dice');
+    const sp0 = document.getElementById('tierSplitter0');
+    const sp1 = document.getElementById('tierSplitter1');
 
-    if(diceBtn && !diceBtn._diceBound){
-      diceBtn._diceBound = true;
-      diceBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        if(typeof toggleOutlookView === 'function') toggleOutlookView();
+    const r0 = currentRowOrder[0];
+    const r1 = currentRowOrder[1];
+    const r2 = currentRowOrder[2];
+
+    const c0 = !!(typeof rowCollapsedState !== 'undefined' && rowCollapsedState[r0]);
+    const c1 = !!(typeof rowCollapsedState !== 'undefined' && rowCollapsedState[r1]);
+    const c2 = !!(typeof rowCollapsedState !== 'undefined' && rowCollapsedState[r2]);
+
+    if(sp0){
+      // Always maintain thin seam line display
+      sp0.style.display = 'flex';
+      const canSwap0 = (!c0 && !c1);
+      const nameA = rowNames[r0] || 'Top row';
+      const nameB = rowNames[r1] || 'Middle row';
+      const label = `Swap ${nameA} with ${nameB}`;
+      const title = `Swap rows (${nameA} ⇄ ${nameB})`;
+      sp0.querySelectorAll('.seam-swap-dot').forEach(dot => {
+        dot.style.display = canSwap0 ? 'flex' : 'none';
+        dot.setAttribute('aria-label', label);
+        dot.setAttribute('title', title);
       });
     }
 
-    if(toggleBtn){
-      toggleBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        toggleRowCollapse(rowId);
+    if(sp1){
+      // Always maintain thin seam line display
+      sp1.style.display = 'flex';
+      const canSwap1 = (!c1 && !c2);
+      const nameB = rowNames[r1] || 'Middle row';
+      const nameC = rowNames[r2] || 'Bottom row';
+      const label = `Swap ${nameB} with ${nameC}`;
+      const title = `Swap rows (${nameB} ⇄ ${nameC})`;
+      sp1.querySelectorAll('.seam-swap-dot').forEach(dot => {
+        dot.style.display = canSwap1 ? 'flex' : 'none';
+        dot.setAttribute('aria-label', label);
+        dot.setAttribute('title', title);
       });
     }
+  }
+  window.updateSeamDots = updateSeamDots;
 
-    if(upBtn){
-      upBtn.addEventListener('click', (e) => {
+  function initSeamSwapDots(){
+    const dots = document.querySelectorAll('.seam-swap-dot');
+    dots.forEach(dot => {
+      if(dot._seamBound) return;
+      dot._seamBound = true;
+
+      const seamIndex = parseInt(dot.dataset.seam, 10);
+
+      // Stop pointerdown from initiating tier splitter resizing
+      dot.addEventListener('pointerdown', (e) => {
+        e.stopPropagation();
+      });
+
+      dot.addEventListener('click', (e) => {
         e.stopPropagation();
         e.preventDefault();
-        moveRow(rowId, 'up');
+        swapAdjacentRows(seamIndex);
+        dot.classList.add('is-swapped-pulse');
+        setTimeout(() => dot.classList.remove('is-swapped-pulse'), 320);
       });
-    }
 
-    if(downBtn){
-      downBtn.addEventListener('click', (e) => {
+      // Smart TV Remote & Keyboard Navigation (Enter or Space or Select)
+      dot.addEventListener('keydown', (e) => {
+        if(e.key === 'Enter' || e.key === ' ' || e.key === 'Select'){
+          e.preventDefault();
+          e.stopPropagation();
+          swapAdjacentRows(seamIndex);
+          dot.classList.add('is-swapped-pulse');
+          setTimeout(() => dot.classList.remove('is-swapped-pulse'), 320);
+        }
+      });
+
+      // Double-click on seam dot resets to default row arrangement
+      dot.addEventListener('dblclick', (e) => {
         e.stopPropagation();
         e.preventDefault();
-        moveRow(rowId, 'down');
+        applyRowOrder([...DEFAULT_ROW_ORDER], true);
       });
-    }
-
-    // Double-click on arrow handle area resets to default order
-    ctrlEl.addEventListener('dblclick', (e) => {
-      e.stopPropagation();
-      e.preventDefault();
-      applyRowOrder([...DEFAULT_ROW_ORDER], true);
     });
   }
 
@@ -13870,17 +14148,125 @@
   }
 
   function initRowArranger(){
+    const screenEl = document.getElementById('screen');
+    const dropIndicator = document.getElementById('rowDropIndicator');
+
     VALID_ROW_IDS.forEach(id => {
-      const ctrlId = `ctrl${id.charAt(0).toUpperCase() + id.slice(1)}`;
-      const ctrl = document.getElementById(ctrlId);
-      if(ctrl){
-        bindRowControlEvents(ctrl, id);
+      const rowEl = document.getElementById(id);
+      if(!rowEl) return;
+
+      // Bind corner shade roll-up button
+      const shadeBtn = rowEl.querySelector('.row-shade-btn');
+      if(shadeBtn && !shadeBtn._bound){
+        shadeBtn._bound = true;
+        shadeBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          toggleRowCollapse(id);
+        });
+      }
+
+      // Bind corner drag handle (Direct Drag-and-Drop & Arrow Keys)
+      const dragHandle = rowEl.querySelector('.row-drag-handle');
+      if(dragHandle && !dragHandle._bound){
+        dragHandle._bound = true;
+
+        // Pointer Drag-and-Drop
+        dragHandle.addEventListener('pointerdown', (e) => {
+          if(e.button !== undefined && e.button !== 0) return;
+          if(rowCollapsedState[id]) return; // Don't drag while rolled up
+          e.stopPropagation();
+
+          let isDragging = false;
+          let targetIndex = currentRowOrder.indexOf(id);
+          const startY = e.clientY;
+
+          function onPointerMove(ev){
+            const deltaY = Math.abs(ev.clientY - startY);
+            if(!isDragging && deltaY > 6){
+              isDragging = true;
+              rowEl.classList.add('is-row-dragging');
+              if(dropIndicator) dropIndicator.classList.add('is-active');
+            }
+
+            if(!isDragging || !screenEl || !dropIndicator) return;
+            if(ev.cancelable) ev.preventDefault();
+
+            // Find closest row boundary
+            const screenRect = screenEl.getBoundingClientRect();
+            const activeRows = currentRowOrder
+              .map((rId, idx) => ({ id: rId, el: document.getElementById(rId), index: idx }))
+              .filter(item => item.el && !rowCollapsedState[item.id]);
+
+            if(activeRows.length <= 1) return;
+
+            let minDistance = Infinity;
+
+            activeRows.forEach((item) => {
+              const rRect = item.el.getBoundingClientRect();
+              const midY = rRect.top + (rRect.height / 2);
+              const dist = Math.abs(ev.clientY - midY);
+
+              if(dist < minDistance){
+                minDistance = dist;
+                targetIndex = item.index;
+                if(ev.clientY < midY){
+                  dropIndicator.style.top = `${Math.max(4, rRect.top - screenRect.top - 2)}px`;
+                } else {
+                  dropIndicator.style.top = `${Math.min(screenRect.height - 6, rRect.bottom - screenRect.top - 2)}px`;
+                }
+              }
+            });
+          }
+
+          function onPointerUp(){
+            window.removeEventListener('pointermove', onPointerMove);
+            window.removeEventListener('pointerup', onPointerUp);
+            window.removeEventListener('pointercancel', onPointerUp);
+
+            if(isDragging){
+              rowEl.classList.remove('is-row-dragging');
+              if(dropIndicator) dropIndicator.classList.remove('is-active');
+
+              const currentIndex = currentRowOrder.indexOf(id);
+              if(targetIndex !== -1 && targetIndex !== currentIndex){
+                const newOrder = [...currentRowOrder];
+                newOrder.splice(currentIndex, 1);
+                newOrder.splice(targetIndex, 0, id);
+                applyRowOrder(newOrder, true);
+              }
+            }
+          }
+
+          window.addEventListener('pointermove', onPointerMove, { passive: false });
+          window.addEventListener('pointerup', onPointerUp);
+          window.addEventListener('pointercancel', onPointerUp);
+        });
+
+        // Smart TV Remote & Keyboard Navigation (Up/Down Arrow Keys)
+        dragHandle.addEventListener('keydown', (e) => {
+          if(e.key === 'ArrowUp' || e.key === 'Up'){
+            e.preventDefault();
+            e.stopPropagation();
+            moveRow(id, 'up');
+          } else if(e.key === 'ArrowDown' || e.key === 'Down'){
+            e.preventDefault();
+            e.stopPropagation();
+            moveRow(id, 'down');
+          } else if(e.key === 'Enter' || e.key === ' '){
+            e.preventDefault();
+            e.stopPropagation();
+            dragHandle.style.transform = 'scale(1.3)';
+            setTimeout(() => { dragHandle.style.transform = ''; }, 200);
+          }
+        });
       }
 
       // Also allow clicking directly on the horizontal shutter bar to pull down/unroll
       const shutterId = `shutter${id.charAt(0).toUpperCase() + id.slice(1)}`;
       const shutterBar = document.getElementById(shutterId);
-      if(shutterBar){
+      if(shutterBar && !shutterBar._bound){
+        shutterBar._bound = true;
         shutterBar.addEventListener('click', (e) => {
           e.stopPropagation();
           e.preventDefault();
@@ -13899,6 +14285,7 @@
       }
     });
 
+    initSeamSwapDots();
     applyRowOrder(currentRowOrder, false);
     updateRowCollapseUI();
   }

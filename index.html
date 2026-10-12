@@ -72,6 +72,7 @@
     --dimmer-active-dot-shadow:0 0 6px rgba(255,230,0,0.75);
     --screen-bg:#020608;
     --screen-bg-2:#040b0e;
+    --panel-bg:rgba(4, 11, 14, 0.65);
     --teal:#49e6c4;
     --teal-dim:#1f6656;
     --blue:#3aa8ff;
@@ -82,8 +83,213 @@
     --red:#ff5c6c;
     --ink:#dce7ea;
     --ink-dim:#6b7f87;
+    --clock-digits:#ffe600;
     --grid-line:rgba(140,200,210,0.14);
     --board-brightness:1.0;
+  }
+
+  /* ===============================================================
+     THEME SYSTEM: 7 DISTINCT PRODUCTION HARDWARE PALETTES
+     1. SIDEWALK (Playful Chalk on Slate / Tactical HUD Cyber Deck)
+     2. MONOCHROME (Slate Titanium / 8-Bit Gray Tone Accent)
+     3. APOLLO (Retro NASA & Naval Flight Deck / Red-White-and-Blue Mil-Spec)
+     4. ARIZONA DUSK (Desert Twilight / Sunset Coral, Violet & Peach)
+     5. ELECTRIC RUST (Artisanal Tube & Point-to-Point Ferric Copper / Andrea Angelli Rome)
+     6. SPECTRUM (Pure Primary & Secondary Chromatics: R-B-Y / G-P-O)
+     7. EAGLE SKY (Patriotic Americana / Red, White, Blue with Slate Gray, Navy & Wine Red)
+     =============================================================== */
+  html[data-theme="sidewalk"],
+  html[data-theme="metro"],
+  html[data-theme="original"]{
+    --screen-bg:#020608;
+    --screen-bg-2:#040b0e;
+    --panel-bg:rgba(4, 11, 14, 0.65);
+    --teal:#49e6c4;
+    --teal-dim:#1f6656;
+    --blue:#3aa8ff;
+    --blue-dim:#1c4f7a;
+    --purple:#cf7dff;
+    --purple-dim:#5c3a72;
+    --amber:#ffb648;
+    --red:#ff5c6c;
+    --ink:#dce7ea;
+    --ink-dim:#6b7f87;
+    --clock-digits:#ffe600;
+    --grid-line:rgba(140,200,210,0.14);
+    --brand-color:#7a8893;
+    --brand-b-color:#a6b5c0;
+  }
+
+  html[data-theme="monochrome"]{
+    --screen-bg:#06080a;
+    --screen-bg-2:#0e1216;
+    --panel-bg:rgba(14, 18, 22, 0.70);
+    --teal:#e2e8f0;
+    --teal-dim:#64748b;
+    --blue:#94a3b8;
+    --blue-dim:#475569;
+    --purple:#cbd5e1;
+    --purple-dim:#475569;
+    --amber:#f1f5f9;
+    --red:#e2e8f0;
+    --ink:#f8fafc;
+    --ink-dim:#718292;
+    --clock-digits:#f8fafc;
+    --grid-line:rgba(226, 232, 240, 0.14);
+    --brand-color:#828e97;
+    --brand-b-color:#b4c2cd;
+  }
+
+  /* 3. APOLLO (Retro NASA & Naval Red-White-and-Blue Mil-Spec Flight Deck)
+     - Blue: #5f7e9b (Steel Cadet Blue - aircraft & NASA console housings)
+     - White: #b4bcc8 (Matte Bone / Chalk White - weathered non-glare cockpit lettering)
+     - Red: #b25555 (Subdued Apollo Crimson - DSKY warning lamps & status)
+     - Green: #6f9185 (Lunar Command Green - muted lunar radar sweep green)
+     - Backgrounds: #080a0d (Deep Obsidian space) & #0d1219 (Command Navy cards) */
+  html[data-theme="apollo"]{
+    --screen-bg:#080a0d;
+    --screen-bg-2:#0d1219;
+    --panel-bg:rgba(13, 18, 25, 0.75);
+    --teal:#6f9185;
+    --teal-dim:#374b44;
+    --blue:#5f7e9b;
+    --blue-dim:#2d3d4c;
+    --purple:#758ca3;
+    --purple-dim:#384858;
+    --amber:#b25555;
+    --red:#b25555;
+    --ink:#b4bcc8;
+    --ink-dim:#626d7a;
+    --clock-digits:#b4bcc8;
+    --grid-line:rgba(95, 126, 155, 0.20);
+    --brand-color:#5f7e9b;
+    --brand-b-color:#b4bcc8;
+  }
+
+  html[data-theme="arizona-dusk"]{
+    --screen-bg:#0b070d;
+    --screen-bg-2:#160d19;
+    --panel-bg:rgba(22, 13, 25, 0.70);
+    --teal:#fb7185;
+    --teal-dim:#881337;
+    --blue:#c084fc;
+    --blue-dim:#581c87;
+    --purple:#e879f9;
+    --purple-dim:#701a75;
+    --amber:#fb923c;
+    --red:#f43f5e;
+    --ink:#fae8ff;
+    --ink-dim:#a57fa8;
+    --clock-digits:#fb923c;
+    --grid-line:rgba(251, 113, 133, 0.17);
+    --brand-color:#a57fa8;
+    --brand-b-color:#e879f9;
+  }
+
+  /* 5. ELECTRIC RUST (Artisanal Tube & Point-to-Point Ferric Copper / Andrea Angelli Rome)
+     - Ferric Rust: #d96d31 (Electric Ferric Rust primary accent)
+     - Filament Amber: #f0a35f (NOS valve glow & incandescent pilot warmth)
+     - Aged Verdigris: #4ea388 (Weathered copper patina & component oxide)
+     - Cold Steel Blue: #6b8ba6 (Audio chassis cobalt / capacitor cold blue)
+     - Tempered Plum: #b86b84 (Oxide titanium temper glow)
+     - Weathered Bone: #f4eae0 (Aged Bakelite & silkscreen label lettering)
+     - Backgrounds: #0f0b09 (Raw oxidized iron ore) & #17110e (Charred enclosure card) */
+  html[data-theme="electric-rust"]{
+    --screen-bg:#0f0b09;
+    --screen-bg-2:#17110e;
+    --panel-bg:rgba(23, 17, 14, 0.76);
+    --teal:#4ea388;
+    --teal-dim:#245345;
+    --blue:#6b8ba6;
+    --blue-dim:#2d4355;
+    --purple:#b86b84;
+    --purple-dim:#582f3d;
+    --amber:#f0a35f;
+    --red:#d9583b;
+    --ink:#f4eae0;
+    --ink-dim:#8c7b6f;
+    --clock-digits:#f0a35f;
+    --grid-line:rgba(217, 109, 49, 0.16);
+    --brand-color:#b8683b;
+    --brand-b-color:#f0a35f;
+  }
+
+  /* 6. SPECTRUM (Pure Chromatic Primaries & Secondaries)
+     - Primary Red: #ff1744 (Razor-sharp bright crimson warning & alert punch)
+     - Primary Blue: #2979ff (Brilliant royal cobalt blue for Today & radar)
+     - Primary Yellow: #ffe600 (Electric lemon-yellow digits & solar radiance)
+     - Secondary Green: #00e676 (Hyper-vivid emerald green for Retro Tech & vitality)
+     - Secondary Purple: #b026ff (Electric ultraviolet for Inspiration & twilight)
+     - Secondary Orange: #ff9100 (Vibrant tangelo orange for Food channel & warmth)
+     - Pure Ink: #ffffff & #8fa3bf (Chalk-white and slate legibility)
+     - Backgrounds: #06080d & #0b0f16 (Deep black abyss to maximize phosphor pop) */
+  html[data-theme="spectrum"]{
+    --screen-bg:#06080d;
+    --screen-bg-2:#0b0f16;
+    --panel-bg:rgba(12, 17, 26, 0.76);
+    --teal:#00e676;
+    --teal-dim:#006633;
+    --blue:#2979ff;
+    --blue-dim:#153e80;
+    --purple:#b026ff;
+    --purple-dim:#591380;
+    --amber:#ff9100;
+    --red:#ff1744;
+    --ink:#ffffff;
+    --ink-dim:#8fa3bf;
+    --clock-digits:#ffe600;
+    --grid-line:rgba(41, 121, 255, 0.18);
+    --brand-color:#2979ff;
+    --brand-b-color:#ffe600;
+  }
+
+  /* 7. EAGLE SKY (Patriotic Americana: Red, White & Blue with Gray, Navy & Wine Red)
+     - Primary Red: #e62234 (Bold patriotic scarlet red for alerts, forecast highs & active highlights)
+     - Primary White: #ffffff (Pure brilliant white clock digits, date period & clean high-visibility ink)
+     - Primary Blue: #1e6beb (Vivid soaring cobalt blue for Today channel & primary active pips)
+     - Deep Navy: #070d19 / #0d1728 (Deep admiral navy backgrounds and panels)
+     - Slate Gray: #94a3b8 / #64748b (Aviation silver/slate gray for Retro Tech & secondary labels)
+     - Wine Red: #911d33 (Rich deep cabernet/burgundy wine red for Food channel, attributions & warm accents)
+     - Aviation Horizon Grid: rgba(30, 107, 235, 0.16) */
+  html[data-theme="eagle-sky"]{
+    --screen-bg:#070d19;
+    --screen-bg-2:#0d1728;
+    --panel-bg:rgba(13, 23, 40, 0.78);
+    --teal:#94a3b8;
+    --teal-dim:#475569;
+    --blue:#1e6beb;
+    --blue-dim:#103b82;
+    --purple:#911d33;
+    --purple-dim:#4a0f1b;
+    --amber:#911d33;
+    --red:#e62234;
+    --ink:#ffffff;
+    --ink-dim:#8899ac;
+    --clock-digits:#ffffff;
+    --grid-line:rgba(30, 107, 235, 0.16);
+    --brand-color:#e62234;
+    --brand-b-color:#1e6beb;
+  }
+  html[data-theme="eagle-sky"] .day-hero-name{
+    color:var(--red, #e62234);
+  }
+  html[data-theme="eagle-sky"] .date-monthday-str,
+  html[data-theme="eagle-sky"] .date-year-str{
+    color:var(--blue, #1e6beb);
+  }
+  html[data-theme="eagle-sky"] .day-card .hi-lo .hi{
+    color:var(--red, #e62234);
+    font-weight:600;
+  }
+  html[data-theme="eagle-sky"] .day-card .hi-lo .lo{
+    color:var(--blue, #1e6beb);
+    font-weight:500;
+  }
+  html[data-theme="eagle-sky"] .day-card .dname{
+    color:var(--ink, #ffffff);
+  }
+  html[data-theme="eagle-sky"] .day-card.is-today .dname{
+    color:var(--red, #e62234);
   }
   *{
     box-sizing:border-box;
@@ -150,23 +356,30 @@
     height:clamp(16px, 2.2vh, 20px);
     flex:0 0 auto;
   }
-  /* Hardware-Style 5-Dot Board Dimmer (Top Left) */
-  .device-dimmer{
+  /* Hardware Top Bar Left Cluster (Dimmer + Theme Selector) */
+  .device-top-left{
     position:absolute;
     left:clamp(6px, 0.8vw, 8px);
     top:50%;
     transform:translateY(-50%);
     display:inline-flex;
     align-items:center;
+    gap:5px;
+    z-index:20;
+  }
+  /* Hardware-Style 5-Dot Board Dimmer (Top Left) */
+  .device-dimmer{
+    display:inline-flex;
+    align-items:center;
     gap:4.5px;
     background:rgba(0,0,0,0.32);
     border:1px solid rgba(140,200,210,0.22);
     border-radius:12px;
-    padding:2px 6px 2px 6px;
+    padding:2px 6px;
     cursor:pointer;
     user-select:none;
     transition:all 0.2s ease;
-    z-index:20;
+    flex-shrink:0;
   }
   .device-dimmer:hover{
     border-color:rgba(73,230,196,0.45);
@@ -175,6 +388,75 @@
   .device-dimmer:focus-visible{
     outline:2px solid var(--teal);
     outline-offset:2px;
+  }
+
+  /* Hardware Theme Selector Pill (Between Dimmer and Brand Title) */
+  .theme-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:4.5px;
+    background:rgba(0,0,0,0.28);
+    border:1px solid rgba(140,200,210,0.24);
+    border-radius:10px;
+    padding:2px 7.5px;
+    font-family:'Share Tech Mono', monospace;
+    font-size:0.62rem;
+    font-weight:600;
+    letter-spacing:0.04em;
+    color:var(--ink-dim, #7e8f9b);
+    cursor:pointer;
+    user-select:none;
+    -webkit-user-select:none;
+    line-height:1;
+    transition:background 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+    white-space:nowrap;
+    flex-shrink:0;
+  }
+  .theme-pill:hover{
+    background:rgba(255,255,255,0.09);
+    border-color:rgba(255,255,255,0.40);
+    color:var(--ink, #ffffff);
+  }
+  .theme-pill:active{
+    transform:scale(0.96);
+  }
+  .theme-pill:focus-visible{
+    outline:1.5px solid var(--teal, #49e6c4);
+    outline-offset:1px;
+  }
+  .theme-pill-pip{
+    width:5px;
+    height:5px;
+    border-radius:50%;
+    background:var(--teal, #49e6c4);
+    box-shadow:0 0 5px var(--teal, #49e6c4);
+    flex-shrink:0;
+    transition:background 0.25s ease, box-shadow 0.25s ease;
+  }
+  .theme-pill-prefix{
+    color:var(--ink-dim, #707f88);
+    font-weight:400;
+    opacity:0.85;
+  }
+  .theme-pill-name{
+    color:var(--ink, #dce7ea);
+    font-weight:400;
+    letter-spacing:0.04em;
+    transition:color 0.2s ease;
+  }
+  @media (max-width: 920px){
+    .theme-pill-prefix{
+      display:none;
+    }
+  }
+  @media (max-width: 768px){
+    .device-top-left{
+      gap:3px;
+    }
+    .theme-pill{
+      padding:2px 5px;
+      font-size:0.56rem;
+    }
   }
   .dimmer-icon{
     width:11px;
@@ -638,29 +920,29 @@
     background:rgba(73, 230, 196, 0.15);
   }
   .oracle-title-pill:focus-visible{
-    outline:2px solid #49e6c4;
+    outline:2px solid var(--teal, #49e6c4);
     outline-offset:1px;
   }
   .oracle-title-pill.is-active{
-    background:rgba(73, 230, 196, 0.12);
-    border-color:#49e6c4;
-    color:#49e6c4;
+    background:rgba(255, 255, 255, 0.08);
+    border-color:var(--teal, #49e6c4);
+    color:var(--teal, #49e6c4);
     box-shadow:none;
-    font-weight:500;
+    font-weight:600;
   }
   .oracle-title-pill[data-oracle-mode="notebook"].is-active{
-    background:rgba(255, 215, 72, 0.12);
-    border-color:#ffd748;
-    color:#ffd748;
+    background:rgba(255, 255, 255, 0.08);
+    border-color:var(--blue, #ffd748);
+    color:var(--blue, #ffd748);
     box-shadow:none;
-    font-weight:500;
+    font-weight:600;
   }
   .oracle-title-pill[data-oracle-mode="box"].is-active{
-    background:rgba(251, 146, 60, 0.12);
-    border-color:#fb923c;
-    color:#fb923c;
+    background:rgba(255, 255, 255, 0.08);
+    border-color:var(--purple, #fb923c);
+    color:var(--purple, #fb923c);
     box-shadow:none;
-    font-weight:500;
+    font-weight:600;
   }
   .oracle-title-pill[data-oracle-mode="candle"]{
     flex:0 0 auto;
@@ -672,11 +954,11 @@
     box-sizing:border-box;
   }
   .oracle-title-pill[data-oracle-mode="candle"].is-active{
-    background:rgba(255, 180, 50, 0.12);
-    border-color:#ffb432;
-    color:#ffb432;
+    background:rgba(255, 255, 255, 0.08);
+    border-color:var(--amber, #ffb432);
+    color:var(--amber, #ffb432);
     box-shadow:none;
-    font-weight:500;
+    font-weight:600;
   }
   .oracle-title-pill[data-oracle-mode="candle"] .oracle-pill-icon{
     font-size:clamp(0.54rem, 1.15vh, 0.64rem);
@@ -1053,6 +1335,7 @@
   .glow-blue{color:var(--blue);}
   .glow-purple{color:var(--purple);}
   .glow-amber{color:var(--amber);}
+  .glow-red{color:var(--red, #e62234);}
   .glow-ink{color:var(--ink);}
 
   /* ---- Top Tier: 3 Distinct Certified Blocks ---- */
@@ -1126,21 +1409,21 @@
                box-shadow 0.18s ease;
   }
   .seam-swap-dot:hover .seam-dot-core{
-    background:#49e6c4;
-    box-shadow:0 0 8px rgba(73, 230, 196, 0.95);
+    background:var(--teal, #49e6c4);
+    box-shadow:0 0 8px var(--teal, rgba(73, 230, 196, 0.95));
     transform:scale(1.3);
   }
   .seam-swap-dot:active .seam-dot-core{
     transform:scale(0.85);
-    background:#38bdf8;
-    box-shadow:0 0 10px rgba(56, 189, 248, 0.9);
+    background:var(--blue, #38bdf8);
+    box-shadow:0 0 10px var(--blue, rgba(56, 189, 248, 0.9));
   }
   .seam-swap-dot:focus-visible{
     outline:none;
   }
   .seam-swap-dot:focus-visible .seam-dot-core{
-    background:#49e6c4;
-    box-shadow:0 0 0 2px rgba(73, 230, 196, 0.45), 0 0 12px #49e6c4;
+    background:var(--teal, #49e6c4);
+    box-shadow:0 0 0 2px var(--teal, rgba(73, 230, 196, 0.45)), 0 0 12px var(--teal, #49e6c4);
     transform:scale(1.35);
   }
 
@@ -1149,8 +1432,8 @@
     animation:seamDotPulse 0.32s cubic-bezier(0.16, 1, 0.3, 1);
   }
   @keyframes seamDotPulse{
-    0%{ transform:scale(0.85); background:#38bdf8; box-shadow:0 0 12px #38bdf8; }
-    50%{ transform:scale(1.4); background:#49e6c4; box-shadow:0 0 14px #49e6c4; }
+    0%{ transform:scale(0.85); background:var(--blue, #38bdf8); box-shadow:0 0 12px var(--blue, #38bdf8); }
+    50%{ transform:scale(1.4); background:var(--teal, #49e6c4); box-shadow:0 0 14px var(--teal, #49e6c4); }
     100%{ transform:scale(1.0); }
   }
 
@@ -1171,11 +1454,11 @@
     gap:8px;
     background:repeating-linear-gradient(90deg, rgba(255,255,255,0.035) 0px, transparent 2px, transparent 6px),
                linear-gradient(180deg, rgba(14, 25, 30, 0.95), rgba(7, 14, 18, 0.95));
-    border:1px solid rgba(73, 230, 196, 0.28);
+    border:1px solid var(--grid-line, rgba(73, 230, 196, 0.28));
     border-radius:4px;
     box-shadow:inset 0 1px 0 rgba(255,255,255,0.08), 0 1px 4px rgba(0,0,0,0.5);
     cursor:pointer;
-    color:rgba(180, 215, 222, 0.7);
+    color:var(--ink-dim, rgba(180, 215, 222, 0.7));
     font-family:system-ui, -apple-system, sans-serif;
     font-size:9px;
     font-weight:600;
@@ -1188,19 +1471,19 @@
     padding:0 10px;
   }
   .row-shutter-bar:hover{
-    border-color:rgba(255, 182, 72, 0.65);
+    border-color:var(--amber, rgba(255, 182, 72, 0.65));
     background:repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0px, transparent 2px, transparent 6px),
                linear-gradient(180deg, rgba(20, 32, 38, 0.98), rgba(11, 20, 24, 0.98));
-    color:#ffb648;
-    box-shadow:inset 0 1px 0 rgba(255,255,255,0.15), 0 0 8px rgba(255, 182, 72, 0.2);
+    color:var(--amber, #ffb648);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.15), 0 0 8px var(--amber, rgba(255, 182, 72, 0.2));
   }
   .row-shutter-bar .shutter-slat-dot{
     display:inline-block;
     width:5px;
     height:5px;
     border-radius:50%;
-    background:#ffb648;
-    box-shadow:0 0 5px rgba(255,182,72,0.8);
+    background:var(--amber, #ffb648);
+    box-shadow:0 0 5px var(--amber, rgba(255,182,72,0.8));
     flex-shrink:0;
   }
   .row-shutter-bar .shutter-slat-label{
@@ -1251,7 +1534,7 @@
   }
 
   .top-cert-card{
-    background:rgba(4, 11, 14, 0.65);
+    background:var(--panel-bg, rgba(4, 11, 14, 0.65));
     border:1px solid var(--grid-line);
     border-radius:10px;
     padding:clamp(6px, 1.2vh, 14px) clamp(8px, 1.8cqw, 16px);
@@ -1288,12 +1571,12 @@
     font-size:clamp(1.5rem, min(18.2cqw, 6.2vh), 4.2rem);
     letter-spacing:0.02em;
     line-height:0.96;
-    color:#38bdf8;
+    color:var(--blue, #38bdf8);
     text-transform:uppercase;
     white-space:nowrap;
     max-width:100%;
     overflow:hidden;
-    transition:font-size 0.08s ease;
+    transition:font-size 0.08s ease, color 0.25s ease;
   }
 
   .day-period-name{
@@ -1301,11 +1584,11 @@
     font-weight:800;
     font-size:clamp(0.92rem, min(10.5cqw, 3.6vh), 2.45rem);
     letter-spacing:0.06em;
-    color:#ffffff;
+    color:var(--ink, #ffffff);
     text-transform:uppercase;
     line-height:0.98;
     white-space:nowrap;
-    transition:font-size 0.08s ease;
+    transition:font-size 0.08s ease, color 0.25s ease;
   }
 
   .date-monthday-str{
@@ -1313,12 +1596,12 @@
     font-weight:800;
     font-size:clamp(0.85rem, min(9.8cqw, 3.35vh), 2.28rem);
     letter-spacing:0.03em;
-    color:#38bdf8;
+    color:var(--blue, #38bdf8);
     white-space:nowrap;
     overflow:hidden;
     text-transform:uppercase;
     line-height:0.98;
-    transition:font-size 0.08s ease;
+    transition:font-size 0.08s ease, color 0.25s ease;
   }
 
   .date-year-str{
@@ -1326,10 +1609,10 @@
     font-weight:800;
     font-size:clamp(0.85rem, min(9.8cqw, 3.35vh), 2.28rem);
     letter-spacing:0.06em;
-    color:#38bdf8;
+    color:var(--blue, #38bdf8);
     white-space:nowrap;
     line-height:0.98;
-    transition:font-size 0.08s ease;
+    transition:font-size 0.08s ease, color 0.25s ease;
   }
 
   /* Block 2: 2-Mode Interactive Clock (Digital • Analog) */
@@ -1415,7 +1698,7 @@
     font-weight:900;
     font-size:clamp(3.8rem, min(37cqw, 13.8vh), 8.5rem);
     letter-spacing:0.02em;
-    color:#ffe600;
+    color:var(--clock-digits, #ffe600);
     line-height:0.86;
     margin:0;
     text-align:left;
@@ -1423,6 +1706,7 @@
     font-variant-numeric: tabular-nums;
     font-feature-settings: "tnum" 1;
     width:100%;
+    transition:color 0.25s ease;
   }
 
   .clock-colon-dots{
@@ -1432,13 +1716,14 @@
     font-weight:900;
     font-size:clamp(1.2rem, min(10.8cqw, 3.6vh), 2.6rem);
     letter-spacing:0.12em;
-    color:#ffe600;
+    color:var(--clock-digits, #ffe600);
     line-height:0.8;
     text-align:center;
     justify-self:center;
     padding:1px 0;
     margin:0 auto;
     width:100%;
+    transition:color 0.25s ease;
   }
 
   .clock-min-val{
@@ -1448,7 +1733,7 @@
     font-weight:900;
     font-size:clamp(3.8rem, min(37cqw, 13.8vh), 8.5rem);
     letter-spacing:0.02em;
-    color:#ffe600;
+    color:var(--clock-digits, #ffe600);
     line-height:0.86;
     margin:0;
     text-align:left;
@@ -1456,6 +1741,7 @@
     font-variant-numeric: tabular-nums;
     font-feature-settings: "tnum" 1;
     width:100%;
+    transition:color 0.25s ease;
   }
 
   .clock-ampm-val{
@@ -1465,7 +1751,7 @@
     font-weight:600;
     font-size:clamp(1.45rem, min(14.5cqw, 5.45vh), 3.35rem);
     letter-spacing:0.02em;
-    color:#ffffff;
+    color:var(--ink, #ffffff);
     line-height:0.86;
     align-self:center;
     justify-self:start;
@@ -1473,7 +1759,7 @@
     width:100%;
     font-variant-numeric: tabular-nums;
     font-feature-settings: "tnum" 1;
-    transition:color 0.15s ease, transform 0.1s ease;
+    transition:color 0.25s ease, transform 0.1s ease;
     cursor:pointer;
     background:none !important;
     border:none !important;
@@ -1484,7 +1770,7 @@
     user-select:none;
   }
   .clock-ampm-val:hover{
-    color:#49e6c4;
+    color:var(--teal, #49e6c4);
     background:none !important;
   }
   .clock-ampm-val:active{
@@ -1501,7 +1787,7 @@
     font-weight:600;
     font-size:clamp(1.45rem, min(14.5cqw, 5.45vh), 3.35rem);
     letter-spacing:0.02em;
-    color:#ffffff;
+    color:var(--ink, #ffffff);
     line-height:0.86;
     align-self:center;
     justify-self:start;
@@ -1509,6 +1795,7 @@
     width:100%;
     font-variant-numeric: tabular-nums;
     font-feature-settings: "tnum" 1;
+    transition:color 0.25s ease;
   }
 
   /* Mode 2: Analog Wall Clock (Yellow & White Dial) */
@@ -1591,30 +1878,32 @@
     font-family:'Outfit', sans-serif;
     font-weight:500;
     line-height:0.88;
-    color:#ffe600;
+    color:var(--clock-digits, #ffe600);
     letter-spacing:0.02em;
     font-variant-numeric: tabular-nums;
     font-feature-settings: "tnum" 1;
     text-shadow:0 0 6px rgba(255, 230, 0, 0.35);
     user-select:none;
     text-align:center;
+    transition:color 0.25s ease;
   }
   .sidecar-dots{
     font-family:'Outfit', sans-serif;
     font-weight:500;
     line-height:0.75;
-    color:#ffe600;
+    color:var(--clock-digits, #ffe600);
     letter-spacing:0.14em;
     text-align:center;
     user-select:none;
     margin:0 auto;
     text-shadow:0 0 5px rgba(255, 230, 0, 0.35);
+    transition:color 0.25s ease;
   }
   .sidecar-ampm{
     font-family:'Outfit', sans-serif;
     font-weight:500;
     line-height:1;
-    color:#ffffff;
+    color:var(--ink, #ffffff);
     letter-spacing:0.04em;
     padding:2px 6px;
     border-radius:4px;
@@ -1627,20 +1916,20 @@
     text-align:center;
   }
   .sidecar-ampm:hover{
-    color:#49e6c4;
-    border-color:rgba(73, 230, 196, 0.8);
-    background:rgba(73, 230, 196, 0.18);
+    color:var(--teal, #49e6c4);
+    border-color:var(--teal, rgba(73, 230, 196, 0.8));
+    background:rgba(255, 255, 255, 0.12);
   }
   .sidecar-ampm.is-24h{
-    color:#49e6c4;
-    border-color:rgba(73, 230, 196, 0.5);
-    background:rgba(73, 230, 196, 0.14);
+    color:var(--teal, #49e6c4);
+    border-color:var(--teal, rgba(73, 230, 196, 0.5));
+    background:rgba(255, 255, 255, 0.08);
   }
   .sidecar-ampm:active{
     transform:scale(0.92);
   }
   .sidecar-ampm:focus-visible{
-    box-shadow:0 0 0 2px #49e6c4;
+    box-shadow:0 0 0 2px var(--teal, #49e6c4);
   }
   .analog-clock-svg{
     width:auto;
@@ -1658,6 +1947,18 @@
     font-family:'Outfit',sans-serif;
     font-variant-numeric:tabular-nums;
     user-select:none;
+    fill:var(--ink, #ffffff);
+    transition:fill 0.25s ease;
+  }
+  .analog-numerals-group text.cardinal-num{
+    fill:var(--clock-digits, #ffe600);
+  }
+  #analogDialTicks line{
+    stroke:var(--grid-line, rgba(255,255,255,0.32));
+    transition:stroke 0.25s ease;
+  }
+  #analogDialTicks line.hour-tick{
+    stroke:var(--clock-digits, #ffe600);
   }
 
   /* Block 3: Mockup-Accurate Weather Block */
@@ -1712,9 +2013,9 @@
     width:clamp(15px, min(4.2cqw, 2.6vh), 24px);
     height:clamp(15px, min(4.2cqw, 2.6vh), 24px);
     flex:none;
-    color:#46f1ab;
-    filter:drop-shadow(0 0 6px rgba(70,241,171,0.45));
-    transition:width 0.08s ease, height 0.08s ease;
+    color:var(--teal, #46f1ab);
+    filter:drop-shadow(0 0 6px currentColor);
+    transition:width 0.08s ease, height 0.08s ease, color 0.25s ease;
   }
 
   .top-city-name{
@@ -1722,12 +2023,12 @@
     font-weight:700;
     font-size:clamp(1.1rem, min(5.2cqw, 3.2vh), 1.85rem);
     letter-spacing:0.04em;
-    color:#f2f9fb;
+    color:var(--ink, #f2f9fb);
     white-space:nowrap;
     overflow:visible;
     line-height:1.1;
     text-transform:uppercase;
-    transition:font-size 0.08s ease;
+    transition:font-size 0.08s ease, color 0.25s ease;
   }
 
   .top-cond-summary{
@@ -1756,11 +2057,11 @@
     font-size:clamp(1.0rem, min(4.8cqw, 2.9vh), 1.65rem);
     font-weight:400;
     letter-spacing:0.04em;
-    color:#eaf5f9;
+    color:var(--ink, #eaf5f9);
     white-space:nowrap;
     line-height:1.1;
     text-transform:uppercase;
-    transition:font-size 0.08s ease;
+    transition:font-size 0.08s ease, color 0.25s ease;
   }
 
   /* Lower Row: Hero Temp Justified Lower-Left, Telemetry Justified Lower-Right */
@@ -1816,10 +2117,10 @@
     font-weight:400;
     font-size:clamp(4.6rem, min(40cqw, 17vh), 9.2rem);
     letter-spacing:-0.04em;
-    color:#46f1ab;
+    color:var(--teal, #46f1ab);
     line-height:0.74;
     font-variant-numeric: tabular-nums;
-    transition:font-size 0.08s ease;
+    transition:font-size 0.08s ease, color 0.25s ease;
   }
 
   .hero-temp-unit-stack{
@@ -1830,7 +2131,8 @@
     align-self:flex-start;
     margin-left:clamp(2px, 0.6cqw, 6px);
     margin-top:clamp(2px, 0.5vh, 6px);
-    color:#46f1ab;
+    color:var(--teal, #46f1ab);
+    transition:color 0.25s ease;
   }
 
   .hero-deg{
@@ -2065,7 +2367,7 @@
     position:relative;
   }
   .panel{
-    background:rgba(4, 11, 14, 0.65);
+    background:var(--panel-bg, rgba(4, 11, 14, 0.65));
     border:1px solid var(--grid-line);
     border-radius:10px;
     box-shadow:inset 0 1px 0 rgba(255,255,255,0.05), 0 2px 10px rgba(0,0,0,0.35);
@@ -2182,8 +2484,8 @@
   }
   .inspire-tab-btn{
     height:100%;
-    background:rgba(4, 14, 20, 0.55);
-    border:1px solid rgba(179, 136, 255, 0.22);
+    background:var(--panel-bg, rgba(4, 14, 20, 0.55));
+    border:1px solid var(--grid-line, rgba(179, 136, 255, 0.22));
     color:var(--ink-dim);
     font-family:'Outfit',sans-serif;
     font-size:clamp(0.54rem, min(2.5cqw, 1.1vh), 0.68rem);
@@ -2207,16 +2509,16 @@
     -webkit-tap-highlight-color:transparent;
   }
   .inspire-tab-btn:hover{
-    color:#ffffff;
-    border-color:rgba(179, 136, 255, 0.55);
-    background:rgba(179, 136, 255, 0.15);
+    color:var(--ink, #ffffff);
+    border-color:var(--purple);
+    background:rgba(255, 255, 255, 0.08);
   }
   .inspire-tab-btn.active{
-    background:rgba(179, 136, 255, 0.12);
-    border-color:#c084fc;
-    color:#c084fc;
+    background:rgba(255, 255, 255, 0.08);
+    border-color:var(--purple);
+    color:var(--purple);
     box-shadow:none;
-    font-weight:500;
+    font-weight:600;
   }
   .inspire-body-wrap{
     flex:1 1 0;
@@ -2259,10 +2561,10 @@
   .inspire-text{
     font-family:'Outfit',sans-serif;
     font-weight:450;
-    color:#f2f9fb;
+    color:var(--ink, #f2f9fb);
     letter-spacing:0.01em;
     text-align:left;
-    transition:opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    transition:opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), color 0.25s ease;
     width:100%;
     word-break:normal;
     overflow-wrap:break-word;
@@ -2341,8 +2643,8 @@
     transition:border-color 0.2s ease, box-shadow 0.2s ease;
   }
   .details-holiday-panel:hover{
-    border-color:rgba(56, 189, 248, 0.45);
-    box-shadow:0 0 16px rgba(56, 189, 248, 0.12);
+    border-color:var(--blue-dim, rgba(56, 189, 248, 0.45));
+    box-shadow:0 0 16px rgba(0, 0, 0, 0.25);
   }
   .holiday-head{
     display:flex;
@@ -2371,8 +2673,8 @@
   }
   .holiday-tab-btn{
     height:100%;
-    background:rgba(4, 14, 20, 0.55);
-    border:1px solid rgba(56, 189, 248, 0.22);
+    background:var(--panel-bg, rgba(4, 14, 20, 0.55));
+    border:1px solid var(--grid-line, rgba(56, 189, 248, 0.22));
     color:var(--ink-dim);
     font-family:'Outfit',sans-serif;
     font-size:clamp(0.54rem, min(2.5cqw, 1.1vh), 0.68rem);
@@ -2396,30 +2698,30 @@
     -webkit-tap-highlight-color:transparent;
   }
   .holiday-tab-btn:hover{
-    color:#ffffff;
-    border-color:rgba(56, 189, 248, 0.55);
-    background:rgba(56, 189, 248, 0.15);
+    color:var(--ink, #ffffff);
+    border-color:var(--blue);
+    background:rgba(255, 255, 255, 0.08);
   }
   .holiday-tab-btn.active{
-    background:rgba(56, 189, 248, 0.12);
-    border-color:#38bdf8;
-    color:#38bdf8;
+    background:rgba(255, 255, 255, 0.08);
+    border-color:var(--blue);
+    color:var(--blue);
     box-shadow:none;
-    font-weight:500;
+    font-weight:600;
   }
   .holiday-tab-btn[data-channel="food"].active{
-    background:rgba(251, 191, 36, 0.12);
-    border-color:#fbbf24;
-    color:#fbbf24;
+    background:rgba(255, 255, 255, 0.08);
+    border-color:var(--amber);
+    color:var(--amber);
     box-shadow:none;
-    font-weight:500;
+    font-weight:600;
   }
   .holiday-tab-btn[data-channel="tech"].active{
-    background:rgba(73, 230, 196, 0.12);
-    border-color:#49e6c4;
-    color:#49e6c4;
+    background:rgba(255, 255, 255, 0.08);
+    border-color:var(--teal);
+    color:var(--teal);
     box-shadow:none;
-    font-weight:500;
+    font-weight:600;
   }
   .holiday-nav-controls{
     display:flex;
@@ -2469,7 +2771,7 @@
   .cal-top-accent{
     width:100%;
     height:clamp(6px, 0.85vh, 7px);
-    background:linear-gradient(90deg, #0284c7, #38bdf8);
+    background:linear-gradient(90deg, var(--blue-dim, #0284c7), var(--blue, #38bdf8));
     display:flex;
     justify-content:space-evenly;
     align-items:center;
@@ -2489,13 +2791,13 @@
     display:flex;
     align-items:center;
     justify-content:center;
-    background:#0c131a;
+    background:var(--screen-bg-2, #0c131a);
   }
   .cal-day-num{
     font-family:'Space Mono',monospace;
     font-weight:700;
     font-size:clamp(0.64rem, 1.25vh, 0.76rem);
-    color:#ffffff;
+    color:var(--ink, #ffffff);
     line-height:1;
     letter-spacing:-0.03em;
   }
@@ -2544,14 +2846,14 @@
     font-weight:400;
     font-size:clamp(0.85rem, min(3.0cqw, 1.5vh), 1.08rem);
     line-height:1.44;
-    color:rgba(235, 242, 248, 0.92);
+    color:var(--ink, rgba(235, 242, 248, 0.92));
     letter-spacing:0.01em;
     margin:0;
     word-break:normal;
     overflow-wrap:break-word;
     flex-shrink:0;
     overflow:visible;
-    transition:opacity 0.2s ease, transform 0.2s ease;
+    transition:opacity 0.2s ease, transform 0.2s ease, color 0.25s ease;
   }
   .holiday-summary.fading{
     opacity:0;
@@ -2705,11 +3007,11 @@
     forced-color-adjust:none !important;
   }
   .eightball-triangle-face{
-    fill:#0c2331 !important;
-    stroke:#257599 !important;
+    fill:var(--screen-bg-2, #0c2331) !important;
+    stroke:var(--blue, #257599) !important;
   }
   .eightball-triangle-shade{
-    fill:#091b26 !important;
+    fill:var(--screen-bg, #091b26) !important;
   }
   .eightball-answer-text{
     position:absolute;
@@ -2724,10 +3026,11 @@
     text-align:center;
     width:72%;
     max-height:68%;
-    color:#e1f8ff;
+    color:var(--teal, #e1f8ff);
+    text-shadow:0 0 10px var(--teal, rgba(73,230,196,0.6));
     user-select:none;
     pointer-events:none;
-    transition:opacity 0.2s ease;
+    transition:opacity 0.2s ease, color 0.25s ease;
     forced-color-adjust:none !important;
     color-scheme:only dark !important;
     will-change:transform, opacity;
@@ -2747,7 +3050,7 @@
   .eightball-bubble{
     position:absolute;
     border-radius:50%;
-    background:rgba(73, 230, 196, 0.35);
+    background:var(--teal, rgba(73, 230, 196, 0.35));
     pointer-events:none;
     opacity:0;
   }
@@ -3082,12 +3385,13 @@
   .open-book-entry-num{
     font-family:'Outfit', sans-serif;
     font-size:clamp(0.55rem, 1.0vw, 0.65rem);
-    font-weight:700;
+    font-weight:600;
     letter-spacing:0.18em;
-    color:#744b1c;
+    color:#111111;
+    text-shadow:none;
     text-transform:uppercase;
     margin-bottom:6px;
-    opacity:0.85;
+    opacity:0.65;
   }
   .open-book-entry-num:empty{
     margin-bottom:0;
@@ -3095,9 +3399,10 @@
   }
   .notebook-prompt-text{
     font-family:'Outfit', sans-serif;
-    color:#2f1f10;
+    color:#111111;
+    text-shadow:none;
     font-size:clamp(0.70rem, 1.3vw, 0.86rem);
-    font-weight:600;
+    font-weight:400;
     line-height:1.32;
     text-align:center;
     width:100%;
@@ -3109,9 +3414,10 @@
   }
   .open-book-flourish{
     font-size:0.85rem;
-    color:#936329;
+    color:#111111;
+    text-shadow:none;
     margin-top:6px;
-    opacity:0.6;
+    opacity:0.45;
     line-height:1;
   }
 
@@ -3144,7 +3450,7 @@
     top:0;
     width:8px;
     height:75%;
-    background:#b52626;
+    background:#9e2a2b;
     border-radius:0 0 2px 2px;
     box-shadow:2px 2px 5px rgba(0,0,0,0.6);
     clip-path:polygon(0 0, 100% 0, 100% 100%, 50% 84%, 0 100%);
@@ -3176,13 +3482,14 @@
     100%{ transform:rotateY(-175deg) skewY(2deg); opacity:0; }
   }
 
-  /* Answer Text: Crystal Clear, Deep Ink on Bright Parchment (No hyphenated splits!) */
+  /* Answer Text: Strict Black Ink on Parchment, Crisp & Lightweight (Excluded from Themes) */
   .notebook-answer-text{
     font-family:'Outfit', sans-serif;
-    color:#120c06 !important;
+    color:#000000 !important;
+    text-shadow:none !important;
     font-size:clamp(0.70rem, 1.3vw, 0.88rem);
-    font-weight:700;
-    line-height:1.3;
+    font-weight:400;
+    line-height:1.32;
     text-align:center;
     width:100%;
     max-width:98%;
@@ -3415,9 +3722,10 @@
   }
   .attic-card-text{
     font-family:'Outfit', sans-serif;
-    color:#1a0f05;
+    color:#000000 !important;
+    text-shadow:none !important;
     font-size:clamp(0.74rem, 1.4vw, 0.92rem);
-    font-weight:700;
+    font-weight:400;
     line-height:1.26;
     text-align:center;
     width:100%;
@@ -3429,11 +3737,11 @@
     margin-top:4px;
     font-size:0.58rem;
     font-family:'Outfit',sans-serif;
-    font-weight:800;
+    font-weight:600;
     letter-spacing:0.12em;
     text-transform:uppercase;
-    color:#8b3a2b;
-    border:1px solid rgba(139, 58, 43, 0.4);
+    color:#111111;
+    border:1px solid rgba(0, 0, 0, 0.35);
     padding:1px 5px;
     border-radius:3px;
     transform:rotate(3deg);
@@ -3625,10 +3933,11 @@
     -webkit-font-smoothing:antialiased;
     line-height:var(--candle-line-height, 1.35);
     letter-spacing:0.025em;
-    color:rgba(255, 235, 205, 0.92);
+    color:var(--ink, rgba(255, 235, 205, 0.92));
     cursor:default;
     text-decoration:none !important;
     z-index:5;
+    transition:color 0.25s ease;
   }
   .candle-text-line{
     display:block;
@@ -3638,35 +3947,37 @@
   }
   .candle-heart-symbol{
     display:inline-block;
-    color:#ff8d70;
+    color:var(--teal, #ff8d70);
     margin-left:4px;
     font-size:0.95em;
     vertical-align:-1px;
-    text-shadow:0 0 8px rgba(255, 140, 100, 0.45);
+    text-shadow:0 0 8px var(--teal, rgba(255, 140, 100, 0.45));
     transition:transform 0.25s ease, color 0.25s ease;
   }
   .candle-press-hint{
     display:inline-block;
     font-size:0.90em;
     font-weight:300 !important; /* Strictly unbolded */
-    color:#ffbe3b;
+    color:var(--amber, #ffbe3b);
     letter-spacing:0.03em;
     margin-top:4px;
     text-decoration:none !important; /* Strictly NO underline */
     opacity:0.95;
     white-space:nowrap;
     cursor:default;
+    transition:color 0.25s ease;
   }
   .candle-press-hint.candle-press-action{
     font-size:0.92em;
     font-weight:300 !important; /* Strictly unbolded */
-    color:#ffbe3b;
+    color:var(--amber, #ffbe3b);
     letter-spacing:0.03em;
     margin-top:4px;
     text-decoration:none !important; /* Strictly NO underline */
     cursor:pointer;
     opacity:1;
     white-space:nowrap;
+    transition:color 0.25s ease;
   }
 
   /* Flame Animations */
@@ -4125,10 +4436,10 @@
   }
   .tier-splitter.has-collapsed-above:hover .tier-splitter-grip,
   .tier-splitter.has-collapsed-below:hover .tier-splitter-grip{
-    background:#38bdf8;
+    background:var(--blue, #38bdf8);
     height:4px;
     width:clamp(84px, 16vw, 140px);
-    box-shadow:0 0 16px rgba(56, 189, 248, 0.95);
+    box-shadow:0 0 16px var(--blue, rgba(56, 189, 248, 0.95));
   }
 
   body.is-resizing-blocks{
@@ -5053,7 +5364,7 @@
     min-height:0;
     gap:clamp(2px, 0.5vh, 6px);
     padding:clamp(6px, 1.2vh, 12px) clamp(4px, 1cqw, 8px) clamp(6px, 1.0vh, 10px);
-    background:rgba(4, 11, 14, 0.70);
+    background:var(--panel-bg, rgba(4, 11, 14, 0.70));
     border:1px solid var(--grid-line);
     border-radius:10px;
     container-type:inline-size;
@@ -5081,13 +5392,14 @@
     font-size:clamp(0.72rem, min(11.8cqw, 2.0vh), 1.15rem);
     letter-spacing:0.04em;
     text-transform:uppercase;
-    color:#62d9ff;
+    color:var(--blue, #62d9ff);
     line-height:1;
     white-space:nowrap;
     margin-bottom:clamp(1px, 0.3vh, 3px);
+    transition:color 0.25s ease;
   }
   .day-card.is-today .dname{
-    color:#49e6c4;
+    color:var(--teal, #49e6c4);
   }
   .day-card .dicon{
     width:clamp(28px, min(24cqw, 4.6vh), 42px);
@@ -5101,7 +5413,7 @@
     font-weight:400;
     font-size:clamp(0.66rem, min(10.8cqw, 1.45vh), 0.92rem);
     letter-spacing:0.02em;
-    color:#9ec7d6;
+    color:var(--ink-dim, #9ec7d6);
     line-height:1.15;
     text-align:center;
     white-space:nowrap;
@@ -5110,9 +5422,10 @@
     max-width:96%;
     margin-top:-1px;
     margin-bottom:1px;
+    transition:color 0.25s ease;
   }
   .day-card.is-today .ddesc{
-    color:#90e8d5;
+    color:var(--teal, #90e8d5);
   }
   .day-card .hi-lo{
     font-family:'Outfit',sans-serif;
@@ -5141,21 +5454,24 @@
     transform:scale(0.96);
   }
   .day-card .hi-lo:focus-visible{
-    box-shadow:0 0 0 2px #49e6c4;
+    box-shadow:0 0 0 2px var(--teal, #49e6c4);
   }
   .day-card .hi-lo .hi{
-    color:#fff6e5;
+    color:var(--ink, #fff6e5);
     font-weight:400;
+    transition:color 0.25s ease;
   }
   .day-card .hi-lo .sep{
-    color:#446b7a;
+    color:var(--ink-dim, #446b7a);
     font-weight:300;
     font-size:0.85em;
+    transition:color 0.25s ease;
   }
   .day-card .hi-lo .lo{
-    color:#50cbff;
+    color:var(--blue, #50cbff);
     font-weight:400;
     font-size:0.92em;
+    transition:color 0.25s ease;
   }
   .day-meta-grid,
   .day-meta-row{
@@ -5352,7 +5668,7 @@
     min-height:0;
     gap:clamp(2px, 0.8cqw, 5px);
     padding:clamp(6px, 1.5vh, 12px) clamp(8px, 1.8cqw, 14px);
-    background:rgba(4, 11, 14, 0.78);
+    background:var(--panel-bg, rgba(4, 11, 14, 0.78));
     border:1px solid var(--grid-line);
     border-radius:12px;
     container-type:inline-size;
@@ -5452,11 +5768,12 @@
     font-weight:400;
     font-size:clamp(1.05rem, 6.2cqw, 1.30rem);
     letter-spacing:0.01em;
-    color:#ffffff;
+    color:var(--ink, #ffffff);
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
     line-height:1.2;
+    transition:color 0.25s ease;
   }
   .friend-meta-right{
     display:flex;
@@ -5470,21 +5787,21 @@
     gap:4px;
     padding:2px 7px;
     background:rgba(2, 8, 12, 0.85);
-    border:1px solid rgba(73, 230, 196, 0.32);
+    border:1px solid var(--teal-dim, rgba(73, 230, 196, 0.32));
     border-radius:5px;
     font-family:'Share Tech Mono', monospace;
     font-size:clamp(0.70rem, 4.2cqw, 0.88rem);
     font-weight:400;
-    color:#7effdb;
+    color:var(--teal, #7effdb);
     letter-spacing:0.02em;
     white-space:nowrap;
     cursor:pointer;
     user-select:none;
     -webkit-tap-highlight-color:transparent;
-    transition:border-color 0.15s ease, background 0.15s ease;
+    transition:border-color 0.15s ease, background 0.15s ease, color 0.25s ease;
   }
   .friend-clock-pill:hover{
-    border-color:#49e6c4;
+    border-color:var(--teal, #49e6c4);
     background:rgba(73, 230, 196, 0.15);
   }
   .friend-day-tag{
@@ -5492,9 +5809,10 @@
     padding:1px 3px;
     border-radius:3px;
     background:rgba(255, 182, 72, 0.25);
-    color:#ffb648;
+    color:var(--amber, #ffb648);
     font-weight:400;
     line-height:1;
+    transition:color 0.25s ease;
   }
 
   /* Subhead Row: Location & Mini Weather Condition */
@@ -5505,22 +5823,24 @@
     gap:8px;
     width:100%;
     min-width:0;
-    border-bottom:1px solid rgba(73, 230, 196, 0.15);
+    border-bottom:1px solid var(--grid-line, rgba(73, 230, 196, 0.15));
     padding-bottom:4px;
     margin-bottom:1px;
+    transition:border-color 0.25s ease;
   }
   .friend-city{
     font-family:'Outfit', sans-serif;
     font-weight:400;
     font-size:clamp(0.78rem, 4.8cqw, 0.94rem);
     letter-spacing:0.02em;
-    color:#62d9ff;
+    color:var(--blue, #62d9ff);
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
     line-height:1.2;
     flex:1 1 auto;
     opacity:0.95;
+    transition:color 0.25s ease;
   }
   .friend-cond-mini{
     display:inline-flex;
@@ -5529,9 +5849,10 @@
     font-family:'Outfit', sans-serif;
     font-weight:400;
     font-size:clamp(0.74rem, 4.4cqw, 0.88rem);
-    color:#b5e4f4;
+    color:var(--ink-dim, #b5e4f4);
     white-space:nowrap;
     flex-shrink:0;
+    transition:color 0.25s ease;
   }
   .friend-cond-icon{
     width:16px;
@@ -5569,10 +5890,11 @@
     font-family:'Outfit', sans-serif;
     font-weight:400;
     font-size:clamp(2.4rem, 15cqw, 3.5rem);
-    color:#ffffff;
+    color:var(--teal, #ffffff);
     letter-spacing:-0.03em;
     line-height:0.88;
     font-variant-numeric:tabular-nums;
+    transition:color 0.25s ease;
   }
   .friend-temp-unit-stack{
     display:inline-flex;
@@ -5588,6 +5910,7 @@
     font-size:clamp(1.05rem, 6.5cqw, 1.50rem);
     color:var(--teal);
     line-height:0.75;
+    transition:color 0.25s ease;
   }
   .friend-unit{
     font-family:'Outfit', sans-serif;
@@ -5595,6 +5918,7 @@
     font-size:clamp(0.80rem, 4.8cqw, 1.10rem);
     color:var(--teal);
     line-height:0.85;
+    transition:color 0.25s ease;
   }
 
   /* HARD-RIGHT Telemetry Stack (Uniform size, unbolded, icons instead of letters) */
@@ -5645,13 +5969,14 @@
     min-width:0;
     padding-top:clamp(7px, 1.4vh, 12px);
     padding-bottom:clamp(3px, 0.6vh, 6px);
-    border-top:1px solid rgba(73, 230, 196, 0.22);
+    border-top:1px solid var(--grid-line, rgba(73, 230, 196, 0.22));
     font-family:'Outfit', sans-serif;
     font-size:clamp(0.85rem, 5.2cqw, 1.02rem);
     font-weight:400;
-    color:#93b2be;
+    color:var(--ink-dim, #93b2be);
     line-height:1.1;
     margin-top:auto;
+    transition:color 0.25s ease, border-color 0.25s ease;
   }
   .friend-hilo{
     display:inline-flex;
@@ -5661,23 +5986,26 @@
     white-space:nowrap;
   }
   .friend-hilo .hi{
-    color:#ff9574;
+    color:var(--amber, #ff9574);
     font-weight:400;
+    transition:color 0.25s ease;
   }
   .friend-hilo .sep{
     opacity:0.4;
     margin:0 1px;
   }
   .friend-hilo .lo{
-    color:#64b5f6;
+    color:var(--blue, #64b5f6);
     font-weight:400;
+    transition:color 0.25s ease;
   }
   .friend-sub-meta{
     display:inline-flex;
     align-items:center;
     font-weight:400;
-    color:#9abecb;
+    color:var(--ink-dim, #9abecb);
     white-space:nowrap;
+    transition:color 0.25s ease;
   }
   .friend-skeleton-bar{
     background:rgba(73, 230, 196, 0.15);
@@ -5834,20 +6162,28 @@
 
 <div class="device">
   <div class="device-top">
-    <!-- 5-Dot Board Dimmer & Continuous Hardware Slider (Far Left) -->
-    <div class="device-dimmer" id="boardDimmer" role="group" aria-label="Board Brightness Dimmer" title="Adjust display brightness (100%, 75%, 50%, 25%, 12%) • Drag continuous slider or tap presets • Key: D">
-      <svg class="dimmer-icon" id="dimmerIconBtn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" role="button" tabindex="0" aria-label="Cycle display brightness" title="Display Dimmer • Tap green icon to cycle brightness presets">
-        <circle cx="12" cy="12" r="4.5"/>
-        <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.93 4.93l1.77 1.77M17.3 17.3l1.77 1.77M4.93 19.07l1.77-1.77M17.3 6.7l1.77-1.77"/>
-      </svg>
-      <div class="dimmer-slider-wrap">
-        <input type="range" class="dimmer-slider" id="dimmerSlider" min="10" max="100" step="1" value="100" aria-label="Continuous brightness slider (10% - 100%)" title="Continuous dimmer slider">
+    <!-- Top-Left cluster: 5-Dot Board Dimmer & Hardware Theme Selector Pill -->
+    <div class="device-top-left" id="deviceTopLeft">
+      <div class="device-dimmer" id="boardDimmer" role="group" aria-label="Board Brightness Dimmer" title="Adjust display brightness (100%, 75%, 50%, 25%, 12%) • Drag continuous slider or tap presets • Key: D">
+        <svg class="dimmer-icon" id="dimmerIconBtn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" role="button" tabindex="0" aria-label="Cycle display brightness" title="Display Dimmer • Tap green icon to cycle brightness presets">
+          <circle cx="12" cy="12" r="4.5"/>
+          <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.93 4.93l1.77 1.77M17.3 17.3l1.77 1.77M4.93 19.07l1.77-1.77M17.3 6.7l1.77-1.77"/>
+        </svg>
+        <div class="dimmer-slider-wrap">
+          <input type="range" class="dimmer-slider" id="dimmerSlider" min="10" max="100" step="1" value="100" aria-label="Continuous brightness slider (10% - 100%)" title="Continuous dimmer slider">
+        </div>
+        <button type="button" class="dimmer-warmth-dot" id="dimmerWarmthDot" title="Brightness Warmth: 100% (Daylight Gold) • Tap to cycle presets" aria-label="Brightness warmth indicator. Tap to cycle brightness."></button>
+        <span class="dimmer-pct-label" id="dimmerPctLabel">100%</span>
+        <button type="button" class="dimmer-mono-btn" id="dimmerMonoBtn" title="256-Gradient Monochromatic Grayscale Mode • Tap to toggle • Key: G" aria-label="Toggle 256 Grayscale Mode" aria-pressed="false">
+          <span class="dimmer-mono-pip"></span>
+          <span class="dimmer-mono-label">256</span>
+        </button>
       </div>
-      <button type="button" class="dimmer-warmth-dot" id="dimmerWarmthDot" title="Brightness Warmth: 100% (Daylight Gold) • Tap to cycle presets" aria-label="Brightness warmth indicator. Tap to cycle brightness."></button>
-      <span class="dimmer-pct-label" id="dimmerPctLabel">100%</span>
-      <button type="button" class="dimmer-mono-btn" id="dimmerMonoBtn" title="256-Gradient Monochromatic Grayscale Mode • Tap to toggle • Key: G" aria-label="Toggle 256 Grayscale Mode" aria-pressed="false">
-        <span class="dimmer-mono-pip"></span>
-        <span class="dimmer-mono-label">256</span>
+
+      <button type="button" class="theme-pill" id="themeSelectorBtn" title="Display Theme: Sidewalk • Tap to cycle themes (Sidewalk, Monochrome, Apollo, Arizona Dusk, Electric Rust, Spectrum, Eagle Sky) • Key: T" aria-label="Display theme selector. Current theme: Sidewalk. Tap to cycle themes.">
+        <span class="theme-pill-pip" id="themePillPip"></span>
+        <span class="theme-pill-prefix">THEME:</span>
+        <span class="theme-pill-name" id="themePillName">Sidewalk</span>
       </button>
     </div>
 
@@ -5858,7 +6194,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.101126.0817</span>
+        <span id="appVersionText">v1.101126.2015</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -5928,20 +6264,20 @@
                 <stop offset="100%" stop-color="#1e293b"/>
               </radialGradient>
               <linearGradient id="analogRimGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="rgba(255,255,255,0.25)"/>
-                <stop offset="50%" stop-color="rgba(73,230,196,0.35)"/>
+                <stop offset="0%" stop-color="var(--grid-line, rgba(255,255,255,0.25))"/>
+                <stop offset="50%" stop-color="var(--teal, rgba(73,230,196,0.35))"/>
                 <stop offset="100%" stop-color="rgba(0,0,0,0.65)"/>
               </linearGradient>
               <filter id="analogGlow" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow dx="0" dy="0" stdDeviation="2.5" flood-color="#ffe600" flood-opacity="0.45"/>
+                <feDropShadow dx="0" dy="0" stdDeviation="2.5" flood-color="var(--clock-digits, #ffe600)" flood-opacity="0.45"/>
               </filter>
               <filter id="analogMinGlow" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow dx="0" dy="0" stdDeviation="2.2" flood-color="#ffffff" flood-opacity="0.4"/>
+                <feDropShadow dx="0" dy="0" stdDeviation="2.2" flood-color="var(--ink, #ffffff)" flood-opacity="0.4"/>
               </filter>
             </defs>
             <!-- Outer Bezel & Case -->
             <circle cx="100" cy="100" r="97" fill="url(#analogBezelGrad)" stroke="url(#analogRimGrad)" stroke-width="3"/>
-            <circle cx="100" cy="100" r="93" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+            <circle cx="100" cy="100" r="93" fill="none" stroke="var(--grid-line, rgba(255,255,255,0.06))" stroke-width="1"/>
             
             <!-- Minute and Hour Dial Ticks -->
             <g id="analogDialTicks"></g>
@@ -5950,30 +6286,30 @@
             <g id="analogNumerals" class="analog-numerals-group"></g>
 
             <!-- Hands -->
-            <!-- Hour Hand (Yellow, Bold, Tapered Baton with Pointed Tip) -->
+            <!-- Hour Hand (Bold, Tapered Baton with Pointed Tip) -->
             <g id="analogHourHand">
               <path d="M 97.5 106 L 97 96 L 98 56 L 100 48 L 102 56 L 103 96 L 102.5 106 Z" fill="rgba(0,0,0,0.5)" transform="translate(1, 1.5)"/>
-              <path d="M 97.5 106 L 97 96 L 98 56 L 100 48 L 102 56 L 103 96 L 102.5 106 Z" fill="#ffe600" stroke="#ffd000" stroke-width="0.6"/>
-              <line x1="100" y1="96" x2="100" y2="50" stroke="#fff59d" stroke-width="1.2" stroke-linecap="round"/>
+              <path d="M 97.5 106 L 97 96 L 98 56 L 100 48 L 102 56 L 103 96 L 102.5 106 Z" fill="var(--clock-digits, #ffe600)" stroke="var(--teal, #ffd000)" stroke-width="0.6"/>
+              <line x1="100" y1="96" x2="100" y2="50" stroke="var(--ink, #fff59d)" stroke-width="1.2" stroke-linecap="round"/>
             </g>
 
-            <!-- Minute Hand (White & Silver, Sleek, Reaching Minute Track) -->
+            <!-- Minute Hand (Sleek, Reaching Minute Track) -->
             <g id="analogMinHand">
               <path d="M 98 108 L 97.8 96 L 98.8 28 L 100 20 L 101.2 28 L 102.2 96 L 102 108 Z" fill="rgba(0,0,0,0.5)" transform="translate(1, 1.5)"/>
-              <path d="M 98 108 L 97.8 96 L 98.8 28 L 100 20 L 101.2 28 L 102.2 96 L 102 108 Z" fill="#ffffff" stroke="#cbd5e1" stroke-width="0.6"/>
-              <line x1="100" y1="96" x2="100" y2="22" stroke="#94a3b8" stroke-width="1.0" stroke-linecap="round"/>
+              <path d="M 98 108 L 97.8 96 L 98.8 28 L 100 20 L 101.2 28 L 102.2 96 L 102 108 Z" fill="var(--ink, #ffffff)" stroke="var(--ink-dim, #cbd5e1)" stroke-width="0.6"/>
+              <line x1="100" y1="96" x2="100" y2="22" stroke="var(--blue, #94a3b8)" stroke-width="1.0" stroke-linecap="round"/>
             </g>
 
-            <!-- Second Hand (Vibrant Yellow / Accent Sweep Hand with Hub and Tail) -->
+            <!-- Second Hand (Accent Sweep Hand with Hub and Tail) -->
             <g id="analogSecHandGroup">
               <line x1="100" y1="116" x2="100" y2="16" stroke="rgba(0,0,0,0.4)" stroke-width="1.6" stroke-linecap="round" transform="translate(1, 1.5)"/>
-              <line id="analogSecHand" x1="100" y1="116" x2="100" y2="16" stroke="#ffd748" stroke-width="1.6" stroke-linecap="round"/>
-              <circle cx="100" cy="112" r="3.2" fill="#ffd748" stroke="#cca529" stroke-width="0.6"/>
+              <line id="analogSecHand" x1="100" y1="116" x2="100" y2="16" stroke="var(--teal, #ffd748)" stroke-width="1.6" stroke-linecap="round"/>
+              <circle cx="100" cy="112" r="3.2" fill="var(--teal, #ffd748)" stroke="var(--teal-dim, #cca529)" stroke-width="0.6"/>
             </g>
 
-            <!-- Center Pivot Pin (Two-tone Gold & Dark Bezel) -->
-            <circle cx="100" cy="100" r="5.5" fill="#141c24" stroke="#ffe600" stroke-width="2.2"/>
-            <circle cx="100" cy="100" r="2.2" fill="#ffe600"/>
+            <!-- Center Pivot Pin -->
+            <circle cx="100" cy="100" r="5.5" fill="var(--screen-bg-2, #141c24)" stroke="var(--clock-digits, #ffe600)" stroke-width="2.2"/>
+            <circle cx="100" cy="100" r="2.2" fill="var(--clock-digits, #ffe600)"/>
           </svg>
         </div>
 
@@ -6031,7 +6367,7 @@
           <div class="top-wx-telemetry-col top-wx-capsules-col">
             <!-- Item 1: Humidity -->
             <div class="wx-telemetry-row wx-telemetry-capsule" title="Relative Humidity">
-              <svg class="wx-row-icon capsule-icon glow-blue" viewBox="0 0 24 24" fill="rgba(56,189,248,0.12)" stroke="#38bdf8" stroke-width="1.7">
+              <svg class="wx-row-icon capsule-icon glow-blue" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.12" stroke="currentColor" stroke-width="1.7">
                 <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
               </svg>
               <div class="wx-row-reading capsule-reading">
@@ -6042,8 +6378,8 @@
 
             <!-- Item 2: UV Index -->
             <div class="wx-telemetry-row wx-telemetry-capsule" title="UV Index">
-              <svg class="wx-row-icon capsule-icon glow-teal" id="topUvIcon" viewBox="0 0 24 24" fill="none" stroke="#49e6c4" stroke-width="1.7">
-                <circle cx="12" cy="12" r="4" fill="rgba(73, 230, 196, 0.12)"/>
+              <svg class="wx-row-icon capsule-icon glow-teal" id="topUvIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                <circle cx="12" cy="12" r="4" fill="currentColor" fill-opacity="0.12"/>
                 <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
               </svg>
               <div class="wx-row-reading capsule-reading">
@@ -6054,7 +6390,7 @@
 
             <!-- Item 3: Barometric Pressure -->
             <div class="wx-telemetry-row wx-telemetry-capsule" title="Barometric Pressure">
-              <svg class="wx-row-icon capsule-icon glow-purple" id="topPressureIcon" viewBox="0 0 24 24" fill="none" stroke="#cf7dff">
+              <svg class="wx-row-icon capsule-icon glow-purple" id="topPressureIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <circle cx="12" cy="12" r="9.5" stroke="currentColor" stroke-width="1.5"/>
                 <path d="M 6.5 13.5 A 6.5 6.5 0 1 1 17.5 13.5" stroke="currentColor" stroke-width="1.7" stroke-dasharray="3.2 1.6" stroke-linecap="butt" fill="none"/>
                 <circle cx="12" cy="12" r="1.9" fill="currentColor"/>
@@ -7011,7 +7347,8 @@
         line.setAttribute('y1', y1);
         line.setAttribute('x2', x2);
         line.setAttribute('y2', y2);
-        line.setAttribute('stroke', isHour ? '#ffe600' : 'rgba(255,255,255,0.32)');
+        line.setAttribute('stroke', isHour ? 'var(--clock-digits, #ffe600)' : 'var(--grid-line, rgba(255,255,255,0.32))');
+        if(isHour) line.classList.add('hour-tick');
         line.setAttribute('stroke-width', isHour ? '2.4' : '1.1');
         line.setAttribute('stroke-linecap', 'round');
         frag.appendChild(line);
@@ -7037,9 +7374,10 @@
         text.setAttribute('dominant-baseline', 'central');
         text.setAttribute('font-family', "'Outfit', sans-serif");
         const isCardinal = (i % 3 === 0);
+        if(isCardinal) text.classList.add('cardinal-num');
         text.setAttribute('font-size', isCardinal ? '14' : '12');
         text.setAttribute('font-weight', isCardinal ? '800' : '700');
-        text.setAttribute('fill', isCardinal ? '#ffe600' : '#ffffff');
+        text.setAttribute('fill', isCardinal ? 'var(--clock-digits, #ffe600)' : 'var(--ink, #ffffff)');
         text.textContent = String(i);
         frag.appendChild(text);
       }
@@ -8118,28 +8456,28 @@
         <div class="day-meta-grid">
           <div class="day-meta-subrow">
             <div class="day-telem-item d-hum" title="Humidity: ${hum}%">
-              <svg class="day-telem-icon glow-blue" viewBox="0 0 24 24" fill="rgba(56,189,248,0.12)" stroke="#38bdf8" stroke-width="2">
+              <svg class="day-telem-icon glow-blue" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.12" stroke="currentColor" stroke-width="2">
                 <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
               </svg>
-              <span class="day-telem-val glow-blue" style="color:#38bdf8;">${hum}<span class="day-telem-unit">%</span></span>
+              <span class="day-telem-val glow-blue">${hum}<span class="day-telem-unit">%</span></span>
             </div>
             <div class="day-telem-item d-uv" title="Peak UV: ${uv} (${uvCategory(uv)})">
-              <svg class="day-telem-icon" viewBox="0 0 24 24" fill="none" stroke="${ucol}" stroke-width="2">
+              <svg class="day-telem-icon glow-amber" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="4.2"/>
                 <path d="M12 2v2.2M12 19.8V22M2 12h2.2M19.8 12H22M4.93 4.93l1.56 1.56M17.51 17.51l1.56 1.56M4.93 19.07l1.56-1.56M17.51 6.49l1.56-1.56"/>
               </svg>
-              <span class="day-telem-val" style="color:${ucol};">${uv}<span class="day-telem-unit">uv</span></span>
+              <span class="day-telem-val glow-amber">${uv}<span class="day-telem-unit">uv</span></span>
             </div>
           </div>
           <div class="day-meta-subrow day-meta-center">
             <div class="day-telem-item d-press" title="Pressure: ${pressIn} inHg">
-              <svg class="day-telem-icon glow-purple" viewBox="0 0 24 24" fill="none" stroke="#cf7dff">
+              <svg class="day-telem-icon glow-purple" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <circle cx="12" cy="12" r="9.5" stroke="currentColor" stroke-width="1.6"/>
                 <path d="M 6.5 13.5 A 6.5 6.5 0 1 1 17.5 13.5" stroke="currentColor" stroke-width="1.8" stroke-dasharray="3.2 1.6" stroke-linecap="butt" fill="none"/>
                 <circle cx="12" cy="12" r="1.8" fill="currentColor"/>
                 <path d="M12 12 L16.5 9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
               </svg>
-              <span class="day-telem-val glow-purple" style="color:#cf7dff;">${pressIn}<span class="day-telem-unit">in</span></span>
+              <span class="day-telem-val glow-purple">${pressIn}<span class="day-telem-unit">in</span></span>
             </div>
           </div>
         </div>
@@ -8748,15 +9086,15 @@
         <!-- HARD RIGHT: 3 Telemetry Rows with Icons -->
         <div class="friend-telemetry-col">
           <div class="friend-telem-row" title="Relative Humidity: ${hum}%">
-            <svg class="friend-telem-icon glow-blue" viewBox="0 0 24 24" fill="rgba(56,189,248,0.12)" stroke="#38bdf8" stroke-width="1.6"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+            <svg class="friend-telem-icon glow-blue" viewBox="0 0 24 24" fill="currentColor" fill-opacity="0.12" stroke="currentColor" stroke-width="1.6"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
             <span class="friend-telem-reading glow-blue"><span class="friend-telem-val">${hum}</span><span class="friend-telem-unit">%</span></span>
           </div>
           <div class="friend-telem-row" title="UV Index: ${uv}">
-            <svg class="friend-telem-icon glow-teal" viewBox="0 0 24 24" fill="none" stroke="#49e6c4" stroke-width="1.6"><circle cx="12" cy="12" r="4" fill="rgba(73, 230, 196, 0.12)"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+            <svg class="friend-telem-icon glow-teal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4" fill="currentColor" fill-opacity="0.12"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
             <span class="friend-telem-reading glow-teal"><span class="friend-telem-val">${uv}</span><span class="friend-telem-unit">UV</span></span>
           </div>
           <div class="friend-telem-row" title="Barometric Pressure: ${pressIn} in">
-            <svg class="friend-telem-icon glow-purple" viewBox="0 0 24 24" fill="none" stroke="#cf7dff"><circle cx="12" cy="12" r="9.5" stroke="currentColor" stroke-width="1.5"/><path d="M 6.5 13.5 A 6.5 6.5 0 1 1 17.5 13.5" stroke="currentColor" stroke-width="1.7" stroke-dasharray="3.2 1.6" stroke-linecap="butt" fill="none"/><circle cx="12" cy="12" r="1.9" fill="currentColor"/><path d="M12 12 L16.8 9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            <svg class="friend-telem-icon glow-purple" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9.5" stroke="currentColor" stroke-width="1.5"/><path d="M 6.5 13.5 A 6.5 6.5 0 1 1 17.5 13.5" stroke="currentColor" stroke-width="1.7" stroke-dasharray="3.2 1.6" stroke-linecap="butt" fill="none"/><circle cx="12" cy="12" r="1.9" fill="currentColor"/><path d="M12 12 L16.8 9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
             <span class="friend-telem-reading glow-purple"><span class="friend-telem-val">${pressIn}</span><span class="friend-telem-unit">in</span></span>
           </div>
         </div>
@@ -9533,7 +9871,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.101126.0817';
+  const CLIENT_APP_VERSION = 'v1.101126.2015';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -9996,6 +10334,124 @@
     }
   ];
 
+  /* ---------------------------------------------------------------
+     THEME PALETTES & BEZEL HARMONY DEFINITIONS
+     - 7 Cycle-able Themes: Sidewalk, Monochrome, Apollo, Arizona Dusk, Electric Rust, Spectrum, Eagle Sky
+     - Seamlessly integrates with Dimmer and 256 Grayscale filter
+  --------------------------------------------------------------- */
+  const THEMES = [
+    {
+      id: 'sidewalk',
+      name: 'Sidewalk',
+      fullName: 'Sidewalk (Chalk on Slate)',
+      pip: '#49e6c4'
+    },
+    {
+      id: 'monochrome',
+      name: 'Monochrome',
+      fullName: 'Monochrome Slate (Titanium)',
+      pip: '#e2e8f0'
+    },
+    {
+      id: 'apollo',
+      name: 'Apollo',
+      fullName: 'Apollo NASA / Naval Flight Deck (R-W-B)',
+      pip: '#5f7e9b'
+    },
+    {
+      id: 'arizona-dusk',
+      name: 'Arizona Dusk',
+      fullName: 'Arizona Dusk (Sunset Coral & Violet)',
+      pip: '#fb7185'
+    },
+    {
+      id: 'electric-rust',
+      name: 'Electric Rust',
+      fullName: 'Electric Rust (Artisanal Tube & Ferric Copper)',
+      pip: '#d96d31'
+    },
+    {
+      id: 'spectrum',
+      name: 'Spectrum',
+      fullName: 'Spectrum (Bright Primaries & Secondaries: R-B-Y / G-P-O)',
+      pip: '#ffe600'
+    },
+    {
+      id: 'eagle-sky',
+      name: 'Eagle Sky',
+      fullName: 'Eagle Sky (Patriotic Red, White, Blue & Navy)',
+      pip: '#e62234'
+    }
+  ];
+
+  const THEME_BEZELS = {
+    'sidewalk': [
+      { bezelHi: '#252d34', bezel: '#171c21', bezelLo: '#0e1215', brandColor: '#7a8893', brandBColor: '#a6b5c0' },
+      { bezelHi: '#1e242a', bezel: '#13181d', bezelLo: '#0b0e11', brandColor: '#626f7a', brandBColor: '#8a97a2' },
+      { bezelHi: '#171c21', bezel: '#0f1317', bezelLo: '#080a0d', brandColor: '#4a555e', brandBColor: '#68747e' },
+      { bezelHi: '#101418', bezel: '#0a0d10', bezelLo: '#050709', brandColor: '#303940', brandBColor: '#455059' },
+      { bezelHi: '#07090b', bezel: '#040507', bezelLo: '#010203', brandColor: '#1a2026', brandBColor: '#242c33' }
+    ],
+    'metro': [
+      { bezelHi: '#252d34', bezel: '#171c21', bezelLo: '#0e1215', brandColor: '#7a8893', brandBColor: '#a6b5c0' },
+      { bezelHi: '#1e242a', bezel: '#13181d', bezelLo: '#0b0e11', brandColor: '#626f7a', brandBColor: '#8a97a2' },
+      { bezelHi: '#171c21', bezel: '#0f1317', bezelLo: '#080a0d', brandColor: '#4a555e', brandBColor: '#68747e' },
+      { bezelHi: '#101418', bezel: '#0a0d10', bezelLo: '#050709', brandColor: '#303940', brandBColor: '#455059' },
+      { bezelHi: '#07090b', bezel: '#040507', bezelLo: '#010203', brandColor: '#1a2026', brandBColor: '#242c33' }
+    ],
+    'original': [
+      { bezelHi: '#252d34', bezel: '#171c21', bezelLo: '#0e1215', brandColor: '#7a8893', brandBColor: '#a6b5c0' },
+      { bezelHi: '#1e242a', bezel: '#13181d', bezelLo: '#0b0e11', brandColor: '#626f7a', brandBColor: '#8a97a2' },
+      { bezelHi: '#171c21', bezel: '#0f1317', bezelLo: '#080a0d', brandColor: '#4a555e', brandBColor: '#68747e' },
+      { bezelHi: '#101418', bezel: '#0a0d10', bezelLo: '#050709', brandColor: '#303940', brandBColor: '#455059' },
+      { bezelHi: '#07090b', bezel: '#040507', bezelLo: '#010203', brandColor: '#1a2026', brandBColor: '#242c33' }
+    ],
+    'monochrome': [
+      { bezelHi: '#282d33', bezel: '#191d21', bezelLo: '#0f1215', brandColor: '#828e97', brandBColor: '#b4c2cd' },
+      { bezelHi: '#202428', bezel: '#14171a', bezelLo: '#0b0d0e', brandColor: '#636e76', brandBColor: '#8e9aa4' },
+      { bezelHi: '#181b1e', bezel: '#0f1113', bezelLo: '#08090a', brandColor: '#485157', brandBColor: '#6c767e' },
+      { bezelHi: '#101214', bezel: '#0a0b0c', bezelLo: '#050607', brandColor: '#32393e', brandBColor: '#4b5257' },
+      { bezelHi: '#080809', bezel: '#040405', bezelLo: '#010102', brandColor: '#1b1f22', brandBColor: '#282d31' }
+    ],
+    'apollo': [
+      { bezelHi: '#1e2832', bezel: '#131b23', bezelLo: '#090e13', brandColor: '#5f7e9b', brandBColor: '#b4bcc8' },
+      { bezelHi: '#182029', bezel: '#0f161d', bezelLo: '#070b0f', brandColor: '#4d667d', brandBColor: '#8e9aa7' },
+      { bezelHi: '#121820', bezel: '#0c1117', bezelLo: '#05080b', brandColor: '#3a4e60', brandBColor: '#6c7783' },
+      { bezelHi: '#0c1016', bezel: '#080c10', bezelLo: '#030507', brandColor: '#283542', brandBColor: '#4b545d' },
+      { bezelHi: '#06080b', bezel: '#040508', bezelLo: '#010203', brandColor: '#161e26', brandBColor: '#2b3036' }
+    ],
+    'arizona-dusk': [
+      { bezelHi: '#30202a', bezel: '#1d1219', bezelLo: '#11080e', brandColor: '#a57fa8', brandBColor: '#e879f9' },
+      { bezelHi: '#251921', bezel: '#160d13', bezelLo: '#0d060a', brandColor: '#805f83', brandBColor: '#b75bc5' },
+      { bezelHi: '#1c1218', bezel: '#10080d', bezelLo: '#080407', brandColor: '#5d4360', brandBColor: '#884193' },
+      { bezelHi: '#130a10', bezel: '#0a0407', bezelLo: '#050204', brandColor: '#3e2a40', brandBColor: '#5c2b64' },
+      { bezelHi: '#080407', bezel: '#040203', bezelLo: '#010001', brandColor: '#231625', brandBColor: '#341739' }
+    ],
+    'electric-rust': [
+      { bezelHi: '#36241b', bezel: '#201611', bezelLo: '#120c09', brandColor: '#b8683b', brandBColor: '#f0a35f' },
+      { bezelHi: '#2b1c15', bezel: '#19110d', bezelLo: '#0e0907', brandColor: '#93532f', brandBColor: '#c4854e' },
+      { bezelHi: '#201510', bezel: '#130d0a', bezelLo: '#0a0605', brandColor: '#6e3e23', brandBColor: '#97663c' },
+      { bezelHi: '#160e0b', bezel: '#0d0907', bezelLo: '#070403', brandColor: '#4a2918', brandBColor: '#684629' },
+      { bezelHi: '#0b0705', bezel: '#060403', bezelLo: '#020101', brandColor: '#28160d', brandBColor: '#3a2717' }
+    ],
+    'spectrum': [
+      { bezelHi: '#252932', bezel: '#151922', bezelLo: '#0c0f16', brandColor: '#2979ff', brandBColor: '#ffe600' },
+      { bezelHi: '#1e222a', bezel: '#11141c', bezelLo: '#090c12', brandColor: '#2060cc', brandBColor: '#cca800' },
+      { bezelHi: '#171a20', bezel: '#0d1016', bezelLo: '#06080d', brandColor: '#174799', brandBColor: '#997e00' },
+      { bezelHi: '#101217', bezel: '#090b0f', bezelLo: '#040509', brandColor: '#0f2f66', brandBColor: '#665400' },
+      { bezelHi: '#07080a', bezel: '#040507', bezelLo: '#010204', brandColor: '#081733', brandBColor: '#332a00' }
+    ],
+    'eagle-sky': [
+      { bezelHi: '#1e283b', bezel: '#121b2b', bezelLo: '#09101d', brandColor: '#1e6beb', brandBColor: '#e62234' },
+      { bezelHi: '#182030', bezel: '#0e1623', bezelLo: '#070c17', brandColor: '#1754bc', brandBColor: '#b81b2a' },
+      { bezelHi: '#121926', bezel: '#0a101b', bezelLo: '#050911', brandColor: '#123f8c', brandBColor: '#8a141f' },
+      { bezelHi: '#0c111c', bezel: '#070b13', bezelLo: '#03060b', brandColor: '#0c295c', brandBColor: '#5c0d15' },
+      { bezelHi: '#06080e', bezel: '#030509', bezelLo: '#010205', brandColor: '#06142e', brandBColor: '#2e070b' }
+    ]
+  };
+
+  let currentThemeIndex = 0;
+
   let currentDimmerIndex = 0;
   const boardDimmerEl = document.getElementById('boardDimmer');
   const dimmerWarmthDot = document.getElementById('dimmerWarmthDot');
@@ -10060,14 +10516,17 @@
       dimmerSlider.value = String(config.pct);
     }
 
-    // Proportionately update bezel to darker matte gray tones as dimmer drops
-    if(config.bezelHi) rootStyle.setProperty('--bezel-hi', config.bezelHi);
-    if(config.bezel) rootStyle.setProperty('--bezel', config.bezel);
-    if(config.bezelLo) rootStyle.setProperty('--bezel-lo', config.bezelLo);
+    // Proportionately update bezel to match current active theme and dimmer level
+    const activeThemeId = THEMES[currentThemeIndex]?.id || 'original';
+    const themeBezelSet = THEME_BEZELS[activeThemeId] || THEME_BEZELS['original'];
+    const bz = themeBezelSet[safeIdx] || themeBezelSet[0];
+    if(bz.bezelHi) rootStyle.setProperty('--bezel-hi', bz.bezelHi);
+    if(bz.bezel) rootStyle.setProperty('--bezel', bz.bezel);
+    if(bz.bezelLo) rootStyle.setProperty('--bezel-lo', bz.bezelLo);
     if(config.insetHi) rootStyle.setProperty('--bezel-inset-hi', config.insetHi);
     if(config.insetLo) rootStyle.setProperty('--bezel-inset-lo', config.insetLo);
-    if(config.brandColor) rootStyle.setProperty('--brand-color', config.brandColor);
-    if(config.brandBColor) rootStyle.setProperty('--brand-b-color', config.brandBColor);
+    if(bz.brandColor) rootStyle.setProperty('--brand-color', bz.brandColor);
+    if(bz.brandBColor) rootStyle.setProperty('--brand-b-color', bz.brandBColor);
     if(config.activeDot) rootStyle.setProperty('--dimmer-active-dot', config.activeDot);
     if(config.activeDotBorder) rootStyle.setProperty('--dimmer-active-dot-border', config.activeDotBorder);
     if(config.activeDotShadow) rootStyle.setProperty('--dimmer-active-dot-shadow', config.activeDotShadow);
@@ -10121,13 +10580,16 @@
     updateDimmerWarmthDot(clampedPct, closestIdx);
 
     const config = DIMMER_LEVELS[closestIdx];
-    if(config.bezelHi) rootStyle.setProperty('--bezel-hi', config.bezelHi);
-    if(config.bezel) rootStyle.setProperty('--bezel', config.bezel);
-    if(config.bezelLo) rootStyle.setProperty('--bezel-lo', config.bezelLo);
+    const activeThemeId = THEMES[currentThemeIndex]?.id || 'original';
+    const themeBezelSet = THEME_BEZELS[activeThemeId] || THEME_BEZELS['original'];
+    const bz = themeBezelSet[closestIdx] || themeBezelSet[0];
+    if(bz.bezelHi) rootStyle.setProperty('--bezel-hi', bz.bezelHi);
+    if(bz.bezel) rootStyle.setProperty('--bezel', bz.bezel);
+    if(bz.bezelLo) rootStyle.setProperty('--bezel-lo', bz.bezelLo);
     if(config.insetHi) rootStyle.setProperty('--bezel-inset-hi', config.insetHi);
     if(config.insetLo) rootStyle.setProperty('--bezel-inset-lo', config.insetLo);
-    if(config.brandColor) rootStyle.setProperty('--brand-color', config.brandColor);
-    if(config.brandBColor) rootStyle.setProperty('--brand-b-color', config.brandBColor);
+    if(bz.brandColor) rootStyle.setProperty('--brand-color', bz.brandColor);
+    if(bz.brandBColor) rootStyle.setProperty('--brand-b-color', bz.brandBColor);
     if(config.activeDot) rootStyle.setProperty('--dimmer-active-dot', config.activeDot);
     if(config.activeDotBorder) rootStyle.setProperty('--dimmer-active-dot-border', config.activeDotBorder);
     if(config.activeDotShadow) rootStyle.setProperty('--dimmer-active-dot-shadow', config.activeDotShadow);
@@ -10246,6 +10708,107 @@
     });
   }
 
+  // ---------------------------------------------------------------
+  // HARDWARE THEME CONTROLLER (7-THEME PALETTE MATRIX)
+  // 1. SIDEWALK (Chalk on Slate / Tactical HUD)
+  // 2. MONOCHROME (Slate Titanium)
+  // 3. APOLLO (Aerospace NASA / Naval Flight Deck)
+  // 4. ARIZONA DUSK (Sunset Coral & Dusk Violet)
+  // 5. ELECTRIC RUST (Artisanal Tube & Ferric Copper)
+  // 6. SPECTRUM (Pure Primary & Secondary Chromatics)
+  // 7. EAGLE SKY (Patriotic Americana / R-W-B, Navy & Wine Red)
+  // ---------------------------------------------------------------
+  function applyTheme(themeIndexOrId, save = true){
+    let idx = 0;
+    if(typeof themeIndexOrId === 'number'){
+      idx = (themeIndexOrId >= 0 && themeIndexOrId < THEMES.length) ? themeIndexOrId : 0;
+    } else if(typeof themeIndexOrId === 'string'){
+      if(themeIndexOrId === 'original' || themeIndexOrId === 'metro') themeIndexOrId = 'sidewalk';
+      const found = THEMES.findIndex(t => t.id === themeIndexOrId);
+      idx = found !== -1 ? found : 0;
+    }
+    currentThemeIndex = idx;
+    const theme = THEMES[idx];
+
+    document.documentElement.setAttribute('data-theme', theme.id);
+
+    const pillName = document.getElementById('themePillName');
+    if(pillName){
+      pillName.textContent = theme.name;
+    }
+
+    const pillPip = document.getElementById('themePillPip');
+    if(pillPip){
+      pillPip.style.background = theme.pip;
+      pillPip.style.boxShadow = `0 0 5px ${theme.pip}`;
+    }
+
+    const themeBtn = document.getElementById('themeSelectorBtn');
+    if(themeBtn){
+      themeBtn.title = `Display Theme: ${theme.name} (${theme.fullName}) • Tap to cycle • Key: T`;
+      themeBtn.setAttribute('aria-label', `Display theme: ${theme.name}. Current theme: ${theme.fullName}. Tap to cycle themes.`);
+    }
+
+    // Refresh bezel to align with current dimmer level under the active theme
+    const rootStyle = document.documentElement.style;
+    const themeBezelSet = THEME_BEZELS[theme.id] || THEME_BEZELS['original'];
+    const bz = themeBezelSet[currentDimmerIndex] || themeBezelSet[0];
+    if(bz.bezelHi) rootStyle.setProperty('--bezel-hi', bz.bezelHi);
+    if(bz.bezel) rootStyle.setProperty('--bezel', bz.bezel);
+    if(bz.bezelLo) rootStyle.setProperty('--bezel-lo', bz.bezelLo);
+    if(bz.brandColor) rootStyle.setProperty('--brand-color', bz.brandColor);
+    if(bz.brandBColor) rootStyle.setProperty('--brand-b-color', bz.brandBColor);
+
+    // Refresh active bottom view immediately so dynamic elements update
+    try {
+      if(typeof activeOutlookTrayView !== 'undefined'){
+        if(activeOutlookTrayView === 'forecast' && typeof renderOutlook === 'function'){
+          renderOutlook();
+        } else if(typeof renderWeatherFriends === 'function'){
+          renderWeatherFriends();
+        }
+      }
+    } catch(e){}
+
+    // Refresh middle row cards (Inspiration and Discovery / Retro Tech) immediately
+    try {
+      if(typeof fitQuoteTextToContainer === 'function' && typeof currentInspirationData !== 'undefined' && currentInspirationData){
+        fitQuoteTextToContainer(currentInspirationData.text, currentInspirationData.author);
+      }
+      if(typeof screenAndFitHolidayText === 'function'){
+        screenAndFitHolidayText();
+      }
+    } catch(e){}
+
+    if(save){
+      try{
+        localStorage.setItem('wf_board_theme', theme.id);
+      }catch(e){}
+    }
+  }
+
+  function cycleBoardTheme(forward = true){
+    const next = forward
+      ? (currentThemeIndex + 1) % THEMES.length
+      : (currentThemeIndex - 1 + THEMES.length) % THEMES.length;
+    applyTheme(next, true);
+  }
+
+  const themeSelectorBtn = document.getElementById('themeSelectorBtn');
+  if(themeSelectorBtn){
+    themeSelectorBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      cycleBoardTheme(true);
+      themeSelectorBtn.blur();
+    });
+    themeSelectorBtn.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        cycleBoardTheme(true);
+      }
+    });
+  }
+
   // Keyboard accessibility on green dimmer icon button
   const dimmerIconBtn = document.getElementById('dimmerIconBtn');
   if(dimmerIconBtn){
@@ -10269,6 +10832,9 @@
     } else if(e.key === 'g' || e.key === 'G'){
       e.preventDefault();
       toggleGrayscale256Mode();
+    } else if(e.key === 't' || e.key === 'T'){
+      e.preventDefault();
+      cycleBoardTheme(true);
     }
   });
 
@@ -10306,6 +10872,18 @@
       setGrayscale256Mode(true, false);
     }
   }catch(e){}
+
+  // Restore saved theme on startup
+  try{
+    const savedTheme = localStorage.getItem('wf_board_theme');
+    if(savedTheme !== null){
+      applyTheme(savedTheme, false);
+    } else {
+      applyTheme(0, false);
+    }
+  }catch(e){
+    applyTheme(0, false);
+  }
 
   // PWA Service Worker Registration & Platform-Aware Install Prompt Handler
   const pwaInstallBtn = document.getElementById('pwaInstallBtn');
@@ -11920,7 +12498,7 @@
       id: 'food',
       label: 'Food Days',
       glow: 'glow-amber',
-      titleColor: '#fbbf24',
+      titleColor: 'var(--amber)',
       endpoint: '/api/food-holidays',
       dataKey: 'holidays',
       tabId: 'tabFoodHolidays',
@@ -11930,7 +12508,7 @@
       id: 'tech',
       label: 'Retro Tech',
       glow: 'glow-teal',
-      titleColor: '#49e6c4',
+      titleColor: 'var(--teal)',
       endpoint: '/api/tech-history',
       dataKey: 'items',
       tabId: 'tabTechHistory',
@@ -12305,7 +12883,7 @@
 
     holidayTitleEl.textContent = title;
     holidayTitleEl.style.fontWeight = '600';
-    holidayTitleEl.style.color = isMemorial ? '#93c5fd' : cfg.titleColor;
+    holidayTitleEl.style.color = isMemorial ? 'var(--blue)' : cfg.titleColor;
     holidayTitleEl.style.fontSize = finalTitlePx + 'px';
     holidayTitleEl.style.lineHeight = '1.15';
     holidayTitleEl.style.textWrap = 'balance';
@@ -12319,7 +12897,7 @@
 
     holidaySummaryEl.textContent = chosenText;
     holidaySummaryEl.style.fontWeight = '400';
-    holidaySummaryEl.style.color = 'rgba(235, 242, 248, 0.92)';
+    holidaySummaryEl.style.color = 'var(--ink)';
     holidaySummaryEl.style.fontSize = chosenSummaryPx + 'px';
     holidaySummaryEl.style.lineHeight = '1.44';
 

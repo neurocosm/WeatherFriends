@@ -165,6 +165,10 @@
     --brand-color:#5f7e9b;
     --brand-b-color:#b4bcc8;
   }
+  html[data-theme="apollo"] .friend-name{
+    color:var(--red, #b25555);
+    font-weight:500;
+  }
 
   html[data-theme="arizona-dusk"]{
     --screen-bg:#0b070d;
@@ -6194,7 +6198,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.101126.2015</span>
+        <span id="appVersionText">v1.101226.0557</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -9871,7 +9875,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.101126.2015';
+  const CLIENT_APP_VERSION = 'v1.101226.0557';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');

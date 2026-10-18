@@ -6201,7 +6201,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.101226.0617</span>
+        <span id="appVersionText">v1.101726.1019</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -9878,7 +9878,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.101226.0617';
+  const CLIENT_APP_VERSION = 'v1.101726.1019';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -12629,6 +12629,7 @@
     if(resetPosition && holidayContentArea){
       holidayContentArea.scrollTop = 0;
       holidayScrollState.currentScroll = 0;
+      holidayContentArea.style.justifyContent = 'center';
     }
   }
 
@@ -12641,7 +12642,8 @@
       const clientH = holidayContentArea.clientHeight;
       const overflow = scrollH - clientH;
 
-      if(overflow > 7){
+      if(overflow > 6){
+        holidayContentArea.style.justifyContent = 'flex-start';
         holidayScrollState.maxScroll = overflow;
         if(!holidayScrollState.active){
           holidayScrollState.active = true;
@@ -12654,6 +12656,7 @@
           startHolidayScrollLoop();
         }
       } else {
+        holidayContentArea.style.justifyContent = 'center';
         stopHolidayAutoScroll(true);
       }
     });
@@ -12797,102 +12800,85 @@
     const targetH = Math.max(50, usableH - 6);
     buf.style.width = targetW + 'px';
 
-    const titleLen = title.length;
-    // Adaptively scale title ratio & max title size based on character count so short titles can fill nicely without overwhelming
-    const heightBoost = Math.max(1.0, Math.min(1.45, usableH / 140));
-    let titleRatio = 1.30;
-    let maxTitlePx = Math.round(26.0 * heightBoost);
-    let minTitlePx = 16.0;
-    if (titleLen > 48) {
-      titleRatio = 1.15;
-      maxTitlePx = Math.round(19.0 * heightBoost);
-      minTitlePx = 15.0;
-    } else if (titleLen > 32) {
-      titleRatio = 1.20;
-      maxTitlePx = Math.round(22.0 * heightBoost);
-      minTitlePx = 15.5;
-    } else if (titleLen > 20) {
-      titleRatio = 1.25;
-      maxTitlePx = Math.round(24.5 * heightBoost);
-      minTitlePx = 16.0;
-    }
-
-    function testFit(text, summaryPx) {
-      const titlePx = Math.min(maxTitlePx, Math.max(minTitlePx, Math.round(summaryPx * titleRatio)));
-      const gapPx = Math.min(14, Math.max(4, Math.round(summaryPx * 0.40)));
+    // Test fit function: Title and Summary share the EXACT SAME font size & line-height
+    function testFit(summaryText, px, lh) {
+      const gapPx = Math.min(10, Math.max(4, Math.round(px * 0.28)));
+      buf.style.gap = gapPx + 'px';
 
       hBufTitle.textContent = title;
-      hBufTitle.style.fontSize = titlePx + 'px';
-      hBufTitle.style.lineHeight = '1.15';
+      hBufTitle.style.fontSize = px + 'px';
+      hBufTitle.style.lineHeight = String(lh);
       hBufTitle.style.textWrap = 'balance';
       hBufTitle.style.whiteSpace = 'normal';
 
-      hBufSummary.textContent = text;
-      hBufSummary.style.fontSize = summaryPx + 'px';
-      hBufSummary.style.lineHeight = '1.44';
-
-      buf.style.gap = gapPx + 'px';
+      hBufSummary.textContent = summaryText;
+      hBufSummary.style.fontSize = px + 'px';
+      hBufSummary.style.lineHeight = String(lh);
 
       const rH = buf.scrollHeight;
       const rW = buf.scrollWidth;
       return (rH <= targetH && rW <= targetW + 2);
     }
 
-    function findBestSummaryPx(text, minPx = 15.0, maxPx = Math.max(22.0, Math.min(32.0, Math.round(usableH * 0.17)))) {
-      let low = Math.round(minPx * 2);
-      let high = Math.round(maxPx * 2);
+    // Dynamic pre-plexor font scale matching Inspiration (15.5px to up to 48px headroom)
+    const minPx = 15.5;
+    const maxCeilingPx = Math.min(48, Math.max(30, Math.round(targetH * 0.38)));
+
+    function findBestPx(summaryText, testMin = minPx, testMax = maxCeilingPx) {
+      let low = Math.round(testMin * 2);
+      let high = Math.round(testMax * 2);
       let best = 0;
+      let bestLh = 1.30;
 
       while (low <= high) {
         const mid = Math.floor((low + high) / 2);
         const testPx = mid / 2;
-        if (testFit(text, testPx)) {
+        const lh = testPx >= 24 ? 1.20 : (testPx >= 19 ? 1.25 : 1.30);
+        if (testFit(summaryText, testPx, lh)) {
           best = testPx;
-          low = mid + 1;
+          bestLh = lh;
+          low = mid + 1; // It fits! Expand to fill vertical headroom comfortably
         } else {
           high = mid - 1;
         }
       }
-      return best;
+      return { px: best, lh: bestLh };
     }
 
-    // Intelligent text candidate & font size resolver
+    // Intelligent text candidate & font size resolver (readability first)
     function resolveFittingText() {
-      // 1. If full summary fits cleanly at a comfortable, readable size (16.0px - 22.0px), use it!
-      // This dynamically scales UP short & medium 2-sentence stories to fill the block beautifully.
+      // 1. Try full summary at comfortable, readable size (>= 16.0px)
       if (fullSummary) {
-        const px = findBestSummaryPx(fullSummary, 16.0, 22.0);
-        if (px >= 16.0) {
-          return { text: fullSummary, px, needsScroll: false };
+        const res = findBestPx(fullSummary, 16.0, maxCeilingPx);
+        if (res.px >= 16.0) {
+          return { text: fullSummary, px: res.px, lh: res.lh, needsScroll: false };
         }
       }
 
-      // 2. If full summary is too long to fit at 16.0px, check if concise 1-sentence summary fits comfortably (15.0px - 22.0px):
-      // This prevents shrinking into tiny legal print and gives a punchy, crystal-clear 1-sentence display.
+      // 2. If full summary overflows or is forced below 16px, try concise 1-2 sentence version (>= 15.5px)
       if (conciseText && conciseText !== fullSummary) {
-        const px = findBestSummaryPx(conciseText, 15.0, 22.0);
-        if (px >= 15.0) {
-          return { text: conciseText, px, needsScroll: false };
+        const res = findBestPx(conciseText, 15.5, maxCeilingPx);
+        if (res.px >= 15.5) {
+          return { text: conciseText, px: res.px, lh: res.lh, needsScroll: false };
         }
       }
 
-      // 3. For genuinely long stories that exceed container even at 15px:
-      // Never crush text into tiny illegible font!
-      // Keep it at a steady, comfortable, readable size (15.2px - 16.5px) and let auto-scroller reveal it smoothly.
+      // 3. For long stories that exceed container even at 15.5px:
+      // Never shrink to micro-print! Keep at readable size and let smooth auto-scroller reveal it
       const scrollText = fullSummary || conciseText || title;
-      const targetScrollPx = Math.max(15.2, Math.min(16.5, Math.round(usableH * 0.10)));
-      return { text: scrollText, px: targetScrollPx, needsScroll: true };
+      const targetScrollPx = Math.max(15.5, Math.min(17.0, Math.round(usableH * 0.11)));
+      return { text: scrollText, px: targetScrollPx, lh: 1.32, needsScroll: true };
     }
 
-    const { text: chosenText, px: chosenSummaryPx, needsScroll } = resolveFittingText();
-    const finalTitlePx = Math.min(maxTitlePx, Math.max(minTitlePx, Math.round(chosenSummaryPx * titleRatio)));
-    const finalGapPx = Math.min(10, Math.max(4, Math.round(chosenSummaryPx * 0.40)));
+    const { text: chosenText, px: finalPx, lh: finalLh, needsScroll } = resolveFittingText();
+    const finalGapPx = Math.min(10, Math.max(4, Math.round(finalPx * 0.28)));
 
+    // Apply IDENTICAL font size to both Title and Summary
     holidayTitleEl.textContent = title;
     holidayTitleEl.style.fontWeight = '600';
     holidayTitleEl.style.color = isMemorial ? 'var(--blue)' : cfg.titleColor;
-    holidayTitleEl.style.fontSize = finalTitlePx + 'px';
-    holidayTitleEl.style.lineHeight = '1.15';
+    holidayTitleEl.style.fontSize = finalPx + 'px';
+    holidayTitleEl.style.lineHeight = String(finalLh);
     holidayTitleEl.style.textWrap = 'balance';
     holidayTitleEl.style.whiteSpace = 'normal';
 
@@ -12905,16 +12891,17 @@
     holidaySummaryEl.textContent = chosenText;
     holidaySummaryEl.style.fontWeight = '400';
     holidaySummaryEl.style.color = 'var(--ink)';
-    holidaySummaryEl.style.fontSize = chosenSummaryPx + 'px';
-    holidaySummaryEl.style.lineHeight = '1.44';
+    holidaySummaryEl.style.fontSize = finalPx + 'px';
+    holidaySummaryEl.style.lineHeight = String(finalLh);
 
     holidayContentArea.style.gap = finalGapPx + 'px';
-    holidayContentArea.style.justifyContent = 'flex-start';
 
-    // Determine scrolling based on intelligence decision
+    // Vertical alignment: Optical center in box when fitting, top-aligned when scrolling
     if (!needsScroll) {
+      holidayContentArea.style.justifyContent = 'center';
       stopHolidayAutoScroll(true);
     } else {
+      holidayContentArea.style.justifyContent = 'flex-start';
       checkAndStartHolidayAutoScroll();
     }
   }

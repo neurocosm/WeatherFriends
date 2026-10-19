@@ -8,15 +8,15 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Weather Friends">
+<meta name="apple-mobile-web-app-title" content="WeatherFriends">
 <link rel="manifest" href="/manifest.json">
 <link rel="icon" type="image/svg+xml" href="/icon.svg">
 <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<title>Weather Friends app by BostonyFX</title>
-<meta name="description" content="Weather Friends app by BostonyFX - Smart display weather console with live forecasts, precision local station data, barometric tracking, and environmental monitoring.">
-<meta property="og:title" content="Weather Friends app by BostonyFX">
-<meta property="og:description" content="Weather Friends app by BostonyFX - Smart display weather console with live forecasts, precision local station data, barometric tracking, and environmental monitoring.">
+<title>WeatherFriends by: BostonyFX</title>
+<meta name="description" content="WeatherFriends by: BostonyFX - Smart display weather console with live forecasts, precision local station data, barometric tracking, and environmental monitoring.">
+<meta property="og:title" content="WeatherFriends by: BostonyFX">
+<meta property="og:description" content="WeatherFriends by: BostonyFX - Smart display weather console with live forecasts, precision local station data, barometric tracking, and environmental monitoring.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Outfit:wght@300;400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Special+Elite&display=swap" rel="stylesheet">
@@ -6195,13 +6195,13 @@
     </div>
 
     <div class="brand">
-      <span>Weather Friends app by <b>BostonyFX</b></span>
+      <span>WeatherFriends by: <b>BostonyFX</b></span>
       <button class="version-pill" id="appVersionBadge" type="button" title="Tap to refresh weather. If an update is available, will install and reload latest version. (Hold or double-tap to force reload)" aria-label="Version and manual refresh">
         <span class="version-update-dot" id="versionUpdateDot"></span>
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.101726.1019</span>
+        <span id="appVersionText">v1.101826.2141</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -9878,7 +9878,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.101726.1019';
+  const CLIENT_APP_VERSION = 'v1.101826.2141';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -12786,8 +12786,32 @@
     }
 
     const cleanLeadingPunct = (s) => (s || '').replace(/^[\s,;:\-–—\.]+(?=[a-zA-Z0-9"“'‘])/, '').trim();
-    const conciseText = cleanLeadingPunct(rawConcise);
-    const fullSummary = cleanLeadingPunct(rawFull);
+    const rawConciseClean = cleanLeadingPunct(rawConcise);
+    const rawFullClean = cleanLeadingPunct(rawFull);
+
+    // Strip redundant leading title from summary if Checkiday/feed repeated it verbatim
+    // e.g. "National Sunday School Teacher Appreciation Day honors..." -> "Honors..."
+    const stripTitlePrefix = (text, t) => {
+      if(!text || !t) return text || '';
+      const cleanT = t.replace(/^[\p{Emoji}\u200d\s]+/u, '').trim();
+      const escapedT = cleanT.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const reg = new RegExp(`^${escapedT}\\s*[:,–—\\-]?\\s*(is|are|was|were|has|have|celebrates?|honors?|marks?|commemorates?|observes?|recognizes?|promotes?|encourages?|focuses?\\s+on)?`, 'i');
+      const match = text.match(reg);
+      if(match && match[0]){
+        const verb = match[1];
+        let rest = text.slice(match[0].length).trim();
+        if(verb){
+          rest = verb.charAt(0).toUpperCase() + verb.slice(1) + (rest ? ' ' + rest : '');
+        } else if(rest){
+          rest = rest.charAt(0).toUpperCase() + rest.slice(1);
+        }
+        return rest || text;
+      }
+      return text;
+    };
+
+    const conciseText = stripTitlePrefix(rawConciseClean, title);
+    const fullSummary = stripTitlePrefix(rawFullClean, title);
 
     const compStyle = window.getComputedStyle ? window.getComputedStyle(holidayContentArea) : null;
     const padTop = compStyle ? parseFloat(compStyle.paddingTop) || 0 : 2;
@@ -12802,7 +12826,7 @@
 
     // Test fit function: Title and Summary share the EXACT SAME font size & line-height
     function testFit(summaryText, px, lh) {
-      const gapPx = Math.min(10, Math.max(4, Math.round(px * 0.28)));
+      const gapPx = Math.min(8, Math.max(3, Math.round(px * 0.22)));
       buf.style.gap = gapPx + 'px';
 
       hBufTitle.textContent = title;
@@ -12846,28 +12870,32 @@
     }
 
     // Intelligent text candidate & font size resolver (readability first)
+    // To match Inspiration's bold readability, we set a high static-fit bar (>= 18.5px).
+    // If text cannot fit cleanly at >= 18.5px, we refuse to crush it into 8 lines of fine-print;
+    // instead, we set a proud, comfortable size (19.5px - 21.0px) and let smooth auto-scroll handle the rest.
     function resolveFittingText() {
-      // 1. Try full summary at comfortable, readable size (>= 16.0px)
+      // 1. Try full summary at comfortable hero size (>= 18.5px)
       if (fullSummary) {
-        const res = findBestPx(fullSummary, 16.0, maxCeilingPx);
-        if (res.px >= 16.0) {
+        const res = findBestPx(fullSummary, 18.5, maxCeilingPx);
+        if (res.px >= 18.5) {
           return { text: fullSummary, px: res.px, lh: res.lh, needsScroll: false };
         }
       }
 
-      // 2. If full summary overflows or is forced below 16px, try concise 1-2 sentence version (>= 15.5px)
+      // 2. If full summary overflows 18.5px, try concise 1-sentence version at >= 18.0px
       if (conciseText && conciseText !== fullSummary) {
-        const res = findBestPx(conciseText, 15.5, maxCeilingPx);
-        if (res.px >= 15.5) {
+        const res = findBestPx(conciseText, 18.0, maxCeilingPx);
+        if (res.px >= 18.0) {
           return { text: conciseText, px: res.px, lh: res.lh, needsScroll: false };
         }
       }
 
-      // 3. For long stories that exceed container even at 15.5px:
-      // Never shrink to micro-print! Keep at readable size and let smooth auto-scroller reveal it
+      // 3. For genuinely long stories that exceed container at 18px:
+      // Keep font at a proud, readable 19.5px matching Inspiration and smoothly auto-scroll!
       const scrollText = fullSummary || conciseText || title;
-      const targetScrollPx = Math.max(15.5, Math.min(17.0, Math.round(usableH * 0.11)));
-      return { text: scrollText, px: targetScrollPx, lh: 1.32, needsScroll: true };
+      const targetScrollPx = Math.max(19.0, Math.min(21.5, Math.round(usableH * 0.138)));
+      const lh = targetScrollPx >= 20 ? 1.24 : 1.28;
+      return { text: scrollText, px: targetScrollPx, lh, needsScroll: true };
     }
 
     const { text: chosenText, px: finalPx, lh: finalLh, needsScroll } = resolveFittingText();

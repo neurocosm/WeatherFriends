@@ -1622,16 +1622,17 @@
     transition:font-size 0.08s ease, color 0.25s ease;
   }
 
-  /* Block 2: 2-Mode Interactive Clock (Digital • Analog) */
+  /* Block 2: 2-Mode Interactive Clock (Digital • Analog • Hybrid) */
   #topClockBlock{
     position:relative;
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:center;
-    cursor:pointer;
-    user-select:none;
-    touch-action:manipulation;
+    cursor:pointer !important;
+    user-select:none !important;
+    -webkit-user-select:none !important;
+    touch-action:manipulation !important;
     -webkit-tap-highlight-color:rgba(73, 230, 196, 0.25);
     outline:none;
     overflow:hidden !important;
@@ -1642,6 +1643,11 @@
     contain:layout paint;
     box-sizing:border-box !important;
     transition:filter 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+  }
+  #topClockBlock *{
+    cursor:pointer !important;
+    touch-action:manipulation !important;
+    -webkit-tap-highlight-color:rgba(73, 230, 196, 0.25);
   }
   #topClockBlock:hover{
     filter:brightness(1.08);
@@ -6201,7 +6207,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.101826.2141</span>
+        <span id="appVersionText">v1.102026.2020</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -7998,15 +8004,53 @@
   // 3. 1-Tap Clock Mode Cycle: Stacked Digital (default) -> Analog -> Hybrid -> Stacked Digital
   const topClockCard = document.getElementById('topClockBlock');
   if(topClockCard){
-    topClockCard.addEventListener('click', (e) => {
+    let clockTouchStartX = 0;
+    let clockTouchStartY = 0;
+    let clockTouchMoved = false;
+    let clockLastTrigger = 0;
+
+    const handleClockCycle = (e) => {
       // Do not cycle clock mode if user tapped digital AM/PM badges (which toggle 12H / 24H)
       if(e && e.target && e.target.closest && (e.target.closest('#clockAmpm') || e.target.closest('#sidecarAmpm'))){
         return;
       }
+      const now = Date.now();
+      if(now - clockLastTrigger < 320) return; // Debounce dual touch + click
+      clockLastTrigger = now;
+      if(e && typeof e.stopPropagation === 'function') e.stopPropagation();
       cycleClockMode();
+    };
+
+    // 1. Direct Touch support for tablets & mobile (instant, no 300ms lag, works on iPad & Android)
+    topClockCard.addEventListener('touchstart', (e) => {
+      clockTouchMoved = false;
+      if(e.touches && e.touches[0]){
+        clockTouchStartX = e.touches[0].clientX;
+        clockTouchStartY = e.touches[0].clientY;
+      }
+    }, { passive: true });
+
+    topClockCard.addEventListener('touchmove', (e) => {
+      if(e.touches && e.touches[0]){
+        const dx = Math.abs(e.touches[0].clientX - clockTouchStartX);
+        const dy = Math.abs(e.touches[0].clientY - clockTouchStartY);
+        if(dx > 10 || dy > 10){
+          clockTouchMoved = true;
+        }
+      }
+    }, { passive: true });
+
+    topClockCard.addEventListener('touchend', (e) => {
+      if(clockTouchMoved) return; // User was scrolling, not tapping
+      handleClockCycle(e);
+    }, { passive: true });
+
+    // 2. Mouse click & Pointer tap support (desktop / mouse / trackpad)
+    topClockCard.addEventListener('click', (e) => {
+      handleClockCycle(e);
     });
 
-    // Smart TV remote & Keyboard navigation (Enter, Space, Select, Accept, 'C')
+    // 3. Smart TV remote & Keyboard navigation (Enter, Space, Select, Accept, 'C')
     topClockCard.addEventListener('keydown', (e) => {
       if(e.target && (e.target.id === 'clockAmpm' || e.target.id === 'sidecarAmpm')){
         // Let the digital AM/PM button toggle 12H / 24H format
@@ -8014,7 +8058,7 @@
       }
       if(e.key === 'Enter' || e.key === ' ' || e.key === 'Select' || e.key === 'Accept' || e.key === 'c' || e.key === 'C'){
         e.preventDefault();
-        cycleClockMode();
+        handleClockCycle(e);
       }
     });
 
@@ -9878,7 +9922,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.101826.2141';
+  const CLIENT_APP_VERSION = 'v1.102026.2020';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -12447,7 +12491,9 @@
      - Double-tap calendar icon to force background feed re-sync
      - Auto-refresh on midnight rollover & Smart TV wake-from-sleep
   --------------------------------------------------------------- */
-  const HOLIDAY_ROTATION_MS = 15 * 60 * 1000; // 15 minutes per item
+  const CELEBRATE_CHANNELS = ['holidays', 'food', 'tech'];
+  const CELEBRATE_ROTATION_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes (matches Inspiration ROTATION_INTERVAL_MS)
+  const HOLIDAY_ROTATION_MS = CELEBRATE_ROTATION_INTERVAL_MS;
 
   function isSolemnHoliday(title) {
     if (!title || typeof title !== 'string') return false;
@@ -13026,10 +13072,46 @@
   function rotateHoliday(direction = 1, isManual = false){
     stopHolidayAutoScroll(true);
     const items = channelData[activeHolidayChannel] || [];
-    if(!items || items.length <= 1) return;
+    if(!items || items.length <= 1){
+      if(isManual){
+        rotateToNextCelebrateChannel();
+      }
+      return;
+    }
     channelIndices[activeHolidayChannel] = (channelIndices[activeHolidayChannel] + direction + items.length) % items.length;
     channelLastRotate[activeHolidayChannel] = Date.now();
     renderCurrentHoliday(true);
+  }
+
+  /* ---------------------------------------------------------------
+     CELEBRATE / DAILY BLOCK 5-MINUTE ROTATION ENGINE
+     - Synchronized with Inspiration block (5-minute rotation cycle)
+     - Continuously rotates channels: Today -> Food Days -> Retro Tech -> Today
+     - Automatically advances the celebration item index in each channel
+     - Pauses when hovering over panel or manually scrolling
+     - Immediate manual tab switch or card tap resets the 5-minute timer
+  --------------------------------------------------------------- */
+  let celebrateRotationTimer = null;
+  let isHoveringCelebrate = false;
+
+  function rotateToNextCelebrateChannel(){
+    if(isHoveringCelebrate || holidayUserInteracting) return;
+    const curIdx = CELEBRATE_CHANNELS.indexOf(activeHolidayChannel);
+    const nextIdx = (curIdx + 1) % CELEBRATE_CHANNELS.length;
+    const nextChan = CELEBRATE_CHANNELS[nextIdx];
+
+    // Advance item index in the next channel so each cycle displays a fresh celebration
+    const items = channelData[nextChan] || [];
+    if(items.length > 1){
+      channelIndices[nextChan] = ((channelIndices[nextChan] || 0) + 1) % items.length;
+    }
+
+    setHolidayChannel(nextChan, false);
+  }
+
+  function resetCelebrateRotationTimer(){
+    if(celebrateRotationTimer) clearInterval(celebrateRotationTimer);
+    celebrateRotationTimer = setInterval(rotateToNextCelebrateChannel, CELEBRATE_ROTATION_INTERVAL_MS);
   }
 
   function setHolidayChannel(channelId, forceFetch = false){
@@ -13101,22 +13183,8 @@
           });
           channelData[channelId] = parsed;
           const savedIdx = parseInt(localStorage.getItem(`wf_${channelId}_index`) || '0', 10);
-          const savedLastRotate = parseInt(localStorage.getItem(`wf_${channelId}_last_rotate`) || '0', 10);
-
-          if(!isNaN(savedLastRotate) && savedLastRotate > 0){
-            const elapsed = Date.now() - savedLastRotate;
-            if(elapsed >= HOLIDAY_ROTATION_MS){
-              const intervalsElapsed = Math.floor(elapsed / HOLIDAY_ROTATION_MS);
-              channelIndices[channelId] = (savedIdx + intervalsElapsed) % channelData[channelId].length;
-              channelLastRotate[channelId] = Date.now() - (elapsed % HOLIDAY_ROTATION_MS);
-            } else {
-              channelIndices[channelId] = (savedIdx >= 0 && savedIdx < channelData[channelId].length) ? savedIdx : 0;
-              channelLastRotate[channelId] = savedLastRotate;
-            }
-          } else {
-            channelIndices[channelId] = (savedIdx >= 0 && savedIdx < channelData[channelId].length) ? savedIdx : 0;
-            channelLastRotate[channelId] = Date.now();
-          }
+          channelIndices[channelId] = (savedIdx >= 0 && savedIdx < channelData[channelId].length) ? savedIdx : 0;
+          channelLastRotate[channelId] = Date.now();
 
           if(channelId === activeHolidayChannel){
             renderCurrentHoliday(false);
@@ -13212,6 +13280,7 @@
       if(targetChan && targetChan !== activeHolidayChannel){
         setHolidayChannel(targetChan, false);
       }
+      resetCelebrateRotationTimer();
     });
   });
 
@@ -13252,10 +13321,15 @@
       if(e.target.closest('#holidayTabs')) return;
       if(holidayTouchMoved) return; // User was scrolling text manually, do not skip card
       rotateHoliday(1, true);
+      resetCelebrateRotationTimer();
     });
 
     panelDetailsEl.addEventListener('mouseenter', () => {
+      isHoveringCelebrate = true;
       handleHolidayUserInteraction();
+    });
+    panelDetailsEl.addEventListener('mouseleave', () => {
+      isHoveringCelebrate = false;
     });
   }
 
@@ -13263,6 +13337,7 @@
     holidayCalendarBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       rotateHoliday(1, true);
+      resetCelebrateRotationTimer();
     });
     // Power-action: double-clicking calendar icon forces a fresh re-fetch across all channels
     holidayCalendarBtn.addEventListener('dblclick', (e) => {
@@ -13276,29 +13351,19 @@
         localStorage.removeItem('wf_holiday_date');
       }catch(err){}
       loadAllChannels(true);
+      resetCelebrateRotationTimer();
     });
   }
 
-  // Background timer: checks 15m rotation progress & rollover to next day at midnight
+  // Background timer: checks midnight rollover to next day
   setInterval(() => {
-    // A. Check if calendar date changed to the next day
     const currentDay = getLocalDateKey();
     if(holidayActiveDateKey && currentDay !== holidayActiveDateKey){
       console.log('[Discovery Engine] Date rolled over (' + currentDay + '). Re-fetching all channels...');
       loadAllChannels(true);
       return;
     }
-
-    // B. Check 15-minute rotation cycle for active channel
-    const items = channelData[activeHolidayChannel] || [];
-    const lastRotate = channelLastRotate[activeHolidayChannel] || 0;
-    if(items.length > 1 && lastRotate > 0){
-      const elapsed = Date.now() - lastRotate;
-      if(elapsed >= HOLIDAY_ROTATION_MS){
-        rotateHoliday(1, false);
-      }
-    }
-  }, 1000);
+  }, 30000);
 
   // Smart TV & Standby Wakeup Recovery
   document.addEventListener('visibilitychange', () => {
@@ -13312,6 +13377,7 @@
       } else {
         loadAllChannels(false);
       }
+      resetCelebrateRotationTimer();
       if(typeof checkServerVersion === 'function') checkServerVersion();
     }
   });
@@ -13322,11 +13388,13 @@
     if(holidayActiveDateKey && currentDay !== holidayActiveDateKey){
       loadAllChannels(true);
     }
+    resetCelebrateRotationTimer();
   });
 
   window.addEventListener('online', () => {
     console.log('[Smart TV] Network restored, re-verifying discovery channels...');
     loadAllChannels(true);
+    resetCelebrateRotationTimer();
     if(typeof checkServerVersion === 'function') checkServerVersion();
   });
 
@@ -13336,12 +13404,14 @@
     if(key === 'r' || key === 'R' || key === 'ColorF0Red' || key === 'ColorF1Green'){
       console.log('[Smart TV Remote] Triggered discovery channels reload via remote key:', key);
       loadAllChannels(true);
+      resetCelebrateRotationTimer();
     }
   });
 
   // Initial load
   setHolidayChannel(activeHolidayChannel, false);
   loadAllChannels(false);
+  resetCelebrateRotationTimer();
 
   /* ---------------------------------------------------------------
      INTERACTIVE ROW SEAM & TIER SPLITTERS (HORIZONTAL & VERTICAL RESIZING)

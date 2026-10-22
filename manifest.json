@@ -4,7 +4,7 @@
   "description": "High-visibility weather console with real-time radar, solar data, and alerts",
   "start_url": "./",
   "scope": "./",
-  "display": "standalone",
+  "display": "fullscreen",
   "orientation": "any",
   "background_color": "#070e12",
   "theme_color": "#070e12",

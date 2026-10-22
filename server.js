@@ -84,6 +84,43 @@ app.get('/api/version', (req, res) => {
   });
 });
 
+// Server-side Weather Proxy with in-memory caching (guarantees weather always loads cleanly)
+const weatherCache = new Map();
+const WEATHER_CACHE_TTL = 3 * 60 * 1000; // 3 minutes
+
+app.get('/api/weather', async (req, res) => {
+  const lat = parseFloat(req.query.lat) || 42.3765;
+  const lon = parseFloat(req.query.lon) || -71.2356;
+  const cacheKey = `${lat.toFixed(2)},${lon.toFixed(2)}`;
+  const now = Date.now();
+
+  const cached = weatherCache.get(cacheKey);
+  if (cached && (now - cached.time < WEATHER_CACHE_TTL)) {
+    return res.json(cached.data);
+  }
+
+  try {
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}`
+      + `&current=temperature_2m,relative_humidity_2m,apparent_temperature,pressure_msl,weather_code,wind_speed_10m,uv_index`
+      + `&daily=weather_code,temperature_2m_max,temperature_2m_min,uv_index_max,relative_humidity_2m_max,pressure_msl_mean,sunrise,sunset`
+      + `&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch&timezone=auto&forecast_days=6`;
+    const r = await fetch(url, { headers: { 'User-Agent': 'WeatherFriendsConsole/2.0' } });
+    if (r.ok) {
+      const data = await r.json();
+      weatherCache.set(cacheKey, { time: now, data });
+      return res.json(data);
+    }
+  } catch (err) {
+    console.error('Weather proxy error:', err.message);
+  }
+
+  if (cached) {
+    return res.json(cached.data);
+  }
+
+  res.status(502).json({ error: 'weather service unavailable' });
+});
+
 // Server-side IP Geolocation fallback (avoids browser adblocker / CORS blocks)
 app.get('/api/location', async (req, res) => {
   try {

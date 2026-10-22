@@ -828,6 +828,42 @@
     animation:none !important;
   }
 
+  .fullscreen-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    background:rgba(0,0,0,0.22);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:10px;
+    padding:2px 7px;
+    font-family:'Rajdhani',sans-serif;
+    font-weight:700;
+    font-size:0.60rem;
+    letter-spacing:0.06em;
+    color:#707f88;
+    cursor:pointer;
+    user-select:none;
+    -webkit-user-select:none;
+    -webkit-touch-callout:none;
+    touch-action:manipulation;
+    transition:all 0.2s ease;
+    box-shadow:inset 0 1px 2px rgba(0,0,0,0.2);
+  }
+  .fullscreen-pill:hover{
+    border-color:rgba(73,230,196,0.35);
+    color:#93a8b4;
+  }
+  .fullscreen-pill.is-fullscreen-active{
+    background:rgba(12,32,28,0.65);
+    border-color:rgba(73,230,196,0.55);
+    color:#49e6c4;
+  }
+  .fullscreen-icon{
+    width:10px;
+    height:10px;
+    flex:none;
+  }
+
   /* Direct Ambient Theater Launch Pill */
   .theater-launch-pill{
     display:inline-flex;
@@ -6032,113 +6068,25 @@
 
 
 
-  /* ---- Responsive & Device Optimization ---- */
-  /* Portrait / Mobile Narrow Fallback: allow smooth vertical flow when device is held vertically */
-  @media (orientation: portrait), (max-width: 768px){
-    html{
-      height:auto !important;
-      min-height:100% !important;
-      max-height:none !important;
-      overflow-y:auto !important;
-    }
-    body{
-      height:auto !important;
-      min-height:100% !important;
-      max-height:none !important;
-      overflow-y:auto !important;
-      display:block !important;
-      padding:8px !important;
-    }
-    .device{
-      height:auto !important;
-      min-height:auto !important;
-      max-height:none !important;
-      flex:none !important;
-      border-radius:14px !important;
-      padding:8px 10px !important;
-    }
-    .device-top{
-      height:auto !important;
-      margin-bottom:8px !important;
-    }
-    .screen{
-      height:auto !important;
-      min-height:auto !important;
-      overflow:visible !important;
-      display:block !important;
-      flex:none !important;
-      padding:10px 8px !important;
-    }
-    .row-splitter{
-      display:none !important;
-    }
-    .tier-splitter{
-      display:flex !important;
-      height:14px !important;
-      cursor:default !important;
-      margin:4px 0 !important;
-    }
-    .tier-splitter-grip{
-      display:none !important;
-    }
-    .topbar{
-      display:grid !important;
-      grid-template-columns:1fr !important;
-      flex:none !important;
-      min-height:auto !important;
-      gap:10px !important;
-      margin-bottom:10px !important;
-    }
-    .top-cert-card{
-      min-height:185px !important;
-      height:auto !important;
-      margin-bottom:0 !important;
-    }
-    .panels{
-      display:grid !important;
-      grid-template-columns:1fr !important;
-      flex:none !important;
-      min-height:auto !important;
-      gap:10px !important;
-      margin-bottom:10px !important;
-    }
-    .panel{
-      border-right:none !important;
-      border-bottom:1px solid var(--grid-line) !important;
-      min-height:auto !important;
-      padding:14px 10px !important;
-    }
-    .outlook{
-      display:block !important;
-      overflow-x:visible !important;
-      flex:none !important;
-      min-height:auto !important;
-      padding-top:10px !important;
-    }
-    .outlook-forecast-grid{
-      display:grid !important;
-      grid-template-columns:repeat(5,minmax(64px,1fr)) !important;
-      overflow-x:auto !important;
-      gap:8px !important;
-      padding-bottom:4px !important;
-    }
-    .outlook-friends-grid{
-      display:grid !important;
-      grid-template-columns:repeat(auto-fit,minmax(180px,1fr)) !important;
-      overflow-x:auto !important;
-      gap:8px !important;
-      padding-bottom:4px !important;
-    }
-    .day-card{
-      aspect-ratio:auto !important;
-      max-height:none !important;
-      min-height:90px !important;
-    }
-    .friend-card{
-      aspect-ratio:auto !important;
-      max-height:none !important;
-      min-height:140px !important;
-    }
+  /* Fullscreen Tablet Mode (Edge-to-Edge immersion) */
+  :fullscreen, ::backdrop{
+    background: #000000 !important;
+  }
+  :fullscreen body,
+  body.is-fullscreen-app{
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: 100vw !important;
+    max-height: 100vh !important;
+  }
+  :fullscreen .device,
+  body.is-fullscreen-app .device{
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: max(4px, env(safe-area-inset-top, 4px)) max(6px, env(safe-area-inset-right, 6px)) max(4px, env(safe-area-inset-bottom, 4px)) max(6px, env(safe-area-inset-left, 6px)) !important;
   }
 
   /* iPad & iOS Safe Area optimization (Home Indicator / Rounded bezels) */
@@ -6207,7 +6155,7 @@
         <svg class="version-refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
         </svg>
-        <span id="appVersionText">v1.102026.2020</span>
+        <span id="appVersionText">v1.102226.0543</span>
         <span class="version-new-badge" id="versionNewBadge">NEW UPDATE</span>
       </button>
     </div>
@@ -6219,6 +6167,12 @@
           <line x1="12" y1="15" x2="12" y2="3"/>
         </svg>
         <span id="pwaInstallLabel">INSTALL</span>
+      </button>
+      <button class="fullscreen-pill" id="fullscreenBtn" type="button" title="Full Screen Edge-to-Edge: hides browser bars and system headers on tablets • Tap to toggle" aria-label="Toggle Fullscreen">
+        <svg class="fullscreen-icon" id="fullscreenIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
+          <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+        </svg>
+        <span class="fullscreen-label" id="fullscreenLabel">FULL</span>
       </button>
       <button class="wake-pill" id="wakeLockBtn" title="Keep tablet screen awake (Active). Tap to toggle. Long-press to launch Theater Mode!" aria-label="Toggle screen keep awake or long-press to launch Theater Mode">
         <span class="wake-dot"></span>
@@ -7034,6 +6988,14 @@
 <script>
 (function(){
 
+  // Suppress benign browser ResizeObserver loop notification messages
+  window.addEventListener('error', (e) => {
+    if(e && e.message && (e.message.includes('ResizeObserver loop completed with undelivered notifications') || e.message.includes('ResizeObserver loop limit exceeded'))){
+      if(typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+      if(typeof e.preventDefault === 'function') e.preventDefault();
+    }
+  });
+
   // Platform & Hardware Intelligence Detection (iPad vs Android Tablet vs Desktop)
   const ua = navigator.userAgent || '';
   const isTouchDevice = (navigator.maxTouchPoints && navigator.maxTouchPoints > 0) || ('ontouchstart' in window);
@@ -7060,6 +7022,12 @@
       activeOutlookTrayView = savedView;
     }
   } catch(e){}
+
+  // Global inspiration quote state (hoisted to avoid Temporal Dead Zone errors in orientation & refit loops)
+  var currentInspirationData = {
+    text: "Wherever you go, no matter what the weather, always bring your own sunshine.",
+    author: "Anthony J. D'Angelo"
+  };
 
   /* ---------------------------------------------------------------
      CLOCK + DATE (12-Hour / 24-Hour, Conversational Period, Full Date, DST)
@@ -7802,10 +7770,10 @@
       availH = 160;
     }
 
-    const padH = Math.max(6, Math.round(availH * 0.045));
-    const padW = Math.max(8, Math.round(availW * 0.03));
-    const targetW = Math.max(100, availW - (padW * 2));
-    const targetH = Math.max(70, availH - (padH * 2));
+    const padH = Math.max(4, Math.round(availH * 0.045));
+    const padW = Math.max(6, Math.round(availW * 0.03));
+    const targetW = Math.max(70, availW - (padW * 2));
+    const targetH = Math.max(60, availH - (padH * 2));
 
     const buf = getWxMeasureBuffer();
 
@@ -7818,17 +7786,17 @@
     wxBufCond.textContent = condName;
 
     // Both lines occupy the full card width, giving ample space for longer weather descriptions
-    const availCityTxtW = Math.max(70, targetW - 32);
-    const availCondTxtW = Math.max(70, targetW - 36);
+    const availCityTxtW = Math.max(50, targetW - 32);
+    const availCondTxtW = Math.max(50, targetW - 36);
 
     let headLow = 13;
-    let headHigh = Math.min(26, Math.max(16, Math.round(targetW * 0.075)));
+    let headHigh = Math.min(26, Math.max(14, Math.round(targetW * 0.075)));
     let bestHeadS = 16;
 
     while(headLow <= headHigh){
       const mid = Math.floor((headLow + headHigh) / 2);
       wxBufCity.style.fontSize = mid + 'px';
-      wxBufCond.style.fontSize = Math.max(12, Math.round(mid * 0.92)) + 'px';
+      wxBufCond.style.fontSize = Math.max(11, Math.round(mid * 0.92)) + 'px';
       if(wxBufCity.scrollWidth <= availCityTxtW && wxBufCond.scrollWidth <= availCondTxtW){
         bestHeadS = mid;
         headLow = mid + 1;
@@ -7838,22 +7806,22 @@
     }
 
     if(topCityNameEl) topCityNameEl.style.fontSize = bestHeadS + 'px';
-    if(topCondDescEl) topCondDescEl.style.fontSize = Math.max(12, Math.round(bestHeadS * 0.92)) + 'px';
+    if(topCondDescEl) topCondDescEl.style.fontSize = Math.max(11, Math.round(bestHeadS * 0.92)) + 'px';
 
-    const iconDim = Math.max(15, Math.min(24, Math.round(bestHeadS * 1.25)));
+    const iconDim = Math.max(13, Math.min(24, Math.round(bestHeadS * 1.25)));
     if(topLocPinEl){
       topLocPinEl.style.width = iconDim + 'px';
       topLocPinEl.style.height = iconDim + 'px';
     }
-    const condIconDim = Math.max(19, Math.min(30, Math.round(iconDim * 1.21)));
+    const condIconDim = Math.max(16, Math.min(30, Math.round(iconDim * 1.21)));
     if(topCondIconWrapEl){
       topCondIconWrapEl.style.width = condIconDim + 'px';
       topCondIconWrapEl.style.height = condIconDim + 'px';
     }
 
     // Header stack height (2 lines + gap)
-    const headerH = Math.max(28, Math.round(bestHeadS * 2.15) + 3);
-    const bodyAvailH = Math.max(50, targetH - headerH - 2);
+    const headerH = Math.max(24, Math.round(bestHeadS * 2.15) + 3);
+    const bodyAvailH = Math.max(40, targetH - headerH - 2);
 
     // 2. Uniform Unbolded Telemetry Items in Lower-Right (Humidity, Barometric Pressure, UV)
     // All 3 use identical font, size, unbolded weight, and are justified hard-right
@@ -7861,9 +7829,9 @@
     const capsuleUnitEls = topWeatherBlockEl.querySelectorAll('.capsule-unit');
     const capsuleIconEls = topWeatherBlockEl.querySelectorAll('.capsule-icon');
 
-    const capsuleValSize = Math.max(12, Math.min(23, Math.round(bodyAvailH * 0.19)));
-    const capsuleUnitSize = Math.max(9, Math.min(14, Math.round(capsuleValSize * 0.70)));
-    const capsuleIconSize = Math.max(13, Math.min(20, Math.round(capsuleValSize * 0.94)));
+    const capsuleValSize = Math.max(11, Math.min(23, Math.round(bodyAvailH * 0.19)));
+    const capsuleUnitSize = Math.max(8, Math.min(14, Math.round(capsuleValSize * 0.70)));
+    const capsuleIconSize = Math.max(11, Math.min(20, Math.round(capsuleValSize * 0.94)));
 
     capsuleValEls.forEach(el => { el.style.fontSize = capsuleValSize + 'px'; });
     capsuleUnitEls.forEach(el => { el.style.fontSize = capsuleUnitSize + 'px'; });
@@ -7873,9 +7841,9 @@
     });
 
     // Approximate width taken by the hard-right telemetry stack
-    const telemetryWidth = Math.max(76, Math.round(capsuleValSize * 4.1));
+    const telemetryWidth = Math.max(64, Math.round(capsuleValSize * 3.8));
     // The giant hero temperature in the lower-left gets all remaining horizontal width!
-    const leftColTargetW = Math.max(80, targetW - telemetryWidth - 8);
+    const leftColTargetW = Math.max(50, targetW - telemetryWidth - 4);
 
     // 3. Binary search for Giant Taller Hero Temperature Font Size (Lower-Left Corner)
     wxBufTemp.textContent = (heroTempNumEl.textContent || '61').trim();
@@ -7888,8 +7856,8 @@
     while(low <= high){
       const mid = Math.floor((low + high) / 2);
       const sTemp = mid;
-      const sDeg = Math.max(13, Math.round(mid * 0.30));
-      const sUnit = Math.max(10, Math.round(mid * 0.22));
+      const sDeg = Math.max(11, Math.round(mid * 0.30));
+      const sUnit = Math.max(9, Math.round(mid * 0.22));
 
       wxBufTemp.style.fontSize = sTemp + 'px';
       wxBufDeg.style.fontSize = sDeg + 'px';
@@ -7908,8 +7876,8 @@
     }
 
     const finalTemp = bestTempS;
-    const finalDeg = Math.max(13, Math.round(bestTempS * 0.30));
-    const finalUnit = Math.max(10, Math.round(bestTempS * 0.22));
+    const finalDeg = Math.max(11, Math.round(bestTempS * 0.30));
+    const finalUnit = Math.max(9, Math.round(bestTempS * 0.22));
 
     heroTempNumEl.style.fontSize = finalTemp + 'px';
     if(heroDegEl) heroDegEl.style.fontSize = finalDeg + 'px';
@@ -8420,13 +8388,30 @@
   }
 
   async function fetchWeather(lat, lon){
+    // 1. Try our Express server weather proxy first (cached & reliable)
+    try {
+      const pr = await fetch(`/api/weather?lat=${lat}&lon=${lon}`);
+      if(pr.ok){
+        const pData = await pr.json();
+        if(pData && pData.current && pData.daily) {
+          try { localStorage.setItem('wf_cached_weather', JSON.stringify(pData)); } catch(e){}
+          return pData;
+        }
+      }
+    } catch(err){
+      console.warn('Weather proxy fetch error, falling back to direct Open-Meteo:', err);
+    }
+
+    // 2. Direct Open-Meteo fallback
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}`
       + `&current=temperature_2m,relative_humidity_2m,apparent_temperature,pressure_msl,weather_code,wind_speed_10m,uv_index`
       + `&daily=weather_code,temperature_2m_max,temperature_2m_min,uv_index_max,relative_humidity_2m_max,pressure_msl_mean,sunrise,sunset`
       + `&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch&timezone=auto&forecast_days=6`;
     const r = await fetch(url);
     if(!r.ok) throw new Error('weather fetch failed');
-    return r.json();
+    const data = await r.json();
+    try { localStorage.setItem('wf_cached_weather', JSON.stringify(data)); } catch(e){}
+    return data;
   }
 
   function hpaToInHg(hpa){ return hpa * 0.0295301; }
@@ -8879,6 +8864,19 @@
       return cached.data;
     }
 
+    // 1. Try server proxy first
+    try {
+      const pr = await fetch(`/api/weather?lat=${friend.lat}&lon=${friend.lon}`);
+      if(pr.ok){
+        const data = await pr.json();
+        if(data && data.current){
+          friendWeatherCache.set(friend.id, { data, timestamp: now });
+          return data;
+        }
+      }
+    } catch(e){}
+
+    // 2. Direct Open-Meteo fallback
     try {
       const url = `https://api.open-meteo.com/v1/forecast?latitude=${friend.lat}&longitude=${friend.lon}`
         + `&current=temperature_2m,relative_humidity_2m,apparent_temperature,pressure_msl,weather_code,wind_speed_10m,uv_index`
@@ -8929,7 +8927,7 @@
         shutterLabel.innerHTML = `WEATHER FRIENDS • ${weatherFriendsList.length} LOCATIONS <span class="shutter-unroll-hint">(click to pull down)</span>`;
       }
       forecastGrid.style.display = 'none';
-      friendsGrid.style.display = 'grid';
+      friendsGrid.style.display = '';
 
       if(animate){
         friendsGrid.classList.remove('outlook-view-transition-in');
@@ -8955,7 +8953,7 @@
         shutterLabel.innerHTML = '5-DAY OUTLOOK FORECAST <span class="shutter-unroll-hint">(click to pull down)</span>';
       }
       friendsGrid.style.display = 'none';
-      forecastGrid.style.display = 'grid';
+      forecastGrid.style.display = '';
 
       if(animate){
         forecastGrid.classList.remove('outlook-view-transition-in');
@@ -9666,6 +9664,48 @@
     }
   }
 
+  const DEFAULT_WEATHER_DATA = {
+    current: {
+      temperature_2m: 68,
+      relative_humidity_2m: 52,
+      apparent_temperature: 68,
+      pressure_msl: 1016.5,
+      weather_code: 1,
+      wind_speed_10m: 7,
+      uv_index: 4
+    },
+    daily: {
+      time: [
+        new Date().toISOString().slice(0, 10),
+        new Date(Date.now() + 86400000).toISOString().slice(0, 10),
+        new Date(Date.now() + 172800000).toISOString().slice(0, 10),
+        new Date(Date.now() + 259200000).toISOString().slice(0, 10),
+        new Date(Date.now() + 345600000).toISOString().slice(0, 10),
+        new Date(Date.now() + 432000000).toISOString().slice(0, 10)
+      ],
+      weather_code: [1, 2, 0, 3, 61, 1],
+      temperature_2m_max: [72, 74, 69, 68, 65, 70],
+      temperature_2m_min: [54, 56, 52, 50, 48, 51],
+      uv_index_max: [5, 6, 6, 4, 3, 5],
+      relative_humidity_2m_max: [65, 60, 55, 70, 75, 60],
+      pressure_msl_mean: [1016, 1015, 1018, 1014, 1012, 1017],
+      sunrise: [
+        new Date().toISOString().slice(0, 10) + 'T05:30:00',
+        new Date(Date.now() + 86400000).toISOString().slice(0, 10) + 'T05:29:00',
+        new Date(Date.now() + 172800000).toISOString().slice(0, 10) + 'T05:28:00',
+        new Date(Date.now() + 259200000).toISOString().slice(0, 10) + 'T05:27:00',
+        new Date(Date.now() + 345600000).toISOString().slice(0, 10) + 'T05:26:00'
+      ],
+      sunset: [
+        new Date().toISOString().slice(0, 10) + 'T20:05:00',
+        new Date(Date.now() + 86400000).toISOString().slice(0, 10) + 'T20:06:00',
+        new Date(Date.now() + 172800000).toISOString().slice(0, 10) + 'T20:07:00',
+        new Date(Date.now() + 259200000).toISOString().slice(0, 10) + 'T20:08:00',
+        new Date(Date.now() + 345600000).toISOString().slice(0, 10) + 'T20:09:00'
+      ]
+    }
+  };
+
   async function loadWeatherFor(lat, lon, label, accuracyMeters){
     setStatus('Fetching weather…');
     const accTxt = accuracyMeters ? ` • ±${Math.round(accuracyMeters)}m` : '';
@@ -9689,8 +9729,19 @@
       data = await fetchWeather(lat, lon);
     }catch(e){
       setStatus('Weather service unreachable.');
+      try {
+        const cachedStr = localStorage.getItem('wf_cached_weather');
+        if(cachedStr){
+          data = JSON.parse(cachedStr);
+          updateWeatherUI(data);
+        }
+      }catch(err){}
       return;
     }
+
+    try{
+      localStorage.setItem('wf_cached_weather', JSON.stringify(data));
+    }catch(e){}
 
     updateWeatherUI(data);
   }
@@ -9701,7 +9752,28 @@
   let locationInitialized = false;
 
   async function init(){
-    // 1. Instant check: Reload saved location from current or previous session
+    // 0. Frame-0 Instant Render: Render cached weather or baseline so outlook is never empty
+    try{
+      const cached = localStorage.getItem('wf_cached_weather');
+      if(cached){
+        const parsedData = JSON.parse(cached);
+        if(parsedData && parsedData.current && parsedData.daily){
+          updateWeatherUI(parsedData);
+        } else {
+          updateWeatherUI(DEFAULT_WEATHER_DATA);
+        }
+      } else {
+        updateWeatherUI(DEFAULT_WEATHER_DATA);
+      }
+    }catch(e){
+      updateWeatherUI(DEFAULT_WEATHER_DATA);
+    }
+
+    // 1. Resolve initial station from saved cache or default to Waltham, MA
+    let initialLat = 42.3765;
+    let initialLon = -71.2356;
+    let initialName = 'Waltham, MA';
+
     try{
       const saved = localStorage.getItem('wx_saved_location');
       if(saved){
@@ -9713,42 +9785,23 @@
             parsed.name = 'Waltham, MA';
             try{ localStorage.setItem('wx_saved_location', JSON.stringify(parsed)); }catch(e){}
           }
-          locationInitialized = true;
-          await loadWeatherFor(parsed.lat, parsed.lon, parsed.name);
-          return;
+          initialLat = parsed.lat;
+          initialLon = parsed.lon;
+          initialName = parsed.name || 'Waltham, MA';
         }
       }
     }catch(e){}
 
-    // 2. Perform High-Accuracy Geolocation / IP auto-detect
+    // Immediately trigger weather fetch for active station
+    locationInitialized = true;
+    loadWeatherFor(initialLat, initialLon, initialName);
+
+    // 2. Perform Geolocation in parallel without blocking initial display
     if(navigator.geolocation){
-      let handled = false;
-
-      // Start fallback timer: if browser permission prompt hangs or takes > 3.5s, use high precision default
-      const fallbackTimer = setTimeout(async () => {
-        if(!handled && !locationInitialized){
-          handled = true;
-          const ip = await fetchIpLocation();
-          let chosenLat = ip.lat, chosenLon = ip.lon, chosenName = ip.name;
-          if(chosenName && (chosenName.includes('Boston') || chosenName.includes('Detected'))){
-            chosenLat = 42.3765;
-            chosenLon = -71.2356;
-            chosenName = 'Waltham, MA';
-          }
-          locationInitialized = true;
-          loadWeatherFor(chosenLat, chosenLon, chosenName);
-        }
-      }, 3500);
-
       navigator.geolocation.getCurrentPosition(
         async (pos) => {
-          if(handled) return;
-          handled = true;
-          clearTimeout(fallbackTimer);
           const lat = pos.coords.latitude, lon = pos.coords.longitude;
-          locationInitialized = true;
           loadWeatherFor(lat, lon, 'Locating…', pos.coords.accuracy);
-          // Reverse geocode with high precision (zoom=18)
           const label = await reverseGeocode(lat, lon);
           const finalName = label || 'Waltham, MA';
           const cityEl = document.getElementById('cityName');
@@ -9761,31 +9814,16 @@
           }catch(e){}
         },
         async (err) => {
-          if(handled) return;
-          handled = true;
-          clearTimeout(fallbackTimer);
-          const ip = await fetchIpLocation();
-          let chosenLat = ip.lat, chosenLon = ip.lon, chosenName = ip.name;
-          if(chosenName && (chosenName.includes('Boston') || chosenName.includes('Detected'))){
-            chosenLat = 42.3765;
-            chosenLon = -71.2356;
-            chosenName = 'Waltham, MA';
-          }
-          locationInitialized = true;
-          loadWeatherFor(chosenLat, chosenLon, chosenName);
+          // If geolocation denied or unavailable, auto-detect IP in background
+          try {
+            const ip = await fetchIpLocation();
+            if(ip && ip.lat && ip.lon && (Math.abs(ip.lat - initialLat) > 0.5 || Math.abs(ip.lon - initialLon) > 0.5)){
+              loadWeatherFor(ip.lat, ip.lon, ip.name);
+            }
+          } catch(e){}
         },
-        { enableHighAccuracy: true, timeout: 7000, maximumAge: 10000 }
+        { enableHighAccuracy: true, timeout: 5000, maximumAge: 60000 }
       );
-    } else {
-      const ip = await fetchIpLocation();
-      let chosenLat = ip.lat, chosenLon = ip.lon, chosenName = ip.name;
-      if(chosenName && (chosenName.includes('Boston') || chosenName.includes('Detected'))){
-        chosenLat = 42.3765;
-        chosenLon = -71.2356;
-        chosenName = 'Waltham, MA';
-      }
-      locationInitialized = true;
-      loadWeatherFor(chosenLat, chosenLon, chosenName);
     }
   }
 
@@ -9922,7 +9960,7 @@
   /* ---------------------------------------------------------------
      REMOTE VERSION CONTROL & MANUAL REFRESH / CACHE BUSTER
   --------------------------------------------------------------- */
-  const CLIENT_APP_VERSION = 'v1.102026.2020';
+  const CLIENT_APP_VERSION = 'v1.102226.0543';
   let serverLatestVersion = CLIENT_APP_VERSION;
   let updatePending = false;
   const verBadgeBtn = document.getElementById('appVersionBadge');
@@ -10291,6 +10329,61 @@
       requestScreenWakeLock();
     }
   });
+
+  /* ---------------------------------------------------------------
+     FULLSCREEN CONTROLLER (EDGE-TO-EDGE TABLET IMMERSION)
+     - Calls native requestFullscreen to hide browser URL bar and tablet OS status bar
+     - Toggles icon & button label: FULL <-> WINDOW
+  --------------------------------------------------------------- */
+  const fullscreenBtn = document.getElementById('fullscreenBtn');
+  const fullscreenLabel = document.getElementById('fullscreenLabel');
+
+  function isFullscreenActive(){
+    const doc = document;
+    return !!(doc.fullscreenElement || doc.webkitFullscreenElement || doc.mozFullScreenElement || doc.msFullscreenElement);
+  }
+
+  function toggleFullscreen(){
+    const doc = document;
+    const docEl = document.documentElement;
+    const requestFS = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.mozRequestFullScreen || docEl.msRequestFullscreen;
+    const exitFS = doc.exitFullscreen || doc.webkitExitFullscreen || doc.mozCancelFullScreen || doc.msExitFullscreen;
+
+    if(!isFullscreenActive()){
+      if(requestFS){
+        requestFS.call(docEl).catch(() => {});
+      }
+    } else {
+      if(exitFS){
+        exitFS.call(doc).catch(() => {});
+      }
+    }
+  }
+
+  function updateFullscreenUI(){
+    const active = isFullscreenActive();
+    if(fullscreenLabel){
+      fullscreenLabel.textContent = active ? 'WINDOW' : 'FULL';
+    }
+    if(fullscreenBtn){
+      fullscreenBtn.classList.toggle('is-fullscreen-active', active);
+      fullscreenBtn.title = active ? 'Exit full screen mode' : 'Full Screen Edge-to-Edge: hides browser bars and system headers on tablets';
+    }
+    document.body.classList.toggle('is-fullscreen-app', active);
+  }
+
+  if(fullscreenBtn){
+    fullscreenBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      toggleFullscreen();
+    });
+  }
+
+  document.addEventListener('fullscreenchange', updateFullscreenUI);
+  document.addEventListener('webkitfullscreenchange', updateFullscreenUI);
+  document.addEventListener('mozfullscreenchange', updateFullscreenUI);
+  document.addEventListener('MSFullscreenChange', updateFullscreenUI);
 
   /* ---------------------------------------------------------------
      HARDWARE-STYLE 5-DOT BOARD DIMMER CONTROLLER
@@ -11056,7 +11149,7 @@
     return `${y}-${m}-${d}`;
   }
 
-  let currentInspirationData = {
+  currentInspirationData = currentInspirationData || {
     text: "Wherever you go, no matter what the weather, always bring your own sunshine.",
     author: "Anthony J. D'Angelo"
   };
@@ -11256,10 +11349,10 @@
     buf.style.width = targetW + 'px';
     buf.innerHTML = buildInspirationHtml(cleanText, cleanAuthor);
 
-    // Dynamic pre-plexor font scale for quotes (15.5px to up to 48px depending on headroom)
+    // Dynamic pre-plexor font scale for quotes
     // Seamlessly expands short/medium quotes to fill available height, scales down gracefully for long text
     const minQuotePx = 15.5;
-    let low = Math.round(minQuotePx * 2); // 31
+    let low = Math.round(minQuotePx * 2); // 31 in landscape
     let high = Math.min(96, Math.max(52, Math.round(targetH * 0.38))) * 2;
     let bestSize = minQuotePx;
     let bestLineHeight = 1.30;
@@ -12890,7 +12983,7 @@
       return (rH <= targetH && rW <= targetW + 2);
     }
 
-    // Dynamic pre-plexor font scale matching Inspiration (15.5px to up to 48px headroom)
+    // Dynamic pre-plexor font scale matching Inspiration
     const minPx = 15.5;
     const maxCeilingPx = Math.min(48, Math.max(30, Math.round(targetH * 0.38)));
 
@@ -12916,9 +13009,6 @@
     }
 
     // Intelligent text candidate & font size resolver (readability first)
-    // To match Inspiration's bold readability, we set a high static-fit bar (>= 18.5px).
-    // If text cannot fit cleanly at >= 18.5px, we refuse to crush it into 8 lines of fine-print;
-    // instead, we set a proud, comfortable size (19.5px - 21.0px) and let smooth auto-scroll handle the rest.
     function resolveFittingText() {
       // 1. Try full summary at comfortable hero size (>= 18.5px)
       if (fullSummary) {
@@ -13254,10 +13344,31 @@
           }
         }
       }
-    }catch(err){
-      console.warn(`[Discovery Engine] Failed to fetch channel ${channelId}:`, err);
     }finally{
       channelFetching[channelId] = false;
+      // If channelData is still empty after fetch attempt, populate with instant fallback items
+      if(!channelData[channelId] || channelData[channelId].length === 0){
+        if(channelId === 'holidays'){
+          channelData[channelId] = [
+            { title: "National Read a Book Day", primarySummary: "Encouraging people of all ages to step away from screens and get lost in a good book.", summary: "Encouraging people of all ages to step away from screens and get lost in a good book." },
+            { title: "Barbie Doll Day", primarySummary: "Marks the anniversary of the day that the Barbie doll first went on sale in 1959, created by Ruth Handler.", summary: "Marks the anniversary of the day that the Barbie doll first went on sale in 1959, created by Ruth Handler." },
+            { title: "Fight Procrastination Day", primarySummary: "A dedicated day encouraging everyone to overcome delay, get organized, and tackle that long-overdue project today.", summary: "A dedicated day encouraging everyone to overcome delay, get organized, and tackle that long-overdue project today." }
+          ];
+        } else if(channelId === 'food'){
+          channelData[channelId] = [
+            { title: "National Coffee Ice Cream Day", primarySummary: "Honoring the creamy, caffeinated dessert favorite blending rich espresso and sweet cream.", summary: "Honoring the creamy, caffeinated dessert favorite blending rich espresso and sweet cream." },
+            { title: "National Cheese Pizza Day", primarySummary: "Honoring the classic flatbread pie first enjoyed in 18th-century Naples and beloved across America.", summary: "Honoring the classic flatbread pie first enjoyed in 18th-century Naples and beloved across America." }
+          ];
+        } else if(channelId === 'tech'){
+          channelData[channelId] = [
+            { title: "First Computer Bug (1947)", primarySummary: "Grace Hopper's team famously discovered a moth trapped in a relay of the Harvard Mark II computer.", summary: "Grace Hopper's team famously discovered a moth trapped in a relay of the Harvard Mark II computer." },
+            { title: "Voyager 1 Launches (1977)", primarySummary: "NASA launched the iconic Voyager 1 probe on a historic grand tour of the outer planets and interstellar space.", summary: "NASA launched the iconic Voyager 1 probe on a historic grand tour of the outer planets and interstellar space." }
+          ];
+        }
+        if(channelId === activeHolidayChannel){
+          renderCurrentHoliday(false);
+        }
+      }
     }
   }
 
@@ -14231,6 +14342,11 @@
       const seamIndex = parseInt(splitter.dataset.seam, 10);
 
       let startX = 0;
+      let startY = 0;
+      let startDateH = 0;
+      let startCwH = 0;
+      let startClockW = 0;
+      let startWxW = 0;
       let startW = [];
       let containerWidth = 0;
       let isDragging = false;
@@ -14251,6 +14367,8 @@
 
         isDragging = true;
         startX = e.clientX;
+        startY = e.clientY;
+
         startW = [...currentWeights[rowId]];
         containerWidth = rowEl.getBoundingClientRect().width;
         splitter.classList.add('is-dragging');
@@ -14260,7 +14378,8 @@
       }
 
       function onPointerMove(e){
-        if(!isDragging || containerWidth <= 0) return;
+        if(!isDragging) return;
+        if(containerWidth <= 0) return;
         const deltaX = e.clientX - startX;
         if(Math.abs(deltaX) > 4 && longPressTimer){
           clearTimeout(longPressTimer);
